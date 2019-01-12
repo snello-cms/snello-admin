@@ -1,15 +1,15 @@
-import {Component} from "@angular/core";
-import {AbstractEditComponent} from "../../common/abstract-edit-component";
-import {ActivatedRoute, Router} from "@angular/router";
-import {Condition} from "../../model/condtion";
-import {ConditionService} from "../../service/condition.service";
-import {MetadataService} from "../../service/metadata.service";
-import {Metadata} from "../../model/metadata";
+import {Component} from '@angular/core';
+import {AbstractEditComponent} from '../../common/abstract-edit-component';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Condition} from '../../model/condtion';
+import {ConditionService} from '../../service/condition.service';
+import {MetadataService} from '../../service/metadata.service';
+import {Metadata} from '../../model/metadata';
 
 @Component(
   {
-    templateUrl: "./condition-edit.component.html",
-    styleUrls: ["./condition-edit.component.css"]
+    templateUrl: './condition-edit.component.html',
+    styleUrls: ['./condition-edit.component.css']
   }
 )
 export class ConditionEditComponent extends AbstractEditComponent<Condition> {

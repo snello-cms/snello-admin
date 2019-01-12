@@ -1,18 +1,17 @@
-import {Component} from "@angular/core";
-import {AbstractEditComponent} from "../../common/abstract-edit-component";
-import {ActivatedRoute, Router} from "@angular/router";
-import {FieldDefinitionService} from "../../service/field-definition.service";
-import {MetadataService} from "../../service/metadata.service";
-import {FieldDefinition, MAP_INPUT_TO_FIELD} from "../../model/field-definition";
-import {Metadata} from "../../model/metadata";
-import {SelectItem} from "primeng/api";
-import {map, switchMap} from "rxjs/operators";
-import {of} from "rxjs";
+import {Component} from '@angular/core';
+import {AbstractEditComponent} from '../../common/abstract-edit-component';
+import {ActivatedRoute, Router} from '@angular/router';
+import {FieldDefinitionService} from '../../service/field-definition.service';
+import {MetadataService} from '../../service/metadata.service';
+import {FieldDefinition, MAP_INPUT_TO_FIELD} from '../../model/field-definition';
+import {SelectItem} from 'primeng/api';
+import {map, switchMap} from 'rxjs/operators';
+import {of} from 'rxjs';
 
 @Component(
   {
-    templateUrl: "./field-definition-edit.component.html",
-    styleUrls: ["./field-definition-edit.component.css"]
+    templateUrl: './field-definition-edit.component.html',
+    styleUrls: ['./field-definition-edit.component.css']
   }
 )
 export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDefinition> {
@@ -34,7 +33,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
     private metadataService: MetadataService
   ) {
     super(router, route, fieldDefinitionService, 'fielddefinition');
-    for(let key of Array.from( MAP_INPUT_TO_FIELD.keys()) ) {
+    for(const key of Array.from( MAP_INPUT_TO_FIELD.keys()) ) {
       this.fieldTypes.push({value: key, label: key});
       this.mapFieldToType.set(MAP_INPUT_TO_FIELD.get(key)[0]+ MAP_INPUT_TO_FIELD.get(key)[1], key)
     }
@@ -92,7 +91,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
   }
 
   preSave(): boolean {
-    let fieldDefTypes = MAP_INPUT_TO_FIELD.get(this.fieldType);
+    const fieldDefTypes = MAP_INPUT_TO_FIELD.get(this.fieldType);
     this.element.metadata_name =  this.mapMetadata.get(this.element.metadata_uuid);
     this.element.type = fieldDefTypes[0];
     this.element.inputType = fieldDefTypes[1];
@@ -102,7 +101,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
 
 
   preUpdate(): boolean {
-    let fieldDefTypes = MAP_INPUT_TO_FIELD.get(this.fieldType);
+    const fieldDefTypes = MAP_INPUT_TO_FIELD.get(this.fieldType);
     this.element.metadata_name =  this.mapMetadata.get(this.element.metadata_uuid);
     this.element.type = fieldDefTypes[0];
     this.element.inputType = fieldDefTypes[1];

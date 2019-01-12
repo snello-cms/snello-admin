@@ -1,19 +1,32 @@
-# Stage 1
-FROM node:8.11.2-alpine as node
+### STAGE 1: Build ###
 
-WORKDIR /usr/src/app
+# We label our stage as ‘builder’
+FROM node:10-alpine as builder
 
-COPY package*.json ./
+COPY package.json package-lock.json ./
 
-RUN npm install
+## Storing node modules on a separate layer will prevent unnecessary npm installs at each build
+RUN npm i && mkdir /ng-app && mv ./node_modules ./ng-app
+
+WORKDIR /ng-app
 
 COPY . .
 
-RUN npm run build
+## Build the angular app in production mode and store the artifacts in dist folder
+RUN $(npm bin)/ng build --prod --output-path=dist
 
-# Stage 2
-FROM nginx:1.13.12-alpine
 
-COPY --from=node /usr/src/app/dist/snello-admin /usr/share/nginx/html
+### STAGE 2: Setup ###
 
+FROM nginx:1.14.1-alpine
+
+## Copy our default nginx config
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+
+## Remove default nginx website
+RUN rm -rf /usr/share/nginx/html/*
+
+## From ‘builder’ stage copy over the artifacts in dist folder to default nginx public folder
+COPY --from=builder /ng-app/dist /usr/share/nginx/html
+
+CMD ["nginx", "-g", "daemon off;"]

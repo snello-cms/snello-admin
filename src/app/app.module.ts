@@ -42,6 +42,7 @@ import {DocumentListComponent} from "./components/documents/document-list.compon
 import {TableModule} from 'primeng/table';
 import {InputTextModule} from 'primeng/inputtext';
 import {DropdownModule} from 'primeng/dropdown';
+import {RouterOutloetComponent} from './common/router-outlet.component';
 
 
 @NgModule({
@@ -69,7 +70,9 @@ import {DropdownModule} from 'primeng/dropdown';
     FormGenerationMetadataListComponent,
     FormGenerationListComponent,
     FormGenerationEditComponent,
-    OutletComponent
+    OutletComponent,
+    RouterOutloetComponent
+
   ],
   imports: [
     BrowserModule,

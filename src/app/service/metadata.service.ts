@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Metadata} from '../model/metadata';
-import {METADATA_API_PATH} from "../../constants";
-import {Observable} from "rxjs";
-import {AbstractService} from "../common/abstract-service";
-import {FieldDefinition} from "../model/field-definition";
-import {catchError, map} from "rxjs/operators";
+import {METADATA_API_PATH} from '../../constants';
+import {Observable} from 'rxjs';
+import {AbstractService} from '../common/abstract-service';
+import {FieldDefinition} from '../model/field-definition';
+import {catchError, map} from 'rxjs/operators';
 
 @Injectable()
 export class MetadataService extends AbstractService<Metadata> {

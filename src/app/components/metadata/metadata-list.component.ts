@@ -1,14 +1,14 @@
-import {AbstractListComponent} from "../../common/abstract-list-component";
-import {Component, ViewChild} from "@angular/core";
-import {Metadata} from "../../model/metadata";
-import {Router} from "@angular/router";
-import {MetadataService} from "../../service/metadata.service";
-import {MatPaginator, MatTableDataSource} from "@angular/material";
+import {AbstractListComponent} from '../../common/abstract-list-component';
+import {Component, ViewChild} from '@angular/core';
+import {Metadata} from '../../model/metadata';
+import {Router} from '@angular/router';
+import {MetadataService} from '../../service/metadata.service';
+import {MatPaginator, MatTableDataSource} from '@angular/material';
 
 @Component(
   {
-    templateUrl: "./metadata-list.component.html",
-    styleUrls: ["./metadata-list.component.css"]
+    templateUrl: './metadata-list.component.html',
+    styleUrls: ['./metadata-list.component.css']
   }
 )
 export class MetadataListComponent extends AbstractListComponent<Metadata> {
@@ -16,13 +16,11 @@ export class MetadataListComponent extends AbstractListComponent<Metadata> {
   displayedColumns: string[] = ['table_name', 'description', 'table_key', 'order_by', 'alias_table', 'operations'];
   dataSource = new MatTableDataSource<Metadata>();
 
-  
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-
   constructor(
-    protected router: Router,
-    protected service: MetadataService) {
+      protected router: Router,
+      protected service: MetadataService) {
 
     super(router, service, 'metadata');
     this.filters = new Metadata();
@@ -48,7 +46,7 @@ export class MetadataListComponent extends AbstractListComponent<Metadata> {
   public createTable(metadata: Metadata) {
     this.service.createTable(metadata).subscribe(
       element => {
-        console.log("table created: " + element);
+        console.log('table created: ' + element);
       });
   }
 
