@@ -19,8 +19,8 @@ export class MetadataListComponent extends AbstractListComponent<Metadata> {
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
-      protected router: Router,
-      protected service: MetadataService) {
+      router: Router,
+      public service: MetadataService) {
 
     super(router, service, 'metadata');
     this.filters = new Metadata();
@@ -44,7 +44,7 @@ export class MetadataListComponent extends AbstractListComponent<Metadata> {
   }
 
   public createTable(metadata: Metadata) {
-    this.service.createTable(metadata).subscribe(
+    (<MetadataService>this.service).createTable(metadata).subscribe(
       element => {
         console.log('table created: ' + element);
       });

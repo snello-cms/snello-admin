@@ -1,14 +1,14 @@
-import {Component, ViewChild} from "@angular/core";
-import {ActivatedRoute, Router} from "@angular/router";
-import {DataListService} from "../../service/data-list.service";
-import {FieldDefinition} from "../../model/field-definition";
-import {DynamicFormComponent} from "../../generic.components/dynamic-form/dynamic-form.component";
-import {ApiService} from "../../service/api.service";
+import {Component, ViewChild} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {DataListService} from '../../service/data-list.service';
+import {FieldDefinition} from '../../model/field-definition';
+import {DynamicFormComponent} from '../../generic.components/dynamic-form/dynamic-form.component';
+import {ApiService} from '../../service/api.service';
 
 @Component(
   {
-    templateUrl: "./form-generation-edit.component.html",
-    styleUrls: ["./form-generation-edit.component.css"]
+      templateUrl: './form-generation-edit.component.html',
+      styleUrls: ['./form-generation-edit.component.css']
   }
 )
 export class FormGenerationEditComponent {
@@ -19,12 +19,12 @@ export class FormGenerationEditComponent {
   errorMessage: string;
   metadataName: string;
   uuid: string;
-  constructor(
-    protected router: Router,
-    private route: ActivatedRoute,
-    public dataListService: DataListService,
-    private apiService: ApiService
-  ) {
+
+    constructor(
+        protected router: Router,
+        protected route: ActivatedRoute,
+        protected dataListService: DataListService,
+        protected apiService: ApiService) {
 
   }
 
@@ -35,7 +35,7 @@ export class FormGenerationEditComponent {
     if (this.uuid) {
       this.apiService.fetch(this.metadataName, this.uuid).subscribe(
         element => {
-          for (let definition_1 of this.regConfig) {
+            for (const definition_1 of this.regConfig) {
             if(element.hasOwnProperty(definition_1.name)) {
               definition_1.value = element[definition_1.name];
             }
@@ -51,7 +51,7 @@ export class FormGenerationEditComponent {
       .subscribe(
         element => {
           if (element) {
-            console.log("record saved : " + element);
+              console.log('record saved : ' + element);
           }
         }
       );
@@ -62,7 +62,7 @@ export class FormGenerationEditComponent {
       .subscribe(
         element => {
           if (element) {
-            console.log("record saved : " + element);
+              console.log('record saved : ' + element);
             this.router.navigate(['datalist/list', this.metadataName]);
           }
         }
@@ -72,5 +72,9 @@ export class FormGenerationEditComponent {
   cancel () {
     this.router.navigate(['datalist/list', this.metadataName]);
   }
+
+    submit(event: any) {
+
+    }
 }
 

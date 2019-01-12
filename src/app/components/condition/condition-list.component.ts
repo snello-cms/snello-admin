@@ -1,13 +1,13 @@
-import {AbstractListComponent} from "../../common/abstract-list-component";
-import {Component, ViewChild} from "@angular/core";
-import {Router} from "@angular/router";
-import {Condition} from "../../model/condtion";
-import {ConditionService} from "../../service/condition.service";
+import {AbstractListComponent} from '../../common/abstract-list-component';
+import {Component} from '@angular/core';
+import {Router} from '@angular/router';
+import {Condition} from '../../model/condtion';
+import {ConditionService} from '../../service/condition.service';
 
 @Component(
   {
-    templateUrl: "./condition-list.component.html",
-    styleUrls: ["./condition-list.component.css"]
+    templateUrl: './condition-list.component.html',
+    styleUrls: ['./condition-list.component.css']
   }
 )
 export class ConditionListComponent extends AbstractListComponent<Condition> {
@@ -19,9 +19,8 @@ export class ConditionListComponent extends AbstractListComponent<Condition> {
   condition: string;
   sub_query: string;
 
-  constructor(
-    protected router: Router,
-    protected service: ConditionService) {
+  constructor(router: Router,
+              public service: ConditionService) {
 
     super(router, service, 'condition');
     this.filters = new Condition();

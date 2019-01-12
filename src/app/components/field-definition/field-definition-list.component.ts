@@ -21,7 +21,7 @@ export class FieldDefinitionListComponent extends AbstractListComponent<FieldDef
 
   constructor(
       protected router: Router,
-      protected service: FieldDefinitionService) {
+      public service: FieldDefinitionService) {
 
     super(router, service, 'fielddefinition');
     this.filters = new FieldDefinition();

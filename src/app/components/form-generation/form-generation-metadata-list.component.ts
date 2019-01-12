@@ -1,12 +1,12 @@
-import {Component} from "@angular/core";
-import {Router} from "@angular/router";
-import {DataListService} from "../../service/data-list.service";
-import {ApiService} from "../../service/api.service";
+import {Component} from '@angular/core';
+import {Router} from '@angular/router';
+import {DataListService} from '../../service/data-list.service';
+import {ApiService} from '../../service/api.service';
 
 @Component(
   {
-    templateUrl: "./form-generation-metadata-list.component.html",
-    styleUrls: ["./form-generation-metadata-list.component.css"]
+    templateUrl: './form-generation-metadata-list.component.html',
+    styleUrls: ['./form-generation-metadata-list.component.css']
   }
 )
 export class FormGenerationMetadataListComponent {

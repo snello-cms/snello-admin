@@ -1,6 +1,6 @@
-import { AbstractService } from './abstract-service';
-import { Router } from '@angular/router';
-import { OnInit } from '@angular/core';
+import {AbstractService} from './abstract-service';
+import {Router} from '@angular/router';
+import {OnInit} from '@angular/core';
 
 export abstract class AbstractListComponent<T> implements OnInit {
 
@@ -67,7 +67,7 @@ export abstract class AbstractListComponent<T> implements OnInit {
 
   constructor(
     protected router: Router,
-    protected service: AbstractService<T>,
+    public service: AbstractService<T>,
     protected path?: string
   ) {}
 

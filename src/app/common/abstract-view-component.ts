@@ -1,6 +1,6 @@
-import {AbstractService} from "./abstract-service";
-import {Router, ActivatedRoute} from "@angular/router";
-import {OnInit} from "@angular/core";
+import {AbstractService} from './abstract-service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {OnInit} from '@angular/core';
 
 export abstract class AbstractViewComponent<T> implements OnInit {
 
@@ -29,7 +29,7 @@ export abstract class AbstractViewComponent<T> implements OnInit {
                 }
             );
         } else {
-            this.addError("Errore nel caricamento dei dati.");
+            this.addError('Errore nel caricamento dei dati.');
         }
     }
 
