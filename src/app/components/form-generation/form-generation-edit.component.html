@@ -1,0 +1,19 @@
+<div class="form">
+  <div style="text-align:center">
+    <h1>
+      Edit {{metadataName}}
+    </h1>
+  </div>
+  <div class="margin-top">
+    <dynamic-form (submit)="submit($event)" [fields]="regConfig">
+    </dynamic-form>
+  </div>
+  <div class="margin-top">
+    {{ form.value | json }}
+  </div>
+
+
+</div>
+<button type="button" *ngIf="!uuid" (click)="save()">SALVA</button>&nbsp;&nbsp;
+<button type="button" *ngIf="uuid" (click)="update()">AGGIORNA</button>&nbsp;&nbsp;
+<button type="button" (click)="cancel()">ANNULLA</button>&nbsp;&nbsp;

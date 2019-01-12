@@ -1,0 +1,54 @@
+<form>
+  <div style="text-align:center">
+    <h1>
+      Lista Conditions
+    </h1>
+  </div>
+
+  <div class="mat-elevation-z8">
+
+    <p-table #table (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true" [resizableColumns]="true"
+             [responsive]="true" [rows]="10" [totalRecords]="service.listSize" [value]="model">
+      <ng-template let-columns pTemplate="header">
+        <tr class="sort-header">
+          <th pResizableColumn>Indice</th>
+          <th pResizableColumn>Metadata Name</th>
+          <th pResizableColumn>Condition</th>
+          <th pResizableColumn>Separator</th>
+          <th pResizableColumn>SubQuery</th>
+          <th pResizableColumn>Query Params</th>
+
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td [attr.colspan]="colspan">
+            Nessun risultato.
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
+        <tr>
+          <td class="RowIndex">{{ rowIndex + 1 }}</td>
+          <td class="ui-resizable-column">{{rowData.metadata_name}}</td>
+          <td class="ui-resizable-column">{{rowData.condition}}</td>
+          <td class="ui-resizable-column">{{rowData.separator}}</td>
+          <td class="ui-resizable-column">{{rowData.sub_query}}</td>
+          <td class="ui-resizable-column">{{rowData.query_params}}</td>
+
+
+          <td>
+            <button (click)="edit(rowData)" class="btn btn-success btn-sm" pButton>
+              <i aria-hidden="true" class="fa fa-pencil"></i>
+              Modifica
+            </button>
+          </td>
+
+        </tr>
+      </ng-template>
+    </p-table>
+
+  </div>
+    <button mat-button (click)="new()">Aggiungi!</button>
+
+</form>

@@ -1,0 +1,28 @@
+<p-table #table [paginator]="true" [resizableColumns]="true"
+[responsive]="true" [rows]="10" [totalRecords]="model.length" [value]="model">
+
+<ng-template let-columns pTemplate="header">
+  <tr class="sort-header">
+    <th class="Operations">Indice</th>
+    <th *ngFor="let def of regConfig">{{def.label}}</th>
+    <th class="Operations">Operazioni</th>
+  </tr>
+</ng-template>
+<ng-template pTemplate="emptymessage">
+  <tr>
+    <td [attr.colspan]="regConfig.length + 2">
+      Nessun risultato.
+    </td>
+  </tr>
+</ng-template>
+<ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
+  <tr *ngFor="let rowData of model">
+    <td class="RowIndex">{{ rowIndex + 1 }}</td>
+    <td *ngFor="let def of regConfig">{{dato(rowData, def)}}</td>
+    <td>
+      <button (click)="edit(metadataName,rowData.uuid)" mat-button>Modifica</button>
+    </td>
+  </tr>
+</ng-template>
+</p-table>
+

@@ -1,0 +1,67 @@
+<form>
+  <div style="text-align:center">
+    <h1>
+      Edit Condition
+    </h1>
+  </div>
+  <mat-form-field>
+    <mat-select [(ngModel)]="element.metadata_uuid" name="metadata" placeholder="Metadata (*)">
+      <mat-option *ngFor="let metadata of metadatas" [value]="metadata.uuid"
+                  (onSelectionChange)="setName($event, metadata)">
+        {{metadata.table_name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <br/>
+
+
+  <mat-form-field>
+    <input matInput label="Separator" name="table" pInputText [(ngModel)]="element.separator" placeholder="Separator">
+  </mat-form-field>
+
+
+  <br/>
+
+  <mat-form-field>
+    <input [(ngModel)]="element.condition" matInput name="Condition (*)" pInputText placeholder="Condition">
+  </mat-form-field>
+
+
+  <br/>
+  <mat-form-field>
+    <input [(ngModel)]="element.sub_query" matInput name="Sub query (*)" pInputText placeholder="Sub query">
+  </mat-form-field>
+
+
+  <br/>
+  <mat-form-field>
+    <input matInput name="alias_table" pInputText [(ngModel)]="element.alias_table" placeholder="Alias table">
+  </mat-form-field>
+
+
+  <br/>
+
+  <br/>
+  <mat-form-field>
+    <input matInput name="alias_condition" pInputText [(ngModel)]="element.alias_condition"
+           placeholder="Alias condition">
+  </mat-form-field>
+
+
+  <br/>
+
+  <mat-form-field>
+    <input matInput name="query_params" pInputText [(ngModel)]="element.query_params"
+           placeholder="Query Params  (*)">
+  </mat-form-field>
+  <br/>
+
+
+  <button type="button" *ngIf="!element.uuid" (click)="save()">SALVA</button>&nbsp;&nbsp;
+
+  <button type="button" *ngIf="element.uuid" (click)="update()">MODIFICA</button>&nbsp;&nbsp;&nbsp;&nbsp;
+
+  <button type="button" *ngIf="element.uuid" (click)="delete()">ELIMINA</button>&nbsp;&nbsp;
+
+  <button type="button" (click)="navigateToList()">ANNULLA</button>
+</form>

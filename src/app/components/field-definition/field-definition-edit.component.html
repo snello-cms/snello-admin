@@ -1,0 +1,131 @@
+<div class="content view">
+<form>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>
+                Edit Field Definition
+            </h3>
+        </div>
+        <div class="col-md-6">
+            <div class="pull-right" role="group" aria-label="Basic example">
+            
+                <button type="button" class="btn btn-danger pull-right" (click)="navigateToList()">ANNULLA</button>
+                <button type="button" class="btn btn-warning pull-right" *ngIf="element.uuid" (click)="delete()">ELIMINA</button>
+
+                <button class="btn btn-success pull-right" type="button" *ngIf="!element.uuid" (click)="save()">SALVA</button>
+                <button class="btn btn-success pull-right" type="button" *ngIf="element.uuid" (click)="update()">MODIFICA</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+    <br>
+    <div class="clearfix"></div>
+
+    <div class="form-group clearfix row">
+        <label class="label-text col-sm-3">Metadata (*)</label>
+        <div class="col-sm-9">
+
+            <p-dropdown [(ngModel)]="element.metadata_uuid" [filter]="false" [options]="metadatasSelect" [style]="{'width':'100%'}"  name="metadata"
+                filterBy="label" placeholder="Seleziona un metadato" >
+            </p-dropdown>
+        </div>
+    </div>
+
+
+
+
+    <mat-checkbox *ngIf="false" [(ngModel)]="element.table_key" class="table_key" color="primary" id="table_key">Table
+        Key</mat-checkbox>
+
+    <div class="form-group clearfix row">
+        <label class="label-text col-sm-3">Label (*)</label>
+        <div class="col-sm-9">
+            <input [(ngModel)]="element.label" name="label" pInputText type="text">
+        </div>
+    </div>
+
+
+    <div class="form-group clearfix row">
+        <label class="label-text col-sm-3">Nome (*)</label>
+        <div class="col-sm-9">
+            <input [(ngModel)]="element.name" pInputText type="text" name="name">
+        </div>
+    </div>
+
+    <div class="form-group clearfix row">
+        <label class="label-text col-sm-3">Input Type (*)</label>
+        <div class="col-sm-9">
+            <p-dropdown [(ngModel)]="fieldType" [filter]="false" [options]="fieldTypes" name="typeSelect" placeholder="Seleziona un tipo"
+            [style]="{'width':'100%'}"  filterBy="label">
+            </p-dropdown>
+        </div>
+    </div>
+
+
+    <div class="form-group clearfix row">
+        <label class="label-text col-sm-3">Group Name (*)</label>
+        <div class="col-sm-9">
+            <input pInputText placeholder="Group" name="group" [(ngModel)]="element.group_name">
+        </div>
+    </div>
+
+    <div class="form-group clearfix row">
+        <label class="label-text col-sm-3">Tab Name (*)</label>
+        <div class="col-sm-9">
+            <input pInputText placeholder="Tab" name="tab" [(ngModel)]="element.tab_name">
+        </div>
+    </div>
+
+
+
+    <div class="form-group clearfix row">
+        <label class="label-text col-sm-3">SQL Type</label>
+        <div class="col-sm-9">
+            <input pInputText placeholder="Tipo SQL" name="sql_type" [(ngModel)]="element.sql_type">
+        </div>
+    </div>
+
+
+
+    <div class="form-group clearfix row">
+        <label class="label-text col-sm-3">SQL Definition</label>
+        <div class="col-sm-9">
+            <input pInputText placeholder="Definizione Campo SQL" name="sql_definition" [(ngModel)]="element.sql_definition">
+        </div>
+    </div>
+
+
+
+
+
+    <div class="form-group clearfix row">
+        <label class="label-text col-sm-3">Valore Default</label>
+        <div class="col-sm-9">
+            <input pInputText placeholder="Valore Default" name="default_value" [(ngModel)]="element.default_value">
+        </div>
+    </div>
+
+
+    <div class="form-group clearfix row">
+        <label class="label-text col-sm-3">Pattern</label>
+        <div class="col-sm-9">
+            <input pInputText placeholder="Pattern" name="pattern" [(ngModel)]="element.pattern">
+
+        </div>
+    </div>
+
+
+    <div class="form-group clearfix row">
+        <label class="label-text col-sm-3">Definition</label>
+        <div class="col-sm-9">
+            <input pInputText placeholder="Definizione" name="definition" [(ngModel)]="element.definition">
+
+        </div>
+    </div>
+
+
+
+
+</form>
+</div>

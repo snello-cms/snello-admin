@@ -1,0 +1,105 @@
+<div class="col-md-12">
+  <div class="content view">
+    <h3>
+      Edit Metadata
+    </h3>
+    <div class="clearfix"></div>
+    <br>
+    <div class="clearfix"></div>
+
+    <form>
+
+      <div class="form-group clearfix row">
+        <label class="label-text col-sm-3">Label (*)</label>
+        <div class="col-sm-9">
+          <input [(ngModel)]="element.table_name" label="Table (*)" name="table" pInputText placeholder="Table (*)">
+        </div>
+      </div>
+
+
+      <div class="form-group clearfix row">
+        <label class="label-text col-sm-3">Select Fields</label>
+        <div class="col-sm-9">
+
+          <input [(ngModel)]="element.select_fields" name="SelFields" pInputText placeholder="Select Fields">
+        </div>
+      </div>
+
+
+      <div class="form-group clearfix row">
+        <label class="label-text col-sm-3">Description</label>
+        <div class="col-sm-9">
+          <input [(ngModel)]="element.description" name="Descirption" pInputText placeholder="Description">
+        </div>
+      </div>
+
+
+      <div class="form-group clearfix row">
+        <label class="label-text col-sm-3">Alias table</label>
+        <div class="col-sm-9">
+
+          <input [(ngModel)]="element.alias_table" name="alias_table" pInputText placeholder="Alias table">
+        </div>
+      </div>
+
+
+      <div class="form-group clearfix row">
+        <label class="label-text col-sm-3">Alias condition</label>
+        <div class="col-sm-9">
+
+          <input [(ngModel)]="element.alias_condition" name="alias_condition" pInputText placeholder="Alias condition">
+        </div>
+      </div>
+
+       <div class="form-group clearfix row">
+        <label class="label-text col-sm-3">Table key (*)</label>
+        <div class="col-sm-9">
+
+          <input [(ngModel)]="element.table_key" name="table_key" pInputText placeholder="table key  (*)">
+        </div>
+      </div>
+
+      <div class="form-group clearfix row">
+        <label class="label-text col-sm-3">Table key Type(*)</label>
+        <div class="col-sm-9">
+          <p-dropdown [(ngModel)]="element.table_key_type" [filter]="false" [options]="tableTypeSelect"
+                      [style]="{'width':'100%'}"  filterBy="label"
+                      name="tableKeyType" placeholder="Seleziona un tipo chiave">
+          </p-dropdown>
+        </div>
+      </div>
+
+      <div *ngIf="element.table_key_type == 'slug'" class="form-group clearfix row">
+        <label class="label-text col-sm-3">Table key Addition (*)</label>
+        <div class="col-sm-9">
+
+          <input [(ngModel)]="element.table_key_addition" name="table_key_addition" pInputText placeholder="table key addition">
+        </div>
+      </div>
+
+      <div class="form-group clearfix row">
+        <label class="label-text col-sm-3">Creation query</label>
+        <div class="col-sm-9">
+          <input [(ngModel)]="element.creation_query" name="creation_query" pInputText placeholder="Creation query">
+        </div>
+      </div>
+
+
+      <div class="form-group clearfix row">
+        <label class="label-text col-sm-3">Order By</label>
+        <div class="col-sm-9">
+          <input [(ngModel)]="element.order_by" name="order_by" pInputText placeholder="Order By">
+        </div>
+      </div>
+
+      <br/>
+
+      <button (click)="save()" *ngIf="!element.uuid" class="btn btn-success" type="button">SALVA</button>
+
+      <button (click)="update()" *ngIf="element.uuid" class="btn btn-success" type="button">MODIFICA</button>
+
+      <button (click)="navigateToList()" class="btn btn-warning" type="button">ANNULLA</button>
+    </form>
+
+  </div>
+</div>

@@ -1,0 +1,58 @@
+<div class="col-md-12">
+    <div class="content list">
+  
+      <form>
+        <button pButton class="btn btn-success-outline pull-right" (click)="new()"><i class="fa fa-plus-circle"></i> Aggiungi</button>
+  
+        <h3>
+            Lista Field Definitions
+        </h3>
+  
+        <div class="clearfix"></div>
+        <br>
+        <div class="clearfix"></div>
+
+
+        <p-table #table (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true" [resizableColumns]="true"
+                 [responsive]="true" [rows]="10" [totalRecords]="service.listSize" [value]="model">
+          <ng-template let-columns pTemplate="header">
+            <tr class="sort-header">
+              <th pResizableColumn>Indice</th>
+              <th pResizableColumn>Metadata Name</th>
+              <th pResizableColumn>Label</th>
+              <th pResizableColumn>Table Key</th>
+              <th pResizableColumn>Input Type</th>
+              <th pResizableColumn>Operations</th>
+
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td [attr.colspan]="colspan">
+                Nessun risultato.
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
+            <tr>
+              <td class="RowIndex">{{ rowIndex + 1 }}</td>
+              <td class="ui-resizable-column">{{rowData.metadata_name}}</td>
+              <td class="ui-resizable-column">{{rowData.label}}</td>
+              <td class="ui-resizable-column">{{rowData.table_key}}</td>
+              <td class="ui-resizable-column">{{rowData.type}}</td>
+
+
+              <td>
+                <button (click)="edit(rowData)" class="btn btn-success btn-sm" pButton><i aria-hidden="true"
+                                                                                          class="fa fa-pencil"></i>
+                  Modifica
+                </button>
+              </td>
+
+            </tr>
+          </ng-template>
+        </p-table>
+
+      </form>
+    </div>
+</div>
