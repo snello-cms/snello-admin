@@ -1,0 +1,7 @@
+.git
+.cache
+.idea
+dist/*
+.dockerignore
+README.md
+node_modules/*
