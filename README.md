@@ -1,2 +1,6 @@
-# snello-admin
-backend angular
+# Snello ADMIN
+
+To build:
+
+npm install
+ng build --prod

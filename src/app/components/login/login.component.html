@@ -1,0 +1,35 @@
+<p-toast></p-toast>
+
+<p-blockUI [blocked]="logging">
+</p-blockUI>
+
+
+<div class="login-container">
+    <div class="container">
+        <div class="col-sm-6 col-sm-offset-3">
+
+            <div class="login-wrapper">
+                <div class="logo-login">
+                    <a [routerLink]="'/adminpage'" ><img class="logo" src="assets/images/logo_white.svg"></a>
+                </div>
+                <div class="logo-wrapper">
+
+                </div>
+                <div class="form-wrapper">
+
+                    <form [formGroup]="mainForm" (ngSubmit)="onSubmit()">
+                        <div class="form-group">
+                            <input class="form-control" id="usernameIn" placeholder="Username" formControlName="username">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" id="exampleInputEmail1" placeholder="Password" formControlName="password">
+                        </div>
+                        <button [disabled]="!mainForm.valid" type="submit" class="btn btn-default btn-block">Login
+            </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

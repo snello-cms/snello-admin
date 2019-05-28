@@ -1,0 +1,99 @@
+<sidebar></sidebar>
+
+<div class="sidebar">
+    <adminhome-topbar></adminhome-topbar>
+</div>
+
+
+<div class="sidebar-subpage">
+    <h3>
+        Lista Select Query
+    </h3>
+    <p>
+
+    </p>
+    <button pButton class="btn btn-add pull-right btn-block" (click)="new()"><i
+      class="fa fa-plus-circle"></i> Aggiungi</button>
+</div>
+
+
+
+<div class="main">
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-md-12 col-sm-12">
+                <div class="content list">
+
+                    <form>
+
+                        <div class="row">
+                            <div class="clearfix"></div>
+                            <div class="col-sm-12">
+
+                                <div class="filter-wrapper clearfix">
+                                    <div class="col-sm-5">
+                                        <div class="clearfix"></div>
+                                        <input id="nome" name="name" type="text" class="form-control"
+                                                placeholder="name" [(ngModel)]="service.search.query_name_contains"
+                                                pInputText #name="ngModel" *ngIf="service.search">
+                                    </div>
+                                    <div class="col-sm-5">
+
+                                    </div>
+
+                                    <div class="col-sm-2">
+                                        <div class="btn-group">
+
+                                            <button type="button" class="btn btn-search" (click)="reload(datatable)" icon="ui-icon-search">Cerca</button>
+                                            <button type="button" class="btn btn-reset" (click)="reset(datatable)" icon="ui-icon-undo">Annulla</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-wrapper clearfix">
+                            <p-table #datatable (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true" [resizableColumns]="true" [responsive]="true" [rows]="10" [totalRecords]="service.listSize" [value]="model">
+
+                                <ng-template let-columns pTemplate="header">
+                                    <tr class="sort-header">
+                                        <th pResizableColumn>Indice</th>
+                                        <th pResizableColumn>Nome Query</th>
+                                        <th pResizableColumn>Query</th>
+                                        <th pResizableColumn>Con parametri</th>
+                                        <th class="Operations">Operazioni</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="emptymessage">
+                                    <tr>
+                                        <td [attr.colspan]="colspan">
+                                            Nessun risultato.
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                                <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
+                                    <tr>
+                                        <td class="RowIndex">{{ rowIndex + 1 }}</td>
+                                        <td class="ui-resizable-column">{{rowData.query_name}}</td>
+                                        <td class="ui-resizable-column">{{rowData.select_query}}</td>
+                                        <td class="ui-resizable-column">{{rowData.with_params}}</td>
+                                        <td>
+                                            <button type="button" pButton (click)="edit(rowData)" title="modifica">
+                      <i aria-hidden="true" class="fa fa-pencil"></i>
+                    </button>
+                                            <button type="button" pButton (click)="view(rowData)" title="visualizza">
+                      <i aria-hidden="true" class="fa fa-info-circle"></i>
+                    </button>
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

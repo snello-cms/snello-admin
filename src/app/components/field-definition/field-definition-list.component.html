@@ -1,58 +1,106 @@
-<div class="col-md-12">
-    <div class="content list">
-  
-      <form>
-        <button pButton class="btn btn-success-outline pull-right" (click)="new()"><i class="fa fa-plus-circle"></i> Aggiungi</button>
-  
-        <h3>
-            Lista Field Definitions
-        </h3>
-  
-        <div class="clearfix"></div>
-        <br>
-        <div class="clearfix"></div>
+<sidebar></sidebar>
+
+<div class="sidebar">
+    <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+
+    <h3>
+        Lista Field Definitions
+    </h3>
+    <p>
+
+    </p>
+    <button pButton class="btn btn-add pull-right btn-block" (click)="new()"><i
+  class="fa fa-plus-circle"></i> Aggiungi</button>
+</div>
 
 
-        <p-table #table (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true" [resizableColumns]="true"
-                 [responsive]="true" [rows]="10" [totalRecords]="service.listSize" [value]="model">
-          <ng-template let-columns pTemplate="header">
-            <tr class="sort-header">
-              <th pResizableColumn>Indice</th>
-              <th pResizableColumn>Metadata Name</th>
-              <th pResizableColumn>Label</th>
-              <th pResizableColumn>Table Key</th>
-              <th pResizableColumn>Input Type</th>
-              <th pResizableColumn>Operations</th>
+<div class="main">
 
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="emptymessage">
-            <tr>
-              <td [attr.colspan]="colspan">
-                Nessun risultato.
-              </td>
-            </tr>
-          </ng-template>
-          <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
-            <tr>
-              <td class="RowIndex">{{ rowIndex + 1 }}</td>
-              <td class="ui-resizable-column">{{rowData.metadata_name}}</td>
-              <td class="ui-resizable-column">{{rowData.label}}</td>
-              <td class="ui-resizable-column">{{rowData.table_key}}</td>
-              <td class="ui-resizable-column">{{rowData.type}}</td>
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-md-12 col-sm-12">
+                <div class="content list">
+
+                    <form>
+                        <div class="row">
+                            <div class="clearfix"></div>
+                            <div class="col-sm-12">
+
+                                <div class="filter-wrapper clearfix">
+                                    <div class="col-sm-5">
+                                        <div class="clearfix"></div>
+                                        <input id="nome" name="name" type="text" class="form-control"
+                                                [(ngModel)]="service.search.name_contains" placeholder="name"
+                                                pInputText #name="ngModel" *ngIf="service.search">
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <div class="clearfix"></div>
+                                        <p-dropdown id="calendarType" [style]="{'width':'100%'}" name="calendarType" [options]="metadatasItems" placeholder="metadata" [(ngModel)]="service.search.metadata_uuid" *ngIf="service.search">
+                                        </p-dropdown>
+                                    </div>
+
+                                    <div class="col-sm-2">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-search" (click)="reload(datatable)" icon="ui-icon-search">Cerca</button>
+                                            <button type="button" class="btn btn-reset" (click)="reset(datatable)" icon="ui-icon-undo">Annulla</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
 
 
-              <td>
-                <button (click)="edit(rowData)" class="btn btn-success btn-sm" pButton><i aria-hidden="true"
-                                                                                          class="fa fa-pencil"></i>
-                  Modifica
-                </button>
-              </td>
+                        <div class="table-wrapper clearfix">
 
-            </tr>
-          </ng-template>
-        </p-table>
+                            <p-table #datatable (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true" [resizableColumns]="true" [responsive]="true" [rows]="10" [totalRecords]="service.listSize" [value]="model">
+                                <ng-template let-columns pTemplate="header">
+                                    <tr class="sort-header">
+                                        <th pResizableColumn>Indice</th>
+                                        <th pResizableColumn>Name</th>
+                                        <th pResizableColumn>Metadata Name</th>
+                                        <th pResizableColumn>Label</th>
+                                        <th pResizableColumn>Table Key</th>
+                                        <th pResizableColumn>Input Type</th>
+                                        <th pResizableColumn>Operations</th>
 
-      </form>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="emptymessage">
+                                    <tr>
+                                        <td [attr.colspan]="colspan">
+                                            Nessun risultato.
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                                <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
+                                    <tr>
+                                        <td class="RowIndex">{{ rowIndex + 1 }}</td>
+                                        <td class="ui-resizable-column">{{rowData.name}}</td>
+                                        <td class="ui-resizable-column">{{rowData.metadata_name}}</td>
+                                        <td class="ui-resizable-column">{{rowData.label}}</td>
+                                        <td class="ui-resizable-column">{{rowData.table_key}}</td>
+                                        <td class="ui-resizable-column">{{rowData.type}}</td>
+
+
+                                        <td>
+                                            <button (click)="edit(rowData)" class="btn btn-success btn-sm" pButton>
+                        <i aria-hidden="true" class="fa fa-pencil"></i>
+                        Modifica
+                      </button>
+                                        </td>
+
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

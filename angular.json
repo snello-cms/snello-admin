@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "snello-admin": {
+    "matcms": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/snello-admin",
+            "outputPath": "dist/admin",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -67,18 +67,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "snello-admin:build"
+            "browserTarget": "matcms:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "snello-admin:build:production"
+              "browserTarget": "matcms:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "snello-admin:build"
+            "browserTarget": "matcms:build"
           }
         },
         "test": {
@@ -112,7 +112,7 @@
         }
       }
     },
-    "snello-admin-e2e": {
+    "matcms-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "prefix": "",
@@ -121,11 +121,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "snello-admin:serve"
+            "devServerTarget": "matcms:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "snello-admin:serve:production"
+              "devServerTarget": "matcms:serve:production"
             }
           }
         },
@@ -141,5 +141,5 @@
       }
     }
   },
-  "defaultProject": "snello-admin"
+  "defaultProject": "matcms"
 }

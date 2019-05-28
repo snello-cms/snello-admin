@@ -1,0 +1,110 @@
+<sidebar></sidebar>
+
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+
+  <h3>
+    Edit Role
+  </h3>
+  <p>
+
+  </p>
+
+</div>
+
+
+<div class="main">
+
+  <div class="container-fluid">
+    <div class="row">
+
+      <div class="col-md-12 col-sm-12">
+        <div class="content view">
+          <div class="row">
+
+            <div class="col-md-12 col-sm-12">
+              <form #theform="ngForm">
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Object Type</label>
+                  <div class="col-sm-9">
+                    <p-dropdown [(ngModel)]="element.object_type" [filter]="false" [options]="objectTypeSelect"
+                                [style]="{'width':'100%'}" filterBy="label" [required]="true" (onChange)="resetName()"
+                                name="object_type" placeholder="Seleziona un tipo">
+                    </p-dropdown>
+                  </div>
+                </div>
+
+                <div *ngIf="element.object_type == 'metadatas'" class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Metadata</label>
+                  <div class="col-sm-9">
+                    <p-dropdown [(ngModel)]="element.object_name" [filter]="false" [options]="metadatas"
+                                [style]="{'width':'100%'}" filterBy="label" name="Metadata" placeholder="Metadata"
+                                (onChange)="changedMetadata()">
+                    </p-dropdown>
+                  </div>
+                </div>
+
+                <div *ngIf="element.object_type == 'query'" class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Select Query</label>
+                  <div class="col-sm-9">
+                    <p-dropdown [(ngModel)]="element.object_name" [filter]="false" [options]="queries"
+                                [style]="{'width':'100%'}" filterBy="label" (onChange)="changedMetadata()" name="Query"
+                                placeholder="Query">
+                    </p-dropdown>
+                  </div>
+                </div>
+
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Action</label>
+                  <div class="col-sm-9">
+                    <p-dropdown [(ngModel)]="element.action" [filter]="false" [options]="actionSelect"
+                                [style]="{'width':'100%'}" filterBy="label" [required]="true" name="actionSelect"
+                                placeholder="Seleziona un azione" (onChange)="changedMetadata()">
+                    </p-dropdown>
+                  </div>
+                </div>
+
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Name</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.name" label="Name" name="name" pInputText placeholder="Name" disabled>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Description</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.description" label="Description" name="Description" pInputText
+                           placeholder="Description">
+                  </div>
+                </div>
+
+
+                <div class="btn-group btn-actions pull-right">
+                  <button type="button" *ngIf="!element.uuid_name" [disabled]="!theform.form.valid"
+                          (click)="save()" class="btn btn-success">
+                    SALVA
+                  </button>
+                  <button type="button" *ngIf="element.uuid_name" [disabled]="!theform.form.valid"
+                          (click)="update()" class="btn btn-success">
+                    MODIFICA
+                  </button>
+                  <button type="button" *ngIf="element.uuid_name" (click)="confirmDelete()" class="btn btn-danger">
+                    ELIMINA
+                  </button>
+                  <button type="button" (click)="navigateToList()" class="btn btn-danger">ANNULLA</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

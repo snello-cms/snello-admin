@@ -1,57 +1,108 @@
-<form>
-    <div style="text-align:center">
-        <h1>
-            Lista Documents
-        </h1>
+<sidebar></sidebar>
+<div class="sidebar">
+    <adminhome-topbar></adminhome-topbar>
+</div>
+
+
+<div class="sidebar-subpage">
+
+    <h3>Lista Documents</h3>
+    <p>
+
+    </p>
+    <button pButton class="btn btn-add pull-right btn-block" (click)="new()"><i class="fa fa-plus-circle"></i>
+        Aggiungi</button>
+</div>
+
+
+
+<div class="main">
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-md-12 col-sm-12">
+                <div class="content list">
+
+                    <form>
+
+                        <div class="row">
+                            <div class="clearfix"></div>
+                            <div class="col-sm-12">
+
+                                <div class="filter-wrapper clearfix">
+                                    <div class="col-sm-5">
+                                        <div class="clearfix"></div>
+                                        <input id="table_name" name="table_name" placeholder="table name" type="text" class="form-control" [(ngModel)]="service.search.table_name_contains" pInputText #nome="ngModel" *ngIf="service.search" />
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <input id="table_key" name="table_key" type="text" class="form-control" placeholder="table key" [(ngModel)]="service.search.table_key_contains" pInputText #nome="ngModel" *ngIf="service.search" />
+
+                                    </div>
+
+                                    <div class="col-sm-2">
+                                        <div class="btn-group">
+
+                                            <button type="button" class="btn btn-search" (click)="reload(datatable)" icon="ui-icon-search">Cerca</button>
+                                            <button type="button" class="btn btn-reset" (click)="reset(datatable)" icon="ui-icon-undo">Annulla</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-wrapper clearfix">
+
+                            <p-table #datatable (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true" [resizableColumns]="true" [responsive]="true" [rows]="10" [totalRecords]="service.listSize" [value]="model">
+                                <ng-template let-columns pTemplate="header">
+                                    <tr class="sort-header">
+                                        <th pResizableColumn>Indice</th>
+                                        <th pResizableColumn>Table name</th>
+                                        <th pResizableColumn>Table key</th>
+                                        <th pResizableColumn>Original name</th>
+                                        <th pResizableColumn>Path</th>
+                                        <th pResizableColumn>Name</th>
+                                        <th pResizableColumn>Size</th>
+                                        <th pResizableColumn>Mimetype</th>
+                                        <th pResizableColumn>Query Params</th>
+                                        <th class="Operations">Operazioni</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="emptymessage">
+                                    <tr>
+                                        <td colspan="9">Nessun risultato.</td>
+                                    </tr>
+                                </ng-template>
+                                <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
+                                    <tr>
+                                        <td class="RowIndex">{{ rowIndex + 1 }}</td>
+                                        <td class="ui-resizable-column">{{ rowData.table_name }}</td>
+                                        <td class="ui-resizable-column">{{ rowData.table_key }}</td>
+                                        <td class="ui-resizable-column">{{ rowData.original_name }}</td>
+                                        <td class="ui-resizable-column">
+                                            <a [href]="webpath(rowData.path)" target="_blank"><i aria-hidden="true"
+                                                    class="fa fa-info-circle"></i></a> {{ rowData.path }}
+                                        </td>
+                                        <td class="ui-resizable-column">{{ rowData.name }}</td>
+                                        <td class="ui-resizable-column">{{ rowData.size }}</td>
+                                        <td class="ui-resizable-column">{{ rowData.mimetype }}</td>
+                                        <td class="ui-resizable-column">{{ rowData.query_params }}</td>
+                                        <td>
+                                            <button (click)="edit(rowData)" class="btn btn-success btn-sm" pButton>
+                                                <i aria-hidden="true" class="fa fa-pencil"></i> Modifica
+                                            </button>
+
+                                            <button (click)="confirmDelete(rowData)" class="btn btn-warning btn-sm" pButton>
+                                                <i aria-hidden="true" class="fa fa-trash"></i> Elimina
+                                            </button>
+
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="mat-elevation-z8">
-      <p-table #table (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true" [resizableColumns]="true"
-               [responsive]="true" [rows]="10" [totalRecords]="service.listSize" [value]="model">
-        <ng-template let-columns pTemplate="header">
-          <tr class="sort-header">
-            <th pResizableColumn>Indice</th>
-            <th pResizableColumn>Table name</th>
-            <th pResizableColumn>Table key</th>
-            <th pResizableColumn>Original name</th>
-            <th pResizableColumn>Path</th>
-            <th pResizableColumn>Name</th>
-            <th pResizableColumn>Size</th>
-            <th pResizableColumn>Mimetype</th>
-            <th pResizableColumn>Query Params</th>
-
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td [attr.colspan]="colspan">
-              Nessun risultato.
-            </td>
-          </tr>
-        </ng-template>
-        <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
-          <tr>
-            <td class="RowIndex">{{ rowIndex + 1 }}</td>
-            <td class="ui-resizable-column">{{rowData.table_name}}</td>
-            <td class="ui-resizable-column">{{rowData.table_key}}</td>
-            <td class="ui-resizable-column">{{rowData.original_name}}</td>
-            <td class="ui-resizable-column">{{rowData.path}}</td>
-            <td class="ui-resizable-column">{{rowData.name}}</td>
-            <td class="ui-resizable-column">{{rowData.size}}</td>
-            <td class="ui-resizable-column">{{rowData.mimetype}}</td>
-            <td class="ui-resizable-column">{{rowData.query_params}}</td>
-            <td>
-              <button (click)="edit(rowData)" class="btn btn-success btn-sm" pButton>
-                <i aria-hidden="true" class="fa fa-pencil"></i>
-                Modifica
-              </button>
-            </td>
-
-          </tr>
-        </ng-template>
-      </p-table>
-
-    </div>
-    <button mat-button (click)="new()">Aggiungi!</button>
-
-</form>

@@ -1,20 +1,20 @@
-import {NgModule} from '@angular/core';
-import {MatMomentDateModule} from '@angular/material-moment-adapter';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { MatMomentDateModule } from "@angular/material-moment-adapter";
 import {
   MatButtonModule,
-  MatCardModule,
-  MatCheckboxModule,
-  MatDatepickerModule,
-  MatFormFieldModule,
   MatIconModule,
+  MatCardModule,
+  MatFormFieldModule,
   MatInputModule,
   MatListModule,
+  MatDatepickerModule,
   MatNativeDateModule,
+  MatSelectModule,
   MatOptionModule,
-  MatRadioModule,
-  MatSelectModule
-} from '@angular/material';
-
+  MatCheckboxModule,
+  MatRadioModule
+} from "@angular/material";
 @NgModule({
   imports: [
     MatButtonModule,

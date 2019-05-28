@@ -1,131 +1,215 @@
-<div class="content view">
-<form>
-    <div class="row">
-        <div class="col-md-6">
-            <h3>
-                Edit Field Definition
-            </h3>
-        </div>
-        <div class="col-md-6">
-            <div class="pull-right" role="group" aria-label="Basic example">
-            
-                <button type="button" class="btn btn-danger pull-right" (click)="navigateToList()">ANNULLA</button>
-                <button type="button" class="btn btn-warning pull-right" *ngIf="element.uuid" (click)="delete()">ELIMINA</button>
+<sidebar></sidebar>
 
-                <button class="btn btn-success pull-right" type="button" *ngIf="!element.uuid" (click)="save()">SALVA</button>
-                <button class="btn btn-success pull-right" type="button" *ngIf="element.uuid" (click)="update()">MODIFICA</button>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>
+    Edit Field Definition
+  </h3>
+
+</div>
+<div class="main">
+
+  <div class="container-fluid">
+    <div class="content">
+      <form #theform="ngForm">
+
+        <div class="row">
+
+          <div class="col-sm-12">
+            <div class="panel clearfix">
+
+              <div class="form-group clearfix row">
+                <label class="label-text col-sm-3">Metadata (*)</label>
+                <div class="col-sm-9">
+
+                  <p-dropdown [(ngModel)]="element.metadata_uuid" [filter]="false" [options]="metadatasSelect"
+                              [style]="{'width':'100%'}" filterBy="label" (onChange)="changedMetadata($event)"
+                              name="metadata" placeholder="Select metadata">
+                  </p-dropdown>
+                </div>
+              </div>
+
+
+              <div class="form-group clearfix row">
+                <label class="label-text col-sm-3">Name (*)</label>
+                <div class="col-sm-9">
+                  <input [(ngModel)]="element.name" name="name" pInputText type="text">
+                </div>
+              </div>
+
+              <div class="form-group clearfix row">
+                <label class="label-text col-sm-3">Label (*)</label>
+                <div class="col-sm-9">
+                  <input [(ngModel)]="element.label" name="label" pInputText type="text">
+                </div>
+              </div>
+
+
+              <div class="form-group clearfix row">
+                <label class="label-text col-sm-3">Input Type (*)</label>
+                <div class="col-sm-9">
+                  <p-dropdown [(ngModel)]="fieldType" [filter]="false" [options]="fieldTypes" [style]="{'width':'100%'}"
+                              filterBy="label" name="typeSelect" placeholder="Seleziona un tipo">
+                  </p-dropdown>
+                </div>
+              </div>
+
+
+              <div *ngIf="fieldType == 'join'|| fieldType == 'multijoin'" class="form-group clearfix row">
+                <label class="label-text col-sm-3">Join Table Name</label>
+                <div class="col-sm-9">
+                  <input [(ngModel)]="element.join_table_name" name="joinTableName" pInputText
+                         placeholder="Join Table Name">
+                </div>
+              </div>
+
+              <div *ngIf="fieldType == 'join'|| fieldType == 'multijoin'" class="form-group clearfix row">
+                <label class="label-text col-sm-3">Join Table Key</label>
+                <div class="col-sm-9">
+                  <input [(ngModel)]="element.join_table_key" name="joinTableKey" pInputText
+                         placeholder="Join Table Key">
+                </div>
+              </div>
+
+              <div *ngIf="fieldType == 'join'|| fieldType == 'multijoin'" class="form-group clearfix row">
+                <label class="label-text col-sm-3">Join Table Fields</label>
+                <div class="col-sm-9">
+                  <input [(ngModel)]="element.join_table_select_fields" name="joinTableSelectFields" pInputText
+                         placeholder="Join Table Select Fields">
+                </div>
+              </div>
+
+
+              <div *ngIf="fieldType == 'select'" class="form-group clearfix row">
+                <label class="label-text col-sm-3">Options</label>
+                <div class="col-sm-9">
+                  <textarea [(ngModel)]="element.options" name="options" pInputTextarea></textarea>
+                </div>
+              </div>
+              <div class="form-group clearfix row" *ngIf="tabs.length > 0">
+                <label class="label-text col-sm-3">Tab Name</label>
+                <div class="col-sm-9">
+                  <p-dropdown [(ngModel)]="element.tab_name" [filter]="false" [options]="tabs"
+                              [style]="{'width':'100%'}" filterBy="label" (onChange)="changedTab($event)" name="tab"
+                              placeholder="Tab">
+                  </p-dropdown>
+                </div>
+              </div>
+              <div class="form-group clearfix row" *ngIf="tabToGroups.size > 0">
+                <label class="label-text col-sm-3">Group Name</label>
+                <div class="col-sm-9">
+                  <p-dropdown [(ngModel)]="element.group_name" [filter]="false" [options]="groups"
+                              [style]="{'width':'100%'}" filterBy="label" name="group" placeholder="Group">
+                  </p-dropdown>
+                </div>
+              </div>
+
+              <div class="form-group clearfix row">
+                <label class="label-text col-sm-3">Show In List</label>
+                <div class="col-sm-9">
+                  <p-inputSwitch [(ngModel)]="element.showInList" name="showInList">Show In List</p-inputSwitch>
+                </div>
+              </div>
+
+
+              <div class="form-group clearfix row">
+                <label class="label-text col-sm-3">Is Searchable</label>
+                <div class="col-sm-9">
+                  <p-inputSwitch [(ngModel)]="element.searchable" name="searchable">searchable</p-inputSwitch>
+                </div>
+              </div>
+
+
+              <div class="form-group clearfix row" *ngIf="element.searchable">
+                <label class="label-text col-sm-3">Search Condition</label>
+                <div class="col-sm-9">
+                  <p-dropdown [(ngModel)]="element.searchCondition" [filter]="false" [options]="searchConditionItems"
+                              [style]="{'width':'100%'}" filterBy="label" name="typeSelect"
+                              placeholder="Seleziona una condizione di ricerca">
+                  </p-dropdown>
+                </div>
+              </div>
+
+              <div class="form-group clearfix row">
+                <label class="label-text col-sm-3">Advanced Options?</label>
+                <div class="col-sm-9">
+                  <p-inputSwitch name="advanced" [(ngModel)]="advanced"></p-inputSwitch>
+                </div>
+              </div>
+
+              <div class="form-group clearfix row" *ngIf="advanced">
+                <label class="label-text col-sm-3">SQL Type</label>
+                <div class="col-sm-9">
+                  <input [(ngModel)]="element.sql_type" name="sql_type" pInputText placeholder="Tipo SQL">
+                </div>
+              </div>
+
+
+              <div class="form-group clearfix row" *ngIf="advanced">
+                <label class="label-text col-sm-3">SQL Definition</label>
+                <div class="col-sm-9">
+                  <input [(ngModel)]="element.sql_definition" name="sql_definition" pInputText
+                         placeholder="Definizione Campo SQL">
+                </div>
+              </div>
+
+
+              <div class="form-group clearfix row" *ngIf="advanced">
+                <label class="label-text col-sm-3">Valore Default</label>
+                <div class="col-sm-9">
+                  <input [(ngModel)]="element.default_value" name="default_value" pInputText
+                         placeholder="Valore Default">
+                </div>
+              </div>
+
+
+              <div class="form-group clearfix row" *ngIf="advanced">
+                <label class="label-text col-sm-3">Pattern</label>
+                <div class="col-sm-9">
+                  <input [(ngModel)]="element.pattern" name="pattern" pInputText placeholder="Pattern">
+
+                </div>
+              </div>
+
+
+              <div class="form-group clearfix row" *ngIf="advanced">
+                <label class="label-text col-sm-3">Definition</label>
+                <div class="col-sm-9">
+                  <input [(ngModel)]="element.definition" name="definition" pInputText placeholder="Definizione">
+                </div>
+              </div>
+
+
+              <div class="btn-group btn-actions pull-right">
+                <button (click)="navigateToList()" class="btn btn-danger" type="button">ANNULLA</button>
+                <button (click)="confirmDelete()" *ngIf="element.uuid" class="btn btn-warning" type="button">
+                  ELIMINA
+                </button>
+                <button (click)="save()" [disabled]="!theform.form.valid" *ngIf="!element.uuid" class="btn btn-success"
+                        type="button">
+                  SALVA
+                </button>
+                <button (click)="update()" [disabled]="!theform.form.valid" *ngIf="element.uuid" class="btn btn-success"
+                        type="button">
+                  MODIFICA
+                </button>
+                <button (click)="next(element.metadata_uuid)" [disabled]="!theform.form.valid" *ngIf="!element.uuid"
+                        class="btn btn-success"
+                        type="button">
+                  NEXT
+                </button>
+
+              </div>
             </div>
-        </div>
-    </div>
+          </div>
 
-    <div class="clearfix"></div>
-    <br>
-    <div class="clearfix"></div>
-
-    <div class="form-group clearfix row">
-        <label class="label-text col-sm-3">Metadata (*)</label>
-        <div class="col-sm-9">
-
-            <p-dropdown [(ngModel)]="element.metadata_uuid" [filter]="false" [options]="metadatasSelect" [style]="{'width':'100%'}"  name="metadata"
-                filterBy="label" placeholder="Seleziona un metadato" >
-            </p-dropdown>
-        </div>
-    </div>
-
-
-
-
-    <mat-checkbox *ngIf="false" [(ngModel)]="element.table_key" class="table_key" color="primary" id="table_key">Table
-        Key</mat-checkbox>
-
-    <div class="form-group clearfix row">
-        <label class="label-text col-sm-3">Label (*)</label>
-        <div class="col-sm-9">
-            <input [(ngModel)]="element.label" name="label" pInputText type="text">
-        </div>
-    </div>
-
-
-    <div class="form-group clearfix row">
-        <label class="label-text col-sm-3">Nome (*)</label>
-        <div class="col-sm-9">
-            <input [(ngModel)]="element.name" pInputText type="text" name="name">
-        </div>
-    </div>
-
-    <div class="form-group clearfix row">
-        <label class="label-text col-sm-3">Input Type (*)</label>
-        <div class="col-sm-9">
-            <p-dropdown [(ngModel)]="fieldType" [filter]="false" [options]="fieldTypes" name="typeSelect" placeholder="Seleziona un tipo"
-            [style]="{'width':'100%'}"  filterBy="label">
-            </p-dropdown>
-        </div>
-    </div>
-
-
-    <div class="form-group clearfix row">
-        <label class="label-text col-sm-3">Group Name (*)</label>
-        <div class="col-sm-9">
-            <input pInputText placeholder="Group" name="group" [(ngModel)]="element.group_name">
-        </div>
-    </div>
-
-    <div class="form-group clearfix row">
-        <label class="label-text col-sm-3">Tab Name (*)</label>
-        <div class="col-sm-9">
-            <input pInputText placeholder="Tab" name="tab" [(ngModel)]="element.tab_name">
-        </div>
-    </div>
-
-
-
-    <div class="form-group clearfix row">
-        <label class="label-text col-sm-3">SQL Type</label>
-        <div class="col-sm-9">
-            <input pInputText placeholder="Tipo SQL" name="sql_type" [(ngModel)]="element.sql_type">
-        </div>
-    </div>
-
-
-
-    <div class="form-group clearfix row">
-        <label class="label-text col-sm-3">SQL Definition</label>
-        <div class="col-sm-9">
-            <input pInputText placeholder="Definizione Campo SQL" name="sql_definition" [(ngModel)]="element.sql_definition">
-        </div>
-    </div>
-
-
-
-
-
-    <div class="form-group clearfix row">
-        <label class="label-text col-sm-3">Valore Default</label>
-        <div class="col-sm-9">
-            <input pInputText placeholder="Valore Default" name="default_value" [(ngModel)]="element.default_value">
-        </div>
-    </div>
-
-
-    <div class="form-group clearfix row">
-        <label class="label-text col-sm-3">Pattern</label>
-        <div class="col-sm-9">
-            <input pInputText placeholder="Pattern" name="pattern" [(ngModel)]="element.pattern">
 
         </div>
+      </form>
+
     </div>
-
-
-    <div class="form-group clearfix row">
-        <label class="label-text col-sm-3">Definition</label>
-        <div class="col-sm-9">
-            <input pInputText placeholder="Definizione" name="definition" [(ngModel)]="element.definition">
-
-        </div>
-    </div>
-
-
-
-
-</form>
+  </div>
 </div>

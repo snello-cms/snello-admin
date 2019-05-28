@@ -1,0 +1,29 @@
+<div class="header">
+
+</div>
+<div class="sidenav">
+  <ul>
+    <li [class]="selected == 'adminpage' ? 'active' : '' ">
+      <a [routerLink]="'adminpage'" (click)="select('adminpage')"><i class="fa fa-home" aria-hidden="true"></i></a>
+    </li>
+    <li [class]="selected == 'home' ? 'active' : '' " >
+      <a [routerLink]="'home'" (click)="select('home')"><i class="fa fa-table" aria-hidden="true"></i></a>
+    </li>
+  </ul>
+</div>
+
+    <router-outlet></router-outlet>
+
+
+<div class="footer clearfix">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-6 text-right">
+        snello admin - {{version()}}
+        <a href="http://snello.io/" target="_blank">
+          <img class="logo" src="assets/images/snello.png">
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,14 +1,15 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Condition} from '../model/condtion';
-import {CONDITION_API_PATH} from "../../constants";
-import {AbstractService} from "../common/abstract-service";
+import {CONDITION_API_PATH} from '../../constants';
+import {AbstractService} from '../common/abstract-service';
+import { MessageService } from 'primeng/api';
 
 @Injectable()
 export class ConditionService extends AbstractService<Condition> {
 
-  constructor(protected http: HttpClient) {
-    super(CONDITION_API_PATH, http);
+  constructor(protected http: HttpClient, messageService: MessageService) {
+    super(CONDITION_API_PATH, http, messageService);
   }
 
   getId(element: Condition) {
@@ -16,6 +17,12 @@ export class ConditionService extends AbstractService<Condition> {
   }
 
   buildSearch() {
+    this.search = {
+      name_contains: '',
+      uuid: '',
+      metadata_uuid: '',
+      _limit: 10
+    };
   }
 }
 

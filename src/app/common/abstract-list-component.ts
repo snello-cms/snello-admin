@@ -1,6 +1,8 @@
+import { ConfirmationService } from 'primeng/api';
 import {AbstractService} from './abstract-service';
 import {Router} from '@angular/router';
 import {OnInit} from '@angular/core';
+import {DataTable} from 'primeng/primeng';
 
 export abstract class AbstractListComponent<T> implements OnInit {
 
@@ -66,10 +68,12 @@ export abstract class AbstractListComponent<T> implements OnInit {
   public filters: any;
 
   constructor(
-    protected router: Router,
-    public service: AbstractService<T>,
-    protected path?: string
-  ) {}
+      public router: Router,
+      public confirmationService: ConfirmationService,
+      public service: AbstractService<T>,
+      public path?: string
+  ) {
+  }
 
   ngOnInit() {
     this.service.buildSearch();
@@ -78,6 +82,8 @@ export abstract class AbstractListComponent<T> implements OnInit {
 
   public loaddata(firstReload: boolean, datatable: any) {
     this.preLoaddata();
+    console.log('loading data...', this.service.search);
+    this.firstReload = firstReload;
     this.service.getList().subscribe(
       model => {
         this.model = <T[]>model;
@@ -88,35 +94,39 @@ export abstract class AbstractListComponent<T> implements OnInit {
     );
   }
 
-  public preLoaddata() {}
+  public preLoaddata() {
+  }
 
-  public lazyLoad(
-    event: any, datatable?: any) {
+  public lazyLoad(event: any, datatable?: any) {
+    console.log('lazyLoad data...', this.service.search);
     if (!this.firstReload) {
-      this.service.search.startRow = event.first;
+      this.service._start = event.first;
     }
-    //this.service.search.pageSize = event.rows;
+    this.service._limit = event.rows;
+    // this.service.search.pageSize = event.rows;
     this.loaddata(this.firstReload, datatable);
     if (this.firstReload) {
       this.firstReload = false;
     }
   }
-  /*
-    public refresh(datatable: DataTable) {
-      this.clearMsgs();
-      datatable.reset();
-    }
 
-    public reload(datatable: DataTable) {
-      this.service.search.startRow = 0;
-      this.refresh(datatable);
-    }
 
-    public reset(datatable: DataTable) {
+  public reload(datatable: any) {
+    this.service._start = 0;
+    datatable.reset();
+    this.refresh(datatable);
+  }
+
+  public refresh(datatable: DataTable) {
+    this.clearMsgs();
+    datatable.reset();
+  }
+
+  public reset(datatable: DataTable) {
       this.service.buildSearch();
       this.refresh(datatable);
     }
-  */
+
   public newElement(): T {
     throw new Error('override this');
   }
@@ -136,11 +146,14 @@ export abstract class AbstractListComponent<T> implements OnInit {
     return null;
   }
 
-  public postSave() {}
+  public postSave() {
+  }
 
-  public postUpdate() {}
+  public postUpdate() {
+  }
 
-  public postDelete() {}
+  public postDelete() {
+  }
 
   public save() {
     this.clearMsgs();
@@ -166,6 +179,20 @@ export abstract class AbstractListComponent<T> implements OnInit {
       focusable.focus();
     }
   }
+
+  public confirmDelete(element: T) {
+    this.clearMsgs();
+    if (!this.confirmationService) {
+      return this.delete(element);
+    }
+    this.confirmationService.confirm({
+      message: 'Confermi la cancellazione?',
+      accept: () => {
+        this.delete(element);
+      }
+    });
+  }
+
 
   public delete(element: T) {
     this.clearMsgs();
@@ -197,14 +224,15 @@ export abstract class AbstractListComponent<T> implements OnInit {
     );
   }
 
-  public postList() {}
+  public postList() {
+  }
 
   public addInfo(message: string) {
-  /*  this.msgs.push({
-      severity: 'info',
-      summary: 'Informazioni: ',
-      detail: message
-    });*/
+    /*  this.msgs.push({
+        severity: 'info',
+        summary: 'Informazioni: ',
+        detail: message
+      });*/
   }
 
   public addWarn(message: string) {
@@ -216,11 +244,11 @@ export abstract class AbstractListComponent<T> implements OnInit {
   }
 
   public addError(message: string) {
-    //this.msgs.push({ severity: 'error', summary: 'Errore: ', detail: message });
+    // this.msgs.push({ severity: 'error', summary: 'Errore: ', detail: message });
   }
 
   public clearMsgs() {
-    //this.msgs = [];
+    // this.msgs = [];
   }
 
   public view(element: T) {
@@ -236,26 +264,27 @@ export abstract class AbstractListComponent<T> implements OnInit {
   getId() {
     return this.element['uuid'];
   }
-/*
-  protected preLoad(event: LazyLoadEvent, datatable?: any) {
-    if (event.sortField) {
-      this.service.search.orderBy =
-        event.sortField + (event.sortOrder > 0 ? ' ASC' : ' DESC');
-    }
-    this.manageFilters(event);
-  }
 
-  protected manageFilters(event: LazyLoadEvent) {
-  }
-
-  public resetAllFilters(table: Table) {
-    if (table.filters) {
-      this.filters = {
-        nome: null
-      };
-      table.filters = {};
-      table.onLazyLoad.emit(table.createLazyLoadMetadata());
+  /*
+    protected preLoad(event: LazyLoadEvent, datatable?: any) {
+      if (event.sortField) {
+        this.service.search.orderBy =
+          event.sortField + (event.sortOrder > 0 ? ' ASC' : ' DESC');
+      }
+      this.manageFilters(event);
     }
-  }
-  */
+
+    protected manageFilters(event: LazyLoadEvent) {
+    }
+
+    public resetAllFilters(table: Table) {
+      if (table.filters) {
+        this.filters = {
+          nome: null
+        };
+        table.filters = {};
+        table.onLazyLoad.emit(table.createLazyLoadMetadata());
+      }
+    }
+    */
 }

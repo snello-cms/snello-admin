@@ -1,71 +1,138 @@
-<div class="col-md-12">
-  <div class="content list">
+<sidebar></sidebar>
 
-    <form>
-      <button (click)="new()" class="btn btn-success-outline pull-right" pbutton><i class="fa fa-plus-circle"></i>
-        Aggiungi
-      </button>
 
-      <h3>
-        Lista Metadata
-      </h3>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
 
-      <div class="clearfix"></div>
-      <br>
-      <div class="clearfix"></div>
+<div class="sidebar-subpage">
+  <h3>
+    Lista Metadata
+  </h3>
+  <p>
 
-      <p-table #table (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true" [resizableColumns]="true"
-               [responsive]="true" [rows]="10" [totalRecords]="service.listSize" [value]="model">
+  </p>
+  <button pButton class="btn btn-add pull-right btn-block" (click)="new()"><i
+    class="fa fa-plus-circle"></i> Aggiungi
+  </button>
+</div>
 
-        <ng-template let-columns pTemplate="header">
-          <tr class="sort-header">
-            <th pResizableColumn>Indice</th>
-            <th pResizableColumn>Nome Tabella
-            </th>
-            <th pResizableColumn>Descrizione
-            </th>
-            <th pResizableColumn>Table Key
-            </th>
-            <th pResizableColumn>Alias Table
-            </th>
-            <th pResizableColumn>Order By
-            </th>
-            <th class="Operations">Operazioni</th>
-            <th class="Operations">Operazioni</th>
 
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td [attr.colspan]="colspan">
-              Nessun risultato.
-            </td>
-          </tr>
-        </ng-template>
-        <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
-          <tr>
-            <td class="RowIndex">{{ rowIndex + 1 }}</td>
-            <td class="ui-resizable-column">{{rowData.table_name}}</td>
-            <td class="ui-resizable-column">{{rowData.description}}</td>
-            <td class="ui-resizable-column">{{rowData.table_key}}</td>
-            <td class="ui-resizable-column">{{rowData.alias_table}}</td>
-            <td class="ui-resizable-column">{{rowData.order_by}}</td>
-            <td>
-              <button (click)="edit(rowData)" class="btn btn-success btn-sm" pButton><i aria-hidden="true"
-                                                                                        class="fa fa-pencil"></i> Modifica
-              </button>
-            </td>
-            <td>
+<div class="main">
 
-              <button (click)="createTable(rowData)" class="btn btn-info btn-sm" pButton><i aria-hidden="true"
-                                                                                            class="fa fa-table"></i> Crea
-                Tabella
-              </button>
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
+  <div class="container-fluid">
+    <div class="row">
 
-    </form>
+      <div class="col-md-12 col-sm-12">
+        <div class="content list">
+
+          <form>
+
+            <div class="row">
+              <div class="clearfix"></div>
+              <div class="col-sm-12">
+
+                <div class="filter-wrapper clearfix">
+                  <div class="col-sm-5">
+                    <div class="clearfix"></div>
+                    <input id="nome" name="nome" type="text" placeholder="name"
+                           class="form-control" [(ngModel)]="service.search.table_name_contains" pInputText
+                           #nome="ngModel" *ngIf="service.search">
+                  </div>
+                  <div class="col-sm-5">
+
+                  </div>
+
+                  <div class="col-sm-2">
+                    <div class="btn-group">
+
+                      <button type="button" class="btn btn-search" (click)="reload(datatable)" icon="ui-icon-search">
+                        Cerca
+                      </button>
+                      <button type="button" class="btn btn-reset" (click)="reset(datatable)" icon="ui-icon-undo">
+                        Annulla
+                      </button>
+                    </div>
+                  </div>
+
+
+                </div>
+              </div>
+            </div>
+
+
+            <div class="table-wrapper clearfix">
+
+              <p-table #datatable (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true"
+                       [resizableColumns]="true" [responsive]="true" [rows]="10" [totalRecords]="service.listSize"
+                       [value]="model">
+
+                <ng-template let-columns pTemplate="header">
+                  <tr class="sort-header">
+                    <th pResizableColumn>Indice</th>
+                    <th pResizableColumn>Nome Tabella</th>
+                    <th pResizableColumn>Tipo Tabella</th>
+                    <th pResizableColumn>Descrizione</th>
+                    <th pResizableColumn>Table Key</th>
+                    <th pResizableColumn>Alias Table</th>
+                    <th pResizableColumn>Order By</th>
+                    <th class="Operations">Operazioni</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="8">
+                      Nessun risultato.
+                    </td>
+                  </tr>
+                </ng-template>
+                <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
+                  <tr>
+                    <td class="RowIndex">{{ rowIndex + 1 }}</td>
+                    <td class="ui-resizable-column">
+                      <button type="button" class="btn btn-default" (click)="view(rowData)" title="visualizza">
+                        <i aria-hidden="true" class="fa fa-info-circle"></i>  {{rowData.table_name}}
+                      </button>
+                    </td>
+                    <td class="ui-resizable-column">{{rowData.already_exist ? 'already_exist' : 'created'}}</td>
+                    <td class="ui-resizable-column">{{rowData.description}}</td>
+                    <td class="ui-resizable-column">{{rowData.table_key}}</td>
+                    <td class="ui-resizable-column">{{rowData.alias_table}}</td>
+                    <td class="ui-resizable-column">{{rowData.order_by}}</td>
+                    <td>
+                      <div class="btn-group">
+                        <button type="button" class="btn btn-default" (click)="edit(rowData)" title="Modify"
+                                *ngIf="!rowData.created || rowData.already_exist">
+                          <i aria-hidden="true" class="fa fa-pencil"></i>
+                        </button>
+                        <button type="button" class="btn btn-success" (click)="addField(rowData)"
+                                title="Add Field Definition" *ngIf="!rowData.created || rowData.already_exist">
+                          <i aria-hidden="true" class="fa fa-plus-square-o"></i>
+                        </button>
+                        <button type="button" class="btn btn-primary" (click)="confirmCreateTable(rowData)"
+                                title="Create Table on Database" *ngIf="!rowData.created && !rowData.already_exist">
+                          <i aria-hidden="true" class="fa fa-lock"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-warning" (click)="confirmTruncateTable(rowData)"
+                                title="Truncate Table Data" *ngIf="rowData.created && !rowData.already_exist">
+                          <i aria-hidden="true" class="fa fa-eraser"></i>
+                        </button>
+
+                        <button type="button" class="btn btn-danger" (click)="confirmDeleteTable(rowData)"
+                                title="Delete Table on Database" *ngIf="rowData.created && !rowData.already_exist">
+                          <i aria-hidden="true" class="fa fa-exclamation-triangle"></i>
+                        </button>
+                      </div>
+
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

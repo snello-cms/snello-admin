@@ -1,0 +1,44 @@
+<div class="header">
+    <div class="logo-header">
+        <a [routerLink]="'/adminpage'" (click)="select('adminpage')">
+            <img class="logo" src="assets/images/logo_white.svg"></a>
+    </div>
+    <ul class="nav nav-tabs text-center">
+        <li *permit="'metadatas_edit, metadatas_view,fielddefinitions_edit, fielddefinitions_view,conditions_edit, conditions_view,documents_edit, documents_view,publicdata_edit,selectqueries_edit, selectqueries_view,users_edit, users_view,roles_edit,roles_view,urlmaprules_edit, urlmaprules_view,links_edit, links_view'">
+            <a [routerLink]="'/adminpage'" (click)="select('adminpage')" [className]="isAdminPage()">
+                <i class="fa fa-bookmark" aria-hidden="true"></i> ADMIN
+            </a>
+        </li>
+        <li *permit="'contents_edit, contents_view'">
+            <a [routerLink]="'/home'" (click)="select('home')" [className]="isContenPage()"><i class="fa fa-bookmark-o" aria-hidden="true"></i> CONTENTS
+    </a>
+        </li>
+    </ul>
+
+    <ul class="user-menu">
+
+        <li [class]="''">
+            <a (click)="logout()"> <i class="fa fa-sign-out" aria-hidden="true"></i> logout</a>
+        </li>
+
+    </ul>
+</div>
+<div class="sidenav">
+    <ul>
+        <li [class]="selected == 'adminpage' ? 'active' : '' ">
+            <a [routerLink]="'/adminpage'" (click)="select('adminpage')">
+                <i class="fa fa-home" aria-hidden="true"></i>
+            </a>
+        </li>
+        <li [class]="selected == 'home' ? 'active' : '' ">
+            <a [routerLink]="'/home'" (click)="select('home')">
+                <i class="fa fa-table" aria-hidden="true"></i>
+            </a>
+        </li>
+        <li [class]="''">
+            <a (click)="logout()">
+                <i class="fa fa-sign-out" aria-hidden="true"></i>
+            </a>
+        </li>
+    </ul>
+</div>

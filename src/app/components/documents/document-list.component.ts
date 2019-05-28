@@ -1,8 +1,10 @@
 import {AbstractListComponent} from '../../common/abstract-list-component';
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Document} from '../../model/document';
 import {DocumentService} from '../../service/document.service';
+import {ConfirmationService} from 'primeng/api';
+import {BASE_PATH} from "../../../constants";
 
 @Component(
     {
@@ -10,23 +12,24 @@ import {DocumentService} from '../../service/document.service';
         styleUrls: ['./document-list.component.css']
     }
 )
-export class DocumentListComponent extends AbstractListComponent<Document> {
+export class DocumentListComponent extends AbstractListComponent<Document> implements OnInit {
 
 
     uuid: string;
 
 
-    constructor(router: Router,
-                public service: DocumentService) {
+    constructor(
+        public router: Router,
+        public confirmationService: ConfirmationService,
+        public service: DocumentService) {
 
-        super(router, service, 'document');
+        super(router, confirmationService, service, 'document');
         this.filters = new Document();
     }
 
     ngOnInit() {
         this.service.buildSearch();
         this.firstReload = true;
-        this.loaddata(true, null);
     }
 
     public new() {
@@ -35,5 +38,9 @@ export class DocumentListComponent extends AbstractListComponent<Document> {
 
     postList() {
         super.postList();
+    }
+
+    webpath(name: string) {
+        return BASE_PATH + name;
     }
 }

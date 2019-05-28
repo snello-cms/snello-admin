@@ -1,0 +1,11 @@
+:host  ::ng-deep .ui-fileupload {
+        background: blue;
+    }
+
+    .ui-fileupload-buttonbar {
+        color: red;
+    }
+
+    .ui-fileupload-content {
+        color: yellowgreen;
+    }

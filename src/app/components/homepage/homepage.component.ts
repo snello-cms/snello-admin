@@ -1,5 +1,9 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
+import {DataListService} from "../../service/data-list.service";
+import {ApiService} from "../../service/api.service";
+import {MetadataService} from "../../service/metadata.service";
+import {Metadata} from "../../model/metadata";
 
 @Component(
   {
@@ -7,54 +11,28 @@ import {ActivatedRoute, Router} from "@angular/router";
     styleUrls: ["./homepage.component.css"]
   }
 )
-export class HomepageComponent {
+export class HomepageComponent implements OnInit {
 
-  items: any[] = [];
+  model: any[] = [];
+  errorMessage: string;
+
 
   constructor(private _route: ActivatedRoute,
-              public router: Router) {
+              public router: Router,
+              public metadatasService: MetadataService,
+              public dataListService: DataListService,
+              private apiService: ApiService) {
 
-    this.items = [
-      {
-        id: "list",
-        section: "metadata",
-        name: "Metadati",
-        summary: "Gestione dei metadati sulle tabelle"
-      },
-      {
-        id: "list",
-        section: "fielddefinition",
-        name: "Field Definitions",
-        summary: "Gestione definizione dei campi per popolare le form"
-      },
-      {
-        id: "list",
-        section: "condition",
-        name: "Condition",
-        summary: "Gestione delle condizioni di filtro delle tabelle"
-      },
-      {
-        id: "list",
-        section: "document",
-        name: "Document",
-        summary: "Gestione dei documenti"
-      },
-
-      {
-        id: "metadata",
-        section: "datalist",
-        name: "Form Generation List",
-        summary: "Simulazione di creazione di form e tabelle dinamiche"
-      },
-
-      {
-        id: "",
-        section: "example",
-        name: "Esempio",
-        summary: "Esempio di partenza modellato con i FieldDefinition"
-      },
-    ];
+    this.model = [];
   }
 
+  ngOnInit() {
+    this.metadatasService.getList().subscribe(
+        model => {
+          this.model = <Metadata[]>model;
+        },
+        error => (this.errorMessage = <any>error)
+    );
+  }
 
 }

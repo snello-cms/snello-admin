@@ -2,14 +2,16 @@ import {Injectable, OnInit} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
-import {API_PATH, API_SERVICE_PATH} from "../../constants";
+import {API_SERVICE_PATH} from "../../constants";
 import {FieldDefinition} from "../model/field-definition";
-import {Metadata} from "../model/metadata";
 
 @Injectable()
 export class ApiService implements OnInit {
 
   url: string;
+  _start: number;
+  _limit: number;
+  listSize: number;
 
   public map: Map<string, FieldDefinition[]> = new Map<string, FieldDefinition[]>();
 
@@ -47,6 +49,13 @@ export class ApiService implements OnInit {
       .pipe(catchError(this.handleError));
   }
 
+  public delete(tableName: string, table_key: string): Observable<any> {
+    let url = this.url + "/" + tableName + "/" + table_key;
+    return this.http
+      .delete(url, {responseType: 'text'})
+      .pipe(catchError(this.handleError.bind(this)));
+  }
+
   public update(tableName: string, table_key: string, element: any): Observable<any> {
     let url = this.url + "/" + tableName + "/" + table_key;
     const body = element;
@@ -69,10 +78,11 @@ export class ApiService implements OnInit {
   }
 
 
-  public getList(tableName: string) {
+  public getList(tableName: string, regConfigSearch: FieldDefinition[]) {
     let params = new HttpParams();
-    //params = this.applyRestrictions(params, this.search);
-
+    params = params.set('_start', this._start + '');
+    params = params.set("_limit", this._limit + '');
+    params = this.applyRestrictions(params, regConfigSearch);
     return this.http
       .get<any[]>(this.url + '/' + tableName, {
         observe: 'response',
@@ -80,13 +90,74 @@ export class ApiService implements OnInit {
       })
       .pipe(
         map(res => {
-          // this.listSize = res.headers.get('listSize') != null ? +res.headers.get('listSize') : 0;
-          // return res.body;
+          const keys = res.headers.keys();
+          console.log(keys);
+          let headers = keys.map(key => {
+              `${key}: ${res.headers.get(key)}`
+            }
+          );
+          console.log(headers);
+          this.listSize = res.headers.get('size') != null ? +res.headers.get('size') : 0;
+          console.log(this.listSize);
           const ts: any[] = res.body; // json();
           return ts;
         }),
         catchError(this.handleError)
       );
   }
+
+  private applyRestrictions(params: HttpParams, regConfigSearch?: FieldDefinition[]): any {
+
+    for (const key of regConfigSearch) {
+      if (key.value != null) {
+        params = params.set(
+          key.searchFieldName,
+          key.value
+        );
+      }
+
+    }
+    return params;
+  }
+
+  public getJoinList(field: FieldDefinition, searchValue?: string, searchField?:string): Observable<any[]> {
+    let params = new HttpParams();
+    //per ora senza ricerca e non paginate, in futuro chissà..
+    params = params.set('select_fields', field.join_table_select_fields + ',' + field.join_table_key);
+
+    if (searchValue) {
+      params = params.set(
+        searchField + "_contains",
+        searchValue
+      );
+    }
+    return this.http
+      .get<any[]>(this.url + '/' + field.join_table_name, {
+        observe: 'response',
+        params: params,
+      })
+      .pipe(
+        map(res => {
+          const keys = res.headers.keys();
+          console.log(keys);
+          let headers = keys.map(key => {
+              `${key}: ${res.headers.get(key)}`
+            }
+          );
+          console.log(headers);
+          const ts: any[] = res.body; // json();
+          return ts;
+        }),
+        catchError(this.handleError)
+      );
+  }
+
+  protected toQueryParam(field: string, value: any) {
+    if (value instanceof Date) {
+      return (value as Date).toLocaleString('it-IT', {hour12: false});
+    }
+    return value;
+  }
+
 
 }

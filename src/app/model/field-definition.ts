@@ -1,16 +1,25 @@
 import {Validator} from "./validator";
 
-export const MAP_INPUT_TO_FIELD : Map<string, any> = new Map(
+export const MAP_INPUT_TO_FIELD: Map<string, any> = new Map(
   [
     ["string", ["input", "text"]],
-    ["text", ["textarea", null]],
     ["number", ["input", "number"]],
+    ["decimal", ["input", "decimal"]],
+    ["password", ["input", "password"]],
+    ["email", ["input", "email"]],
+    ["text", ["textarea", null]],
     ["boolean", ["checkbox", null]],
     ["date", ["date", null]],
-    ["email", ["input", "email"]],
-    ["password", ["input", "password"]],
-    ["enum", ["select", null]],
+    ["datetime", ["datetime", null]],
+    ["time", ["time", null]],
+    ["select", ["select", null]],
+    ["media", ["media", null]],
+    ["tags", ["tags", null]],
+    ["join", ["join", null]],
+    ["multijoin", ["multijoin", null]],
     ["media", ["media", null]]
+
+
   ]);
 
 export class FieldDefinition {
@@ -21,7 +30,7 @@ export class FieldDefinition {
   label?: string;
   name?: string;
   inputType?: string;
-  options?: string[];
+  options?: string;
   type: string;
   value?: any;
   validations?: Validator[];
@@ -39,6 +48,34 @@ export class FieldDefinition {
   group_name?: string;
   tab_name?: string;
 
+  join_table_name: string;
+  join_table_key: string;
+  join_table_select_fields: string;
 
+  table_name?: string;
+  table_key_value?: string;
+
+  searchable: boolean;
+
+//    static final String EQU = "=";
+//    static final String NE = "_ne";
+//    static final String LT = "_lt";
+//    static final String GT = "_gt";
+//    static final String LTE = "_lte";
+//    static final String GTE = "_gte";
+//    static final String CNT = "_contains";
+//    static final String NCNT = "_ncontains";
+  searchCondition: string;
+
+// composizione del name + la codiione scelta
+// -> es: search on "name": (EQU) name, (LIKE) name_contains,(NOT LIKE) name_ncontains,
+// -> es: search on  "age": (EQU) age, (<) age_lt,(>) age_gt, (<=) age_lte, (>=) age_gte
+  searchFieldName: string;
+
+//definisce se il campo deve essere visto nella lista
+  showInList:boolean;
+
+  //usato solo lato angular
+  isEdit?:boolean = false;
 }
 

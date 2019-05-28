@@ -1,6 +1,7 @@
 import { AbstractService } from './abstract-service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { OnInit } from '@angular/core';
+import { ConfirmationService, MessageService } from 'primeng/api';
 
 export abstract class AbstractEditComponent<T> implements OnInit {
 
@@ -8,10 +9,11 @@ export abstract class AbstractEditComponent<T> implements OnInit {
   public element: T = null;
 
   constructor(
-    protected router: Router,
-    protected route: ActivatedRoute,
-    protected service: AbstractService<T>,
-    protected path?: string,
+      public router: Router,
+      public route: ActivatedRoute,
+      public confirmationService: ConfirmationService,
+      public service: AbstractService<T>,
+      public path?: string,
   ) {}
 
   ngOnInit() {
@@ -124,7 +126,7 @@ export abstract class AbstractEditComponent<T> implements OnInit {
   }
 
   public clearMsgs() {
-    //this.msgs = [];
+    // this.msgs = [];
   }
 
   public addInfo(message: string) {
@@ -182,7 +184,8 @@ export abstract class AbstractEditComponent<T> implements OnInit {
   }
 
   public confirmDelete() {
-/*    if (!this.confirmationService) {
+    this.clearMsgs();
+    if (!this.confirmationService) {
       return this.delete();
     }
     this.confirmationService.confirm({
@@ -190,7 +193,7 @@ export abstract class AbstractEditComponent<T> implements OnInit {
       accept: () => {
         this.delete();
       }
-    });*/
+    });
   }
 
   getId() {

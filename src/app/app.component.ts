@@ -1,6 +1,5 @@
-import {Component, ViewChild} from '@angular/core';
-import {DynamicFormComponent} from './generic.components/dynamic-form/dynamic-form.component';
-import {MetadataService} from './service/metadata.service';
+import {Component} from '@angular/core';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-root',
@@ -9,29 +8,9 @@ import {MetadataService} from './service/metadata.service';
 })
 export class AppComponent {
 
-  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
-
-  constructor(private metadataService: MetadataService) {
+  constructor(protected router: Router) {
   }
 
-  public viewData(name: string, id: string) {
-    this.metadataService.viewMetadata(name, id).subscribe(
-      result => {
-      }
-    );
-  }
 
-  public editData(name: string, id: string) {
-    this.metadataService.viewMetadata(name, id).subscribe(
-      result => {
-      }
-    );
-  }
 
-  public newData(name: string) {
-    this.metadataService.newMetadata(name).subscribe(
-      result => {
-      }
-    );
-  }
 }

@@ -1,9 +1,10 @@
+import {Component, OnInit} from '@angular/core';
 import {AbstractListComponent} from '../../common/abstract-list-component';
-import {Component, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
-import {MatPaginator, MatTableDataSource} from '@angular/material';
 import {FieldDefinitionService} from '../../service/field-definition.service';
 import {FieldDefinition} from '../../model/field-definition';
+import {MetadataService} from '../../service/metadata.service';
+import {ConfirmationService, SelectItem} from 'primeng/api';
 
 @Component(
   {
@@ -11,27 +12,35 @@ import {FieldDefinition} from '../../model/field-definition';
     styleUrls: ['./field-definition-list.component.css']
   }
 )
-export class FieldDefinitionListComponent extends AbstractListComponent<FieldDefinition> {
+export class FieldDefinitionListComponent extends AbstractListComponent<FieldDefinition> implements OnInit {
 
-  // displayedColumns: string[] = ['metadata_name', 'table_key', 'label', 'name', 'inputType', 'group', 'tab', 'sql_type', 'pattern', 'operations'];
-  dataSource = new MatTableDataSource<FieldDefinition>();
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-
+  public metadatasItems: SelectItem[];
 
   constructor(
-      protected router: Router,
-      public service: FieldDefinitionService) {
+    public router: Router,
+    public confirmationService: ConfirmationService,
+    public service: FieldDefinitionService,
+    public metadataService: MetadataService) {
 
-    super(router, service, 'fielddefinition');
+    super(router, confirmationService, service, 'fielddefinition');
     this.filters = new FieldDefinition();
-    this.dataSource.paginator = this.paginator;
+
+    this.metadatasItems = [];
+    this.metadataService.buildSearch();
+    this.metadataService.getAllList().subscribe(metadatas => {
+      this.metadatasItems.push({label: null, value: '...'});
+      for (let p = 0; p < metadatas.length; p++) {
+        this.metadatasItems.push({
+          label: metadatas[p].table_name,
+          value: metadatas[p].uuid
+        });
+      }
+    });
   }
 
   ngOnInit() {
     this.service.buildSearch();
     this.firstReload = true;
-    this.loaddata(true, null);
   }
 
   public new() {
@@ -39,7 +48,6 @@ export class FieldDefinitionListComponent extends AbstractListComponent<FieldDef
   }
 
   postList() {
-    this.dataSource = new MatTableDataSource<FieldDefinition>(this.model);
     super.postList();
   }
 }

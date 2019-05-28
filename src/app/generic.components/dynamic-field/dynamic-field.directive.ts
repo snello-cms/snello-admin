@@ -1,17 +1,17 @@
-import {
-  ComponentFactoryResolver, ComponentRef, Input, OnInit,
-  ViewContainerRef
-} from '@angular/core';
+import {ComponentFactoryResolver, Directive, Input, OnInit, ViewContainerRef} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {FieldDefinition} from '../../model/field-definition';
 import {InputComponent} from '../input/input.component';
-import {ButtonComponent} from '../button/button.component';
 import {SelectComponent} from '../select/select.component';
 import {DateComponent} from '../date/date.component';
-import {RadiobuttonComponent} from '../radiobutton/radiobutton.component';
 import {CheckboxComponent} from '../checkbox/checkbox.component';
-import {Directive} from '@angular/core';
 import {TextAreaComponent} from "../textarea/textarea.component";
+import {TagComponent} from "../tag/tag.component";
+import {DatetimeComponent} from "../datetime/datetime.component";
+import {JoinComponent} from "../join/join.component";
+import {TimeComponent} from "../time/time.component";
+import {MultiJoinComponent} from "../multi-join/multi-join.component";
+import {MediaComponent} from "../media/media.component";
 
 @Directive({
   selector: '[dynamicField]'
@@ -42,11 +42,15 @@ export class DynamicFieldDirective implements OnInit {
 
 const componentMapper = {
   input: InputComponent,
-  button: ButtonComponent,
   select: SelectComponent,
   date: DateComponent,
-  radiobutton: RadiobuttonComponent,
+  datetime: DatetimeComponent,
+  time: TimeComponent,
   checkbox: CheckboxComponent,
-  textarea: TextAreaComponent
+  textarea: TextAreaComponent,
+  tags: TagComponent,
+  join: JoinComponent,
+  multijoin: MultiJoinComponent,
+  media: MediaComponent
 };
 

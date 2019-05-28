@@ -6,19 +6,25 @@ import {Observable} from 'rxjs';
 import {AbstractService} from '../common/abstract-service';
 import {FieldDefinition} from '../model/field-definition';
 import {catchError, map} from 'rxjs/operators';
+import {MessageService} from 'primeng/api';
 
 @Injectable()
 export class MetadataService extends AbstractService<Metadata> {
-
-  constructor(protected http: HttpClient) {
-    super(METADATA_API_PATH, http);
+  constructor(protected http: HttpClient, messageService: MessageService) {
+    super(METADATA_API_PATH, http, messageService);
   }
+
+  private nameToMetadata: Map<string, Metadata> = new Map();
 
   getId(element: Metadata) {
     return element.uuid;
   }
 
-  generateFieldDefinition(arrayFromServer: FieldDefinition[], valuesMap: Map<string, any>, visualization: string): FieldDefinition[] {
+  generateFieldDefinition(
+    arrayFromServer: FieldDefinition[],
+    valuesMap: Map<string, any>,
+    visualization: string
+  ): FieldDefinition[] {
     let i;
     for (i = 0; i < arrayFromServer.length; i++) {
       arrayFromServer[i].value = valuesMap.get(arrayFromServer[i].name);
@@ -35,19 +41,63 @@ export class MetadataService extends AbstractService<Metadata> {
   }
 
   buildSearch() {
+    this.search = {
+      table_name_contains: '',
+      uuid: '',
+      _limit: 10
+    };
+  }
+
+  public getMetadataFromName(name: string): Metadata {
+    return this.nameToMetadata.get(name);
+  }
+
+  protected postList(ts: Metadata[]) {
+    for (let metadata of ts) {
+      this.nameToMetadata.set(metadata.table_name, metadata);
+    }
+    super.postList(ts);
   }
 
   public createTable(metadata: Metadata) {
-    return this.httpClient.get(this.url + '/' + metadata.uuid + '/create', {
-      observe: 'response',
-    }).pipe(
-      map(res => {
-        const t: any = <any>res.body; // json();
-        return t;
-      }),
-      catchError(this.handleError)
-    );
+    return this.httpClient
+      .get(this.url + '/' + metadata.uuid + '/create', {
+        observe: 'response'
+      })
+      .pipe(
+        map(res => {
+          const t: any = <any>res.body; // json();
+          return t;
+        }),
+        catchError(this.handleError)
+      );
+  }
+
+  public deleteTable(uuid: string) {
+    return this.httpClient
+        .get(this.url + '/' + uuid + '/delete', {
+          observe: 'response'
+        })
+        .pipe(
+            map(res => {
+              const t: any = <any>res.body; // json();
+              return t;
+            }),
+            catchError(this.handleError)
+        );
+  }
+
+  public truncateTable(uuid: string) {
+    return this.httpClient
+        .get(this.url + '/' + uuid + '/truncate', {
+          observe: 'response'
+        })
+        .pipe(
+            map(res => {
+              const t: any = <any>res.body; // json();
+              return t;
+            }),
+            catchError(this.handleError)
+        );
   }
 }
-
-

@@ -1,0 +1,36 @@
+<sidebar></sidebar>
+<div class="sidebar">
+    <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+    <h3>Benvenuto<br><b>{{utente?.username}}</b></h3>
+    <p>
+        Snello version: {{version()}}
+    </p>
+</div>
+
+<div class="main">
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <div class="content list">
+                    <div *ngFor="let component of items">
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" *permit="component.roles">
+                            <div class="card-home">
+                                <i class="{{component.icon}} fa-3x pull-right"></i>
+                                <a [routerLink]="'/' + component.section + '/' + component.id">
+                                    <h3>{{component.name}}</h3>
+                                    <p *ngIf="component.summary">
+                                        {{component.summary}}
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

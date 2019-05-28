@@ -1,0 +1,48 @@
+<ul class="list-group">
+    <li class="list-group-item">
+        <a [routerLink]="''"> <i class="fa fa-home"></i>
+            <div class="clearfix"></div><span>Home</span>
+        </a>
+    </li>
+    <li *permit="'metadatas_edit, metadatas_view'" class="list-group-item">
+        <a [routerLink]="'/metadata/list'"> <i class="fa fa-book"></i>
+            <div class="clearfix"></div><span>Metadata</span>
+        </a>
+    </li>
+    <li *permit="'fielddefinitions_edit, fielddefinitions_view'" class="list-group-item">
+        <a [routerLink]="'/fielddefinition/list'"> <i class="fa fa-cogs"></i>
+            <div class="clearfix"></div><span>Definitions</span>
+        </a>
+    </li>
+    <li *permit="'conditions_edit, conditions_view'" class="list-group-item"><a [routerLink]="'/condition/list'"><i
+        class="fa fa-hand-spock-o"></i>
+      <div class="clearfix"></div><span>Conditions</span>
+    </a></li>
+    <li *permit="'documents_edit, documents_view'" class="list-group-item"><a [routerLink]="'/document/list'"><i
+        class="fa fa-files-o"></i>
+      <div class="clearfix"></div><span>Documents</span>
+    </a></li>
+    <li *permit="'selectqueries_edit, selectqueries_view'" class="list-group-item"><a [routerLink]="'/selectqueries/list'"><i class="fa fa-list"></i>
+      <div class="clearfix"></div> <span>Select Queries</span>
+    </a></li>
+    <li *permit="'publicdata_edit'" class="list-group-item"><a [routerLink]="'/publicdata/edit'"><i
+        class="fa fa-globe"></i>
+      <div class="clearfix"></div> <span>Public Data</span>
+    </a></li>
+    <li *permit="'users_edit, users_view'" class="list-group-item"><a [routerLink]="'/user/list'"><i
+        class="fa fa-user-circle-o"></i>
+      <div class="clearfix"></div> <span>User</span>
+    </a></li>
+    <li *permit="'roles_edit,roles_view'" class="list-group-item"><a [routerLink]="'/role/list'"><i
+        class="fa fa-address-card-o"></i>
+      <div class="clearfix"></div> <span>Role</span>
+    </a></li>
+    <li *permit="'urlmaprules_edit, urlmaprules_view'" class="list-group-item"><a [routerLink]="'/urlmaprules/list'"><i
+        class="fa fa-map-signs"></i>
+      <div class="clearfix"></div> <span>Url Map Rules</span>
+    </a></li>
+    <li *permit="'links_edit, links_view'" class="list-group-item"><a [routerLink]="'/links/list'"><i
+        class="fa fa-link"></i>
+      <div class="clearfix"></div> <span>Links</span>
+    </a></li>
+</ul>

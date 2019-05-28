@@ -1,0 +1,12 @@
+<ul class="list-group">
+  <li class="list-group-item">
+    <a [routerLink]="'/home'">
+      <i class="fa fa-home" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li class="list-group-item" *ngFor="let component of model">
+    <a *ngIf="component.already_exist || component.created" [routerLink]="'/datalistgeneral/list/' + component.table_name">
+      <i class="{{component.icon}}" *ngIf="component.icon"></i>
+    </a>
+  </li>
+</ul>

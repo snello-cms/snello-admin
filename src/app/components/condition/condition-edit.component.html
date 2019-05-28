@@ -1,51 +1,81 @@
-<form>
-  <div style="text-align:center">
-    <h1>
-      Edit Condition
-    </h1>
+<sidebar></sidebar>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>
+    Edit Condition
+  </h3>
+  <p>
+  </p>
+</div>
+
+
+<div class="main">
+
+  <div class="container-fluid">
+    <div class="row">
+
+      <div class="col-md-12 col-sm-12">
+        <div class="content view">
+          <div class="row">
+            <div class="col-md-12 col-sm-12">
+              <form #theform="ngForm">
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Metadata(*)</label>
+                  <div class="col-sm-9">
+                    <p-dropdown [(ngModel)]="element.metadata_uuid" [filter]="false" [options]="metadatasSelect"
+                                [required]="true" [style]="{'width':'100%'}" filterBy="label" name="metadata_uuid"
+                                placeholder="Seleziona un metadato">
+                    </p-dropdown>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Condition (*)</label>
+                  <div class="col-sm-9">
+
+                    <input [(ngModel)]="element.condition" [required]="true" name="condition" pInputText
+                           placeholder="Condition  (*)">
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">SubQuery (*)</label>
+                  <div class="col-sm-9">
+
+                    <input [(ngModel)]="element.sub_query" [required]="true" name="sub_query" pInputText
+                           placeholder="SubQuery  (*)">
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Query Params</label>
+                  <div class="col-sm-9">
+
+                    <input [(ngModel)]="element.query_params" name="query_params" pInputText placeholder="Query Params">
+                  </div>
+                </div>
+
+                <div class="btn-group btn-actions pull-right">
+                  <button type="button" *ngIf="!element.uuid" [disabled]="!theform.form.valid" class="btn btn-success"
+                          (click)="save()">SALVA
+                  </button>&nbsp;&nbsp;
+                  <button type="button" *ngIf="element.uuid" [disabled]="!theform.form.valid" class="btn btn-success"
+                          (click)="update()">MODIFICA
+                  </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                  <button type="button" *ngIf="element.uuid" [disabled]="!theform.form.valid" class="btn btn-danger"
+                          (click)="confirmDelete()">ELIMINA
+                  </button>&nbsp;&nbsp;
+
+                  <button type="button" class="btn btn-danger" (click)="navigateToList()">ANNULLA</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <mat-form-field>
-    <mat-select [(ngModel)]="element.metadata_uuid" name="metadata" placeholder="Metadata (*)">
-      <mat-option *ngFor="let metadata of metadatas" [value]="metadata.uuid"
-                  (onSelectionChange)="setName($event, metadata)">
-        {{metadata.table_name}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <br/>
-
-
-  <mat-form-field>
-    <input matInput label="Separator" name="table" pInputText [(ngModel)]="element.separator" placeholder="Separator">
-  </mat-form-field>
-
-
-  <br/>
-
-  <mat-form-field>
-    <input [(ngModel)]="element.condition" matInput name="Condition (*)" pInputText placeholder="Condition">
-  </mat-form-field>
-
-
-  <br/>
-  <mat-form-field>
-    <input [(ngModel)]="element.sub_query" matInput name="Sub query (*)" pInputText placeholder="Sub query">
-  </mat-form-field>
-
-  <br/>
-
-  <mat-form-field>
-    <input matInput name="query_params" pInputText [(ngModel)]="element.query_params"
-           placeholder="Query Params  (*)">
-  </mat-form-field>
-  <br/>
-
-
-  <button type="button" *ngIf="!element.uuid" (click)="save()">SALVA</button>&nbsp;&nbsp;
-
-  <button type="button" *ngIf="element.uuid" (click)="update()">MODIFICA</button>&nbsp;&nbsp;&nbsp;&nbsp;
-
-  <button type="button" *ngIf="element.uuid" (click)="delete()">ELIMINA</button>&nbsp;&nbsp;
-
-  <button type="button" (click)="navigateToList()">ANNULLA</button>
-</form>
+</div>

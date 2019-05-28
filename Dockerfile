@@ -10,9 +10,7 @@ ADD *.json ./ng-app/
 ## Storing node modules on a separate layer will prevent unnecessary npm installs at each build
 WORKDIR /ng-app
 
-RUN npm i
-## Build the angular app in production mode and store the artifacts in dist folder
-RUN $(npm bin)/ng build --prod --output-path=dist
+RUN npm i && $(npm bin)/ng build --prod
 ### STAGE 2: Setup ###
 
 FROM nginx:1.14.1-alpine
