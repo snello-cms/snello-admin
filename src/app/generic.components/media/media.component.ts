@@ -7,7 +7,7 @@ import {from, Observable, of} from "rxjs";
 import {catchError, map} from "rxjs/operators";
 import {MessageService} from "primeng/api";
 import {DomSanitizer} from "@angular/platform-browser";
-import {FileUpload} from "primeng/primeng";
+import {FileUpload} from "primeng/fileupload";
 import { Document } from 'src/app/model/document';
 import { BASE_PATH } from 'src/constants';
 

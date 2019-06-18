@@ -2,7 +2,6 @@ import { ConfirmationService } from 'primeng/api';
 import {AbstractService} from './abstract-service';
 import {Router} from '@angular/router';
 import {OnInit} from '@angular/core';
-import {DataTable} from 'primeng/primeng';
 
 export abstract class AbstractListComponent<T> implements OnInit {
 
@@ -117,12 +116,12 @@ export abstract class AbstractListComponent<T> implements OnInit {
     this.refresh(datatable);
   }
 
-  public refresh(datatable: DataTable) {
+  public refresh(datatable: any) {
     this.clearMsgs();
     datatable.reset();
   }
 
-  public reset(datatable: DataTable) {
+  public reset(datatable: any) {
       this.service.buildSearch();
       this.refresh(datatable);
     }

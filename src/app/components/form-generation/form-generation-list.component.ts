@@ -5,9 +5,6 @@ import {ApiService} from '../../service/api.service';
 import {DataListService} from '../../service/data-list.service';
 import {MetadataService} from "../../service/metadata.service";
 import {Metadata} from "../../model/metadata";
-import {DataTable} from "primeng/primeng";
-import {DynamicFormComponent} from "../../generic.components/dynamic-form/dynamic-form.component";
-import * as moment from "./form-generation-edit.component";
 import {DynamicSearchFormComponent} from "../../generic.components/dynamic-form/dynamic-search-form.component";
 
 @Component(
@@ -138,12 +135,12 @@ export class FormGenerationListComponent implements OnInit {
     this.refresh(datatable);
   }
 
-  public refresh(datatable: DataTable) {
+  public refresh(datatable: any) {
     this.clearMsgs();
     datatable.reset();
   }
 
-  public reset(datatable: DataTable) {
+  public reset(datatable: any) {
     let obj = {};
     if (this.searchForm && this.searchForm.value) {
       for (let k in this.searchForm.value) {

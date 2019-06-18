@@ -29,7 +29,7 @@ export class FieldDefinition {
   table_key: boolean = false;
   label?: string;
   name?: string;
-  inputType?: string;
+  input_type?: string;
   options?: string;
   type: string;
   value?: any;

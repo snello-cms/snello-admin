@@ -126,7 +126,7 @@
               <div class="form-group clearfix row" *ngIf="element.searchable">
                 <label class="label-text col-sm-3">Search Condition</label>
                 <div class="col-sm-9">
-                  <p-dropdown [(ngModel)]="element.searchCondition" [filter]="false" [options]="searchConditionItems"
+                  <p-dropdown [(ngModel)]="element.search_condition" [filter]="false" [options]="searchConditionItems"
                               [style]="{'width':'100%'}" filterBy="label" name="typeSelect"
                               placeholder="Seleziona una condizione di ricerca">
                   </p-dropdown>
