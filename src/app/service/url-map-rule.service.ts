@@ -20,7 +20,7 @@ export class UrlMapRuleService extends AbstractService<UrlMapRule> {
         this.search = {
             pattern_contains: '',
             uuid: '',
-            httpMethods: '',
+            http_methods: '',
             _limit: 10
         };
     }

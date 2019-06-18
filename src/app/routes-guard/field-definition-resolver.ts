@@ -35,7 +35,7 @@ export class FieldDefinitionResolver implements Resolve<FieldDefinition[]> {
         element => {
           if (element != null) {
             for (let definition_1 of fieldDefinitionList) {
-              definition_1.isEdit = true;
+              definition_1.is_edit = true;
               if (element.hasOwnProperty(definition_1.name)) {
                 definition_1.value = element[definition_1.name];
               }

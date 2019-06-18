@@ -47,7 +47,7 @@
                 <tr class="sort-header">
                   <th class="Operations">Indice</th>
                   <ng-container *ngFor="let def of regConfigList">
-                    <th *ngIf="def.showInList">{{def.label}}</th>
+                    <th *ngIf="def.show_in_list">{{def.label}}</th>
                   </ng-container>
 
                   <th class="Operations">Operazioni</th>
@@ -65,7 +65,7 @@
                   <td class="RowIndex">{{ rowIndex + 1 }}</td>
 
                   <ng-container *ngFor="let def of regConfigList">
-                    <td *ngIf="def.showInList">{{dato(rowData, def)}}</td>
+                    <td *ngIf="def.show_in_list">{{dato(rowData, def)}}</td>
                   </ng-container>
 
                   <td>

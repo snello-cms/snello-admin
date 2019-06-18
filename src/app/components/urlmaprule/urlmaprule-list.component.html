@@ -41,7 +41,7 @@
                                     <div class="col-sm-4">
                                         <input id="surname" name="nome" type="text" class="form-control"
                                                 placeholder="http methods"
-                                                [(ngModel)]="service.search.httpMethods_contains" pInputText #surname="ngModel" *ngIf="service.search">
+                                                [(ngModel)]="service.search.http_methods_contains" pInputText #surname="ngModel" *ngIf="service.search">
                                     </div>
 
                                     <div class="col-sm-3">
@@ -82,7 +82,7 @@
                                         <td class="RowIndex">{{ rowIndex + 1 }}</td>
                                         <td class="ui-resizable-column">{{rowData.pattern}}</td>
                                         <td class="ui-resizable-column">{{rowData.access}}</td>
-                                        <td class="ui-resizable-column">{{rowData.httpMethods}}</td>
+                                        <td class="ui-resizable-column">{{rowData.http_methods}}</td>
                                         <td>
                                             <button (click)="edit(rowData)" class="btn btn-edit btn-sm" pButton>
                                                 <i aria-hidden="true" class="fa fa-pencil"></i>

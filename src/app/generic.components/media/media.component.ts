@@ -20,7 +20,7 @@ import { BASE_PATH } from 'src/constants';
         <div class="col-sm-9">
         <div class="upload-box">
 
-          <p-fileUpload #fileInput mode="basic" [name]="field.name" (onSelect)="uploader($event)" [disabled]="!field.isEdit">
+          <p-fileUpload #fileInput mode="basic" [name]="field.name" (onSelect)="uploader($event)" [disabled]="!field.is_edit">
           </p-fileUpload>
           </div>    
           <div class="clearfix"></div> 
@@ -31,7 +31,7 @@ import { BASE_PATH } from 'src/constants';
            <a target="_blank" class="btn btn-default pull-right" href="{{downloadPath()}}">Scarica</a>
           </div>
       </div>
-      <div *ngIf="!field.isEdit">
+      <div *ngIf="!field.is_edit">
       <div class="col-sm-3">
       </div>
       <div class="col-sm-9">
