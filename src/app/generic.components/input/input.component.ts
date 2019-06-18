@@ -12,7 +12,7 @@ import {FieldDefinition} from '../../model/field-definition';
           pInputText
           [formControlName]="field.name"
           [placeholder]="field.label"
-          [type]="field.inputType"
+          [type]="field.input_type"
         />
         <ng-container
           *ngFor="let validation of field.validations">
