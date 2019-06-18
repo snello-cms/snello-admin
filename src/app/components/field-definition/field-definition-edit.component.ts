@@ -143,7 +143,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
     let fieldDefTypes = MAP_INPUT_TO_FIELD.get(this.fieldType);
     this.element.metadata_name = this.mapMetadata.get(this.element.metadata_uuid).table_name;
     this.element.type = fieldDefTypes[0];
-    this.element.inputType = fieldDefTypes[1];
+    this.element.input_type = fieldDefTypes[1];
     delete this.element.value;
     delete this.element.is_edit;
   }
@@ -153,10 +153,10 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
   }
 
   postFind() {
-    if (!this.element.inputType) {
-      this.element.inputType = null;
+    if (!this.element.input_type) {
+      this.element.input_type = null;
     }
-    this.fieldType = this.mapFieldToType.get(this.element.type + this.element.inputType);
+    this.fieldType = this.mapFieldToType.get(this.element.type + this.element.input_type);
     super.postFind();
   }
 

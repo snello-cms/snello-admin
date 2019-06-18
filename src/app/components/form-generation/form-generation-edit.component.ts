@@ -119,7 +119,7 @@ export class FormGenerationEditComponent implements OnInit {
             objToSave[field.name] = moment(objToSave[field.name], 'YYYY-MM-DD[T]HH:mm:ss[Z]').format('YYYY-MM-DD HH:mm:ss');
           }
           //+null = 0
-          if (field.type == 'input' && field.inputType =='number' && objToSave[field.name]) {
+          if (field.type == 'input' && field.input_type =='number' && objToSave[field.name]) {
             objToSave[field.name] = +objToSave[field.name];
           }
         }
@@ -168,9 +168,9 @@ export class FormGenerationEditComponent implements OnInit {
           field.value = (<string>field.value).split(",");
         }
       }
-      if (field.inputType =='decimal') {
+      if (field.input_type =='decimal') {
         //decimal nel backend corrisponde a number
-        field.inputType = 'number';
+        field.input_type = 'number';
       }
     }
   }
