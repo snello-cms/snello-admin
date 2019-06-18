@@ -47,9 +47,12 @@
                   <div class="col-sm-9">
                     <div class="upload-box">
                       <p-fileUpload *ngIf="!uploading" #fup name="docs[]" customUpload="false" chooseLabel="Seleziona"
-                                    cancelLabel="Annulla" multiple="true" [showUploadButton]="true"
+                                    cancelLabel="" multiple="false" [showUploadButton]="false"
                                     (uploadHandler)="uploader($event)"
-                                    (onUpload)="onBasicUpload($event)"></p-fileUpload>
+                                    (onUpload)="onBasicUpload($event)">
+                                  
+                                  
+                                  </p-fileUpload>
                     </div>
                   </div>
                 </div>

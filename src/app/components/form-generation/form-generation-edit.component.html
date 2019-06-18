@@ -2,6 +2,18 @@
 <div class="sidebar">
   <homepage-topbar></homepage-topbar>
 </div>
+
+<div class="sidebar-subpage">
+
+    <h3>Edit {{metadataName}}</h3>
+    <p>
+
+    </p>
+        
+
+</div>
+
+
 <div class="main">
 
   <div class="container-fluid">
@@ -9,12 +21,7 @@
 
       <div class="col-md-12 col-sm-12">
         <div class="content view">
-          <h3>
-            Edit {{metadataName}}
-          </h3>
-          <div class="clearfix"></div>
-          <br>
-          <div class="clearfix"></div>
+       
 
           <div *ngIf="regConfig != null && regConfig.length > 0">
             <dynamic-form [fields]="regConfig">

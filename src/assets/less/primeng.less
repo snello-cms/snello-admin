@@ -1848,6 +1848,20 @@ button.ui-button::-moz-focus-inner {
     background-color: #FFF;
 }
 
+.ui-dialog-footer { 
+    background-color: #efefef;
+    .ui-button-text.ui-clickable {
+    display: inline !important;
+}
+
+.ui-button {
+ border: 0px;
+ border-radius: 3px;
+ background-color: @white;
+ margin-left: 5px;
+}
+}
+
 .ui-dialog .ui-dialog-titlebar {
     padding: .5em .75em;
     position: relative;
@@ -2129,6 +2143,10 @@ button.ui-button::-moz-focus-inner {
 * FileUpload
 */
 
+/*
+* FileUpload
+*/
+
 .ui-fileupload-buttonbar .ui-fileupload-choose.ui-state-disabled input {
     cursor: default;
 }
@@ -2163,6 +2181,10 @@ button.ui-button::-moz-focus-inner {
 
 .ui-fileupload-row {
     display: table-row;
+
+    .pi {
+    display: inherit !important;        
+    }
 }
 
 .ui-fileupload-row>div {
@@ -2196,7 +2218,7 @@ button.ui-button::-moz-focus-inner {
 
 .upload-box {
     background-color: #efefef;
-    outline: 2px dashed #92b0b3;
+    border: 2px dashed #92b0b3;
     border-radius: 4px !important;
     .pi {
         display: none;
@@ -2239,6 +2261,7 @@ button.ui-button::-moz-focus-inner {
 .ui-fileupload-choose.ui-fileupload-choose-selected input[type=file] {
     display: none;
 }
+
 
 /* ui-fluid */
 
@@ -3163,6 +3186,11 @@ button.ui-button::-moz-focus-inner {
     width: 100%;
     border-radius: 3px;
     border: 1px solid #cfdadd;
+}
+
+textarea.ui-inputtext {
+    min-height: 150px;
+
 }
 
 .ui-widget-header .ui-inputtext,
