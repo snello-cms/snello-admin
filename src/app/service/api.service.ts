@@ -111,7 +111,7 @@ export class ApiService implements OnInit {
     for (const key of regConfigSearch) {
       if (key.value != null) {
         params = params.set(
-          key.searchFieldName,
+          key.search_field_name,
           key.value
         );
       }
@@ -120,14 +120,14 @@ export class ApiService implements OnInit {
     return params;
   }
 
-  public getJoinList(field: FieldDefinition, searchValue?: string, searchField?:string): Observable<any[]> {
+  public getJoinList(field: FieldDefinition, searchValue?: string, search_field?:string): Observable<any[]> {
     let params = new HttpParams();
     //per ora senza ricerca e non paginate, in futuro chissà..
     params = params.set('select_fields', field.join_table_select_fields + ',' + field.join_table_key);
 
     if (searchValue) {
       params = params.set(
-        searchField + "_contains",
+        search_field + "_contains",
         searchValue
       );
     }

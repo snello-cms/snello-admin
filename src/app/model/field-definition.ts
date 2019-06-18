@@ -65,17 +65,17 @@ export class FieldDefinition {
 //    static final String GTE = "_gte";
 //    static final String CNT = "_contains";
 //    static final String NCNT = "_ncontains";
-  searchCondition: string;
+  search_condition: string;
 
 // composizione del name + la codiione scelta
 // -> es: search on "name": (EQU) name, (LIKE) name_contains,(NOT LIKE) name_ncontains,
 // -> es: search on  "age": (EQU) age, (<) age_lt,(>) age_gt, (<=) age_lte, (>=) age_gte
-  searchFieldName: string;
+  search_field_name: string;
 
 //definisce se il campo deve essere visto nella lista
-  showInList:boolean;
+  show_in_list:boolean;
 
   //usato solo lato angular
-  isEdit?:boolean = false;
+  is_edit?:boolean = false;
 }
 

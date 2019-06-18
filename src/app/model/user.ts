@@ -10,5 +10,5 @@ export class User {
   uuid_username:string;
   active: boolean;
 
-  userRoles: UserRole[];
+  user_roles: UserRole[];
 }

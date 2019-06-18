@@ -101,7 +101,7 @@ export class FormGenerationEditComponent implements OnInit {
     let objToSave = JSON.parse(JSON.stringify(this.form.value));
     for (let k in objToSave) {
       for (let field of this.regConfig) {
-        delete field.isEdit;
+        delete field.is_edit;
         if (field.name == k) {
           if (field.type == 'tags') {
             objToSave[field.name] = objToSave[field.name].join(",");

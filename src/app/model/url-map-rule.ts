@@ -2,5 +2,5 @@ export class UrlMapRule {
   uuid: string;
   pattern: string;
   access: string;
-  httpMethods: string;
+  http_methods: string;
 }

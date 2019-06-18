@@ -125,7 +125,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
 
     this.pre();
     if (this.element.searchable) {
-      this.element.searchFieldName = this.element.searchCondition == "" ? this.element.name : this.element.name + "_" + this.element.searchCondition;
+      this.element.search_field_name = this.element.search_condition == "" ? this.element.name : this.element.name + "_" + this.element.search_condition;
     }
     return super.preSave();
   }
@@ -134,7 +134,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
   preUpdate(): boolean {
     this.pre();
     if (this.element.searchable) {
-      this.element.searchFieldName = this.element.searchCondition == "" ? this.element.name : this.element.name + "_" + this.element.searchCondition;
+      this.element.search_field_name = this.element.search_condition == "" ? this.element.name : this.element.name + "_" + this.element.search_condition;
     }
     return super.preUpdate();
   }
@@ -145,7 +145,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
     this.element.type = fieldDefTypes[0];
     this.element.inputType = fieldDefTypes[1];
     delete this.element.value;
-    delete this.element.isEdit;
+    delete this.element.is_edit;
   }
 
   createInstance(): FieldDefinition {
