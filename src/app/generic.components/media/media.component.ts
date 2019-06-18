@@ -15,20 +15,31 @@ import { BASE_PATH } from 'src/constants';
   selector: "app-media",
   template: `
     <div class="form-group clearfix row" [formGroup]="group">
-      <div>
+     
         <label class="col-sm-3">{{ field.name }}</label>
         <div class="col-sm-9">
+        <div class="upload-box">
+
           <p-fileUpload #fileInput mode="basic" [name]="field.name" (onSelect)="uploader($event)" [disabled]="!field.isEdit">
           </p-fileUpload>
-        </div>        
+          </div>    
+          <div class="clearfix"></div> 
+          <div *ngIf="uploadedFile">
+          <br>
+          <div class="clearfix"></div>
+          Uploaded file name: {{uploadedFile.original_name}} 
+           <a target="_blank" class="btn btn-default pull-right" href="{{downloadPath()}}">Scarica</a>
+          </div>
       </div>
       <div *ngIf="!field.isEdit">
+      <div class="col-sm-3">
+      </div>
+      <div class="col-sm-9">
+      <br>
           Media component is accessible only after the record has been saved 
       </div>
-      <div *ngIf="uploadedFile">
-        Uploaded file name: {{uploadedFile.original_name}} 
-         <a target="_blank" href="{{downloadPath()}}">Scarica</a>
-        </div>
+      </div>
+     
     </div>
     
   `,
