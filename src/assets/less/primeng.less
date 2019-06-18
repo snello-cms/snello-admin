@@ -307,6 +307,7 @@ button {
     border-left: 0 none;
 }
 
+
 /** TabMenu **/
 
 .ui-tabmenu .ui-tabmenu-nav {
@@ -591,6 +592,7 @@ button {
     padding: 7px 15px;
     border: 1px solid #ccc !important;
     background-color: #efefef;
+    height: 34px;
 }
 
 /** AutoComplete **/
@@ -2156,9 +2158,14 @@ button.ui-button::-moz-focus-inner {
     border-bottom: 0 none;
 }
 
-.ui-fileupload-buttonbar .ui-button {
+.ui-fileupload-buttonbar {
+    
+
+    .ui-button {
     vertical-align: middle;
     margin-right: .25em;
+
+    }
 }
 
 .ui-fileupload-content {
@@ -2181,9 +2188,21 @@ button.ui-button::-moz-focus-inner {
 
 .ui-fileupload-row {
     display: table-row;
+    border-bottom: 1px dotted #ccc;
+
+    &:last-of-type {
+        border-bottom: 0px;
+    }
 
     .pi {
     display: inherit !important;        
+    }
+
+    .ui-button {
+        background-color: @darkblue;
+        color: @white;
+        height: 24px;
+        line-height: 24px;
     }
 }
 
@@ -2220,10 +2239,7 @@ button.ui-button::-moz-focus-inner {
     background-color: #efefef;
     border: 2px dashed #92b0b3;
     border-radius: 4px !important;
-    .pi {
-        display: none;
-        visibility: hidden;
-    }
+   
 }
 
 .ui-fileupload-choose {
@@ -2231,6 +2247,11 @@ button.ui-button::-moz-focus-inner {
     height: 100px;
     line-height: 100px;
     border-radius: 4px !important;
+
+    .pi {
+        display: none;
+        visibility: hidden;
+    }
 }
 
 .ui-fileupload-choose input[type=file] {
