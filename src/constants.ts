@@ -19,7 +19,7 @@ export const USER_ROLES_API_PATH = API_PATH + "/api/userroles";
 export const URL_MAP_RULES_API_PATH = API_PATH + "/api/urlmaprules";
 
 export const API_SERVICE_PATH = API_PATH + '/api';
-export const APP_VERSION = '1.0.RC1';
+export const APP_VERSION = '1.0.RC2';
 
 // se FS => /files/
 // se S3 => /files/
