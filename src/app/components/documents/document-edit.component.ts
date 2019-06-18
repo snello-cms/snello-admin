@@ -20,7 +20,7 @@ export class DocumentEditComponent extends AbstractEditComponent<Document>
     public okFileList: string[];
     public errorFileList: string[];
 
-    @ViewChild('fup')
+    @ViewChild('fup', { static: false })
     fup: FileUpload;
 
 

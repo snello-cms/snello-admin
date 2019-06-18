@@ -52,7 +52,7 @@ export class MediaComponent implements OnInit {
 
   public uploadedFile: Document;
 
-  @ViewChild('fileInput') fileInput: FileUpload;
+  @ViewChild('fileInput', { static: true }) fileInput: FileUpload;
 
   constructor(private apiService: ApiService,
               private documentService: DocumentService,

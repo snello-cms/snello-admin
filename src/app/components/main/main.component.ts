@@ -8,7 +8,7 @@ import {APP_VERSION} from "../../../constants";
 })
 export class MainComponent {
 
-  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+  @ViewChild(DynamicFormComponent, { static: false }) form: DynamicFormComponent;
 
   selected: string = "home";
 

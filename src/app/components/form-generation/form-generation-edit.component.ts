@@ -14,7 +14,7 @@ import {ConfirmationService} from "primeng/api";
 )
 export class FormGenerationEditComponent implements OnInit {
 
-  @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
+  @ViewChild(DynamicFormComponent, { static: false }) form: DynamicFormComponent;
 
   regConfig: FieldDefinition[] = [];
   errorMessage: string;

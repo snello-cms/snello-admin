@@ -25,7 +25,7 @@ export class FormGenerationListComponent implements OnInit {
   firstReload: boolean;
   metadata: Metadata;
 
-  @ViewChild(DynamicSearchFormComponent) searchForm: DynamicSearchFormComponent;
+  @ViewChild(DynamicSearchFormComponent, { static: false }) searchForm: DynamicSearchFormComponent;
 
   constructor(
     protected router: Router,

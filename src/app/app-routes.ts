@@ -37,7 +37,7 @@ export const MainRoutes: Routes = [
 
   {
     path: 'login',
-    loadChildren: './modules/login.module#LoginModule'
+    loadChildren: () => import('./modules/login.module').then(m => m.LoginModule)
   },
   {
     path: 'home',
