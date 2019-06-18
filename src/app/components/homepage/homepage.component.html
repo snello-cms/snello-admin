@@ -5,33 +5,32 @@
 <div class="sidebar-subpage">
   
 </div>
+
+
 <div class="main">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12 col-sm-12">
-        <div class="content list">
-          <div *ngFor="let component of model">
-            <div class="col-md-6" *ngIf="component.created || component.already_exist">
-              <div class="card" style="height: 200px">
-                <div>
-                  <i class="{{component.icon}} fa-4x" *ngIf="component.icon"></i>
-                  <a [routerLink]="'/datalist/list/' + component.table_name">
-                    <h3>{{component.table_name}}</h3>
-                  </a>
+    <div class="container-fluid">
+
+        <div class="row">
+            <div class="col-md-12 col-sm-12">
+                <div class="content list">
+                    <div *ngFor="let component of model">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="component.created || component.already_exist">
+                            <div class="card-home">
+                                <i class="{{component.icon}} fa-3x pull-right" *ngIf="component.icon"></i>
+                                <a [routerLink]="'/datalist/list/' + component.table_name">
+                                    <h3>{{component.table_name}}</h3>
+                               
+                                </a>
+                                <a [routerLink]="'/datalist/new/' + component.table_name" class="btn btn-success-outline">
+                                  Aggiungi
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                  <a [routerLink]="'/datalist/new/' + component.table_name" class="btn btn-success-outline pull-right">
-                    <i class="fa fa-plus-circle"></i>
-                    Aggiungi
-                  </a>
-                  <br/>
-                  <br/>
-                </div>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
+
+

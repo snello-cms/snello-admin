@@ -6,8 +6,8 @@ import {ApiService} from "../../service/api.service";
 @Component({
   selector: "app-join",
   template: `
-    <div class="form-group clearfix row" [formGroup]="group">
-      <div class="col-sm-12">
+    <div class="form-group clearfix" [formGroup]="group">
+      <div class="row">
           <label class="col-sm-3">
             {{ field.name }}
           </label>
@@ -16,26 +16,27 @@ import {ApiService} from "../../service/api.service";
             class="pi pi-times" (click)="removeRecord()"></i>
           </div>
       </div>
-      <div class="col-sm-12">
+      <div class="row">
       <label class="col-sm-3">
 
       </label>
         <div class="col-sm-9">
 
           <p-autoComplete
-            [suggestions]="options" (completeMethod)="search($event)" [dropdown]="true" 
-            [(ngModel)]="filteredValue" [ngModelOptions]="{standalone: true}"
+            [suggestions]="options" (completeMethod)="search($event)" [size]="30" [dropdown]="true" 
+            [(ngModel)]="filteredValue"  [dropdown]="true" [ngModelOptions]="{standalone: true}"
             (onSelect)="selectRecord($event)" [forceSelection]="true">
 
             <ng-template let-brand pTemplate="item">
-              <div class="ui-helper-clearfix">
-                <div style="font-size:18px;float:right;margin:10px 10px 0 0">{{labelMap.get(brand)}}</div>
-              </div>
+             
+               {{labelMap.get(brand)}}
+         
+           
             </ng-template>
             
           </p-autoComplete>
-
-        </div>
+          </div>
+     
       </div>
     </div>
   `,

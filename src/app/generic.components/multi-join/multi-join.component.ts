@@ -13,7 +13,6 @@ import {ApiService} from "../../service/api.service";
         {{ field.name }}
       </label>
       <div class="col-sm-9">
-      <div class="col-sm-9">
 
       <p-autoComplete
         [suggestions]="options" (completeMethod)="search($event)" [dropdown]="true" 
@@ -21,14 +20,10 @@ import {ApiService} from "../../service/api.service";
         (onSelect)="selectRecord($event)" [forceSelection]="true">
 
         <ng-template let-brand pTemplate="item">
-          <div class="ui-helper-clearfix">
-            <div style="font-size:18px;float:right;margin:10px 10px 0 0">{{labelMap.get(brand)}}</div>
-          </div>
+         {{labelMap.get(brand)}}
         </ng-template>
         
       </p-autoComplete>
-
-    </div>
 
       
       </div>
