@@ -34,15 +34,14 @@
                                         <input id="name" name="name" type="text" placeholder="name"
                                                 class="form-control" [(ngModel)]="service.search.name_contains" pInputText #name="ngModel" *ngIf="service.search">
                                     </div>
-                                    <div class="col-sm-5">
+                                    <div class="col-sm-4">
                                         <input id="surname" name="nome" type="text" placeholder="metadata name"
                                                 class="form-control" [(ngModel)]="service.search.metadata_name_contains" pInputText #metadata_name="ngModel" *ngIf="service.search">
 
                                     </div>
 
-                                    <div class="col-sm-2">
+                                    <div class="col-sm-3">
                                         <div class="btn-group">
-
                                             <button type="button" class="btn btn-search" (click)="reload(datatable)" icon="ui-icon-search">Cerca</button>
                                             <button type="button" class="btn btn-reset" (click)="reset(datatable)" icon="ui-icon-undo">Annulla</button>
                                         </div>

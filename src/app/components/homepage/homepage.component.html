@@ -14,16 +14,15 @@
             <div class="col-md-12 col-sm-12">
                 <div class="content list">
                     <div *ngFor="let component of model">
-                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" *ngIf="component.created || component.already_exist">
-                            <div class="card-home">
-                                <i class="{{component.icon}} fa-3x pull-right" *ngIf="component.icon"></i>
-                                <a [routerLink]="'/datalist/list/' + component.table_name">
-                                    <h3>{{component.table_name}}</h3>
-                               
-                                </a>
-                                <a [routerLink]="'/datalist/new/' + component.table_name" class="btn btn-success-outline">
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" *ngIf="component.created || component.already_exist">
+                            <div class="card-home-user">
+                                <a [routerLink]="'/datalist/new/' + component.table_name" class="btn btn-add pull-right">
                                   Aggiungi
                                 </a>
+                                <a [routerLink]="'/datalist/list/' + component.table_name">
+                                    <h3> <i class="{{component.icon}} fa-3x" *ngIf="component.icon"></i> {{component.table_name}}</h3>
+                                </a>
+                            
                             </div>
                         </div>
                     </div>

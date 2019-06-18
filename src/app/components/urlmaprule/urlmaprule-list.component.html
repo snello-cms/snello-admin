@@ -38,13 +38,13 @@
                                         <input id="name" name="name" placeholder="pattern" type="text"
                                                 class="form-control" [(ngModel)]="service.search.pattern_contains" pInputText #name="ngModel" *ngIf="service.search">
                                     </div>
-                                    <div class="col-sm-5">
+                                    <div class="col-sm-4">
                                         <input id="surname" name="nome" type="text" class="form-control"
                                                 placeholder="http methods"
                                                 [(ngModel)]="service.search.httpMethods_contains" pInputText #surname="ngModel" *ngIf="service.search">
                                     </div>
 
-                                    <div class="col-sm-2">
+                                    <div class="col-sm-3">
                                         <div class="btn-group">
 
                                             <button type="button" class="btn btn-search" (click)="reload(datatable)" icon="ui-icon-search">Cerca</button>
