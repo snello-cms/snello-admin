@@ -1,34 +1,28 @@
 import {SelectItem} from 'primeng/api';
 
-export const API_PROTOCOL = window.location.protocol + '//';
-export const API_HOST = window.location.hostname + ':';
-export const API_PORT = +(window.location.port) === 4200 ? 8080 : window.location.port;
-export const API_PATH = API_PROTOCOL + API_HOST + API_PORT;
-
-export const CONDITION_API_PATH = API_PATH + '/api/conditions';
-export const DOCUMENT_API_PATH = API_PATH + '/api/documents';
-export const FIELD_DEFINITION_API_PATH = API_PATH + '/api/fielddefinitions';
-export const LINKS_API_PATH = API_PATH + '/api/links';
-export const METADATA_API_PATH = API_PATH + '/api/metadatas';
-export const DATA_LIST_API_PATH = API_PATH + '/api/datalist';
-export const PUBLIC_DATA_API_PATH = API_PATH + '/api/publicdata';
-export const SELECT_QUERY_API_PATH = API_PATH + '/api/selectqueries';
-export const USER_API_PATH = API_PATH + '/api/users';
-export const ROLE_API_PATH = API_PATH + '/api/roles';
-export const USER_ROLES_API_PATH = API_PATH + '/api/userroles';
-export const URL_MAP_RULES_API_PATH = API_PATH + '/api/urlmaprules';
-
-export const API_SERVICE_PATH = API_PATH + '/api';
+export const CONDITION_API_PATH = 'condition_api_path';
+export const DOCUMENT_API_PATH = 'document_api_path';
+export const FIELD_DEFINITION_API_PATH = 'field_definition_api_path';
+export const LINKS_API_PATH = 'links_api_path';
+export const METADATA_API_PATH = 'metadata_api_path';
+export const DATA_LIST_API_PATH = 'data_list_api_path';
+export const PUBLIC_DATA_API_PATH = 'public_data_api_path';
+export const SELECT_QUERY_API_PATH = 'select_query_api_path';
+export const USER_API_PATH = 'user_api_path';
+export const ROLE_API_PATH = 'role_api_path';
+export const USER_ROLES_API_PATH = 'user_roles_api_path';
+export const URL_MAP_RULES_API_PATH = 'url_map_rules_api_path';
+export const API_SERVICE_PATH = 'api_service_path';
+export const LOGIN_API_PATH = 'login_api_path';
 export const APP_VERSION = '1.0.RC2';
+
+export const CONFIG_PATH = 'config.html';
 
 // se FS => /files/
 // se S3 => /files/
 
 // export const BASE_PATH = 'https://s3.eu-central-1.amazonaws.com/portale-si/';
 export const BASE_PATH = '/files/';
-
-export const IDENTITY_API_PATH = API_PATH + '/api/users';
-export const LOGIN_API_PATH = API_PATH + '/login';
 export const TOKEN_ITEM = 'snello-token';
 export const USER_ITEM = 'snello-user';
 
