@@ -4,7 +4,7 @@ import {AbstractService} from '../common/abstract-service';
 import {MessageService} from 'primeng/api';
 import {SelectQuery} from '../model/select-query';
 import {ConfigurationService} from './configuration.service';
-import {SELECT_QUERY_API_PATH} from '../../constants';
+import {SELECT_QUERY_API_PATH} from '../constants/constants';
 
 @Injectable()
 export class SelectQueryService extends AbstractService<SelectQuery> {

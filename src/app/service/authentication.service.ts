@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {Observable, of, throwError} from 'rxjs';
-import {LOGIN_API_PATH, TOKEN_ITEM, USER_ITEM} from '../../constants';
+import {LOGIN_API_PATH, TOKEN_ITEM, USER_ITEM} from '../constants/constants';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {UserInSession} from '../model/user-in-session';
 import {ConfigurationService} from './configuration.service';

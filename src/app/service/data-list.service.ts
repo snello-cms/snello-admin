@@ -5,7 +5,7 @@ import {Metadata} from '../model/metadata';
 import {Observable} from 'rxjs';
 import {FieldDefinition} from '../model/field-definition';
 import {ConfigurationService} from './configuration.service';
-import {DATA_LIST_API_PATH} from '../../constants';
+import {DATA_LIST_API_PATH} from '../constants/constants';
 
 @Injectable()
 export class DataListService {

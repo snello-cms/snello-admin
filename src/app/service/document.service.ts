@@ -6,7 +6,7 @@ import {Document} from '../model/document';
 import {MessageService} from 'primeng/api';
 import {catchError, map} from 'rxjs/operators';
 import {ConfigurationService} from './configuration.service';
-import {DOCUMENT_API_PATH} from '../../constants';
+import {DOCUMENT_API_PATH} from '../constants/constants';
 
 @Injectable()
 export class DocumentService extends AbstractService<Document> {

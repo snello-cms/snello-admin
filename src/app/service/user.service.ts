@@ -4,7 +4,7 @@ import {AbstractService} from '../common/abstract-service';
 import {MessageService} from 'primeng/api';
 import {User} from '../model/user';
 import {ConfigurationService} from './configuration.service';
-import {USER_API_PATH} from '../../constants';
+import {USER_API_PATH} from '../constants/constants';
 
 @Injectable()
 export class UserService extends AbstractService<User> {

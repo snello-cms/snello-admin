@@ -9,7 +9,7 @@ import {MessageService} from "primeng/api";
 import {DomSanitizer} from "@angular/platform-browser";
 import {FileUpload} from "primeng/fileupload";
 import { Document } from 'src/app/model/document';
-import { BASE_PATH } from 'src/constants';
+import { BASE_PATH } from 'src/app/constants/constants';
 
 @Component({
   selector: "app-media",

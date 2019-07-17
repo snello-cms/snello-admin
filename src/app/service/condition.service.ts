@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Condition} from '../model/condtion';
-import {CONDITION_API_PATH} from '../../constants';
+import {CONDITION_API_PATH} from '../constants/constants';
 import {AbstractService} from '../common/abstract-service';
 import { MessageService } from 'primeng/api';
 

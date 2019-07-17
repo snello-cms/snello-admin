@@ -1,6 +1,6 @@
 import {Component, ViewChild} from '@angular/core';
 import {DynamicFormComponent} from "../../generic.components/dynamic-form/dynamic-form.component";
-import {APP_VERSION} from "../../../constants";
+import {APP_VERSION} from "../../constants/constants";
 
 @Component({
   templateUrl: './main.component.html',

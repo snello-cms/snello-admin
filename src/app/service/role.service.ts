@@ -4,7 +4,7 @@ import {AbstractService} from '../common/abstract-service';
 import {MessageService} from 'primeng/api';
 import {Role} from '../model/role';
 import {ConfigurationService} from './configuration.service';
-import {ROLE_API_PATH} from '../../constants';
+import {ROLE_API_PATH} from '../constants/constants';
 
 @Injectable()
 export class RoleService extends AbstractService<Role> {

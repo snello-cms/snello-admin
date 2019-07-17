@@ -4,7 +4,7 @@ import {Metadata} from '../model/metadata';
 import {AbstractService} from '../common/abstract-service';
 import {MessageService} from 'primeng/api';
 import {ConfigurationService} from './configuration.service';
-import {PUBLIC_DATA_API_PATH} from '../../constants';
+import {PUBLIC_DATA_API_PATH} from '../constants/constants';
 
 @Injectable()
 export class PublicDatasService extends AbstractService<any> {

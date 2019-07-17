@@ -7,7 +7,7 @@ import {FieldDefinition} from '../model/field-definition';
 import {catchError, map} from 'rxjs/operators';
 import {MessageService} from 'primeng/api';
 import {ConfigurationService} from './configuration.service';
-import {METADATA_API_PATH} from '../../constants';
+import {METADATA_API_PATH} from '../constants/constants';
 
 @Injectable()
 export class MetadataService extends AbstractService<Metadata> {

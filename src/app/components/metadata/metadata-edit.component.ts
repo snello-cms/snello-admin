@@ -4,7 +4,7 @@ import {Metadata} from '../../model/metadata';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MetadataService} from '../../service/metadata.service';
 import {ConfirmationService, SelectItem} from 'primeng/api';
-import {FONT_AWESOME_ICONS} from "../../../constants";
+import {FONT_AWESOME_ICONS} from "../../constants/constants";
 
 @Component({
   templateUrl: './metadata-edit.component.html',

@@ -6,7 +6,7 @@ import {Link} from '../model/link';
 import {Observable} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {ConfigurationService} from './configuration.service';
-import {LINKS_API_PATH} from '../../constants';
+import {LINKS_API_PATH} from '../constants/constants';
 
 @Injectable()
 export class LinksService extends AbstractService<Link> {

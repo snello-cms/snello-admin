@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {CONFIG_PATH} from '../../constants';
+import {CONFIG_PATH} from '../constants/constants';
 
 @Injectable()
 export class ConfigurationService {

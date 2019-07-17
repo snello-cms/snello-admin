@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {APP_VERSION} from "../../../constants";
+import {APP_VERSION} from "../../constants/constants";
 import {AuthenticationService} from "../../service/authentication.service";
 import {Router} from "@angular/router";
 

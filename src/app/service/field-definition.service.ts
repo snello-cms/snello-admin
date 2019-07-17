@@ -4,7 +4,7 @@ import {AbstractService} from '../common/abstract-service';
 import {FieldDefinition} from '../model/field-definition';
 import {MessageService} from 'primeng/api';
 import {ConfigurationService} from './configuration.service';
-import {FIELD_DEFINITION_API_PATH} from '../../constants';
+import {FIELD_DEFINITION_API_PATH} from '../constants/constants';
 
 @Injectable()
 export class FieldDefinitionService extends AbstractService<FieldDefinition> {

@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {FieldDefinition} from '../model/field-definition';
 import {ConfigurationService} from './configuration.service';
-import {API_SERVICE_PATH} from '../../constants';
+import {API_SERVICE_PATH} from '../constants/constants';
 
 @Injectable()
 export class ApiService implements OnInit {
@@ -42,7 +42,7 @@ export class ApiService implements OnInit {
     }
 
     public persist(tableName: string, element: any): Observable<any> {
-        let url = this.url + '/' + tableName;
+        const url = this.url + '/' + tableName;
         const body = element;
         return this.http
             .post<any>(url, body)
@@ -50,14 +50,14 @@ export class ApiService implements OnInit {
     }
 
     public delete(tableName: string, table_key: string): Observable<any> {
-        let url = this.url + '/' + tableName + '/' + table_key;
+        const url = this.url + '/' + tableName + '/' + table_key;
         return this.http
             .delete(url, {responseType: 'text'})
             .pipe(catchError(this.handleError.bind(this)));
     }
 
     public update(tableName: string, table_key: string, element: any): Observable<any> {
-        let url = this.url + '/' + tableName + '/' + table_key;
+        const url = this.url + '/' + tableName + '/' + table_key;
         const body = element;
         return this.http
             .put<any>(url, body)
@@ -65,7 +65,7 @@ export class ApiService implements OnInit {
     }
 
     public fetch(tableName: string, table_key: string) {
-        let url = this.url + '/' + tableName + '/' + table_key;
+        const url = this.url + '/' + tableName + '/' + table_key;
         return this.http.get(url, {
             observe: 'response',
         }).pipe(
@@ -122,7 +122,7 @@ export class ApiService implements OnInit {
 
     public getJoinList(field: FieldDefinition, searchValue?: string, search_field?: string): Observable<any[]> {
         let params = new HttpParams();
-        //per ora senza ricerca e non paginate, in futuro chissà..
+        // per ora senza ricerca e non paginate, in futuro chissà..
         params = params.set('select_fields', field.join_table_select_fields + ',' + field.join_table_key);
 
         if (searchValue) {

@@ -5,7 +5,7 @@ import {MessageService} from 'primeng/api';
 import {UserRole} from '../model/user-role';
 import {catchError} from 'rxjs/operators';
 import {ConfigurationService} from './configuration.service';
-import {USER_ROLES_API_PATH} from '../../constants';
+import {USER_ROLES_API_PATH} from '../constants/constants';
 
 @Injectable()
 export class UserRoleService extends AbstractService<UserRole> {

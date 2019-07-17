@@ -4,7 +4,7 @@ import {Router} from '@angular/router';
 import {Document} from '../../model/document';
 import {DocumentService} from '../../service/document.service';
 import {ConfirmationService} from 'primeng/api';
-import {BASE_PATH} from "../../../constants";
+import {BASE_PATH} from "../../constants/constants";
 
 @Component(
     {

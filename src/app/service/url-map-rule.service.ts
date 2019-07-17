@@ -4,7 +4,7 @@ import {AbstractService} from '../common/abstract-service';
 import {MessageService} from 'primeng/api';
 import {UrlMapRule} from '../model/url-map-rule';
 import {ConfigurationService} from './configuration.service';
-import {URL_MAP_RULES_API_PATH} from '../../constants';
+import {URL_MAP_RULES_API_PATH} from '../constants/constants';
 
 @Injectable()
 export class UrlMapRuleService extends AbstractService<UrlMapRule> {
