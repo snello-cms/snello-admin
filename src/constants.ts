@@ -1,22 +1,22 @@
-import {SelectItem} from "primeng/api";
+import {SelectItem} from 'primeng/api';
 
 export const API_PROTOCOL = window.location.protocol + '//';
 export const API_HOST = window.location.hostname + ':';
 export const API_PORT = +(window.location.port) === 4200 ? 8080 : window.location.port;
 export const API_PATH = API_PROTOCOL + API_HOST + API_PORT;
 
-export const CONDITION_API_PATH = API_PATH + "/api/conditions";
-export const DOCUMENT_API_PATH = API_PATH + "/api/documents";
-export const FIELD_DEFINITION_API_PATH = API_PATH + "/api/fielddefinitions";
-export const LINKS_API_PATH = API_PATH + "/api/links";
-export const METADATA_API_PATH = API_PATH + "/api/metadatas";
-export const DATA_LIST_API_PATH = API_PATH + "/api/datalist";
-export const PUBLIC_DATA_API_PATH = API_PATH + "/api/publicdata";
-export const SELECT_QUERY_API_PATH = API_PATH + "/api/selectqueries";
-export const USER_API_PATH = API_PATH + "/api/users";
-export const ROLE_API_PATH = API_PATH + "/api/roles";
-export const USER_ROLES_API_PATH = API_PATH + "/api/userroles";
-export const URL_MAP_RULES_API_PATH = API_PATH + "/api/urlmaprules";
+export const CONDITION_API_PATH = API_PATH + '/api/conditions';
+export const DOCUMENT_API_PATH = API_PATH + '/api/documents';
+export const FIELD_DEFINITION_API_PATH = API_PATH + '/api/fielddefinitions';
+export const LINKS_API_PATH = API_PATH + '/api/links';
+export const METADATA_API_PATH = API_PATH + '/api/metadatas';
+export const DATA_LIST_API_PATH = API_PATH + '/api/datalist';
+export const PUBLIC_DATA_API_PATH = API_PATH + '/api/publicdata';
+export const SELECT_QUERY_API_PATH = API_PATH + '/api/selectqueries';
+export const USER_API_PATH = API_PATH + '/api/users';
+export const ROLE_API_PATH = API_PATH + '/api/roles';
+export const USER_ROLES_API_PATH = API_PATH + '/api/userroles';
+export const URL_MAP_RULES_API_PATH = API_PATH + '/api/urlmaprules';
 
 export const API_SERVICE_PATH = API_PATH + '/api';
 export const APP_VERSION = '1.0.RC2';
@@ -27,92 +27,92 @@ export const APP_VERSION = '1.0.RC2';
 // export const BASE_PATH = 'https://s3.eu-central-1.amazonaws.com/portale-si/';
 export const BASE_PATH = '/files/';
 
-export const IDENTITY_API_PATH = API_PATH + "/api/users";
-export const LOGIN_API_PATH = API_PATH + "/login";
-export const TOKEN_ITEM = "snello-token";
-export const USER_ITEM = "snello-user";
+export const IDENTITY_API_PATH = API_PATH + '/api/users';
+export const LOGIN_API_PATH = API_PATH + '/login';
+export const TOKEN_ITEM = 'snello-token';
+export const USER_ITEM = 'snello-user';
 
 
 export const ADMIN_ITEMS: any[] = [
     {
-        id: "list",
-        icon: "fa fa-book",
-        section: "metadata",
-        name: "Metadati",
-        summary: "Gestione dei metadati sulle tabelle",
-        roles: "metadatas_edit, metadatas_view"
+        id: 'list',
+        icon: 'fa fa-book',
+        section: 'metadata',
+        name: 'Metadati',
+        summary: 'Gestione dei metadati sulle tabelle',
+        roles: 'metadatas_edit, metadatas_view'
     },
     {
-        id: "list",
-        icon: "fa fa-cogs",
-        section: "fielddefinition",
-        name: "Field Definitions",
-        summary: "Gestione definizione dei campi per popolare le form",
-        roles: "fielddefinitions_edit, fielddefinitions_view"
+        id: 'list',
+        icon: 'fa fa-cogs',
+        section: 'fielddefinition',
+        name: 'Field Definitions',
+        summary: 'Gestione definizione dei campi per popolare le form',
+        roles: 'fielddefinitions_edit, fielddefinitions_view'
     },
     {
-        id: "list",
-        icon: "fa fa-hand-spock-o",
-        section: "condition",
-        name: "Condition",
-        summary: "Gestione delle condizioni di filtro delle tabelle",
-        roles: "conditions_edit, conditions_view"
+        id: 'list',
+        icon: 'fa fa-hand-spock-o',
+        section: 'condition',
+        name: 'Condition',
+        summary: 'Gestione delle condizioni di filtro delle tabelle',
+        roles: 'conditions_edit, conditions_view'
     },
     {
-        id: "list",
-        icon: "fa fa-files-o",
-        section: "document",
-        name: "Document",
-        summary: "Gestione dei documenti",
-        roles: "documents_edit, documents_view"
+        id: 'list',
+        icon: 'fa fa-files-o',
+        section: 'document',
+        name: 'Document',
+        summary: 'Gestione dei documenti',
+        roles: 'documents_edit, documents_view'
     },
     {
-        id: "edit",
-        icon: "fa fa-globe",
-        section: "publicdata",
-        name: "Public Data",
-        summary: "Upload di dati",
-        roles: "publicdata_edit"
+        id: 'edit',
+        icon: 'fa fa-globe',
+        section: 'publicdata',
+        name: 'Public Data',
+        summary: 'Upload di dati',
+        roles: 'publicdata_edit'
     },
     {
-        id: "list",
-        icon: "fa fa-list",
-        section: "selectqueries",
-        name: "SelectQuery",
-        summary: "Query di selezione",
-        roles: "selectqueries_edit, selectqueries_view"
+        id: 'list',
+        icon: 'fa fa-list',
+        section: 'selectqueries',
+        name: 'SelectQuery',
+        summary: 'Query di selezione',
+        roles: 'selectqueries_edit, selectqueries_view'
     },
     {
-        id: "list",
-        icon: "fa fa-user-circle-o",
-        section: "user",
-        name: "User",
-        summary: "Users",
-        roles: "users_edit, users_view"
+        id: 'list',
+        icon: 'fa fa-user-circle-o',
+        section: 'user',
+        name: 'User',
+        summary: 'Users',
+        roles: 'users_edit, users_view'
     },
     {
-        id: "list",
-        icon: "fa fa-address-card-o",
-        section: "role",
-        name: "Role",
-        summary: "Roles",
-        roles: "roles_edit,roles_view"
+        id: 'list',
+        icon: 'fa fa-address-card-o',
+        section: 'role',
+        name: 'Role',
+        summary: 'Roles',
+        roles: 'roles_edit,roles_view'
     },
     {
-        id: "list",
-        icon: "fa fa-map-signs",
-        section: "urlmaprules",
-        name: "Url Map Rules",
-        summary: "Url Map Rules",
-        roles: "urlmaprules_edit, urlmaprules_view"
+        id: 'list',
+        icon: 'fa fa-map-signs',
+        section: 'urlmaprules',
+        name: 'Url Map Rules',
+        summary: 'Url Map Rules',
+        roles: 'urlmaprules_edit, urlmaprules_view'
     },
     {
-        id: "list",
-        icon: "fa fa-link",
-        section: "links",
-        name: "Links",
-        summary: "Links",
-        roles: "links_edit, links_view"
+        id: 'list',
+        icon: 'fa fa-link',
+        section: 'links',
+        name: 'Links',
+        summary: 'Links',
+        roles: 'links_edit, links_view'
     }
 ];
 

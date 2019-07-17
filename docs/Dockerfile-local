@@ -1,0 +1,22 @@
+FROM node:10-alpine as builder_web
+RUN mkdir ./ng-app
+COPY src ./ng-app/src
+COPY e2e ./ng-app/e2e
+COPY *.json ./ng-app/
+COPY node_modules ./ng-app/
+COPY docs/snello-admin/index.html ./ng-app/src
+WORKDIR /ng-app
+RUN npm i && $(npm bin)/ng build --prod
+
+FROM nginx:1.14.1-alpine
+
+## Remove default nginx website
+RUN rm -rf /usr/share/nginx/html/*
+
+## From ‘builder’ stage copy over the artifacts in dist folder to default nginx public folder
+COPY --from=builder_web /ng-app/dist /usr/share/nginx/html
+
+COPY  docs/public/index.html /usr/share/nginx/html
+
+
+CMD ["nginx", "-g", "daemon off;"]
