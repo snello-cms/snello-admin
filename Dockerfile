@@ -1,20 +1,19 @@
-### STAGE 1: Build ###
+### STAGE 1: GIT CLONE DEL PROGETTO DA COMPILARE E IMPACCHETTARE ###
+FROM alpine/git  as gitter
+WORKDIR /app
+RUN git clone https://github.com/snello-cms/snello-admin.git
 
-# We label our stage as ‘builder’
+### STAGE 1: NPM INSTALL E GENERA IL COMPILATO ANGULAR ###
 FROM node:10-alpine as builder
-
-RUN mkdir /ng-app
-ADD src  ./ng-app/src
-ADD e2e  ./ng-app/e2e
-ADD *.json ./ng-app/
-## Storing node modules on a separate layer will prevent unnecessary npm installs at each build
+COPY --from=gitter /app/snello-admin/src ./ng-app/src
+COPY --from=gitter /app/snello-admin/e2e ./ng-app/e2e
+COPY --from=gitter /app/snello-admin/*.json ./ng-app/
 WORKDIR /ng-app
 
 RUN npm i && $(npm bin)/ng build --prod
-### STAGE 2: Setup ###
 
+### STAGE 2: CREO IMMAGINE DOCKER CON ELABORATO FINALE ###
 FROM nginx:1.14.1-alpine
-
 ## Copy our default nginx config
 COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
