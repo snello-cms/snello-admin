@@ -93,8 +93,7 @@
             "scripts": [],
             "assets": [
               "src/favicon.ico",
-              "src/assets",
-              "src/config.json"
+              "src/assets"
             ]
           }
         },
