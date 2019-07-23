@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 
-docker build -t snellocms/snello-admin -f docs/Dockerfile-local .
+ng build --prod
+docker build --no-cache -t snellocms/snello-admin -f Dockerfile-local .
 docker tag snellocms/snello-admin snellocms/snello-admin:local
