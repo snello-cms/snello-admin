@@ -185,7 +185,7 @@ export const MainRoutes: Routes = [
 
 @NgModule({
     imports: [
-        RouterModule.forRoot(MainRoutes, {useHash: false, preloadingStrategy: PreloadAllModules}),
+        RouterModule.forRoot(MainRoutes, {useHash: true, preloadingStrategy: PreloadAllModules}),
     ],
     exports: [RouterModule]
 })
