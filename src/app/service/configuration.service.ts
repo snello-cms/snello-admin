@@ -17,6 +17,14 @@ export class ConfigurationService {
     }
 
     public get(key: string): string {
-        return this.configurazione[key];
+        if (!this.configurazione) {
+            this.http.get(CONFIG_PATH).subscribe(
+                conf => {
+                    this.configurazione = conf;
+                    return this.configurazione[key];
+                });
+        } else {
+            return this.configurazione[key];
+        }
     }
 }
