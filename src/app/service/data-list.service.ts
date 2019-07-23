@@ -11,10 +11,9 @@ import {DATA_LIST_API_PATH} from '../constants/constants';
 export class DataListService {
 
     url: string;
-    data_list_api_path: string;
 
     constructor(protected httpClient: HttpClient, configurationService: ConfigurationService) {
-        this.data_list_api_path = configurationService.get(DATA_LIST_API_PATH);
+        this.url = configurationService.get(DATA_LIST_API_PATH);
     }
 
     public getMetadataNames() {
