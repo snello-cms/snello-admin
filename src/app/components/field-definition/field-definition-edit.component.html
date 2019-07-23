@@ -57,7 +57,7 @@
                 </div>
               </div>
 
-
+              
               <div *ngIf="fieldType == 'join'|| fieldType == 'multijoin'" class="form-group clearfix row">
                 <label class="label-text col-sm-3">Join Table Name</label>
                 <div class="col-sm-9">
@@ -118,7 +118,7 @@
               <div class="form-group clearfix row">
                 <label class="label-text col-sm-3">Is Searchable</label>
                 <div class="col-sm-9">
-                  <p-inputSwitch [(ngModel)]="element.searchable" name="searchable">searchable</p-inputSwitch>
+                  <p-inputSwitch [(ngModel)]="element.searchable" name="searchable">Searchable</p-inputSwitch>
                 </div>
               </div>
 
@@ -127,7 +127,7 @@
                 <label class="label-text col-sm-3">Search Condition</label>
                 <div class="col-sm-9">
                   <p-dropdown [(ngModel)]="element.search_condition" [filter]="false" [options]="searchConditionItems"
-                              [style]="{'width':'100%'}" filterBy="label" name="typeSelect"
+                              [style]="{'width':'100%'}" filterBy="label" name="searchableCondition"
                               placeholder="Seleziona una condizione di ricerca">
                   </p-dropdown>
                 </div>
