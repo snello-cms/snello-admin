@@ -43,4 +43,25 @@ export class DocumentListComponent extends AbstractListComponent<Document> imple
     webpath(name: string) {
         return BASE_PATH + name;
     }
+
+    download(uuid: string): void {
+        this.service.simplDownload(uuid).subscribe(response => {
+
+            // It is necessary to create a new blob object with mime-type explicitly set
+            // otherwise only Chrome works like it should
+            const newBlob = new Blob([(response)], {type: 'application/octet-stream'});
+
+            // IE doesn't allow using a blob object directly as link href
+            // instead it is necessary to use msSaveOrOpenBlob
+            if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+                window.navigator.msSaveOrOpenBlob(newBlob);
+                return;
+            }
+
+            // For other browsers:
+            // Create a link pointing to the ObjectURL containing the blob.
+            const downloadURL = URL.createObjectURL(response);
+            window.open(downloadURL);
+        });
+    }
 }
