@@ -20,10 +20,10 @@ export class DraggableListComponent extends AbstractListComponent<Draggable> imp
   constructor(
       public router: Router,
       public confirmationService: ConfirmationService,
-      public service: DraggableService,
+      public draggableService: DraggableService,
       public metadataService: MetadataService) {
 
-    super(router, confirmationService, service, 'draggable');
+    super(router, confirmationService, draggableService, 'draggables');
     this.filters = new Draggable();
      }
 

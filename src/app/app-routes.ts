@@ -27,6 +27,8 @@ import {UrlmapruleEditComponent} from './components/urlmaprule/urlmaprule-edit.c
 import {NgModule} from '@angular/core';
 import {LinksListComponent} from './components/links/links-list.component';
 import {LinksEditComponent} from './components/links/links-edit.component';
+import { DraggableEditComponent } from './components/draggable/draggable-edit.component';
+import { DraggableListComponent } from './components/draggable/draggable-list.component';
 
 export const MainRoutes: Routes = [
     {
@@ -142,6 +144,17 @@ export const MainRoutes: Routes = [
             {path: 'list', component: LinksListComponent},
             {path: 'edit/:id', component: LinksEditComponent},
             {path: 'new', component: LinksEditComponent}
+
+        ]
+    },
+    {
+        path: 'draggables',
+        component: OutletComponent,
+        children: [
+            {path: '', redirectTo: '/draggables/list', pathMatch: 'full'},
+            {path: 'list', component: DraggableListComponent},
+            {path: 'new', component: DraggableEditComponent},
+            {path: 'edit/:id', component: DraggableEditComponent}
 
         ]
     },

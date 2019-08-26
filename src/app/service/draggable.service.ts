@@ -1,27 +1,35 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Condition} from '../model/condtion';
-import {CONDITION_API_PATH, DRAGGABLE_API_PATH} from '../constants/constants';
+import {Metadata} from '../model/metadata';
 import {AbstractService} from '../common/abstract-service';
-import { MessageService } from 'primeng/api';
+import {MessageService} from 'primeng/api';
+import {ConfigurationService} from './configuration.service';
+import {DRAGGABLE_API_PATH} from '../constants/constants';
 import { Draggable } from '../model/draggable';
 
 @Injectable()
 export class DraggableService extends AbstractService<Draggable> {
+    constructor(protected http: HttpClient, messageService: MessageService, configurationService: ConfigurationService) {
+        super(configurationService.get(DRAGGABLE_API_PATH), http, messageService);
+    }
 
-  constructor(protected http: HttpClient, messageService: MessageService) {
-    super(DRAGGABLE_API_PATH, http, messageService);
-  }
+    private nameToMetadata: Map<string, Metadata> = new Map();
 
-  getId(element: Draggable) {
-    return element.uuid;
-  }
+    getId(element: Draggable) {
+        return element.uuid;
+    }
 
-  buildSearch() {
-    this.search = {
-  
-    };
-  }
+
+
+    buildSearch() {
+        this.search = {
+            table_name_contains: '',
+            uuid: '',
+            _limit: 10
+        };
+    }
+
+
+
+
 }
-
-

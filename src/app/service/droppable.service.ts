@@ -8,9 +8,10 @@ import { DROPPABLE_API_PATH } from '../constants/constants';
 @Injectable()
 export class DroppableService extends AbstractService<Droppable> {
 
-  constructor(protected http: HttpClient, messageService: MessageService) {
-    super(DROPPABLE_API_PATH, http, messageService);
+  constructor(protected url: string, protected httpClient: HttpClient, protected messageService: MessageService) {
+    super(DROPPABLE_API_PATH, httpClient, messageService);
   }
+
 
   getId(element: Droppable) {
     return element.uuid;
