@@ -28,7 +28,7 @@ export class DraggableEditComponent extends AbstractEditComponent<Draggable> imp
       public theService: DraggableService,
       public metadataService: MetadataService
   ) {
-    super(router, route, confirmationService, theService, 'draggable');
+    super(router, route, confirmationService, theService, 'draggables');
 
   }
 
