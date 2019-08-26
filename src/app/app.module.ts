@@ -61,6 +61,8 @@ import {registerLocaleData} from '@angular/common';
 import localeIt from '@angular/common/locales/it';
 import {ConfigurationService} from './service/configuration.service';
 import {initializer} from './routes-guard/app-init';
+import { DraggableEditComponent } from './components/draggable/draggable-edit.component';
+import { DraggableListComponent } from './components/draggable/draggable-list.component';
 
 registerLocaleData(localeIt);
 
@@ -114,7 +116,9 @@ registerLocaleData(localeIt);
         UrlmapruleListComponent,
         LinksEditComponent,
         LinksListComponent,
-        Permit
+        Permit,
+        DraggableEditComponent,
+        DraggableListComponent
     ],
     imports: [
         CoreModule.forRoot(),

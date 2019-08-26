@@ -17,6 +17,8 @@ import {UrlMapRuleService} from "../service/url-map-rule.service";
 import {AuthenticationService} from "../service/authentication.service";
 import {LinksService} from "../service/links.service";
 import {Permit} from "../directives/permit";
+import { DraggableService } from '../service/draggable.service';
+import { DroppableService } from '../service/droppable.service';
 
 @NgModule({
   imports: [
@@ -54,7 +56,9 @@ export class CoreModule {
         UserRoleService,
         UrlMapRuleService,
         AuthenticationService,
-        LinksService
+        LinksService,
+        DraggableService,
+        DroppableService
       ]
     };
 

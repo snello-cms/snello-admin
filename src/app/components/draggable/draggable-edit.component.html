@@ -1,0 +1,112 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>
+    Edit Draggable
+  </h3>
+  <p>
+  </p>
+</div>
+
+
+<div class="main">
+
+  <div class="container-fluid">
+    <div class="row">
+
+      <div class="col-md-12 col-sm-12">
+        <div class="content view">
+          <div class="row">
+            <div class="col-md-12 col-sm-12">
+              <form #theform="ngForm">
+
+
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Name (*)</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.name" [required]="true" name="name" pInputText
+                           placeholder="Name (*)">
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Description </label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.description" name="description" pInputText
+                           placeholder="Description">
+                  </div>
+                </div>
+
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Description </label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.description" name="description" pInputText
+                           placeholder="Description" required>
+                  </div>
+                </div>
+
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Description </label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.description" name="description" pInputText
+                           placeholder="Description">
+                  </div>
+                </div>
+
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3"> Template</label>
+                  <div class="col-sm-9">
+                    <textarea pInputTextarea  [(ngModel)]="element.template" 
+                        name="template" placeholder="Template" [required]="true"
+                        required></textarea>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Style</label>
+                  <div class="col-sm-9">
+                    <textarea pInputTextarea  [(ngModel)]="element.style" 
+                        name="style" placeholder="Style" ></textarea>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Vars</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.vars" name="vars" pInputText placeholder="Vars - separati da ;">
+                  </div>
+                </div>
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Dynamics</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.dynamics" name="dynamics" pInputText placeholder="Dynamics- separati da ; e :">
+                  </div>
+                </div>
+                <div class="btn-group btn-actions pull-right">
+                  <button type="button" *ngIf="!element.uuid" [disabled]="!theform.form.valid" class="btn btn-success"
+                          (click)="save()">SALVA
+                  </button>&nbsp;&nbsp;
+                  <button type="button" *ngIf="element.uuid" [disabled]="!theform.form.valid" class="btn btn-success"
+                          (click)="update()">MODIFICA
+                  </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                  <button type="button" *ngIf="element.uuid" [disabled]="!theform.form.valid" class="btn btn-danger"
+                          (click)="confirmDelete()">ELIMINA
+                  </button>&nbsp;&nbsp;
+
+                  <button type="button" class="btn btn-danger" (click)="navigateToList()">ANNULLA</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
