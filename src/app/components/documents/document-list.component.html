@@ -77,10 +77,9 @@
                                         </td>
                                         <td class="ui-resizable-column">{{ rowData.original_name }}</td>
                                         <td class="ui-resizable-column">
-                                            <a (click)="download(rowData.uuid)" class="btn btn-warning"
-                                                    target="_blank"> <i aria-hidden="true"
-                                                    class="fa fa-info-circle"></i></a>
-                                            {{ rowData.path }}
+                                            <button (click)="download(rowData.uuid)" class="btn btn-success btn-sm" pButton>
+                                                <i aria-hidden="true" class="fa fa-pencil"></i>  {{ rowData.path }}
+                                            </button>
                                         </td>
                                         <td class="ui-resizable-column">{{ rowData.mimetype }}
                                             <br/> {{ rowData.size }}</td>

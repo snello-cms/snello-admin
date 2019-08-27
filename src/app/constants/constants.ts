@@ -16,7 +16,7 @@ export const API_SERVICE_PATH = 'api_service_path';
 export const LOGIN_API_PATH = 'login_api_path';
 export const APP_VERSION = '1.0.RC2';
 
-export const CONFIG_PATH = 'snello-admin/config.html';
+export const CONFIG_PATH = '/config.html';
 
 export const DROPPABLE_API_PATH = 'droppable_path';
 export const DRAGGABLE_API_PATH = 'droppable_path';

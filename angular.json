@@ -21,6 +21,7 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
+              "src/config.html",
               "src"
             ],
             "styles": [
@@ -93,7 +94,9 @@
             "scripts": [],
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/config.html",
+              "src"
             ]
           }
         },
