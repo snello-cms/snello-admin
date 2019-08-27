@@ -109,6 +109,14 @@ export const ADMIN_ITEMS: any[] = [
         name: 'Links',
         summary: 'Links',
         roles: 'links_edit, links_view'
+    },
+    {
+        id: 'list',
+        icon: 'fa fa-shopping-basket',
+        section: 'draggables',
+        name: 'Draggables',
+        summary: 'Draggables',
+        roles: 'draggables_edit, draggables_view'
     }
 ];
 
