@@ -27,8 +27,10 @@ import {UrlmapruleEditComponent} from './components/urlmaprule/urlmaprule-edit.c
 import {NgModule} from '@angular/core';
 import {LinksListComponent} from './components/links/links-list.component';
 import {LinksEditComponent} from './components/links/links-edit.component';
-import { DraggableEditComponent } from './components/draggable/draggable-edit.component';
-import { DraggableListComponent } from './components/draggable/draggable-list.component';
+import {DraggableEditComponent} from './components/draggable/draggable-edit.component';
+import {DraggableListComponent} from './components/draggable/draggable-list.component';
+import {DroppableListComponent} from './components/droppable/droppable-list.component';
+import {DroppableEditComponent} from './components/droppable/droppable-edit.component';
 
 export const MainRoutes: Routes = [
     {
@@ -153,6 +155,18 @@ export const MainRoutes: Routes = [
         children: [
             {path: '', redirectTo: '/draggables/list', pathMatch: 'full'},
             {path: 'list', component: DraggableListComponent},
+            {path: 'new', component: DroppableEditComponent},
+            {path: 'edit/:id', component: DroppableEditComponent}
+
+        ]
+    },
+    ,
+    {
+        path: 'droppables',
+        component: OutletComponent,
+        children: [
+            {path: '', redirectTo: '/droppables/list', pathMatch: 'full'},
+            {path: 'list', component: DroppableListComponent},
             {path: 'new', component: DraggableEditComponent},
             {path: 'edit/:id', component: DraggableEditComponent}
 

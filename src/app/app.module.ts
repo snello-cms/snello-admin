@@ -63,6 +63,8 @@ import {ConfigurationService} from './service/configuration.service';
 import {initializer} from './routes-guard/app-init';
 import { DraggableEditComponent } from './components/draggable/draggable-edit.component';
 import { DraggableListComponent } from './components/draggable/draggable-list.component';
+import {DroppableListComponent} from './components/droppable/droppable-list.component';
+import {DroppableEditComponent} from './components/droppable/droppable-edit.component';
 
 registerLocaleData(localeIt);
 
@@ -118,7 +120,9 @@ registerLocaleData(localeIt);
         LinksListComponent,
         Permit,
         DraggableEditComponent,
-        DraggableListComponent
+        DraggableListComponent,
+        DroppableListComponent,
+        DroppableEditComponent
     ],
     imports: [
         CoreModule.forRoot(),

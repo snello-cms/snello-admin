@@ -112,11 +112,19 @@ export const ADMIN_ITEMS: any[] = [
     },
     {
         id: 'list',
-        icon: 'fa fa-shopping-basket',
+        icon: 'fa fa-puzzle-piece',
         section: 'draggables',
         name: 'Draggables',
         summary: 'Draggables',
         roles: 'draggables_edit, draggables_view'
+    },
+    {
+        id: 'list',
+        icon: 'fa fa-shopping-basket',
+        section: 'droppables',
+        name: 'Droppables',
+        summary: 'Droppables',
+        roles: 'droppables_edit, droppables_view'
     }
 ];
 

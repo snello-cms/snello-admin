@@ -1,13 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Condition} from '../../model/condtion';
-import {ConditionService} from '../../service/condition.service';
 import {MetadataService} from '../../service/metadata.service';
-import {Metadata} from '../../model/metadata';
-import {ConfirmationService, SelectItem} from 'primeng/api';
-import { Draggable } from 'src/app/model/draggable';
-import { DraggableService } from 'src/app/service/draggable.service';
+import {ConfirmationService} from 'primeng/api';
+import {Draggable} from 'src/app/model/draggable';
+import {DraggableService} from 'src/app/service/draggable.service';
 
 @Component(
   {
@@ -16,10 +13,6 @@ import { DraggableService } from 'src/app/service/draggable.service';
   }
 )
 export class DraggableEditComponent extends AbstractEditComponent<Draggable> implements OnInit {
-
-  metadatas = [];
-  metadatasSelect: SelectItem[] =[];
-  mapMetadata: Map<string, Metadata> = new Map();
 
   constructor(
       public router: Router,
@@ -34,7 +27,6 @@ export class DraggableEditComponent extends AbstractEditComponent<Draggable> imp
 
   ngOnInit() {
     this.element = new Draggable();
-   
     super.ngOnInit();
   }
 
