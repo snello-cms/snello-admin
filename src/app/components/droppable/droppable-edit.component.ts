@@ -19,6 +19,7 @@ export class DroppableEditComponent extends AbstractEditComponent<Droppable> imp
     draggables = [];
     draggableSelect: SelectItem[] = [];
     mapDraggable: Map<string, Draggable> = new Map();
+    draggable: string;
 
     constructor(
         public router: Router,
@@ -42,6 +43,19 @@ export class DroppableEditComponent extends AbstractEditComponent<Droppable> imp
         super.ngOnInit();
     }
 
+
+    addDraggable() {
+        if (!this.element.draggables) {
+            this.element.draggables = '';
+        }
+        if (!this.element.html) {
+            this.element.html = '';
+        }
+        if (this.draggable && this.mapDraggable.has(this.draggable)) {
+            this.element.draggables += this.mapDraggable.get(this.draggable).uuid;
+            this.element.html += this.mapDraggable.get(this.draggable).template;
+        }
+    }
 
     createInstance(): Droppable {
         return new Droppable();

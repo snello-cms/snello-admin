@@ -155,20 +155,19 @@ export const MainRoutes: Routes = [
         children: [
             {path: '', redirectTo: '/draggables/list', pathMatch: 'full'},
             {path: 'list', component: DraggableListComponent},
-            {path: 'new', component: DroppableEditComponent},
-            {path: 'edit/:id', component: DroppableEditComponent}
+            {path: 'new', component: DraggableEditComponent},
+            {path: 'edit/:id', component: DraggableEditComponent}
 
         ]
     },
-    ,
     {
         path: 'droppables',
         component: OutletComponent,
         children: [
             {path: '', redirectTo: '/droppables/list', pathMatch: 'full'},
             {path: 'list', component: DroppableListComponent},
-            {path: 'new', component: DraggableEditComponent},
-            {path: 'edit/:id', component: DraggableEditComponent}
+            {path: 'new', component: DroppableEditComponent},
+            {path: 'edit/:id', component: DroppableEditComponent}
 
         ]
     },

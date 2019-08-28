@@ -42,10 +42,23 @@
                 </div>
 
                 <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Input Type (*)</label>
+                  <div class="col-sm-9">
+                    <p-dropdown [(ngModel)]="draggable" [filter]="false" [options]="draggableSelect"
+                            [style]="{'width':'100%'}"
+                            filterBy="label" name="typeSelect" placeholder="Seleziona un draggable">
+                    </p-dropdown>
+                    <button (click)="addDraggable()" *ngIf="draggable" class="btn btn-success" type="button">
+                      ADD
+                    </button>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
                   <label class="label-text col-sm-3"> Draggables</label>
                   <div class="col-sm-9">
                     <textarea pInputTextarea  [(ngModel)]="element.draggables"
-                        name="template" placeholder="Template" [required]="true"
+                        name="template" placeholder="draggables" [required]="true"
                         required></textarea>
                   </div>
                 </div>
