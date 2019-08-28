@@ -32,6 +32,7 @@
                             <p-table #datatable (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true" [resizableColumns]="true" [responsive]="true" [rows]="10" [totalRecords]="service.listSize" [value]="model">
                                 <ng-template let-columns pTemplate="header">
                                     <tr class="sort-header">
+                                        <th pResizableColumn>Indice</th>
                                         <th pResizableColumn>Nome</th>
                                         <th pResizableColumn>Descrizione</th>
                                         <th class="Operations">Operazioni</th>

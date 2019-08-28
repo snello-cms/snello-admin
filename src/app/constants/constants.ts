@@ -18,8 +18,8 @@ export const APP_VERSION = '1.0.RC2';
 
 export const CONFIG_PATH = '/config.html';
 
-export const DROPPABLE_API_PATH = 'droppable_path';
-export const DRAGGABLE_API_PATH = 'droppable_path';
+export const DROPPABLE_API_PATH = 'droppable_api_path';
+export const DRAGGABLE_API_PATH = 'draggable_api_path';
 // se FS => /files/
 // se S3 => /files/
 
