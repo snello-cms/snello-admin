@@ -4,12 +4,16 @@ import {Condition} from '../model/condtion';
 import {CONDITION_API_PATH} from '../constants/constants';
 import {AbstractService} from '../common/abstract-service';
 import { MessageService } from 'primeng/api';
+import {ConfigurationService} from './configuration.service';
 
 @Injectable()
 export class ConditionService extends AbstractService<Condition> {
 
-  constructor(protected http: HttpClient, messageService: MessageService) {
-    super(CONDITION_API_PATH, http, messageService);
+  constructor(
+    protected http: HttpClient, 
+    messageService: MessageService, 
+    configurationService: ConfigurationService) {
+    super(configurationService.get(CONDITION_API_PATH), http, messageService);
   }
 
   getId(element: Condition) {
