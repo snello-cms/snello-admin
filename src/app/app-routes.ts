@@ -31,6 +31,7 @@ import {DraggableEditComponent} from './components/draggable/draggable-edit.comp
 import {DraggableListComponent} from './components/draggable/draggable-list.component';
 import {DroppableListComponent} from './components/droppable/droppable-list.component';
 import {DroppableEditComponent} from './components/droppable/droppable-edit.component';
+import {SessionGuard} from './routes-guard/session.guard';
 
 export const MainRoutes: Routes = [
     {
@@ -46,14 +47,17 @@ export const MainRoutes: Routes = [
     {
         path: 'home',
         component: HomepageComponent,
+        canActivate: [SessionGuard]
     },
     {
         path: 'adminpage',
         component: AdminpageComponent,
+        canActivate: [SessionGuard]
     },
     {
         path: 'metadata',
         component: OutletComponent,
+        canActivate: [SessionGuard],
         children: [
             {path: '', redirectTo: '/metadata/list', pathMatch: 'full'},
             {path: 'list', component: MetadataListComponent},
@@ -65,6 +69,7 @@ export const MainRoutes: Routes = [
     {
         path: 'fielddefinition',
         component: OutletComponent,
+        canActivate: [SessionGuard],
         children: [
             {path: '', redirectTo: '/fielddefinition/list', pathMatch: 'full'},
             {path: 'list', component: FieldDefinitionListComponent},
@@ -75,6 +80,7 @@ export const MainRoutes: Routes = [
     {
         path: 'condition',
         component: OutletComponent,
+        canActivate: [SessionGuard],
         children: [
             {path: '', redirectTo: '/condition/list', pathMatch: 'full'},
             {path: 'list', component: ConditionListComponent},
@@ -86,6 +92,7 @@ export const MainRoutes: Routes = [
     {
         path: 'document',
         component: OutletComponent,
+        canActivate: [SessionGuard],
         children: [
             {path: '', redirectTo: '/document/list', pathMatch: 'full'},
             {path: 'list', component: DocumentListComponent},
@@ -97,6 +104,7 @@ export const MainRoutes: Routes = [
     {
         path: 'selectqueries',
         component: OutletComponent,
+        canActivate: [SessionGuard],
         children: [
             {path: '', redirectTo: '/selectqueries/list', pathMatch: 'full'},
             {path: 'list', component: SelectQueryListComponent},
@@ -119,6 +127,7 @@ export const MainRoutes: Routes = [
     {
         path: 'urlmaprules',
         component: OutletComponent,
+        canActivate: [SessionGuard],
         children: [
             {path: '', redirectTo: '/urlmaprules/list', pathMatch: 'full'},
             {path: 'list', component: UrlmapruleListComponent},
@@ -130,6 +139,7 @@ export const MainRoutes: Routes = [
     {
         path: 'role',
         component: OutletComponent,
+        canActivate: [SessionGuard],
         children: [
             {path: '', redirectTo: '/role/list', pathMatch: 'full'},
             {path: 'list', component: RoleListComponent},
@@ -141,6 +151,7 @@ export const MainRoutes: Routes = [
     {
         path: 'links',
         component: OutletComponent,
+        canActivate: [SessionGuard],
         children: [
             {path: '', redirectTo: '/links/list', pathMatch: 'full'},
             {path: 'list', component: LinksListComponent},
@@ -152,6 +163,7 @@ export const MainRoutes: Routes = [
     {
         path: 'draggables',
         component: OutletComponent,
+        canActivate: [SessionGuard],
         children: [
             {path: '', redirectTo: '/draggables/list', pathMatch: 'full'},
             {path: 'list', component: DraggableListComponent},
@@ -163,6 +175,7 @@ export const MainRoutes: Routes = [
     {
         path: 'droppables',
         component: OutletComponent,
+        canActivate: [SessionGuard],
         children: [
             {path: '', redirectTo: '/droppables/list', pathMatch: 'full'},
             {path: 'list', component: DroppableListComponent},
@@ -173,16 +186,19 @@ export const MainRoutes: Routes = [
     },
     {
         path: 'datalistgeneral/list/:name',
+        canActivate: [SessionGuard],
         component: FormGenerationListGeneralComponent,
     },
 
     {
         path: 'publicdata/edit',
+        canActivate: [SessionGuard],
         component: PublicDataComponent,
     },
     {
         path: 'datalist',
         component: OutletComponent,
+        canActivate: [SessionGuard],
         children: [
             {
                 path: 'list/:name',

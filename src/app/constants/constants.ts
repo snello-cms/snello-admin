@@ -1,5 +1,6 @@
 import {SelectItem} from 'primeng/api';
 
+export const ASSET_PATH = 'asset_path';
 export const CONDITION_API_PATH = 'condition_api_path';
 export const DOCUMENT_API_PATH = 'document_api_path';
 export const FIELD_DEFINITION_API_PATH = 'field_definition_api_path';
@@ -16,7 +17,7 @@ export const API_SERVICE_PATH = 'api_service_path';
 export const LOGIN_API_PATH = 'login_api_path';
 export const APP_VERSION = '1.0.RC2';
 
-export const CONFIG_PATH = '/config.html';
+export const CONFIG_PATH = '/assets/config.json';
 
 export const DROPPABLE_API_PATH = 'droppable_api_path';
 export const DRAGGABLE_API_PATH = 'draggable_api_path';

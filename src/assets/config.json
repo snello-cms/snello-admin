@@ -1,4 +1,5 @@
 {
+  "asset_path": "./",
   "condition_api_path": "http://localhost:8080/api/conditions",
   "document_api_path": "http://localhost:8080/api/documents",
   "field_definition_api_path": "http://localhost:8080/api/fielddefinitions",

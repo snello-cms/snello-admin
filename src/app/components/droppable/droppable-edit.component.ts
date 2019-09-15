@@ -20,6 +20,7 @@ export class DroppableEditComponent extends AbstractEditComponent<Droppable> imp
     draggableSelect: SelectItem[] = [];
     mapDraggable: Map<string, Draggable> = new Map();
     draggable: string;
+    variables: { name, draggable, value }[] = [];
 
     constructor(
         public router: Router,
@@ -32,7 +33,7 @@ export class DroppableEditComponent extends AbstractEditComponent<Droppable> imp
         super(router, route, confirmationService, theService, 'droppables');
         this.draggableService.getAllList().subscribe(result => {
             for (const draggable of result) {
-                this.mapDraggable.set(draggable.name, draggable);
+                this.mapDraggable.set(draggable.uuid, draggable);
                 this.draggableSelect.push({value: draggable.uuid, label: draggable.name});
             }
         });
@@ -52,8 +53,12 @@ export class DroppableEditComponent extends AbstractEditComponent<Droppable> imp
             this.element.html = '';
         }
         if (this.draggable && this.mapDraggable.has(this.draggable)) {
-            this.element.draggables += this.mapDraggable.get(this.draggable).uuid;
-            this.element.html += this.mapDraggable.get(this.draggable).template;
+            const draggableScelto = this.mapDraggable.get(this.draggable);
+            this.element.draggables += draggableScelto.uuid;
+            this.element.html += draggableScelto.template;
+            for (const variable of draggableScelto.vars.split(';')) {
+                this.variables.push({name: variable, draggable: draggableScelto.uuid, value: ''});
+            }
         }
     }
 

@@ -10,7 +10,6 @@ import {ConfigurationService} from './configuration.service';
 export class AuthenticationService {
 
     public utente: UserInSession;
-
     private token: any;
     private logi_api_path: string;
 

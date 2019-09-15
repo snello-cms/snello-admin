@@ -1,24 +1,23 @@
 import {ModuleWithProviders, NgModule, Optional, SkipSelf} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {MetadataService} from "../service/metadata.service";
-import {ApiService} from "../service/api.service";
-import {ConditionService} from "../service/condition.service";
-import {DocumentService} from "../service/document.service";
-import {FieldDefinitionService} from "../service/field-definition.service";
-import {DataListService} from "../service/data-list.service";
-import {FieldDefinitionResolver} from "../routes-guard/field-definition-resolver";
-import {ConfirmationService, MessageService} from "primeng/api";
-import {PublicDatasService} from "../service/public-data.service";
-import {SelectQueryService} from "../service/select-query.service";
-import {UserService} from "../service/user.service";
-import {RoleService} from "../service/role.service";
-import {UserRoleService} from "../service/user-role.service";
-import {UrlMapRuleService} from "../service/url-map-rule.service";
-import {AuthenticationService} from "../service/authentication.service";
-import {LinksService} from "../service/links.service";
-import {Permit} from "../directives/permit";
-import { DraggableService } from '../service/draggable.service';
-import { DroppableService } from '../service/droppable.service';
+import {MetadataService} from '../service/metadata.service';
+import {ApiService} from '../service/api.service';
+import {ConditionService} from '../service/condition.service';
+import {DocumentService} from '../service/document.service';
+import {FieldDefinitionService} from '../service/field-definition.service';
+import {DataListService} from '../service/data-list.service';
+import {FieldDefinitionResolver} from '../routes-guard/field-definition-resolver';
+import {ConfirmationService, MessageService} from 'primeng/api';
+import {PublicDatasService} from '../service/public-data.service';
+import {SelectQueryService} from '../service/select-query.service';
+import {UserService} from '../service/user.service';
+import {RoleService} from '../service/role.service';
+import {UserRoleService} from '../service/user-role.service';
+import {UrlMapRuleService} from '../service/url-map-rule.service';
+import {AuthenticationService} from '../service/authentication.service';
+import {LinksService} from '../service/links.service';
+import {DraggableService} from '../service/draggable.service';
+import {DroppableService} from '../service/droppable.service';
 
 @NgModule({
   imports: [
