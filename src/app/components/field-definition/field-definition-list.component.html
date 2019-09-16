@@ -85,14 +85,10 @@
                                         <td class="ui-resizable-column">{{rowData.type}}</td>
                                         <td>
                                             <button (click)="edit(rowData)" class="btn btn-success btn-sm" pButton
-                                                    *ngIf="isEditable(rowData); else notEditable">
+                                                    [disabled]="!isEditable(rowData)">
                                                 <i aria-hidden="true" class="fa fa-pencil"></i>
                                                 Modifica
                                             </button>
-                                            <ng-template #notEditable>
-                                                <i aria-hidden="true" class="fa fa-times"></i> Not Editable
-                                            </ng-template>
-
                                         </td>
                                     </tr>
                                 </ng-template>

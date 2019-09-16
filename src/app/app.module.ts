@@ -65,8 +65,8 @@ import {DraggableEditComponent} from './components/draggable/draggable-edit.comp
 import {DraggableListComponent} from './components/draggable/draggable-list.component';
 import {DroppableListComponent} from './components/droppable/droppable-list.component';
 import {DroppableEditComponent} from './components/droppable/droppable-edit.component';
+import { EditorModule } from '@tinymce/tinymce-angular';
 import {TinymceComponent} from './generic.components/tinymce/tinymce.component';
-import {EditorModule} from '@tinymce/tinymce-angular';
 
 registerLocaleData(localeIt);
 

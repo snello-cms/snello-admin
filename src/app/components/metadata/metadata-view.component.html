@@ -148,7 +148,8 @@
                     <h3>
                         Field Definitions
                     </h3>
-                    <button pButton class="btn btn-add pull-right btn-block" (click)="newFieldDefinition()">
+                    <button pButton class="btn btn-add pull-right btn-block" (click)="newFieldDefinition()"
+                            [disabled]="this.element.created">
                         <i class="fa fa-plus-circle"></i> Aggiungi
                     </button>
                     <p-table [paginator]="true" [resizableColumns]="true" [responsive]="true" [rows]="10" [totalRecords]="fieldDefinitionService.listSize" [value]="fieldDefinitions">
@@ -177,7 +178,8 @@
                                 <td class="ui-resizable-column">{{rowData.table_key}}</td>
                                 <td class="ui-resizable-column">{{rowData.type}}</td>
                                 <td class="ui-resizable-column">
-                                    <button (click)="editField(rowData)" class="btn btn-success btn-sm" pButton>
+                                    <button (click)="editField(rowData)" class="btn btn-success btn-sm"
+                                            [disabled]="this.element.created" pButton>
                                         <i aria-hidden="true" class="fa fa-pencil"></i>
                                         Modifica
                                     </button>
