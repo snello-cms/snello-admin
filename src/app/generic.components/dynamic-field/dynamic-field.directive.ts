@@ -13,6 +13,7 @@ import {TimeComponent} from '../time/time.component';
 import {MultiJoinComponent} from '../multi-join/multi-join.component';
 import {MediaComponent} from '../media/media.component';
 import {TinymceComponent} from '../tinymce/tinymce.component';
+import { InputViewComponent } from '../input/input-view.component';
 
 @Directive({
   selector: '[dynamicField]'
@@ -20,6 +21,7 @@ import {TinymceComponent} from '../tinymce/tinymce.component';
 export class DynamicFieldDirective implements OnInit {
   @Input() field: FieldDefinition;
   @Input() group: FormGroup;
+  @Input() view: boolean;
 
   constructor(
     private resolver: ComponentFactoryResolver,
@@ -31,9 +33,17 @@ export class DynamicFieldDirective implements OnInit {
 
   ngOnInit() {
 
-    const factory = this.resolver.resolveComponentFactory(
-      componentMapper[this.field.type]
-    );
+    let factory;
+    if (!this.view) {
+      factory = this.resolver.resolveComponentFactory(
+        componentMapper[this.field.type]
+      );
+    }    
+    if (this.view) {
+      factory = this.resolver.resolveComponentFactory(
+        componentVewMapper[this.field.type]
+      );
+    }
     this.componentRef = this.container.createComponent(factory);
     this.componentRef.instance.field = this.field;
     this.componentRef.instance.group = this.group;
@@ -56,3 +66,17 @@ const componentMapper = {
   media: MediaComponent
 };
 
+const componentVewMapper = {
+  input: InputViewComponent,
+  select: InputViewComponent,
+  date: InputViewComponent,
+  datetime: InputViewComponent,
+  time: InputViewComponent,
+  checkbox: CheckboxComponent,
+  textarea: InputViewComponent,
+  tinymce: InputViewComponent,
+  tags: InputViewComponent,
+  join: InputViewComponent,
+  multijoin: InputViewComponent,
+  media: MediaComponent
+};

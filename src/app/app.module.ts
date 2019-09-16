@@ -66,6 +66,9 @@ import {DroppableEditComponent} from './components/droppable/droppable-edit.comp
 import {EditorModule} from '@tinymce/tinymce-angular';
 import {TinymceComponent} from './generic.components/tinymce/tinymce.component';
 import {ConfirmationService, MessageService} from 'primeng/api';
+import { InputViewComponent } from './generic.components/input/input-view.component';
+import { FormGenerationViewComponent } from './components/form-generation/form-generation-view.component';
+import { DynamicViewFormComponent } from './generic.components/dynamic-form/dynamic-view-form.component';
 
 registerLocaleData(localeIt);
 
@@ -84,6 +87,7 @@ export function loadConfigurations(configService: ConfigurationService) {
         HomepageComponent,
         TagComponent,
         InputComponent,
+        InputViewComponent,
         SelectComponent,
         JoinComponent,
         MultiJoinComponent,
@@ -97,6 +101,7 @@ export function loadConfigurations(configService: ConfigurationService) {
         DynamicFieldDirective,
         DynamicFormComponent,
         DynamicSearchFormComponent,
+        DynamicViewFormComponent,
         MetadataEditComponent,
         MetadataViewComponent,
         MetadataListComponent,
@@ -109,6 +114,7 @@ export function loadConfigurations(configService: ConfigurationService) {
         FormGenerationMetadataListComponent,
         FormGenerationListComponent,
         FormGenerationEditComponent,
+        FormGenerationViewComponent,
         SelectQueryEditComponent,
         SelectQueryListComponent,
         PublicDataComponent,
@@ -144,6 +150,7 @@ export function loadConfigurations(configService: ConfigurationService) {
     ],
     entryComponents: [
         InputComponent,
+        InputViewComponent,
         SelectComponent,
         JoinComponent,
         MultiJoinComponent,

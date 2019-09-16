@@ -1,0 +1,36 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <homepage-topbar></homepage-topbar>
+</div>
+
+<div class="sidebar-subpage">
+
+    <h3>Edit {{metadataName}}</h3>
+    <p>
+
+    </p>
+        
+
+</div>
+
+
+<div class="main">
+
+  <div class="container-fluid">
+    <div class="row">
+
+      <div class="col-md-12 col-sm-12">
+        <div class="content view">
+       
+
+          <div *ngIf="regConfig != null && regConfig.length > 0">
+            <dynamic-view-form [fields]="regConfig">
+            </dynamic-view-form>
+
+            <button type="button" class="btn btn-warning" (click)="cancel()">ANNULLA</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

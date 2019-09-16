@@ -32,6 +32,7 @@ import {DraggableListComponent} from './components/draggable/draggable-list.comp
 import {DroppableListComponent} from './components/droppable/droppable-list.component';
 import {DroppableEditComponent} from './components/droppable/droppable-edit.component';
 import {SessionGuard} from './routes-guard/session.guard';
+import { FormGenerationViewComponent } from './components/form-generation/form-generation-view.component';
 
 export const MainRoutes: Routes = [
     {
@@ -217,6 +218,13 @@ export const MainRoutes: Routes = [
             {
                 path: 'edit/:name/:uuid',
                 component: FormGenerationEditComponent,
+                resolve: {
+                    fieldDefinitionValorized: FieldDefinitionResolver
+                }
+            },
+            {
+                path: 'view/:name/:uuid',
+                component: FormGenerationViewComponent,
                 resolve: {
                     fieldDefinitionValorized: FieldDefinitionResolver
                 }

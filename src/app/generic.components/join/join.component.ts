@@ -27,9 +27,9 @@ import {ApiService} from "../../service/api.service";
             [(ngModel)]="filteredValue"  [dropdown]="true" [ngModelOptions]="{standalone: true}"
             (onSelect)="selectRecord($event)" [forceSelection]="true">
 
-            <ng-template let-brand pTemplate="item">
+            <ng-template let-xx pTemplate="item">
              
-               {{labelMap.get(brand)}}
+               {{labelMap.get(xx)}}
          
            
             </ng-template>

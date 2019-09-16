@@ -17,7 +17,6 @@ import {UrlMapRuleService} from '../service/url-map-rule.service';
 import {AuthenticationService} from '../service/authentication.service';
 import {LinksService} from '../service/links.service';
 import {DraggableService} from '../service/draggable.service';
-import {DroppableService} from '../service/droppable.service';
 
 @NgModule({
   imports: [

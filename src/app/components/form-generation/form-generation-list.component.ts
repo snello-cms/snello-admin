@@ -84,6 +84,10 @@ export class FormGenerationListComponent implements OnInit {
     this.router.navigate(['datalist/edit', name, uuid]);
   }
 
+  public view(name: string, uuid: string) {
+    this.router.navigate(['datalist/view', name, uuid]);
+  }
+
   public loaddata(firstReload: boolean, datatable: any) {
     this.firstReload = firstReload;
     this.preLoaddata();
