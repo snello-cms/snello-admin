@@ -51,8 +51,6 @@ export class DynamicViewFormComponent implements OnInit {
   @Output() submit: EventEmitter<any> = new EventEmitter<any>();
   form: FormGroup;
 
-  true:boolean = true;
-
   constructor(private fb: FormBuilder) {
   }
 
