@@ -1,0 +1,120 @@
+<sidebar></sidebar>
+<div class="sidebar">
+    <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+    <h3>
+        Edit Droppable
+    </h3>
+    <p>
+    </p>
+</div>
+
+
+<div class="main">
+
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-md-12 col-sm-12">
+                <div class="content view">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12">
+                            <form #theform="ngForm">
+
+
+                                <div class="form-group clearfix row">
+                                    <label class="label-text col-sm-3">Name (*)</label>
+                                    <div class="col-sm-9">
+                                        <input [(ngModel)]="element.name" [required]="true" name="name" pInputText
+                                                placeholder="Name (*)">
+                                    </div>
+                                </div>
+
+                                <div class="form-group clearfix row">
+                                    <label class="label-text col-sm-3">Description </label>
+                                    <div class="col-sm-9">
+                                        <input [(ngModel)]="element.description" name="description" pInputText
+                                                placeholder="Description">
+                                    </div>
+                                </div>
+
+                                <div class="form-group clearfix row">
+                                    <label class="label-text col-sm-3">Input Type (*)</label>
+                                    <div class="col-sm-9">
+                                        <p-dropdown [(ngModel)]="draggable" [filter]="false" [options]="draggableSelect"
+                                                [style]="{'width':'100%'}"
+                                                filterBy="label" name="typeSelect" placeholder="Seleziona un draggable">
+                                        </p-dropdown>
+                                        <button (click)="addDraggable()" *ngIf="draggable" class="btn btn-success" type="button">
+                                            ADD
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group clearfix row">
+                                    <label class="label-text col-sm-3"> Draggables</label>
+                                    <div class="col-sm-9">
+                    <textarea pInputTextarea [(ngModel)]="element.draggables"
+                            name="template" placeholder="draggables" [required]="true"
+                            required></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group clearfix row">
+                                    <label class="label-text col-sm-3">Html</label>
+                                    <div class="col-sm-9">
+                    <textarea pInputTextarea [(ngModel)]="element.html"
+                            name="html" placeholder="Html"></textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group clearfix row">
+                                    <label class="label-text col-sm-3">static values</label>
+                                    <div class="col-sm-9">
+                                        <input [(ngModel)]="element.static_values" name="values" pInputText
+                                                placeholder="Values - var:value;">
+                                    </div>
+                                </div>
+
+                                <div class="form-group clearfix row">
+                                    <label class="label-text col-sm-3">static values</label>
+                                    <div class="col-sm-9">
+                                        <ul *ngIf='variables'>
+                                            <li *ngFor="let vv of variables">{{vv.draggable}} {{vv.name}}
+                                                <input name="{{vv.value}}"/></li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="form-group clearfix row">
+                                    <label class="label-text col-sm-3">dynamic values</label>
+                                    <div class="col-sm-9">
+                                        <input [(ngModel)]="element.dynamic_values" name="dynamics" pInputText
+                                                placeholder="Dynamics - var:value;">
+                                    </div>
+                                </div>
+
+
+                                <div class="btn-group btn-actions pull-right">
+                                    <button type="button" *ngIf="!element.uuid" [disabled]="!theform.form.valid" class="btn btn-success"
+                                            (click)="save()">SALVA
+                                    </button>&nbsp;&nbsp;
+                                    <button type="button" *ngIf="element.uuid" [disabled]="!theform.form.valid" class="btn btn-success"
+                                            (click)="update()">MODIFICA
+                                    </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <button type="button" *ngIf="element.uuid" [disabled]="!theform.form.valid" class="btn btn-danger"
+                                            (click)="confirmDelete()">ELIMINA
+                                    </button>&nbsp;&nbsp;
+
+                                    <button type="button" class="btn btn-danger" (click)="navigateToList()">ANNULLA</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

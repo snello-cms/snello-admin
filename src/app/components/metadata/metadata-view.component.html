@@ -23,6 +23,15 @@
             <div class="col-md-12 col-sm-12">
                 <div class="content view">
                     <div class="row">
+                        <h3>
+                            {{element.table_name}}
+                        </h3>
+                        <button pButton class="btn btn-add pull-right btn-block" (click)="newFieldDefinition()"
+                                [disabled]="this.element.created">
+                            <i class="fa fa-plus-circle"></i> Modifica
+                        </button>
+                    </div>
+                    <div class="row">
                         <div class="col-sm-6">
 
                             <div class="form-group clearfix row">
@@ -141,12 +150,17 @@
                 </div>
             </div>
 
-            <div class="clearfix"></div><br>
+            <div class="clearfix"></div>
+            <br>
             <div class="col-md-12 col-sm-12">
                 <div class="content view">
                     <h3>
                         Field Definitions
                     </h3>
+                    <button pButton class="btn btn-add pull-right btn-block" (click)="newFieldDefinition()"
+                            [disabled]="this.element.created">
+                        <i class="fa fa-plus-circle"></i> Aggiungi
+                    </button>
                     <p-table [paginator]="true" [resizableColumns]="true" [responsive]="true" [rows]="10" [totalRecords]="fieldDefinitionService.listSize" [value]="fieldDefinitions">
                         <ng-template let-columns pTemplate="header">
                             <tr class="sort-header">
@@ -156,6 +170,7 @@
                                 <th pResizableColumn>Label</th>
                                 <th pResizableColumn>Table Key</th>
                                 <th pResizableColumn>Input Type</th>
+                                <th pResizableColumn>Operations</th>
                             </tr>
                         </ng-template>
                         <ng-template pTemplate="emptymessage">
@@ -171,6 +186,13 @@
                                 <td class="ui-resizable-column">{{rowData.label}}</td>
                                 <td class="ui-resizable-column">{{rowData.table_key}}</td>
                                 <td class="ui-resizable-column">{{rowData.type}}</td>
+                                <td class="ui-resizable-column">
+                                    <button (click)="editField(rowData)" class="btn btn-success btn-sm"
+                                            [disabled]="this.element.created" pButton>
+                                        <i aria-hidden="true" class="fa fa-pencil"></i>
+                                        Modifica
+                                    </button>
+                                </td>
                             </tr>
                         </ng-template>
                     </p-table>

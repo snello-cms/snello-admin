@@ -45,4 +45,12 @@
         class="fa fa-link"></i>
       <div class="clearfix"></div> <span>Links</span>
     </a></li>
+    <li *permit="'draggables_edit, draggables_view'" class="list-group-item"><a [routerLink]="'/draggables/list'"><i
+      class="fa fa-puzzle-piece"></i>
+    <div class="clearfix"></div> <span>Draggables</span>
+  </a></li>
+    <li *permit="'droppables_edit, droppables_view'" class="list-group-item"><a [routerLink]="'/droppables/list'"><i
+            class="fa fa-shopping-basket"></i>
+        <div class="clearfix"></div> <span>Droppables</span>
+    </a></li>
 </ul>

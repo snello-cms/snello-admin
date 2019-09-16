@@ -8,7 +8,9 @@ import {catchError, map} from 'rxjs/operators';
 import {ConfigurationService} from './configuration.service';
 import {DOCUMENT_API_PATH} from '../constants/constants';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class DocumentService extends AbstractService<Document> {
 
     private progress$: Observable<number>;
@@ -16,7 +18,7 @@ export class DocumentService extends AbstractService<Document> {
     private progressObserver: Observer<number>;
 
     constructor(protected http: HttpClient, messageService: MessageService, configurationService: ConfigurationService) {
-        super(configurationService.get(DOCUMENT_API_PATH), http, messageService);
+        super(configurationService.getValue(DOCUMENT_API_PATH), http, messageService);
         this.progress$ = new Observable<number>(observer => {
             this.progressObserver = observer;
         });

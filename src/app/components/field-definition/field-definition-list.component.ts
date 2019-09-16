@@ -5,49 +5,58 @@ import {FieldDefinitionService} from '../../service/field-definition.service';
 import {FieldDefinition} from '../../model/field-definition';
 import {MetadataService} from '../../service/metadata.service';
 import {ConfirmationService, SelectItem} from 'primeng/api';
+import {Metadata} from '../../model/metadata';
 
 @Component(
-  {
-    templateUrl: './field-definition-list.component.html',
-    styleUrls: ['./field-definition-list.component.css']
-  }
+    {
+        templateUrl: './field-definition-list.component.html',
+        styleUrls: ['./field-definition-list.component.css']
+    }
 )
 export class FieldDefinitionListComponent extends AbstractListComponent<FieldDefinition> implements OnInit {
 
-  public metadatasItems: SelectItem[];
+    public metadatasItems: SelectItem[];
+    metadatas: Map<string, boolean> = new Map<string, boolean>();
 
-  constructor(
-    public router: Router,
-    public confirmationService: ConfirmationService,
-    public service: FieldDefinitionService,
-    public metadataService: MetadataService) {
+    constructor(
+        public router: Router,
+        public confirmationService: ConfirmationService,
+        public service: FieldDefinitionService,
+        public metadataService: MetadataService) {
+        super(router, confirmationService, service, 'fielddefinition');
+        this.filters = new FieldDefinition();
 
-    super(router, confirmationService, service, 'fielddefinition');
-    this.filters = new FieldDefinition();
-
-    this.metadatasItems = [];
-    this.metadataService.buildSearch();
-    this.metadataService.getAllList().subscribe(metadatas => {
-      this.metadatasItems.push({label: null, value: '...'});
-      for (let p = 0; p < metadatas.length; p++) {
-        this.metadatasItems.push({
-          label: metadatas[p].table_name,
-          value: metadatas[p].uuid
+        this.metadatasItems = [];
+        this.metadataService.buildSearch();
+        this.metadataService.getAllList().subscribe(metadatas => {
+            this.metadatasItems.push({label: null, value: '...'});
+            for (let p = 0; p < metadatas.length; p++) {
+                this.metadatas.set(metadatas[p].uuid, metadatas[p].created);
+                this.metadatasItems.push({
+                    label: metadatas[p].table_name,
+                    value: metadatas[p].uuid
+                });
+            }
         });
-      }
-    });
-  }
+    }
 
-  ngOnInit() {
-    this.service.buildSearch();
-    this.firstReload = true;
-  }
+    ngOnInit() {
+        this.service.buildSearch();
+        this.firstReload = true;
+    }
 
-  public new() {
-    this.router.navigate(['/' + this.path + '/new']);
-  }
+    public new() {
+        this.router.navigate(['/' + this.path + '/new']);
+    }
 
-  postList() {
-    super.postList();
-  }
+    postList() {
+        super.postList();
+    }
+
+    public isEditable(fieldDefinition: FieldDefinition): boolean {
+        if (!this.metadatas.has(fieldDefinition.metadata_uuid)) {
+            return true;
+        }
+        return !this.metadatas.get(fieldDefinition.metadata_uuid);
+    }
 }

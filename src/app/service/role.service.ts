@@ -6,11 +6,13 @@ import {Role} from '../model/role';
 import {ConfigurationService} from './configuration.service';
 import {ROLE_API_PATH} from '../constants/constants';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class RoleService extends AbstractService<Role> {
 
     constructor(protected http: HttpClient, messageService: MessageService, configurationService: ConfigurationService) {
-        super(configurationService.get(ROLE_API_PATH), http, messageService);
+        super(configurationService.getValue(ROLE_API_PATH), http, messageService);
     }
 
     getId(element: Role) {

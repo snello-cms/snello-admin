@@ -5,13 +5,14 @@ import {InputComponent} from '../input/input.component';
 import {SelectComponent} from '../select/select.component';
 import {DateComponent} from '../date/date.component';
 import {CheckboxComponent} from '../checkbox/checkbox.component';
-import {TextAreaComponent} from "../textarea/textarea.component";
-import {TagComponent} from "../tag/tag.component";
-import {DatetimeComponent} from "../datetime/datetime.component";
-import {JoinComponent} from "../join/join.component";
-import {TimeComponent} from "../time/time.component";
-import {MultiJoinComponent} from "../multi-join/multi-join.component";
-import {MediaComponent} from "../media/media.component";
+import {TextAreaComponent} from '../textarea/textarea.component';
+import {TagComponent} from '../tag/tag.component';
+import {DatetimeComponent} from '../datetime/datetime.component';
+import {JoinComponent} from '../join/join.component';
+import {TimeComponent} from '../time/time.component';
+import {MultiJoinComponent} from '../multi-join/multi-join.component';
+import {MediaComponent} from '../media/media.component';
+import {TinymceComponent} from '../tinymce/tinymce.component';
 
 @Directive({
   selector: '[dynamicField]'
@@ -48,6 +49,7 @@ const componentMapper = {
   time: TimeComponent,
   checkbox: CheckboxComponent,
   textarea: TextAreaComponent,
+  tinymce: TinymceComponent,
   tags: TagComponent,
   join: JoinComponent,
   multijoin: MultiJoinComponent,

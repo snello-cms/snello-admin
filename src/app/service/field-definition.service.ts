@@ -6,12 +6,14 @@ import {MessageService} from 'primeng/api';
 import {ConfigurationService} from './configuration.service';
 import {FIELD_DEFINITION_API_PATH} from '../constants/constants';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class FieldDefinitionService extends AbstractService<FieldDefinition> {
     constructor(
         protected http: HttpClient,
         messageService: MessageService, configurationService: ConfigurationService) {
-        super(configurationService.get(FIELD_DEFINITION_API_PATH), http, messageService);
+        super(configurationService.getValue(FIELD_DEFINITION_API_PATH), http, messageService);
     }
 
     getId(element: FieldDefinition) {

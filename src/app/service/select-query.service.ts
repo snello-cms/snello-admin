@@ -6,10 +6,12 @@ import {SelectQuery} from '../model/select-query';
 import {ConfigurationService} from './configuration.service';
 import {SELECT_QUERY_API_PATH} from '../constants/constants';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class SelectQueryService extends AbstractService<SelectQuery> {
     constructor(protected http: HttpClient, messageService: MessageService, configurationService: ConfigurationService) {
-        super(configurationService.get(SELECT_QUERY_API_PATH), http, messageService);
+        super(configurationService.getValue(SELECT_QUERY_API_PATH), http, messageService);
     }
 
     getId(element: SelectQuery) {

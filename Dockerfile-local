@@ -5,7 +5,7 @@ RUN rm -rf /usr/share/nginx/html/*
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-COPY dist/admin /usr/share/nginx/html
+COPY dist/admin /usr/share/nginx/html/snello-admin
 #COPY docs/public/index.html /usr/share/nginx/html/index.html
 
 

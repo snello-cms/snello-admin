@@ -1,13 +1,15 @@
 import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@angular/router';
 import {Observable, of} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
-import {FieldDefinition} from "../model/field-definition";
-import {ApiService} from "../service/api.service";
-import {DataListService} from "../service/data-list.service";
-import {Injectable} from "@angular/core";
-import {MetadataService} from "../service/metadata.service";
+import {FieldDefinition} from '../model/field-definition';
+import {ApiService} from '../service/api.service';
+import {DataListService} from '../service/data-list.service';
+import {Injectable} from '@angular/core';
+import {MetadataService} from '../service/metadata.service';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class FieldDefinitionResolver implements Resolve<FieldDefinition[]> {
   constructor(private dataListService: DataListService,
               private metadataSerive: MetadataService,

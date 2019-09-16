@@ -1,26 +1,31 @@
 import {Component, ViewChild} from '@angular/core';
-import {DynamicFormComponent} from "../../generic.components/dynamic-form/dynamic-form.component";
-import {APP_VERSION} from "../../constants/constants";
+import {DynamicFormComponent} from '../../generic.components/dynamic-form/dynamic-form.component';
+import {APP_VERSION, ASSET_PATH} from '../../constants/constants';
+import {ConfigurationService} from '../../service/configuration.service';
 
 @Component({
-  templateUrl: './main.component.html',
-  styleUrls: ['./main.component.css']
+    templateUrl: './main.component.html',
+    styleUrls: ['./main.component.css']
 })
 export class MainComponent {
 
-  @ViewChild(DynamicFormComponent, { static: false }) form: DynamicFormComponent;
+    @ViewChild(DynamicFormComponent, {static: false}) form: DynamicFormComponent;
 
-  selected: string = "home";
+    public selected = 'home';
+    public asset_path: string;
 
-  constructor() {
-  }
+    constructor(private configurationService: ConfigurationService) {
+        configurationService.getValue(ASSET_PATH).subscribe(
+            ass => this.asset_path = ass
+        );
+    }
 
-  public select(page: string) {
-    this.selected = page;
-  }
+    public select(page: string) {
+        this.selected = page;
+    }
 
-  version(): string {
-    return APP_VERSION;
-  }
+    version(): string {
+        return APP_VERSION;
+    }
 
 }

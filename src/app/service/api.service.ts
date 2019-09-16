@@ -6,7 +6,9 @@ import {FieldDefinition} from '../model/field-definition';
 import {ConfigurationService} from './configuration.service';
 import {API_SERVICE_PATH} from '../constants/constants';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class ApiService implements OnInit {
 
     url: string;
@@ -17,7 +19,9 @@ export class ApiService implements OnInit {
     public map: Map<string, FieldDefinition[]> = new Map<string, FieldDefinition[]>();
 
     constructor(protected http: HttpClient, configurationService: ConfigurationService) {
-        this.url = configurationService.get(API_SERVICE_PATH);
+        configurationService.getValue(API_SERVICE_PATH).subscribe(
+            url => this.url = url
+        );
     }
 
     ngOnInit(): void {

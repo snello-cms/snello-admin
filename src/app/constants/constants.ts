@@ -1,5 +1,6 @@
 import {SelectItem} from 'primeng/api';
 
+export const ASSET_PATH = 'asset_path';
 export const CONDITION_API_PATH = 'condition_api_path';
 export const DOCUMENT_API_PATH = 'document_api_path';
 export const FIELD_DEFINITION_API_PATH = 'field_definition_api_path';
@@ -14,10 +15,12 @@ export const USER_ROLES_API_PATH = 'user_roles_api_path';
 export const URL_MAP_RULES_API_PATH = 'url_map_rules_api_path';
 export const API_SERVICE_PATH = 'api_service_path';
 export const LOGIN_API_PATH = 'login_api_path';
-export const APP_VERSION = '1.0.RC2';
+export const APP_VERSION = '1.0.RC3';
 
-export const CONFIG_PATH = 'snello-admin/config.html';
+export const CONFIG_PATH = '/assets/config.json';
 
+export const DROPPABLE_API_PATH = 'droppable_api_path';
+export const DRAGGABLE_API_PATH = 'draggable_api_path';
 // se FS => /files/
 // se S3 => /files/
 
@@ -107,6 +110,22 @@ export const ADMIN_ITEMS: any[] = [
         name: 'Links',
         summary: 'Links',
         roles: 'links_edit, links_view'
+    },
+    {
+        id: 'list',
+        icon: 'fa fa-puzzle-piece',
+        section: 'draggables',
+        name: 'Draggables',
+        summary: 'Draggables',
+        roles: 'draggables_edit, draggables_view'
+    },
+    {
+        id: 'list',
+        icon: 'fa fa-shopping-basket',
+        section: 'droppables',
+        name: 'Droppables',
+        summary: 'Droppables',
+        roles: 'droppables_edit, droppables_view'
     }
 ];
 

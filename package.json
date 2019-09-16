@@ -20,6 +20,7 @@
     "@angular/platform-browser": "^8.0.1",
     "@angular/platform-browser-dynamic": "^8.0.1",
     "@angular/router": "^8.0.1",
+    "@tinymce/tinymce-angular": "^3.3.0",
     "bootstrap": "3.3.7",
     "core-js": "^2.6.3",
     "jquery": "^3.3.1",
@@ -29,6 +30,7 @@
     "primeicons": "^1.0.0",
     "primeng": "^8.0.0",
     "rxjs": "~6.5.2",
+    "tinymce": "^5.0.15",
     "tslib": "^1.9.0",
     "zone.js": "~0.9.1"
   },

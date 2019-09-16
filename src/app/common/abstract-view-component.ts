@@ -1,22 +1,22 @@
-import {AbstractService} from "./abstract-service";
-import {Router, ActivatedRoute} from "@angular/router";
-import {OnInit} from "@angular/core";
+import {AbstractService} from './abstract-service';
+import {Router, ActivatedRoute} from '@angular/router';
+import {OnInit} from '@angular/core';
 
 export abstract class AbstractViewComponent<T> implements OnInit {
 
-    //public msgs:Message[] = [];
+    // public msgs:Message[] = [];
 
-    public editMode: boolean = false;
-    public element:T = null;
+    public editMode = false;
+    public element: T = null;
 
-    constructor(protected router:Router,
-                protected route:ActivatedRoute,
-                protected service:AbstractService<T>,
+    constructor(protected router: Router,
+                protected route: ActivatedRoute,
+                protected service: AbstractService<T>,
                 public path?: string) {
     }
 
     ngOnInit() {
-        let id:string = this.route.snapshot.params['id'];
+        const id: string = this.route.snapshot.params['id'];
         if (id) {
             this.editMode = true;
             this.service.find(id).subscribe(
@@ -25,11 +25,11 @@ export abstract class AbstractViewComponent<T> implements OnInit {
                     this.postFind();
                 },
                 error => {
-                    this.addError('Errore nel caricamento dei dati.' + ( error || ''));
+                    this.addError('Errore nel caricamento dei dati.' + (error || ''));
                 }
             );
         } else {
-            this.addError("Errore nel caricamento dei dati.");
+            this.addError('Errore nel caricamento dei dati.');
         }
     }
 
@@ -42,19 +42,19 @@ export abstract class AbstractViewComponent<T> implements OnInit {
     }
 
     public clearMsgs() {
-      //this.msgs = [];
+        //this.msgs = [];
     }
 
-    public addInfo(message:string) {
-      //    this.msgs.push({severity: 'info', summary: 'Informazioni: ', detail: message});
+    public addInfo(message: string) {
+        //    this.msgs.push({severity: 'info', summary: 'Informazioni: ', detail: message});
     }
 
-    public addWarn(message:string) {
-      //this.msgs.push({severity: 'warn', summary: 'Attenzione: ', detail: message});
+    public addWarn(message: string) {
+        // this.msgs.push({severity: 'warn', summary: 'Attenzione: ', detail: message});
     }
 
-    public addError(message:string) {
-      //this.msgs.push({severity: 'error', summary: 'Errore: ', detail: message});
+    public addError(message: string) {
+        // this.msgs.push({severity: 'error', summary: 'Errore: ', detail: message});
     }
 
     abstract getId();
@@ -71,9 +71,9 @@ export abstract class AbstractViewComponent<T> implements OnInit {
     annulla() {
         let backPath = this.path;
         const lastIndexOfSlash = this.path.lastIndexOf('/');
-        if ( lastIndexOfSlash >= 0 ) {
+        if (lastIndexOfSlash >= 0) {
             backPath = this.path.substring(0, lastIndexOfSlash + 1);
-            if ( backPath === '' ) {
+            if (backPath === '') {
                 backPath = 'home';
             }
         }

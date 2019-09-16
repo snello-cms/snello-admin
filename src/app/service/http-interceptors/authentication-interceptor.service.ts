@@ -3,7 +3,9 @@ import {HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpRequest} from 
 import {Observable} from 'rxjs';
 import {TOKEN_ITEM} from '../../constants/constants';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class AuthenticationInterceptor implements HttpInterceptor {
 
     constructor() {

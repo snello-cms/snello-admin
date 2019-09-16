@@ -1,10 +1,10 @@
 <div class="header">
     <div class="logo-header">
         <a [routerLink]="'/adminpage'" (click)="select('adminpage')">
-            <img class="logo" src="./assets/images/logo_white.svg"></a>
+            <img class="logo" src="{{asset_path}}/assets/images/logo_white.svg"></a>
     </div>
     <ul class="nav nav-tabs text-center">
-        <li *permit="'metadatas_edit, metadatas_view,fielddefinitions_edit, fielddefinitions_view,conditions_edit, conditions_view,documents_edit, documents_view,publicdata_edit,selectqueries_edit, selectqueries_view,users_edit, users_view,roles_edit,roles_view,urlmaprules_edit, urlmaprules_view,links_edit, links_view'">
+        <li *permit="'metadatas_edit, metadatas_view,fielddefinitions_edit, fielddefinitions_view,conditions_edit, conditions_view,documents_edit, documents_view,publicdata_edit,selectqueries_edit, selectqueries_view,users_edit, users_view,roles_edit,roles_view,urlmaprules_edit, urlmaprules_view,links_edit, links_view,draggables_edit, draggables_view'">
             <a [routerLink]="'/adminpage'" (click)="select('adminpage')" [className]="isAdminPage()">
                 <i class="fa fa-bookmark" aria-hidden="true"></i> ADMIN
             </a>
