@@ -56,19 +56,22 @@ import {LinksEditComponent} from './components/links/links-edit.component';
 import {LinksListComponent} from './components/links/links-list.component';
 import {SideBarComponent} from './components/sidebar/sidebar.component';
 import {PermitDirective} from './directives/permit.directive';
-import {AuthenticationService} from './service/authentication.service';
 import {registerLocaleData} from '@angular/common';
 import localeIt from '@angular/common/locales/it';
 import {ConfigurationService} from './service/configuration.service';
-import {initializer} from './routes-guard/app-init';
 import {DraggableEditComponent} from './components/draggable/draggable-edit.component';
 import {DraggableListComponent} from './components/draggable/draggable-list.component';
 import {DroppableListComponent} from './components/droppable/droppable-list.component';
 import {DroppableEditComponent} from './components/droppable/droppable-edit.component';
-import { EditorModule } from '@tinymce/tinymce-angular';
+import {EditorModule} from '@tinymce/tinymce-angular';
 import {TinymceComponent} from './generic.components/tinymce/tinymce.component';
+import {ConfirmationService, MessageService} from 'primeng/api';
 
 registerLocaleData(localeIt);
+
+export function loadConfigurations(configService: ConfigurationService) {
+    return () => configService.getConfigs();
+}
 
 @NgModule({
     declarations: [
@@ -155,18 +158,18 @@ registerLocaleData(localeIt);
     ],
     providers: [
         [
-            AuthenticationService,
-            ConfigurationService,
+            MessageService,
+            ConfirmationService,
+            {
+                provide: APP_INITIALIZER,
+                useFactory: loadConfigurations,
+                multi: true,
+                deps: [ConfigurationService]
+            },
             {
                 provide: HTTP_INTERCEPTORS,
                 useClass: AuthenticationInterceptor,
                 multi: true
-            },
-            {
-                provide: APP_INITIALIZER,
-                useFactory: initializer,
-                multi: true,
-                deps: [ConfigurationService]
             }
         ]
     ],

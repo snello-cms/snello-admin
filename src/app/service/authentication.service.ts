@@ -6,7 +6,9 @@ import {catchError, map, switchMap} from 'rxjs/operators';
 import {UserInSession} from '../model/user-in-session';
 import {ConfigurationService} from './configuration.service';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class AuthenticationService {
 
     public utente: UserInSession;
@@ -14,12 +16,14 @@ export class AuthenticationService {
     private logi_api_path: string;
 
     constructor(private http: HttpClient, configurationService: ConfigurationService) {
-        this.logi_api_path = configurationService.get(LOGIN_API_PATH);
+        configurationService.getValue(LOGIN_API_PATH).subscribe(
+            path => this.logi_api_path = path
+        );
     }
 
     public getUtente(): Observable<UserInSession> {
         if (!this.utente) {
-            const utenteString = localStorage.getItem(USER_ITEM);
+            const utenteString = sessionStorage.getItem(USER_ITEM);
             if (utenteString) {
                 this.utente = JSON.parse(utenteString);
             }
@@ -36,8 +40,8 @@ export class AuthenticationService {
                         utente.username = res.username;
                         utente.roles = res.roles;
                         this.token = res.token;
-                        localStorage.setItem(TOKEN_ITEM, this.token);
-                        localStorage.setItem(USER_ITEM, JSON.stringify(utente));
+                        sessionStorage.setItem(TOKEN_ITEM, this.token);
+                        sessionStorage.setItem(USER_ITEM, JSON.stringify(utente));
                     }
                 ),
                 switchMap(() => {
@@ -56,7 +60,7 @@ export class AuthenticationService {
     }
 
     public checkToken(): Observable<boolean> {
-        const token: string = localStorage.getItem(TOKEN_ITEM);
+        const token: string = sessionStorage.getItem(TOKEN_ITEM);
         if (!token) {
             this.logout();
             return of(true);
@@ -72,7 +76,7 @@ export class AuthenticationService {
     }
 
     public checkLogged(): boolean {
-        const token: string = localStorage.getItem(TOKEN_ITEM);
+        const token: string = sessionStorage.getItem(TOKEN_ITEM);
         if (!token) {
             return false;
         }
@@ -82,7 +86,7 @@ export class AuthenticationService {
     public logout() {
         this.token = undefined;
         this.utente = undefined;
-        localStorage.removeItem(TOKEN_ITEM);
+        sessionStorage.removeItem(TOKEN_ITEM);
     }
 
     public isLogged(): Observable<boolean> {

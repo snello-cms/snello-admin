@@ -9,10 +9,12 @@ import {MessageService} from 'primeng/api';
 import {ConfigurationService} from './configuration.service';
 import {METADATA_API_PATH} from '../constants/constants';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class MetadataService extends AbstractService<Metadata> {
     constructor(protected http: HttpClient, messageService: MessageService, configurationService: ConfigurationService) {
-        super(configurationService.get(METADATA_API_PATH), http, messageService);
+        super(configurationService.getValue(METADATA_API_PATH), http, messageService);
     }
 
     private nameToMetadata: Map<string, Metadata> = new Map();

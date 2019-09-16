@@ -7,11 +7,13 @@ import {catchError} from 'rxjs/operators';
 import {ConfigurationService} from './configuration.service';
 import {USER_ROLES_API_PATH} from '../constants/constants';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class UserRoleService extends AbstractService<UserRole> {
 
     constructor(protected http: HttpClient, messageService: MessageService, configurationService: ConfigurationService) {
-        super(configurationService.get(USER_ROLES_API_PATH), http, messageService);
+        super(configurationService.getValue(USER_ROLES_API_PATH), http, messageService);
     }
 
     getId(element: UserRole) {

@@ -8,11 +8,13 @@ import {catchError} from 'rxjs/operators';
 import {ConfigurationService} from './configuration.service';
 import {LINKS_API_PATH} from '../constants/constants';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class LinksService extends AbstractService<Link> {
 
     constructor(protected http: HttpClient, messageService: MessageService, configurationService: ConfigurationService) {
-        super(configurationService.get(LINKS_API_PATH), http, messageService);
+        super(configurationService.getValue(LINKS_API_PATH), http, messageService);
     }
 
     getId(element: Link) {

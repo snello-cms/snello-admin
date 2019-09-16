@@ -7,10 +7,12 @@ import {ConfigurationService} from './configuration.service';
 import {DRAGGABLE_API_PATH} from '../constants/constants';
 import { Draggable } from '../model/draggable';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class DraggableService extends AbstractService<Draggable> {
     constructor(protected http: HttpClient, messageService: MessageService, configurationService: ConfigurationService) {
-        super(configurationService.get(DRAGGABLE_API_PATH), http, messageService);
+        super(configurationService.getValue(DRAGGABLE_API_PATH), http, messageService);
     }
 
     private nameToMetadata: Map<string, Metadata> = new Map();

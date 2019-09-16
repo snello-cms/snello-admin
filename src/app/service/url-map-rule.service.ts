@@ -10,7 +10,7 @@ import {URL_MAP_RULES_API_PATH} from '../constants/constants';
 export class UrlMapRuleService extends AbstractService<UrlMapRule> {
 
     constructor(protected http: HttpClient, messageService: MessageService, configurationService: ConfigurationService) {
-        super(configurationService.get(URL_MAP_RULES_API_PATH), http, messageService);
+        super(configurationService.getValue(URL_MAP_RULES_API_PATH), http, messageService);
     }
 
     getId(element: UrlMapRule) {

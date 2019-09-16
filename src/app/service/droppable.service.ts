@@ -7,10 +7,12 @@ import {DROPPABLE_API_PATH} from '../constants/constants';
 import {ConfigurationService} from './configuration.service';
 import {Metadata} from '../model/metadata';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class DroppableService extends AbstractService<Droppable> {
     constructor(protected http: HttpClient, messageService: MessageService, configurationService: ConfigurationService) {
-        super(configurationService.get(DROPPABLE_API_PATH), http, messageService);
+        super(configurationService.getValue(DROPPABLE_API_PATH), http, messageService);
     }
 
     private nameToMetadata: Map<string, Metadata> = new Map();

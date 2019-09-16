@@ -7,7 +7,9 @@ import {DataListService} from '../service/data-list.service';
 import {Injectable} from '@angular/core';
 import {MetadataService} from '../service/metadata.service';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class FieldDefinitionResolver implements Resolve<FieldDefinition[]> {
   constructor(private dataListService: DataListService,
               private metadataSerive: MetadataService,

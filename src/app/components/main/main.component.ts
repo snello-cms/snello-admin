@@ -15,7 +15,9 @@ export class MainComponent {
     public asset_path: string;
 
     constructor(private configurationService: ConfigurationService) {
-        this.asset_path = configurationService.get(ASSET_PATH);
+        configurationService.getValue(ASSET_PATH).subscribe(
+            ass => this.asset_path = ass
+        );
     }
 
     public select(page: string) {

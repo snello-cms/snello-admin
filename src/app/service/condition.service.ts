@@ -6,14 +6,15 @@ import {AbstractService} from '../common/abstract-service';
 import { MessageService } from 'primeng/api';
 import {ConfigurationService} from './configuration.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class ConditionService extends AbstractService<Condition> {
 
-  constructor(
-    protected http: HttpClient, 
-    messageService: MessageService, 
+  constructor(protected http: HttpClient,
+    messageService: MessageService,
     configurationService: ConfigurationService) {
-    super(configurationService.get(CONDITION_API_PATH), http, messageService);
+    super(configurationService.getValue(CONDITION_API_PATH), http, messageService);
   }
 
   getId(element: Condition) {

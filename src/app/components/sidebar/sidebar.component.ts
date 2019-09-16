@@ -15,7 +15,9 @@ export class SideBarComponent {
     constructor(private authenticationService: AuthenticationService,
                 private configurationService: ConfigurationService,
                 protected router: Router) {
-        this.asset_path = configurationService.get(ASSET_PATH);
+        configurationService.getValue(ASSET_PATH).subscribe(
+            ass => this.asset_path = ass
+        );
     }
 
     logout() {

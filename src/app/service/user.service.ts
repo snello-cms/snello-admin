@@ -6,11 +6,13 @@ import {User} from '../model/user';
 import {ConfigurationService} from './configuration.service';
 import {USER_API_PATH} from '../constants/constants';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class UserService extends AbstractService<User> {
 
     constructor(protected http: HttpClient, messageService: MessageService, configurationService: ConfigurationService) {
-        super(configurationService.get(USER_API_PATH), http, messageService);
+        super(configurationService.getValue(USER_API_PATH), http, messageService);
     }
 
     getId(element: User) {

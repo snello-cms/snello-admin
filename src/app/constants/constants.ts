@@ -15,7 +15,7 @@ export const USER_ROLES_API_PATH = 'user_roles_api_path';
 export const URL_MAP_RULES_API_PATH = 'url_map_rules_api_path';
 export const API_SERVICE_PATH = 'api_service_path';
 export const LOGIN_API_PATH = 'login_api_path';
-export const APP_VERSION = '1.0.RC2';
+export const APP_VERSION = '1.0.RC3';
 
 export const CONFIG_PATH = '/assets/config.json';
 

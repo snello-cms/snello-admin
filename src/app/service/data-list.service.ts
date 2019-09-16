@@ -7,13 +7,17 @@ import {FieldDefinition} from '../model/field-definition';
 import {ConfigurationService} from './configuration.service';
 import {DATA_LIST_API_PATH} from '../constants/constants';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class DataListService {
 
     url: string;
 
     constructor(protected httpClient: HttpClient, configurationService: ConfigurationService) {
-        this.url = configurationService.get(DATA_LIST_API_PATH);
+       configurationService.getValue(DATA_LIST_API_PATH).subscribe(
+           url => this.url = url
+       );
     }
 
     public getMetadataNames() {

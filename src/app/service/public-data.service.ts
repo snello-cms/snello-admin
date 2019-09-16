@@ -6,11 +6,13 @@ import {MessageService} from 'primeng/api';
 import {ConfigurationService} from './configuration.service';
 import {PUBLIC_DATA_API_PATH} from '../constants/constants';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class PublicDatasService extends AbstractService<any> {
 
     constructor(protected http: HttpClient, messageService: MessageService, configurationService: ConfigurationService) {
-        super(configurationService.get(PUBLIC_DATA_API_PATH), http, messageService);
+        super(configurationService.getValue(PUBLIC_DATA_API_PATH), http, messageService);
     }
 
     getId(element: Metadata) {

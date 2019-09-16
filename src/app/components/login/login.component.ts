@@ -21,7 +21,9 @@ export class LoginComponent implements OnInit {
                 private fb: FormBuilder,
                 private configurationService: ConfigurationService,
                 private router: Router) {
-        this.asset_path = configurationService.get(ASSET_PATH);
+        configurationService.getValue(ASSET_PATH).subscribe(
+            ass => this.asset_path = ass
+        );
     }
 
     ngOnInit() {

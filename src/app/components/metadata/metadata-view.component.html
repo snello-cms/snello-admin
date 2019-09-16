@@ -23,6 +23,15 @@
             <div class="col-md-12 col-sm-12">
                 <div class="content view">
                     <div class="row">
+                        <h3>
+                            {{element.table_name}}
+                        </h3>
+                        <button pButton class="btn btn-add pull-right btn-block" (click)="newFieldDefinition()"
+                                [disabled]="this.element.created">
+                            <i class="fa fa-plus-circle"></i> Modifica
+                        </button>
+                    </div>
+                    <div class="row">
                         <div class="col-sm-6">
 
                             <div class="form-group clearfix row">

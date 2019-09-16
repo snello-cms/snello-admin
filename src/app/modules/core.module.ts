@@ -38,27 +38,7 @@ export class CoreModule {
   static forRoot(): ModuleWithProviders {
     return {
       ngModule: CoreModule,
-      providers: [
-        MetadataService,
-        ApiService,
-        ConditionService,
-        DocumentService,
-        FieldDefinitionService,
-        DataListService,
-        FieldDefinitionResolver,
-        MessageService,
-        ConfirmationService,
-        PublicDatasService,
-        SelectQueryService,
-        UserService,
-        RoleService,
-        UserRoleService,
-        UrlMapRuleService,
-        AuthenticationService,
-        LinksService,
-        DraggableService,
-        DroppableService
-      ]
+      providers: []
     };
 
   }
