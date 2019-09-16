@@ -21,6 +21,7 @@ export class MetadataEditComponent extends AbstractEditComponent<Metadata>
 
     public newtable = true;
     public advanced = false;
+    public msgs: any;
 
     constructor(
         router: Router,
