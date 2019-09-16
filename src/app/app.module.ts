@@ -68,7 +68,6 @@ import {TinymceComponent} from './generic.components/tinymce/tinymce.component';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import { InputViewComponent } from './generic.components/input/input-view.component';
 import { FormGenerationViewComponent } from './components/form-generation/form-generation-view.component';
-import { DynamicViewFormComponent } from './generic.components/dynamic-form/dynamic-view-form.component';
 
 registerLocaleData(localeIt);
 
@@ -101,7 +100,6 @@ export function loadConfigurations(configService: ConfigurationService) {
         DynamicFieldDirective,
         DynamicFormComponent,
         DynamicSearchFormComponent,
-        DynamicViewFormComponent,
         MetadataEditComponent,
         MetadataViewComponent,
         MetadataListComponent,

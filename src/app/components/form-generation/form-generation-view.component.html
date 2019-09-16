@@ -24,8 +24,8 @@
        
 
           <div *ngIf="regConfig != null && regConfig.length > 0">
-            <dynamic-view-form [fields]="regConfig">
-            </dynamic-view-form>
+            <dynamic-form [fields]="regConfig" [view]="true">
+            </dynamic-form>
 
             <button type="button" class="btn btn-warning" (click)="cancel()">ANNULLA</button>
           </div>

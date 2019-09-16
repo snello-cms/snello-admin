@@ -8,7 +8,7 @@ import {FieldDefinition} from '../../model/field-definition';
         <form class="dynamic-form" [formGroup]="form" (submit)="onSubmit($event)">
 
             <div *ngIf="!groupToFields">
-                <ng-container *ngFor="let field of fields;" dynamicField [field]="field" [group]="form">
+                <ng-container *ngFor="let field of fields;" dynamicField [field]="field" [group]="form" [view]="view">
                 </ng-container>
             </div>
 
@@ -16,14 +16,14 @@ import {FieldDefinition} from '../../model/field-definition';
                 <p-tabPanel [header]="tab" *ngFor="let tab of tabs; let i = index" [selected]="i == 0">
                     <div *ngIf="groupToFields.get(tab)">
                         <ng-container *ngFor="let field of groupToFields.get(tab);" dynamicField [field]="field"
-                                [group]="form">
+                                [group]="form" [view]="view">
                         </ng-container>
                     </div>
                     <div *ngIf="!groupToFields.get(tab)">
                         <ng-container *ngFor="let group of tabToGroups.get(tab);">
                             <p-fieldset [legend]="group">
                                 <ng-container *ngFor="let field of groupToFields.get(group);" dynamicField [field]="field"
-                                        [group]="form">
+                                        [group]="form" [view]="view">
                                 </ng-container>
                             </p-fieldset>
                         </ng-container>
@@ -35,7 +35,7 @@ import {FieldDefinition} from '../../model/field-definition';
                 <ng-container *ngFor="let group of groups;">
                     <p-fieldset [legend]="group">
                         <ng-container *ngFor="let field of groupToFields.get(group);" dynamicField [field]="field"
-                                [group]="form">
+                                [group]="form" [view]="view">
                         </ng-container>
                     </p-fieldset>
                 </ng-container>
@@ -55,6 +55,7 @@ export class DynamicFormComponent implements OnInit {
     }
 
     @Input() fields: FieldDefinition[] = [];
+    @Input() view: boolean = false;
     @Output() submit: EventEmitter<any> = new EventEmitter<any>();
     form: FormGroup;
 
