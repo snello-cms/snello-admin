@@ -56,7 +56,7 @@ export class DroppableEditComponent extends AbstractEditComponent<Droppable> imp
             const draggableScelto = this.mapDraggable.get(this.draggable);
             this.element.draggables += draggableScelto.uuid;
             this.element.html += draggableScelto.template;
-            for (const variable of draggableScelto.vars.split(';')) {
+            for (const variable of draggableScelto.static_vars.split(';')) {
                 this.variables.push({name: variable, draggable: draggableScelto.uuid, value: ''});
             }
         }

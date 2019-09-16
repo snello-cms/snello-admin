@@ -71,15 +71,15 @@
                                 </div>
 
                                 <div class="form-group clearfix row">
-                                    <label class="label-text col-sm-3">Values</label>
+                                    <label class="label-text col-sm-3">static values</label>
                                     <div class="col-sm-9">
-                                        <input [(ngModel)]="element.values" name="values" pInputText
+                                        <input [(ngModel)]="element.static_values" name="values" pInputText
                                                 placeholder="Values - var:value;">
                                     </div>
                                 </div>
 
                                 <div class="form-group clearfix row">
-                                    <label class="label-text col-sm-3">Values</label>
+                                    <label class="label-text col-sm-3">static values</label>
                                     <div class="col-sm-9">
                                         <ul *ngIf='variables'>
                                             <li *ngFor="let vv of variables">{{vv.draggable}} {{vv.name}}
@@ -89,9 +89,9 @@
                                 </div>
 
                                 <div class="form-group clearfix row">
-                                    <label class="label-text col-sm-3">Dynamics</label>
+                                    <label class="label-text col-sm-3">dynamic values</label>
                                     <div class="col-sm-9">
-                                        <input [(ngModel)]="element.dynamics" name="dynamics" pInputText
+                                        <input [(ngModel)]="element.dynamic_values" name="dynamics" pInputText
                                                 placeholder="Dynamics - var:value;">
                                     </div>
                                 </div>

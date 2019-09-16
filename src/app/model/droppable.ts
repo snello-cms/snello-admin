@@ -4,8 +4,8 @@ export class Droppable {
   description: string;
   html: string;
   draggables: string;
-  values: string;
-  dynamics: string;
+  static_values: string;
+  dynamic_values: string;
 
 }
 

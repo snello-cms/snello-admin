@@ -6,7 +6,7 @@ export class Draggable {
   template: string;
   style: string;
   image: string;
-  vars: string;
-  dynamics: string;
+  static_vars: string;
+  dynamic_vars: string;
 }
 
