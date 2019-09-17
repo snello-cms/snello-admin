@@ -27,19 +27,19 @@
                             <div class="col-sm-12">
 
                                 <div class="filter-wrapper clearfix">
-                                    <div class="col-sm-5">
+                                    <div class="col-sm-4">
                                         <div class="clearfix"></div>
                                         <input id="nome" name="nome" type="text" class="form-control"
                                                 placeholder="name" [(ngModel)]="service.search.name_contains" pInputText #nome="ngModel" *ngIf="service.search">
                                     </div>
-                                    <div class="col-sm-5">
+                                    <div class="col-sm-4">
                                         <p-dropdown id="metadata" name="metadata" [style]="{'width':'100%'}" placeholder="metadata"
                                                 [options]="metadatasItems" [(ngModel)]="service.search.metadata_uuid" *ngIf="service.search">
                                         </p-dropdown>
                                     </div>
 
-                                    <div class="col-sm-2">
-                                        <div class="btn-group">
+                                    <div class="col-sm-4">
+                                        <div class="btn-group pull-right">
 
                                             <button type="button" class="btn btn-search" (click)="reload(datatable)" icon="ui-icon-search">Cerca</button>
                                             <button type="button" class="btn btn-reset" (click)="reset(datatable)" icon="ui-icon-undo">Annulla</button>

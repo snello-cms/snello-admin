@@ -34,24 +34,27 @@
                             <div class="col-sm-12">
 
                                 <div class="filter-wrapper clearfix">
-                                    <div class="col-sm-3">
-                                        <div class="clearfix"></div>
+                                        <div class="col-sm-8">
+                                            <div class="row">
+                                    <div class="col-sm-4">
                                         <input id="nome" name="name" type="text" placeholder="name"
                                                 class="form-control" [(ngModel)]="service.search.name_contains" pInputText #name="ngModel" *ngIf="service.search">
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-4">
                                         <input id="object_name" name="object_name" placeholder="object Name"
                                                 type="text" class="form-control" [(ngModel)]="service.search.object_name_contains" pInputText #object_name="ngModel" *ngIf="service.search">
 
                                     </div>
 
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-4">
                                         <input id="action" name="action" placeholder="action" type="text"
                                                 class="form-control" [(ngModel)]="service.search.action_contains" pInputText #action="ngModel" *ngIf="service.search">
 
                                     </div>
-                                    <div class="col-sm-3">
-                                        <div class="btn-group">
+                                </div>
+                                </div>
+                                    <div class="col-sm-4">
+                                        <div class="btn-group pull-right">
 
                                             <button type="button" class="btn btn-search" (click)="reload(datatable)" icon="ui-icon-search">Cerca</button>
                                             <button type="button" class="btn btn-reset" (click)="reset(datatable)" icon="ui-icon-undo">Annulla</button>
