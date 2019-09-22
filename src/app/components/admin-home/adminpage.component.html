@@ -5,7 +5,7 @@
 
 <div class="sidebar-subpage">
     <h3 class="first">Basic</h3>
-    <p-messages [(value)]="msgs"></p-messages>
+    <p-messages closable="true"></p-messages>
 
     <div>
         <button type="button" pButton (click)="showSuccess()" label="Success" class="ui-button-success">Success</button>
@@ -13,7 +13,6 @@
         <button type="button" pButton (click)="showWarn()" label="Warn" class="ui-button-warning">showWarn</button>
         <button type="button" pButton (click)="showError()" label="Error" class="ui-button-danger">showError</button>
         <button type="button" pButton (click)="showMultiple()" label="Multiple">showMultiple</button>
-        <button type="button" pButton (click)="clear()" icon="pi pi-times" style="float:right" label="Clear">clear</button>
     </div>
 
     <h3>Message Service</h3>

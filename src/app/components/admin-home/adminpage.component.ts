@@ -26,7 +26,6 @@ export class AdminpageComponent {
 
     items: any[] = [];
     public utente: UserInSession;
-    msgs: any = [];
 
     constructor(private _route: ActivatedRoute,
                 public router: Router,
@@ -46,30 +45,25 @@ export class AdminpageComponent {
     }
 
     showSuccess() {
-        this.msgs = [];
-        this.msgs.push({severity: 'success', summary: 'Success Message', detail: 'Order submitted'});
+        this.messageService.add({severity: 'success', summary: 'Success Message', detail: 'Order submitted'});
     }
 
     showInfo() {
-        this.msgs = [];
-        this.msgs.push({severity: 'info', summary: 'Info Message', detail: 'PrimeNG rocks'});
+        this.messageService.add({severity: 'info', summary: 'Info Message', detail: 'PrimeNG rocks'});
     }
 
     showWarn() {
-        this.msgs = [];
-        this.msgs.push({severity: 'warn', summary: 'Warn Message', detail: 'There are unsaved changes'});
+        this.messageService.add({severity: 'warn', summary: 'Warn Message', detail: 'There are unsaved changes'});
     }
 
     showError() {
-        this.msgs = [];
-        this.msgs.push({severity: 'error', summary: 'Error Message', detail: 'Validation failed'});
+        this.messageService.add({severity: 'error', summary: 'Error Message', detail: 'Validation failed'});
     }
 
     showMultiple() {
-        this.msgs = [];
-        this.msgs.push({severity: 'info', summary: 'Message 1', detail: 'PrimeNG rocks'});
-        this.msgs.push({severity: 'info', summary: 'Message 2', detail: 'PrimeUI rocks'});
-        this.msgs.push({severity: 'info', summary: 'Message 3', detail: 'PrimeFaces rocks'});
+        this.messageService.add({severity: 'info', summary: 'Message 1', detail: 'PrimeNG rocks'});
+        this.messageService.add({severity: 'info', summary: 'Message 2', detail: 'PrimeUI rocks'});
+        this.messageService.add({severity: 'info', summary: 'Message 3', detail: 'PrimeFaces rocks'});
     }
 
     showViaService() {
@@ -77,6 +71,5 @@ export class AdminpageComponent {
     }
 
     clear() {
-        this.msgs = [];
     }
 }
