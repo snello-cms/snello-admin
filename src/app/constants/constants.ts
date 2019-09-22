@@ -811,3 +811,9 @@ export const FONT_AWESOME_ICONS: SelectItem[] = [
     {label: 'fa meetup', value: 'fa fa-meetup'}
 ];
 
+export const SEVERITY_VALUES: SelectItem[] = [
+    {label: 'info', value: 'info'},
+    {label: 'success', value: 'success'},
+    {label: 'warn', value: 'warn'},
+    {label: 'error', value: 'error'},
+];

@@ -1,9 +1,12 @@
-import {Component} from "@angular/core";
+import {Component} from '@angular/core';
 
 @Component({
-  selector: 'adminhome-topbar',
-  templateUrl: './adminhome-topbar.html'
+    selector: 'adminhome-topbar',
+    templateUrl: './adminhome-topbar.html'
 })
 export class AdminhomeTopBar {
+
+    constructor() {
+    }
 
 }
