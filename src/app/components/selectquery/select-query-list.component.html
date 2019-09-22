@@ -13,9 +13,9 @@
 
     </p>
     <button pButton class="btn btn-add pull-right btn-block" (click)="new()"><i
-      class="fa fa-plus-circle"></i> Aggiungi</button>
+            class="fa fa-plus-circle"></i> Aggiungi
+    </button>
 </div>
-
 
 
 <div class="main">
@@ -81,11 +81,8 @@
                                         <td class="ui-resizable-column">{{rowData.with_params}}</td>
                                         <td>
                                             <button type="button" pButton (click)="edit(rowData)" title="modifica">
-                      <i aria-hidden="true" class="fa fa-pencil"></i>
-                    </button>
-                                            <button type="button" pButton (click)="view(rowData)" title="visualizza">
-                      <i aria-hidden="true" class="fa fa-info-circle"></i>
-                    </button>
+                                                <i aria-hidden="true" class="fa fa-pencil"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                 </ng-template>
