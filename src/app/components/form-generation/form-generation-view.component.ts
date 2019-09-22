@@ -2,9 +2,6 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FieldDefinition} from '../../model/field-definition';
 import {DynamicFormComponent} from '../../generic.components/dynamic-form/dynamic-form.component';
-import {ApiService} from '../../service/api.service';
-import * as moment from 'moment/moment';
-import {ConfirmationService} from 'primeng/api';
 
 @Component(
     {
@@ -36,12 +33,8 @@ export class FormGenerationViewComponent implements OnInit {
             .subscribe((data: { fieldDefinitionValorized: FieldDefinition[] }) => {
                 this.regConfig = data.fieldDefinitionValorized;
             });
-
     }
     cancel() {
         this.router.navigate(['datalist/list', this.metadataName]);
     }
-
-
 }
-

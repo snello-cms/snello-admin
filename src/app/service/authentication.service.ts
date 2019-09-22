@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {Observable, of, throwError} from 'rxjs';
-import {LOGIN_API_PATH, TOKEN_ITEM, USER_ITEM} from '../constants/constants';
+import {LOGIN_API_PATH, REFRESH_TOKEN_ITEM, TOKEN_ITEM, USER_ITEM} from '../constants/constants';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {UserInSession} from '../model/user-in-session';
 import {ConfigurationService} from './configuration.service';
@@ -12,7 +12,8 @@ import {ConfigurationService} from './configuration.service';
 export class AuthenticationService {
 
     public utente: UserInSession;
-    private token: any;
+    private access_token: any;
+    private refresh_token: any;
     private logi_api_path: string;
 
     constructor(private http: HttpClient, configurationService: ConfigurationService) {
@@ -39,8 +40,10 @@ export class AuthenticationService {
                         const utente = new UserInSession();
                         utente.username = res.username;
                         utente.roles = res.roles;
-                        this.token = res.token;
-                        sessionStorage.setItem(TOKEN_ITEM, this.token);
+                        this.access_token = res.access_token;
+                        this.refresh_token = res.refresh_token;
+                        sessionStorage.setItem(TOKEN_ITEM, this.access_token);
+                        sessionStorage.setItem(REFRESH_TOKEN_ITEM, this.refresh_token);
                         sessionStorage.setItem(USER_ITEM, JSON.stringify(utente));
                     }
                 ),
@@ -63,10 +66,9 @@ export class AuthenticationService {
         const token: string = sessionStorage.getItem(TOKEN_ITEM);
         if (!token) {
             this.logout();
-            return of(true);
+            return of(false);
         }
-        this.token = token;
-
+        this.access_token = token;
         return this.getUtente()
             .pipe(
                 map(() => {
@@ -84,9 +86,12 @@ export class AuthenticationService {
     }
 
     public logout() {
-        this.token = undefined;
+        this.access_token = undefined;
+        this.refresh_token = undefined;
         this.utente = undefined;
         sessionStorage.removeItem(TOKEN_ITEM);
+        sessionStorage.removeItem(REFRESH_TOKEN_ITEM);
+        sessionStorage.removeItem(USER_ITEM);
     }
 
     public isLogged(): Observable<boolean> {

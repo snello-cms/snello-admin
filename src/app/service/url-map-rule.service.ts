@@ -6,7 +6,9 @@ import {UrlMapRule} from '../model/url-map-rule';
 import {ConfigurationService} from './configuration.service';
 import {URL_MAP_RULES_API_PATH} from '../constants/constants';
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class UrlMapRuleService extends AbstractService<UrlMapRule> {
 
     constructor(protected http: HttpClient, messageService: MessageService, configurationService: ConfigurationService) {

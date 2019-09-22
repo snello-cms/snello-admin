@@ -11,43 +11,43 @@ import {MetadataService} from '../service/metadata.service';
     providedIn: 'root'
 })
 export class FieldDefinitionResolver implements Resolve<FieldDefinition[]> {
-  constructor(private dataListService: DataListService,
-              private metadataSerive: MetadataService,
-              private router: Router,
-              private apiService: ApiService) {
+    constructor(private dataListService: DataListService,
+                private metadataSerive: MetadataService,
+                private router: Router,
+                private apiService: ApiService) {
 
-  }
+    }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<FieldDefinition[]> | Observable<never> {
-    let key = route.paramMap.get('uuid');
-    let name = route.paramMap.get('name');
-    let fieldDefinitionList: any;
-    return this.dataListService.getFieldDefinitionList(name).pipe(
-      switchMap(
-        el => {
-          fieldDefinitionList = el;
-          if (name) {
-            return this.apiService.fetch(name, key);
-          } else {
-            return of(null);
-          }
-        }
-      ),
-      map(
-        element => {
-          if (element != null) {
-            for (let definition_1 of fieldDefinitionList) {
-              definition_1.is_edit = true;
-              if (element.hasOwnProperty(definition_1.name)) {
-                definition_1.value = element[definition_1.name];
-              }
-              definition_1.table_name = name;
-              definition_1.table_key_value = element.uuid;
-            }
-          }
-          return <FieldDefinition[]>fieldDefinitionList;
-        }
-      )
-    );
-  }
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<FieldDefinition[]> | Observable<never> {
+        const key = route.paramMap.get('uuid');
+        const name = route.paramMap.get('name');
+        let fieldDefinitionList: any;
+        return this.dataListService.getFieldDefinitionList(name).pipe(
+            switchMap(
+                el => {
+                    fieldDefinitionList = el;
+                    if (name) {
+                        return this.apiService.fetch(name, key);
+                    } else {
+                        return of(null);
+                    }
+                }
+            ),
+            map(
+                element => {
+                    if (element != null) {
+                        for (const definition_1 of fieldDefinitionList) {
+                            definition_1.is_edit = true;
+                            if (element.hasOwnProperty(definition_1.name)) {
+                                definition_1.value = element[definition_1.name];
+                            }
+                            definition_1.table_name = name;
+                            definition_1.table_key_value = element.uuid;
+                        }
+                    }
+                    return <FieldDefinition[]>fieldDefinitionList;
+                }
+            )
+        );
+    }
 }

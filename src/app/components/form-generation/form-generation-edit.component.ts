@@ -5,6 +5,8 @@ import {DynamicFormComponent} from '../../generic.components/dynamic-form/dynami
 import {ApiService} from '../../service/api.service';
 import * as moment from 'moment/moment';
 import {ConfirmationService} from 'primeng/api';
+import {Metadata} from '../../model/metadata';
+import {MetadataService} from '../../service/metadata.service';
 
 @Component(
     {
@@ -19,19 +21,21 @@ export class FormGenerationEditComponent implements OnInit {
     regConfig: FieldDefinition[] = [];
     errorMessage: string;
     metadataName: string;
+    metadata: Metadata;
     uuid: string;
 
     constructor(
         protected router: Router,
         private route: ActivatedRoute,
         private apiService: ApiService,
-        private confirmationService: ConfirmationService
-    ) {
+        private metadataService: MetadataService,
+        private confirmationService: ConfirmationService) {
 
     }
 
     ngOnInit() {
         this.metadataName = this.route.snapshot.params['name'];
+        this.metadata = this.metadataService.getMetadataFromName(this.metadataName);
         this.uuid = this.route.snapshot.params['uuid'];
         this.regConfig = [];
         this.route.data
@@ -71,8 +75,9 @@ export class FormGenerationEditComponent implements OnInit {
             .subscribe(
                 element => {
                     if (element) {
+                        const key = this.metadata.table_key;
                         console.log('record saved : ' + element);
-                        this.router.navigate(['datalist/list', this.metadataName]);
+                        this.router.navigate(['datalist/view', this.metadataName, element[key]]);
                     }
                 }
             );
@@ -86,7 +91,7 @@ export class FormGenerationEditComponent implements OnInit {
                 element => {
                     if (element) {
                         console.log('record saved : ' + element);
-                        this.router.navigate(['datalist/list', this.metadataName]);
+                        this.router.navigate(['datalist/view', this.metadataName, this.uuid]);
                     }
                 }
             );

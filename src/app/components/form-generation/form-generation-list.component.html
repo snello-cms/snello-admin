@@ -1,6 +1,6 @@
 <sidebar></sidebar>
 <div class="sidebar">
-  <homepage-topbar></homepage-topbar>
+    <homepage-topbar></homepage-topbar>
 </div>
 
 <div class="sidebar-subpage">
@@ -9,82 +9,77 @@
     <p>
 
     </p>
-        
-  <button (click)="newForm()" class="btn btn-add pull-right btn-block" pbutton>
-            <i class="fa fa-plus-circle"></i>
-            Aggiungi
-          </button>
+
+    <button (click)="newForm()" class="btn btn-add pull-right btn-block" pbutton>
+        <i class="fa fa-plus-circle"></i>
+        Aggiungi
+    </button>
 </div>
 <div class="main">
 
-  <div class="container-fluid">
-    <div class="row">
+    <div class="container-fluid">
+        <div class="row">
 
-      <div class="col-md-12 col-sm-12">
-        <div class="content list">
-      
+            <div class="col-md-12 col-sm-12">
+                <div class="content list">
+                    <div class="clearfix"></div>
+                    <div *ngIf="regConfigList && regConfigList.length > 0">
+                        <div *ngIf="regConfigSearch && regConfigSearch.length > 0">
+                            <dynamic-search-form [fields]="regConfigSearch">
+                            </dynamic-search-form>
+                            <div class="ui-g-12 TexAlCenter">
+                                <button pButton type="button" (click)="reload(table)" icon="ui-icon-search">Cerca</button>
+                                <button pButton type="button" (click)="reset(table)" icon="ui-icon-undo">Annulla</button>
+                            </div>
+                        </div>
 
-          <div class="clearfix"></div>
+                        <div class="table-wrapper clearfix">
 
+                            <p-table #table [paginator]="true" [resizableColumns]="true" lazy="true" (onLazyLoad)="lazyLoad($event)"
+                                    [responsive]="true" [rows]="10" [totalRecords]="apiService.listSize" [value]="model">
 
-          <div *ngIf="regConfigList && regConfigList.length > 0">
+                                <ng-template let-columns pTemplate="header">
+                                    <tr class="sort-header">
+                                        <th class="Operations">Indice</th>
+                                        <ng-container *ngFor="let def of regConfigList">
+                                            <th *ngIf="def.show_in_list">{{def.label}}</th>
+                                        </ng-container>
 
-            <div *ngIf="regConfigSearch && regConfigSearch.length > 0">
-              <dynamic-search-form [fields]="regConfigSearch">
-              </dynamic-search-form>
-              <div class="ui-g-12 TexAlCenter">
-                <button pButton type="button" (click)="reload(table)" icon="ui-icon-search">Cerca</button>
-                <button pButton type="button" (click)="reset(table)" icon="ui-icon-undo">Annulla</button>
-              </div>
+                                        <th class="Operations">Operazioni</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="emptymessage">
+                                    <tr>
+                                        <td [attr.colspan]="2">
+                                            Nessun risultato.
+                                        </td>
+                                    </tr>
+                                </ng-template>
+                                <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
+                                    <tr>
+                                        <td class="RowIndex">{{ rowIndex + 1 }}</td>
+
+                                        <ng-container *ngFor="let def of regConfigList">
+                                            <td *ngIf="def.show_in_list">{{dato(rowData, def)}}</td>
+                                        </ng-container>
+
+                                        <td>
+                                            <button (click)="edit(metadataName, getTableKey(rowData))" class="btn btn-success" pbutton>
+                                                Modifica
+                                            </button>
+                                            <button (click)="view(metadataName, getTableKey(rowData))" class="btn btn-success" pbutton>
+                                                Visualizza
+                                            </button>
+
+                                        </td>
+
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div class="table-wrapper clearfix">
-
-            <p-table #table [paginator]="true" [resizableColumns]="true" lazy="true" (onLazyLoad)="lazyLoad($event)"
-                     [responsive]="true" [rows]="10" [totalRecords]="apiService.listSize" [value]="model">
-
-              <ng-template let-columns pTemplate="header">
-                <tr class="sort-header">
-                  <th class="Operations">Indice</th>
-                  <ng-container *ngFor="let def of regConfigList">
-                    <th *ngIf="def.show_in_list">{{def.label}}</th>
-                  </ng-container>
-
-                  <th class="Operations">Operazioni</th>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="emptymessage">
-                <tr>
-                  <td [attr.colspan]="2">
-                    Nessun risultato.
-                  </td>
-                </tr>
-              </ng-template>
-              <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
-                <tr>
-                  <td class="RowIndex">{{ rowIndex + 1 }}</td>
-
-                  <ng-container *ngFor="let def of regConfigList">
-                    <td *ngIf="def.show_in_list">{{dato(rowData, def)}}</td>
-                  </ng-container>
-
-                  <td>
-                    <button (click)="edit(metadataName, getTableKey(rowData))" class="btn btn-success" pbutton>
-                      Modifica
-                    </button>
-                    <button (click)="view(metadataName, getTableKey(rowData))" class="btn btn-success" pbutton>
-                      Visualizza
-                    </button>
-
-                  </td>
-
-                </tr>
-              </ng-template>
-            </p-table>
-            </div>
-          </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>

@@ -1,5 +1,5 @@
-import {Component, OnInit} from "@angular/core";
-import {ActivatedRoute, Router} from "@angular/router";
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component(
     {
@@ -9,12 +9,9 @@ import {ActivatedRoute, Router} from "@angular/router";
 export class FormGenerationListGeneralComponent implements OnInit {
     metadataName: string;
 
-
     constructor(
         protected router: Router,
-        private route: ActivatedRoute
-    ) {
-
+        private route: ActivatedRoute) {
     }
 
 

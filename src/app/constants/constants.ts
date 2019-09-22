@@ -27,8 +27,12 @@ export const DRAGGABLE_API_PATH = 'draggable_api_path';
 // export const BASE_PATH = 'https://s3.eu-central-1.amazonaws.com/portale-si/';
 export const BASE_PATH = '/files/';
 export const TOKEN_ITEM = 'snello-token';
+export const REFRESH_TOKEN_ITEM = 'snello-refresh-token';
 export const USER_ITEM = 'snello-user';
-
+export const CONTENT_TYPE = 'Content-Type';
+export const APPLICATION_JSON = 'application/json';
+export const AUTHORIZATION = 'Authorization';
+export const BEARER_ = 'Bearer ';
 
 export const ADMIN_ITEMS: any[] = [
     {
