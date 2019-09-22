@@ -312,6 +312,13 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
             }
 
         }
+    }
 
+    navigateToList() {
+        if (this.pageBack) {
+            this.router.navigate([this.pageBack, this.uuidBack]);
+        } else {
+            this.router.navigate(['/' + this.path + '/list']);
+        }
     }
 }
