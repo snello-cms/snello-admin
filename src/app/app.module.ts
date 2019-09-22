@@ -92,6 +92,8 @@ import {RadioButtonModule} from 'primeng/radiobutton';
 import {TabViewModule} from 'primeng/tabview';
 import {ButtonModule} from 'primeng/button';
 import {SidebarModule} from 'primeng/sidebar';
+import {HtmlViewComponent} from './generic.components/input/html-view.component';
+import {LinksViewComponent} from './components/links/links-view.component';
 
 registerLocaleData(localeIt);
 
@@ -111,6 +113,7 @@ export function loadConfigurations(configService: ConfigurationService) {
         TagComponent,
         InputComponent,
         InputViewComponent,
+        HtmlViewComponent,
         SelectComponent,
         JoinComponent,
         MultiJoinComponent,
@@ -151,6 +154,7 @@ export function loadConfigurations(configService: ConfigurationService) {
         UrlmapruleListComponent,
         LinksEditComponent,
         LinksListComponent,
+        LinksViewComponent,
         PermitDirective,
         DraggableEditComponent,
         DraggableListComponent,
@@ -202,6 +206,7 @@ export function loadConfigurations(configService: ConfigurationService) {
     entryComponents: [
         InputComponent,
         InputViewComponent,
+        HtmlViewComponent,
         SelectComponent,
         JoinComponent,
         MultiJoinComponent,

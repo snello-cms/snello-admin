@@ -10,7 +10,8 @@
 
     </p>
     <button pButton class="btn btn-add pull-right btn-block" (click)="new()"><i
-  class="fa fa-plus-circle"></i> Aggiungi</button>
+            class="fa fa-plus-circle"></i> Aggiungi
+    </button>
 </div>
 
 
@@ -76,14 +77,22 @@
                                         <td class="ui-resizable-column">{{rowData.name}}</td>
                                         <td class="ui-resizable-column">{{rowData.metadata_name}}</td>
                                         <td>
-                                            <button (click)="edit(rowData)" class="btn btn-success btn-sm" pButton>
-                      <i aria-hidden="true" class="fa fa-pencil"></i>
-                      Modifica
-                    </button>
-                                            <button (click)="createTable(rowData)" class="btn btn-success btn-sm" pButton>
-                      <i aria-hidden="true" class="fa fa-plus-square-o"></i>
-                      Crea
-                    </button>
+                                            <button *ngIf="!rowData.created" (click)="edit(rowData)" class="btn btn-success btn-sm" pButton>
+                                                <i aria-hidden="true" class="fa fa-pencil"></i>
+                                                Modifica
+                                            </button>
+                                            <button *ngIf="!rowData.created" (click)="createTable(rowData)"
+                                                    class="btn btn-success btn-sm"
+                                                    pButton>
+                                                <i aria-hidden="true" class="fa fa-plus-square-o"></i>
+                                                Crea
+                                            </button>
+                                            <button (click)="view(rowData)"
+                                                    class="btn btn-success btn-sm"
+                                                    pButton>
+                                                <i aria-hidden="true" class="fa fa-info"></i>
+                                                Vedi
+                                            </button>
                                         </td>
 
                                     </tr>

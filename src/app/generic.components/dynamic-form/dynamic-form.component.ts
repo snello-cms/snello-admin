@@ -55,7 +55,7 @@ export class DynamicFormComponent implements OnInit {
     }
 
     @Input() fields: FieldDefinition[] = [];
-    @Input() view: boolean = false;
+    @Input() view = false;
     @Output() submit: EventEmitter<any> = new EventEmitter<any>();
     form: FormGroup;
 

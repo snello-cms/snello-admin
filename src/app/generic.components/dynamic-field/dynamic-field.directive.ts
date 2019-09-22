@@ -13,70 +13,71 @@ import {TimeComponent} from '../time/time.component';
 import {MultiJoinComponent} from '../multi-join/multi-join.component';
 import {MediaComponent} from '../media/media.component';
 import {TinymceComponent} from '../tinymce/tinymce.component';
-import { InputViewComponent } from '../input/input-view.component';
+import {InputViewComponent} from '../input/input-view.component';
+import {HtmlViewComponent} from '../input/html-view.component';
 
 @Directive({
-  selector: '[dynamicField]'
+    selector: '[dynamicField]'
 })
 export class DynamicFieldDirective implements OnInit {
-  @Input() field: FieldDefinition;
-  @Input() group: FormGroup;
-  @Input() view: boolean;
+    @Input() field: FieldDefinition;
+    @Input() group: FormGroup;
+    @Input() view: boolean;
 
-  constructor(
-    private resolver: ComponentFactoryResolver,
-    private container: ViewContainerRef
-  ) {
-  }
-
-  componentRef: any;
-
-  ngOnInit() {
-
-    let factory;
-    if (!this.view) {
-      factory = this.resolver.resolveComponentFactory(
-        componentMapper[this.field.type]
-      );
-    }    
-    if (this.view) {
-      factory = this.resolver.resolveComponentFactory(
-        componentVewMapper[this.field.type]
-      );
+    constructor(
+        private resolver: ComponentFactoryResolver,
+        private container: ViewContainerRef
+    ) {
     }
-    this.componentRef = this.container.createComponent(factory);
-    this.componentRef.instance.field = this.field;
-    this.componentRef.instance.group = this.group;
-  }
+
+    componentRef: any;
+
+    ngOnInit() {
+
+        let factory;
+        if (!this.view) {
+            factory = this.resolver.resolveComponentFactory(
+                componentMapper[this.field.type]
+            );
+        }
+        if (this.view) {
+            factory = this.resolver.resolveComponentFactory(
+                componentVewMapper[this.field.type]
+            );
+        }
+        this.componentRef = this.container.createComponent(factory);
+        this.componentRef.instance.field = this.field;
+        this.componentRef.instance.group = this.group;
+    }
 }
 
 
 const componentMapper = {
-  input: InputComponent,
-  select: SelectComponent,
-  date: DateComponent,
-  datetime: DatetimeComponent,
-  time: TimeComponent,
-  checkbox: CheckboxComponent,
-  textarea: TextAreaComponent,
-  tinymce: TinymceComponent,
-  tags: TagComponent,
-  join: JoinComponent,
-  multijoin: MultiJoinComponent,
-  media: MediaComponent
+    input: InputComponent,
+    select: SelectComponent,
+    date: DateComponent,
+    datetime: DatetimeComponent,
+    time: TimeComponent,
+    checkbox: CheckboxComponent,
+    textarea: TextAreaComponent,
+    tinymce: TinymceComponent,
+    tags: TagComponent,
+    join: JoinComponent,
+    multijoin: MultiJoinComponent,
+    media: MediaComponent
 };
 
 const componentVewMapper = {
-  input: InputViewComponent,
-  select: InputViewComponent,
-  date: InputViewComponent,
-  datetime: InputViewComponent,
-  time: InputViewComponent,
-  checkbox: CheckboxComponent,
-  textarea: InputViewComponent,
-  tinymce: InputViewComponent,
-  tags: InputViewComponent,
-  join: InputViewComponent,
-  multijoin: InputViewComponent,
-  media: MediaComponent
+    input: InputViewComponent,
+    select: InputViewComponent,
+    date: InputViewComponent,
+    datetime: InputViewComponent,
+    time: InputViewComponent,
+    checkbox: CheckboxComponent,
+    textarea: InputViewComponent,
+    tinymce: HtmlViewComponent,
+    tags: InputViewComponent,
+    join: InputViewComponent,
+    multijoin: InputViewComponent,
+    media: MediaComponent
 };

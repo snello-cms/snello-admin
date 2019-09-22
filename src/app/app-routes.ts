@@ -34,6 +34,7 @@ import {DroppableEditComponent} from './components/droppable/droppable-edit.comp
 import {SessionGuard} from './routes-guard/session.guard';
 import {FormGenerationViewComponent} from './components/form-generation/form-generation-view.component';
 import {LoginComponent} from './components/login/login.component';
+import {LinksViewComponent} from './components/links/links-view.component';
 
 export const MainRoutes: Routes = [
     {
@@ -156,8 +157,8 @@ export const MainRoutes: Routes = [
             {path: '', redirectTo: '/links/list', pathMatch: 'full'},
             {path: 'list', component: LinksListComponent},
             {path: 'edit/:id', component: LinksEditComponent},
-            {path: 'new', component: LinksEditComponent}
-
+            {path: 'new', component: LinksEditComponent},
+            {path: 'view/:id', component: LinksViewComponent}
         ]
     },
     {

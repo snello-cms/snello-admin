@@ -2,8 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {AbstractListComponent} from '../../common/abstract-list-component';
 import {Router} from '@angular/router';
 import {ConfirmationService} from 'primeng/api';
-import {Link} from "../../model/link";
-import {LinksService} from "../../service/links.service";
+import {Link} from '../../model/link';
+import {LinksService} from '../../service/links.service';
 
 @Component(
     {
@@ -12,7 +12,6 @@ import {LinksService} from "../../service/links.service";
     }
 )
 export class LinksListComponent extends AbstractListComponent<Link> implements OnInit {
-    
     constructor(
         public router: Router,
         public confirmationService: ConfirmationService,
@@ -36,7 +35,7 @@ export class LinksListComponent extends AbstractListComponent<Link> implements O
     }
 
     getId(): any {
-        return this.element['name'];
+        return this.element.name;
     }
 
     public createTable(link: Link) {
