@@ -4,10 +4,20 @@
 </div>
 
 <div class="sidebar-subpage">
-    <h3>Benvenuto<br><b>{{utente?.username}}</b></h3>
-    <p>
-        Snello version: {{version()}}
-    </p>
+    <h3 class="first">Basic</h3>
+    <p-messages [(value)]="msgs"></p-messages>
+
+    <div>
+        <button type="button" pButton (click)="showSuccess()" label="Success" class="ui-button-success">Success</button>
+        <button type="button" pButton (click)="showInfo()" label="Info" class="ui-button-info">showInfo</button>
+        <button type="button" pButton (click)="showWarn()" label="Warn" class="ui-button-warning">showWarn</button>
+        <button type="button" pButton (click)="showError()" label="Error" class="ui-button-danger">showError</button>
+        <button type="button" pButton (click)="showMultiple()" label="Multiple">showMultiple</button>
+        <button type="button" pButton (click)="clear()" icon="pi pi-times" style="float:right" label="Clear">clear</button>
+    </div>
+
+    <h3>Message Service</h3>
+    <button type="button" pButton (click)="showViaService()" label="Use Service">showViaService</button>
 </div>
 
 <div class="main">

@@ -37,6 +37,10 @@ export class FormGenerationListComponent implements OnInit {
 
     ngOnInit() {
         this.metadataName = this.route.snapshot.params['name'];
+        // TODO QUESTA COSA NON VA BENE!!! CHI LA INIIZIALIZZA?????
+        // TODO QUESTA COSA NON VA BENE!!! CHI LA INIIZIALIZZA?????
+        // TODO QUESTA COSA NON VA BENE!!! CHI LA INIIZIALIZZA?????
+        // TODO QUESTA COSA NON VA BENE!!! CHI LA INIIZIALIZZA?????
         this.metadata = this.metadataService.getMetadataFromName(this.metadataName);
         this.apiService._start = 0;
         this.apiService._limit = 10;
@@ -166,7 +170,7 @@ export class FormGenerationListComponent implements OnInit {
         if (this.searchForm && this.searchForm.value) {
             const objToSave = JSON.parse(JSON.stringify(this.searchForm.value));
             for (const k in objToSave) {
-                if (objToSave.value.hasOwnProperty(k)) {
+                if (objToSave.hasOwnProperty(k)) {
                     for (const field of this.regConfigSearch) {
                         if (field.name === k) {
                             field.value = objToSave[field.name];

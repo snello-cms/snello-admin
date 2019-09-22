@@ -13,11 +13,11 @@ import {METADATA_API_PATH} from '../constants/constants';
     providedIn: 'root'
 })
 export class MetadataService extends AbstractService<Metadata> {
+
+    private nameToMetadata: Map<string, Metadata> = new Map();
     constructor(protected http: HttpClient, messageService: MessageService, configurationService: ConfigurationService) {
         super(configurationService.getValue(METADATA_API_PATH), http, messageService);
     }
-
-    private nameToMetadata: Map<string, Metadata> = new Map();
 
     getId(element: Metadata) {
         return element.uuid;

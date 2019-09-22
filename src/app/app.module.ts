@@ -50,13 +50,11 @@ import {UrlmapruleEditComponent} from './components/urlmaprule/urlmaprule-edit.c
 import {UrlmapruleListComponent} from './components/urlmaprule/urlmaprule-list.component';
 import {AuthenticationInterceptor} from './service/http-interceptors/authentication-interceptor.service';
 import {MainComponent} from './components/main/main.component';
-import {CoreModule} from './modules/core.module';
-import {SharedModule} from './modules/shared.module';
 import {LinksEditComponent} from './components/links/links-edit.component';
 import {LinksListComponent} from './components/links/links-list.component';
 import {SideBarComponent} from './components/sidebar/sidebar.component';
 import {PermitDirective} from './directives/permit.directive';
-import {registerLocaleData} from '@angular/common';
+import {CommonModule, registerLocaleData} from '@angular/common';
 import localeIt from '@angular/common/locales/it';
 import {ConfigurationService} from './service/configuration.service';
 import {DraggableEditComponent} from './components/draggable/draggable-edit.component';
@@ -66,8 +64,34 @@ import {DroppableEditComponent} from './components/droppable/droppable-edit.comp
 import {EditorModule} from '@tinymce/tinymce-angular';
 import {TinymceComponent} from './generic.components/tinymce/tinymce.component';
 import {ConfirmationService, MessageService} from 'primeng/api';
-import { InputViewComponent } from './generic.components/input/input-view.component';
-import { FormGenerationViewComponent } from './components/form-generation/form-generation-view.component';
+import {InputViewComponent} from './generic.components/input/input-view.component';
+import {FormGenerationViewComponent} from './components/form-generation/form-generation-view.component';
+import {RouterModule} from '@angular/router';
+import {ConfirmDialogModule} from 'primeng/confirmdialog';
+import {InputTextareaModule} from 'primeng/inputtextarea';
+import {CheckboxModule} from 'primeng/checkbox';
+import {CalendarModule} from 'primeng/calendar';
+import {TableModule} from 'primeng/table';
+import {ChipsModule} from 'primeng/chips';
+import {InputSwitchModule} from 'primeng/inputswitch';
+import {DropdownModule} from 'primeng/dropdown';
+import {MessagesModule} from 'primeng/messages';
+import {MessageModule} from 'primeng/message';
+import {AutoCompleteModule} from 'primeng/autocomplete';
+import {PanelModule} from 'primeng/panel';
+import {FileUploadModule} from 'primeng/fileupload';
+import {MultiSelectModule} from 'primeng/multiselect';
+import {ToastModule} from 'primeng/toast';
+import {LoginComponent} from './components/login/login.component';
+import {EditorModule as primengEditorModule} from 'primeng/editor';
+import {ChartModule} from 'primeng/chart';
+import {BlockUIModule} from 'primeng/blockui';
+import {FieldsetModule} from 'primeng/fieldset';
+import {ProgressBarModule} from 'primeng/progressbar';
+import {RadioButtonModule} from 'primeng/radiobutton';
+import {TabViewModule} from 'primeng/tabview';
+import {ButtonModule} from 'primeng/button';
+import {SidebarModule} from 'primeng/sidebar';
 
 registerLocaleData(localeIt);
 
@@ -132,11 +156,12 @@ export function loadConfigurations(configService: ConfigurationService) {
         DraggableListComponent,
         DroppableListComponent,
         DroppableEditComponent,
-        TinymceComponent
+        TinymceComponent,
+        LoginComponent
     ],
     imports: [
-        CoreModule.forRoot(),
-        SharedModule,
+        primengEditorModule,
+        ChartModule,
         BrowserModule,
         EditorModule,
         BrowserAnimationsModule,
@@ -145,6 +170,34 @@ export function loadConfigurations(configService: ConfigurationService) {
         FormsModule,
         InputTextModule,
         HttpClientModule,
+        // PRIME NG
+        CommonModule,
+        HttpClientModule,
+        RouterModule,
+        FormsModule,
+        ReactiveFormsModule,
+        ConfirmDialogModule,
+        InputTextareaModule,
+        CheckboxModule,
+        CalendarModule,
+        TableModule,
+        ChipsModule,
+        InputSwitchModule,
+        DropdownModule,
+        MessagesModule,
+        MessageModule,
+        AutoCompleteModule,
+        PanelModule,
+        FileUploadModule,
+        MultiSelectModule,
+        ProgressBarModule,
+        TabViewModule,
+        FieldsetModule,
+        BlockUIModule,
+        ToastModule,
+        ButtonModule,
+        RadioButtonModule,
+        SidebarModule
     ],
     entryComponents: [
         InputComponent,
@@ -162,9 +215,7 @@ export function loadConfigurations(configService: ConfigurationService) {
         TinymceComponent
     ],
     providers: [
-        [
-            MessageService,
-            ConfirmationService,
+        [MessageService, ConfirmationService,
             {
                 provide: APP_INITIALIZER,
                 useFactory: loadConfigurations,

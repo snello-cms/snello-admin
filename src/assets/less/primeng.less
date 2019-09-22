@@ -1850,7 +1850,7 @@ button.ui-button::-moz-focus-inner {
     background-color: #FFF;
 }
 
-.ui-dialog-footer { 
+.ui-dialog-footer {
     background-color: #efefef;
     .ui-button-text.ui-clickable {
     display: inline !important;
@@ -2159,7 +2159,7 @@ button.ui-button::-moz-focus-inner {
 }
 
 .ui-fileupload-buttonbar {
-    
+
 
     .ui-button {
     vertical-align: middle;
@@ -2195,7 +2195,7 @@ button.ui-button::-moz-focus-inner {
     }
 
     .pi {
-    display: inherit !important;        
+    display: inherit !important;
     }
 
     .ui-button {
@@ -2239,7 +2239,7 @@ button.ui-button::-moz-focus-inner {
     background-color: #efefef;
     border: 2px dashed #92b0b3;
     border-radius: 4px !important;
-   
+
 }
 
 .ui-fileupload-choose {
@@ -3599,69 +3599,151 @@ textarea.ui-inputtext {
     float: right;
     padding: .25em;
 }
+//
+//.ui-messages {
+//    border: 1px solid;
+//    margin: .5em 0;
+//    padding: 1em 1em 1em .5em;
+//    display: none;
+//    position: relative;
+//}
+//
+//.ui-messages-icon {
+//    display: inline-block;
+//    padding: 0;
+//    vertical-align: middle;
+//    font-size: 2em;
+//}
+//
+//.ui-messages-summary {
+//    font-weight: bold;
+//    margin-left: .25em;
+//}
+//
+//.ui-messages-detail {
+//    margin-left: .25em;
+//}
+//
+//.ui-messages-success {
+//    color: #2C832f;
+//    background-color: #B4F0B6;
+//    border-color: #B4F0B6;
+//}
+//
+//.ui-messages-success .ui-messages-close {
+//    color: #2C832f;
+//}
+//
+//.ui-messages-info {
+//    color: #1765A3;
+//    background-color: #BFE0FA;
+//    border-color: #BFE0FA;
+//}
+//
+//.ui-messages-info .ui-messages-close {
+//    color: #1765A3;
+//}
+//
+//.ui-messages-warn {
+//    color: #8A6714;
+//    background-color: #FFE9B5;
+//    border-color: #FFE9B5;
+//}
+//
+//.ui-messages-warn .ui-messages-close {
+//    color: #8A6714;
+//}
+//
+//.ui-messages-error {
+//    color: #AB1A0F;
+//    background-color: #FFCBC8;
+//    border-color: #FFCBC8;
+//}
+//
+//.ui-messages-error .ui-messages-close {
+//    color: #AB1A0F;
+//}
+//
+//.ui-messages ul {
+//    margin: 0;
+//    padding: 0;
+//    list-style-type: none;
+//    display: inline-block;
+//    vertical-align: middle;
+//}
+//
+//.ui-messages.ui-messages-noicon ul {
+//    margin: 0 1.5em 0 0;
+//}
+//
+//.ui-messages .ui-messages-close {
+//    cursor: pointer;
+//    position: absolute;
+//    top: 5px;
+//    right: 5px;
+//}
+//
+///* Message */
+//
+//.ui-message .ui-message-icon {
+//    font-size: 1.5em;
+//    vertical-align: middle;
+//}
+//
+//.ui-message .ui-message-text {
+//    vertical-align: middle;
+//}
+//
+//.ui-message {
+//    border: 1px solid;
+//    margin: 0px .25em;
+//    padding: .25em .5em;
+//    display: inline-block;
+//}
+//
+//.ui-fluid .ui-message {
+//    display: block;
+//}
 
+
+.ui-message {
+    border: 1px solid;
+    margin: 0px .25em;
+    padding: .25em .5em;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.ui-message .ui-message-icon,
+.ui-message .ui-message-text {
+    vertical-align: middle;
+}
+
+.ui-fluid .ui-message {
+    display: block;
+}
 .ui-messages {
     border: 1px solid;
     margin: .5em 0;
     padding: 1em 1em 1em .5em;
-    display: none;
     position: relative;
+    display: flex;
 }
 
-.ui-messages-icon {
-    display: inline-block;
+.ui-messages .ui-messages-icon {
+    display:inline-block;
     padding: 0;
     vertical-align: middle;
     font-size: 2em;
 }
 
-.ui-messages-summary {
+.ui-messages .ui-messages-summary {
     font-weight: bold;
     margin-left: .25em;
 }
 
-.ui-messages-detail {
+.ui-messages .ui-messages-detail {
     margin-left: .25em;
-}
-
-.ui-messages-success {
-    color: #2C832f;
-    background-color: #B4F0B6;
-    border-color: #B4F0B6;
-}
-
-.ui-messages-success .ui-messages-close {
-    color: #2C832f;
-}
-
-.ui-messages-info {
-    color: #1765A3;
-    background-color: #BFE0FA;
-    border-color: #BFE0FA;
-}
-
-.ui-messages-info .ui-messages-close {
-    color: #1765A3;
-}
-
-.ui-messages-warn {
-    color: #8A6714;
-    background-color: #FFE9B5;
-    border-color: #FFE9B5;
-}
-
-.ui-messages-warn .ui-messages-close {
-    color: #8A6714;
-}
-
-.ui-messages-error {
-    color: #AB1A0F;
-    background-color: #FFCBC8;
-    border-color: #FFCBC8;
-}
-
-.ui-messages-error .ui-messages-close {
-    color: #AB1A0F;
 }
 
 .ui-messages ul {
@@ -3670,6 +3752,12 @@ textarea.ui-inputtext {
     list-style-type: none;
     display: inline-block;
     vertical-align: middle;
+    display: flex;
+    align-items: center;
+}
+
+.ui-messages ul > li {
+    padding: .25em;
 }
 
 .ui-messages.ui-messages-noicon ul {
@@ -3681,28 +3769,6 @@ textarea.ui-inputtext {
     position: absolute;
     top: 5px;
     right: 5px;
-}
-
-/* Message */
-
-.ui-message .ui-message-icon {
-    font-size: 1.5em;
-    vertical-align: middle;
-}
-
-.ui-message .ui-message-text {
-    vertical-align: middle;
-}
-
-.ui-message {
-    border: 1px solid;
-    margin: 0px .25em;
-    padding: .25em .5em;
-    display: inline-block;
-}
-
-.ui-fluid .ui-message {
-    display: block;
 }
 
 .ui-multiselect {

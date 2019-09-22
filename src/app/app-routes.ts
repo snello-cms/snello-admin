@@ -32,7 +32,8 @@ import {DraggableListComponent} from './components/draggable/draggable-list.comp
 import {DroppableListComponent} from './components/droppable/droppable-list.component';
 import {DroppableEditComponent} from './components/droppable/droppable-edit.component';
 import {SessionGuard} from './routes-guard/session.guard';
-import { FormGenerationViewComponent } from './components/form-generation/form-generation-view.component';
+import {FormGenerationViewComponent} from './components/form-generation/form-generation-view.component';
+import {LoginComponent} from './components/login/login.component';
 
 export const MainRoutes: Routes = [
     {
@@ -40,10 +41,8 @@ export const MainRoutes: Routes = [
         redirectTo: 'login',
         pathMatch: 'full'
     },
-
     {
-        path: 'login',
-        loadChildren: () => import('./modules/login.module').then(m => m.LoginModule)
+        path: 'login', component: LoginComponent,
     },
     {
         path: 'home',
