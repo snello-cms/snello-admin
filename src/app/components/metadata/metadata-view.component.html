@@ -26,9 +26,22 @@
                         <h3>
                             {{element.table_name}}
                         </h3>
-                        <button pButton class="btn btn-add pull-right btn-block" (click)="newFieldDefinition()"
-                                [disabled]="this.element.created">
-                            <i class="fa fa-plus-circle"></i> Modifica
+                        <button pButton class="btn btn-add pull-right btn-block" (click)="edit()">
+                            <i class="fa fa-plus-circle"></i> Edit
+                        </button>
+                        <button type="button" class="btn btn-add pull-right btn-block btn-primary" (click)="confirmCreateTable()"
+                                title="Create Table on Database" *ngIf="!element.created && !element.already_exist">
+                            <i aria-hidden="true" class="fa fa-lock"></i> Create DB Table
+                        </button>
+
+                        <button type="button" class="btn btn-add pull-right btn-block btn-warning" (click)="confirmTruncateTable()"
+                                title="Truncate Table Data" *ngIf="element.created && !element.already_exist">
+                            <i aria-hidden="true" class="fa fa-eraser"></i> Truncate DB Table Data
+                        </button>
+
+                        <button type="button" class="btn btn-add pull-right btn-block btn-danger" (click)="confirmDeleteTable()"
+                                title="Delete Table on Database" *ngIf="element.created && !element.already_exist">
+                            <i aria-hidden="true" class="fa fa-exclamation-triangle"></i> Delete DB Table
                         </button>
                     </div>
                     <div class="row">
@@ -159,7 +172,7 @@
                     </h3>
                     <button pButton class="btn btn-add pull-right btn-block" (click)="newFieldDefinition()"
                             [disabled]="this.element.created">
-                        <i class="fa fa-plus-circle"></i> Aggiungi
+                        <i class="fa fa-plus-circle"></i> Add New Field
                     </button>
                     <p-table [paginator]="true" [resizableColumns]="true" [responsive]="true" [rows]="10" [totalRecords]="fieldDefinitionService.listSize" [value]="fieldDefinitions">
                         <ng-template let-columns pTemplate="header">

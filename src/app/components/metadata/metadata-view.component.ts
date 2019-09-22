@@ -5,6 +5,7 @@ import {MetadataService} from '../../service/metadata.service';
 import {AbstractViewComponent} from '../../common/abstract-view-component';
 import {FieldDefinitionService} from '../../service/field-definition.service';
 import {FieldDefinition} from '../../model/field-definition';
+import {ConfirmationService} from 'primeng/api';
 
 @Component({
     templateUrl: './metadata-view.component.html',
@@ -20,6 +21,7 @@ export class MetadataViewComponent extends AbstractViewComponent<Metadata>
         router: Router,
         route: ActivatedRoute,
         public metadataService: MetadataService,
+        public confirmationService: ConfirmationService,
         public fieldDefinitionService: FieldDefinitionService
     ) {
         super(router, route, metadataService, 'metadata');
@@ -47,6 +49,73 @@ export class MetadataViewComponent extends AbstractViewComponent<Metadata>
             fieldDefinitions => {
                 this.fieldDefinitions = fieldDefinitions;
             });
+    }
+
+    public edit() {
+        this.router.navigate(['/' + this.path + '/edit', this.getId()]);
+    }
+
+    public createTable() {
+        this.metadataService.createTable(this.element).subscribe(
+            element => {
+                console.log('table created: ' + element);
+                this.element = element;
+            });
+    }
+
+    public truncateTable() {
+        this.metadataService.truncateTable(this.element.uuid).subscribe(
+            element => {
+                console.log('table truncated: ' + element);
+                this.element = element;
+            });
+    }
+
+    public deleteTable() {
+        this.metadataService.deleteTable(this.element.uuid).subscribe(
+            element => {
+                console.log('table deleted: ' + element);
+                this.element = element;
+            });
+    }
+
+    public confirmTruncateTable() {
+        this.clearMsgs();
+        if (!this.confirmationService) {
+            return this.truncateTable();
+        }
+        this.confirmationService.confirm({
+            message: 'Confermi la truncate table?',
+            accept: () => {
+                return this.truncateTable();
+            }
+        });
+    }
+
+    public confirmCreateTable() {
+        this.clearMsgs();
+        if (!this.confirmationService) {
+            return this.createTable();
+        }
+        this.confirmationService.confirm({
+            message: 'Confermi la create table?',
+            accept: () => {
+                return this.createTable();
+            }
+        });
+    }
+
+    public confirmDeleteTable() {
+        this.clearMsgs();
+        if (!this.confirmationService) {
+            return this.deleteTable();
+        }
+        this.confirmationService.confirm({
+            message: 'Confermi la delete table?',
+            accept: () => {
+                return this.deleteTable();
+            }
+        });
     }
 
 
