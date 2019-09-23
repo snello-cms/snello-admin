@@ -9,4 +9,3 @@ export class Draggable {
   static_vars: string;
   dynamic_vars: string;
 }
-

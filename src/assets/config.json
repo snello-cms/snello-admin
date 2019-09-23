@@ -14,5 +14,7 @@
   "url_map_rules_api_path": "http://localhost:8080/api/urlmaprules",
   "api_service_path": "http://localhost:8080/api",
   "identity_api_path": "http://localhost:8080/api/users",
-  "login_api_path": "http://localhost:8080/login"
+  "login_api_path": "http://localhost:8080/login",
+  "draggable_api_path": "http://localhost:8080/api/draggables",
+  "droppable_api_path": "http://localhost:8080/api/droppables"
 }
