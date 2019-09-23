@@ -8,38 +8,26 @@ import {ApiService} from "../../service/api.service";
   template: `
     <div class="form-group clearfix" [formGroup]="group">
       <div class="row">
-          <label class="col-sm-3">
-            {{ field.name }}
-          </label>
-          <div class="col-sm-9">
-            {{ decodeName(field.value) }}<i
-            class="pi pi-times" (click)="removeRecord()"></i>
-          </div>
-      </div>
-      <div class="row">
       <label class="col-sm-3">
-
+        {{ field.name }}
       </label>
+
         <div class="col-sm-9">
 
           <p-autoComplete
-            [suggestions]="options" (completeMethod)="search($event)" [size]="30" [dropdown]="true" 
-            [(ngModel)]="filteredValue"  [dropdown]="true" [ngModelOptions]="{standalone: true}"
-            (onSelect)="selectRecord($event)" [forceSelection]="true">
-
-            <ng-template let-xx pTemplate="item">
-             
-               {{labelMap.get(xx)}}
-         
-           
-            </ng-template>
+            [suggestions]="options" (completeMethod)="search($event)" [size]="30" 
+            [field]="labelField" [dataKey]="field.join_table_key" [dropdown]="true"
+            [formControlName]="field.name" [forceSelection]="true">
             
           </p-autoComplete>
           </div>
      
       </div>
     </div>
-  `,
+
+
+
+    `,
   styles: []
 })
 export class JoinComponent implements OnInit {
@@ -51,6 +39,7 @@ export class JoinComponent implements OnInit {
   labelMap: Map<string, any> = new Map();
 
   filteredValue: any = null;
+
   constructor(private apiService: ApiService) {
   }
 
@@ -61,35 +50,13 @@ export class JoinComponent implements OnInit {
       this.labelField = splittedFields[1];
     }
 
-    this.apiService.getJoinList(this.field)
-      .subscribe(options => {
-          if (options != null && options.length > 0) {
-            for (let value of options) {
-              this.options.push(value[this.field.join_table_key])
-              this.labelMap.set(value[this.field.join_table_key], value[this.labelField]);
-            }
-          }
-        }
-      );
   }
 
-  decodeName(fullValue: string) {
-    if (!fullValue) {
-      return null;
-    }
-    let valueAndName = fullValue.split(":");
-    return valueAndName[1];
-  }
 
   handleDropdown(event) {
     //event.query = current value in input field
   }
 
-  selectRecord(event: any) {
-    this.field.value = event + ':' + this.labelMap.get(event);
-    this.group.get(this.field.name).setValue(this.field.value);
-    this.filteredValue = "";
-  }
   
   removeRecord() {
     this.filteredValue = null;
@@ -101,14 +68,9 @@ export class JoinComponent implements OnInit {
 
     this.apiService.getJoinList(this.field, event.query, this.labelField)
       .subscribe(options => {
-          let currValues = [];
           if (options != null && options.length > 0) {
-            for (let value of options) {
-              currValues.push(value[this.field.join_table_key]);
-              this.labelMap.set(value[this.field.join_table_key], value[this.labelField]);
-            }
+              this.options = options;
           }
-          this.options = currValues;
         }
       );
   }

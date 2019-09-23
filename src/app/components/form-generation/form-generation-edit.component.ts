@@ -128,7 +128,7 @@ export class FormGenerationEditComponent implements OnInit {
                         objToSave[field.name] = objToSave[field.name].join(',');
                     }
                     if (field.type === 'join') {
-                        objToSave[field.name] = objToSave[field.name]["value"];
+                        objToSave[field.name] = objToSave[field.name][field.join_table_key];
                     }
                     if (field.type === 'time') {
                         objToSave[field.name] = moment(objToSave[field.name], 'YYYY-MM-DD[T]HH:mm:ss[Z]').format('HH:mm:ss');
