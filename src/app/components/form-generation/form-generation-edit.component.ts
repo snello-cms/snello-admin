@@ -11,8 +11,9 @@ import {MetadataService} from '../../service/metadata.service';
 @Component(
     {
         templateUrl: './form-generation-edit.component.html',
-        styleUrls: ['./form-generation-edit.component.css']
-    }
+        styleUrls: ['./form-generation-edit.component.css'],
+        providers:[MetadataService]
+    }, 
 )
 export class FormGenerationEditComponent implements OnInit {
 
@@ -36,8 +37,10 @@ export class FormGenerationEditComponent implements OnInit {
     ngOnInit() {
 
         this.metadataService.buildSearch();
+        delete this.metadataService.search.uuid;
         this.metadataName = this.route.snapshot.params['name'];        
-        this.metadataService.search.name = this.metadataName; 
+        this.metadataService.search.table_name = this.metadataName; 
+
         this.metadataService.getList().subscribe(
             metadata => {
                 if (metadata && metadata.lenght > 0) {
@@ -123,6 +126,9 @@ export class FormGenerationEditComponent implements OnInit {
                     }
                     if (field.type === 'multijoin') {
                         objToSave[field.name] = objToSave[field.name].join(',');
+                    }
+                    if (field.type === 'join') {
+                        objToSave[field.name] = objToSave[field.name]["value"];
                     }
                     if (field.type === 'time') {
                         objToSave[field.name] = moment(objToSave[field.name], 'YYYY-MM-DD[T]HH:mm:ss[Z]').format('HH:mm:ss');
