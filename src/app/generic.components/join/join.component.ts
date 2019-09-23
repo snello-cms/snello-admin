@@ -50,6 +50,14 @@ export class JoinComponent implements OnInit {
       this.labelField = splittedFields[1];
     }
 
+    if (this.field.value) {
+      this.apiService.fetch(this.field.join_table_name, this.field.value).subscribe(
+        value => {
+          this.group.get(this.field.name).setValue(value); 
+        }
+      );
+    }
+
   }
 
 
@@ -58,12 +66,6 @@ export class JoinComponent implements OnInit {
   }
 
   
-  removeRecord() {
-    this.filteredValue = null;
-    this.group.get(this.field.name).setValue(null);
-    this.field.value = null;
-  }
-
   search(event) {
 
     this.apiService.getJoinList(this.field, event.query, this.labelField)
