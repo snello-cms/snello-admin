@@ -43,7 +43,7 @@ export class FormGenerationEditComponent implements OnInit {
 
         this.metadataService.getList().subscribe(
             metadata => {
-                if (metadata && metadata.lenght > 0) {
+                if (metadata && metadata.length > 0) {
                     this.metadata = metadata[0];
                 }
 
