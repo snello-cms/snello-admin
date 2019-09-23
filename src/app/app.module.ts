@@ -94,6 +94,8 @@ import {ButtonModule} from 'primeng/button';
 import {SidebarModule} from 'primeng/sidebar';
 import {HtmlViewComponent} from './generic.components/input/html-view.component';
 import {LinksViewComponent} from './components/links/links-view.component';
+import { JoinViewComponent } from './generic.components/join/join-view.component';
+import { MultiJoinViewComponent } from './generic.components/multi-join/multi-join-view.component';
 
 registerLocaleData(localeIt);
 
@@ -114,6 +116,8 @@ export function loadConfigurations(configService: ConfigurationService) {
         InputComponent,
         InputViewComponent,
         HtmlViewComponent,
+        MultiJoinViewComponent,
+        JoinViewComponent,
         SelectComponent,
         JoinComponent,
         MultiJoinComponent,
@@ -204,9 +208,11 @@ export function loadConfigurations(configService: ConfigurationService) {
         SidebarModule
     ],
     entryComponents: [
-        InputComponent,
         InputViewComponent,
         HtmlViewComponent,
+        MultiJoinViewComponent,
+        JoinViewComponent,
+        InputComponent,
         SelectComponent,
         JoinComponent,
         MultiJoinComponent,
