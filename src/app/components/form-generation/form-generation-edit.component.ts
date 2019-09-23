@@ -49,6 +49,7 @@ export class FormGenerationEditComponent implements OnInit {
 
             } 
         );
+        //todo: eliminare quando abbiamo capito la gerarchia delle iniezioni
         this.metadataService.buildSearch();
         delete this.metadataService.search.uuid;
         this.uuid = this.route.snapshot.params['uuid'];
