@@ -37,10 +37,13 @@ export class FormGenerationEditComponent implements OnInit {
 
         this.metadataService.buildSearch();
         this.metadataName = this.route.snapshot.params['name'];        
-        this.metadataService.search.table_name = this.metadataName; 
+        this.metadataService.search.name = this.metadataName; 
         this.metadataService.getList().subscribe(
             metadata => {
-                this.metadata = metadata;
+                if (metadata && metadata.lenght > 0) {
+                    this.metadata = metadata[0];
+                }
+
             } 
         );
         this.uuid = this.route.snapshot.params['uuid'];
@@ -84,7 +87,7 @@ export class FormGenerationEditComponent implements OnInit {
                     if (element) {
                         const key = this.metadata.table_key;
                         console.log('record saved : ' + element);
-                        this.router.navigate(['datalist/view', this.metadataName, element["uuid"]]);
+                        this.router.navigate(['datalist/view', this.metadataName, element[key]]);
                     }
                 }
             );
