@@ -37,14 +37,13 @@ export class FormGenerationListComponent implements OnInit {
 
     ngOnInit() {
         this.metadataName = this.route.snapshot.params['name'];
-        this.metadataService.search.table_name = this.metadataName; 
+        this.metadataService.search.table_name = this.metadataName;
         this.metadataService.getList().subscribe(
             metadata => {
                 if (metadata != null && metadata.length > 0) {
                     this.metadata = metadata[0];
                 }
-
-            } 
+            }
         );
         this.apiService._start = 0;
         this.apiService._limit = 10;
@@ -53,7 +52,7 @@ export class FormGenerationListComponent implements OnInit {
             .subscribe(
                 (data: { fieldDefinitionValorized: FieldDefinition[] }) => {
                     this.regConfigList = data.fieldDefinitionValorized;
-                    for (let field of this.regConfigList) {
+                    for (const field of this.regConfigList) {
                         if (field.searchable) {
                             this.regConfigSearch.push(field);
                         }
@@ -65,8 +64,9 @@ export class FormGenerationListComponent implements OnInit {
     dato(rowData: any, fieldDefinition: FieldDefinition): any {
         const fullValue = rowData[fieldDefinition.name];
         if (fieldDefinition.type === 'join') {
-            const splitted = fullValue.split(':');
-            return splitted[1];
+            // const splitted = fullValue.split(':');
+            // TODO COME RECUPERO IL VALORE
+            return '[' + fullValue + ']';
         }
         if (fieldDefinition.type === 'multijoin') {
             let retVal = '';

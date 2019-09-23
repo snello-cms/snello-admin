@@ -1,7 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, Data, Router} from '@angular/router';
 import {FieldDefinition} from '../../model/field-definition';
 import {DynamicFormComponent} from '../../generic.components/dynamic-form/dynamic-form.component';
+import {Observable} from 'rxjs';
 
 @Component(
     {
@@ -20,9 +21,7 @@ export class FormGenerationViewComponent implements OnInit {
 
     constructor(
         protected router: Router,
-        private route: ActivatedRoute,
-    ) {
-
+        private route: ActivatedRoute) {
     }
 
     ngOnInit() {
@@ -34,6 +33,7 @@ export class FormGenerationViewComponent implements OnInit {
                 this.regConfig = data.fieldDefinitionValorized;
             });
     }
+
     cancel() {
         this.router.navigate(['datalist/list', this.metadataName]);
     }

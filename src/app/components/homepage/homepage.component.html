@@ -1,9 +1,9 @@
 <sidebar></sidebar>
 <div class="sidebar">
-  <homepage-topbar></homepage-topbar>
+    <homepage-topbar></homepage-topbar>
 </div>
 <div class="sidebar-subpage">
-  
+
 </div>
 
 
@@ -17,12 +17,14 @@
                         <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" *ngIf="component.created || component.already_exist">
                             <div class="card-home-user">
                                 <a [routerLink]="'/datalist/new/' + component.table_name" class="btn btn-add pull-right">
-                                  Aggiungi
+                                    Aggiungi
                                 </a>
                                 <a [routerLink]="'/datalist/list/' + component.table_name">
-                                    <h3> <i class="{{component.icon}} fa-3x" *ngIf="component.icon"></i> {{component.table_name}}</h3>
+                                    <h3>
+                                        <i class="{{component.icon}} fa-3x" *ngIf="component.icon"></i> {{component.table_name}}
+                                    </h3>
                                 </a>
-                            
+
                             </div>
                         </div>
                     </div>
