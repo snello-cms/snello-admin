@@ -15,30 +15,27 @@ import { of, forkJoin } from 'rxjs';
       </label>
       <div class="col-sm-9">
 
-      <p-autoComplete
-      [suggestions]="options" (completeMethod)="search($event)" [size]="30" 
-      [field]="labelField" [dataKey]="field.join_table_key" [dropdown]="true"
-      [formControlName]="field.name" [forceSelection]="true" [multiple]="true">
-
-
-      </p-autoComplete>
-
+      <ul>
+        <li *ngFor="let c of values">{{ decodeName(c) }}
+          <i class="pi pi-times"></i>
+        </li>
+      </ul>
       
       </div>
+  </div>
+  <div class="col-sm-12">
+  
   </div>
 </div>
   `,
   styles: []
 })
-export class MultiJoinComponent implements OnInit {
+export class MultiJoinViewComponent implements OnInit {
   field: FieldDefinition;
   group: FormGroup;
 
-  options: SelectItem[] = [];
   labelField: string = null;
-  labelMap: Map<string, any> = new Map();
-  values: string[] = [];
-  filteredValue: string;
+  values: any[] = [];
   constructor(private apiService: ApiService) {
   }
 
@@ -48,17 +45,11 @@ export class MultiJoinComponent implements OnInit {
     if (this.labelField == this.field.join_table_key && splittedFields.length > 1) {
       this.labelField  = splittedFields[1];
     }
-    this.apiService.getJoinList(this.field)
-      .subscribe(options => {
-          this.options = options;
-        }
-      );
     
     let observables = [];
     if (this.field.value && this.field.value.length > 0) {
 
       for(let uuid of this.field.value.split(",")) { 
-
         observables.push(this.apiService.fetch(this.field.join_table_name, uuid));
       }
       
@@ -66,31 +57,13 @@ export class MultiJoinComponent implements OnInit {
         observables
       ).subscribe( 
         resolved =>  {
-          this.group.get(this.field.name).setValue(resolved);            
+          this.values = resolved;
         }
       );
     }
   }
-
-
-  search(event) {
-    this.apiService.getJoinList(this.field, event.query, this.labelField)
-      .subscribe(options => {
-          this.options = options;
-        }
-      );
-  }
-
-  handleDropdown(event) {
-    //event.query = current value in input field
-  }
-
-  selectRecord(event: any) {
-    
-  }
-
   
-  removeRecord(event: string) {
-    
+  decodeName(object: any) {
+    return object[this.labelField];
   }
 }

@@ -13,14 +13,8 @@ import {ApiService} from "../../service/api.service";
       </label>
 
         <div class="col-sm-9">
-
-          <p-autoComplete
-            [suggestions]="options" (completeMethod)="search($event)" [size]="30" 
-            [field]="labelField" [dataKey]="field.join_table_key" [dropdown]="true"
-            [formControlName]="field.name" [forceSelection]="true">
-            
-          </p-autoComplete>
-          </div>
+          {{outValue}}
+        </div>
      
       </div>
     </div>
@@ -30,16 +24,13 @@ import {ApiService} from "../../service/api.service";
     `,
   styles: []
 })
-export class JoinComponent implements OnInit {
+export class JoinViewComponent implements OnInit {
   field: FieldDefinition;
   group: FormGroup;
 
-  options: any[] = [];
   labelField: string;
-  labelMap: Map<string, any> = new Map();
 
-  filteredValue: any = null;
-
+  outValue: string;
   constructor(private apiService: ApiService) {
   }
 
@@ -53,7 +44,7 @@ export class JoinComponent implements OnInit {
     if (this.field.value) {
       this.apiService.fetch(this.field.join_table_name, this.field.value).subscribe(
         value => {
-          this.group.get(this.field.name).setValue(value); 
+          this.outValue = value;
         }
       );
     }
@@ -63,18 +54,6 @@ export class JoinComponent implements OnInit {
 
   handleDropdown(event) {
     //event.query = current value in input field
-  }
-
-  
-  search(event) {
-
-    this.apiService.getJoinList(this.field, event.query, this.labelField)
-      .subscribe(options => {
-          if (options != null && options.length > 0) {
-              this.options = options;
-          }
-        }
-      );
   }
 
 }

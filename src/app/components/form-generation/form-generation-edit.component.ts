@@ -129,7 +129,11 @@ export class FormGenerationEditComponent implements OnInit {
                         objToSave[field.name] = objToSave[field.name].join(',');
                     }
                     if (field.type === 'multijoin') {
-                        objToSave[field.name] = objToSave[field.name].join(',');
+                        let values: any[] = [];
+                        for (let value of  objToSave[field.name]) {
+                            values.push(value[field.join_table_key]);
+                        }
+                        objToSave[field.name] = values.join(',');
                     }
                     if (field.type === 'join') {
                         objToSave[field.name] = objToSave[field.name][field.join_table_key];
@@ -159,13 +163,6 @@ export class FormGenerationEditComponent implements OnInit {
     unarshallFields() {
         for (const field of this.regConfig) {
             if (field.type === 'tags') {
-                if (field.value == null) {
-                    field.value = [];
-                } else {
-                    field.value = (<string>field.value).split(',');
-                }
-            }
-            if (field.type === 'multijoin') {
                 if (field.value == null) {
                     field.value = [];
                 } else {

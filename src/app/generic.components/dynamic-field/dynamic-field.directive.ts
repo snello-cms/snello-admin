@@ -15,6 +15,8 @@ import {MediaComponent} from '../media/media.component';
 import {TinymceComponent} from '../tinymce/tinymce.component';
 import {InputViewComponent} from '../input/input-view.component';
 import {HtmlViewComponent} from '../input/html-view.component';
+import { JoinViewComponent } from '../join/join-view.component';
+import { MultiJoinViewComponent } from '../multi-join/multi-join-view.component';
 
 @Directive({
     selector: '[dynamicField]'
@@ -77,7 +79,7 @@ const componentVewMapper = {
     textarea: InputViewComponent,
     tinymce: HtmlViewComponent,
     tags: InputViewComponent,
-    join: InputViewComponent,
-    multijoin: InputViewComponent,
+    join: JoinViewComponent,
+    multijoin: MultiJoinViewComponent,
     media: MediaComponent
 };
