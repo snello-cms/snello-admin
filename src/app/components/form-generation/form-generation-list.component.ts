@@ -37,14 +37,17 @@ export class FormGenerationListComponent implements OnInit {
 
     ngOnInit() {
         this.metadataName = this.route.snapshot.params['name'];
-        // TODO QUESTA COSA NON VA BENE!!! CHI LA INIIZIALIZZA?????
-        // TODO QUESTA COSA NON VA BENE!!! CHI LA INIIZIALIZZA?????
-        // TODO QUESTA COSA NON VA BENE!!! CHI LA INIIZIALIZZA?????
-        // TODO QUESTA COSA NON VA BENE!!! CHI LA INIIZIALIZZA?????
-        this.metadata = this.metadataService.getMetadataFromName(this.metadataName);
+        this.metadataService.search.table_name = this.metadataName; 
+        this.metadataService.getList().subscribe(
+            metadata => {
+                if (metadata != null && metadata.length > 0) {
+                    this.metadata = metadata[0];
+                }
+
+            } 
+        );
         this.apiService._start = 0;
         this.apiService._limit = 10;
-        this.apiService.getDefinitions(this.metadataName);
 
         this.route.data
             .subscribe(

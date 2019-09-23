@@ -34,8 +34,15 @@ export class FormGenerationEditComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.metadataName = this.route.snapshot.params['name'];
-        this.metadata = this.metadataService.getMetadataFromName(this.metadataName);
+
+        this.metadataService.buildSearch();
+        this.metadataName = this.route.snapshot.params['name'];        
+        this.metadataService.search.table_name = this.metadataName; 
+        this.metadataService.getList().subscribe(
+            metadata => {
+                this.metadata = metadata;
+            } 
+        );
         this.uuid = this.route.snapshot.params['uuid'];
         this.regConfig = [];
         this.route.data
@@ -77,7 +84,7 @@ export class FormGenerationEditComponent implements OnInit {
                     if (element) {
                         const key = this.metadata.table_key;
                         console.log('record saved : ' + element);
-                        this.router.navigate(['datalist/view', this.metadataName, element[key]]);
+                        this.router.navigate(['datalist/view', this.metadataName, element["uuid"]]);
                     }
                 }
             );

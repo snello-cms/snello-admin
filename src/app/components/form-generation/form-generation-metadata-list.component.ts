@@ -44,20 +44,10 @@ export class FormGenerationMetadataListComponent implements OnInit {
     }
 
     public toList(name: string) {
-        this.dataListService.getFieldDefinitionList(name).subscribe(
-            definitions => {
-                this.apiService.updateMap(name, definitions);
-                this.router.navigate(['datalist/list', name]);
-            }
-        );
+        this.router.navigate(['datalist/list', name]);
     }
 
     public toForm(name: string) {
-        this.dataListService.getFieldDefinitionList(name).subscribe(
-            definitions => {
-                this.apiService.updateMap(name, definitions);
-                this.router.navigate(['datalist/new', name]);
-            }
-        );
+        this.router.navigate(['datalist/new', name]);
     }
 }

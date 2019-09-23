@@ -16,7 +16,6 @@ export class ApiService implements OnInit {
     _limit: number;
     listSize: number;
 
-    public map: Map<string, FieldDefinition[]> = new Map<string, FieldDefinition[]>();
 
     constructor(protected http: HttpClient, configurationService: ConfigurationService) {
         configurationService.getValue(API_SERVICE_PATH).subscribe(
@@ -37,13 +36,7 @@ export class ApiService implements OnInit {
         return Observable.throw(error.message /*json().msg*/ || error.error /*json().error*/ || 'Server error');
     }
 
-    updateMap(tableName: string, definitions: FieldDefinition[]) {
-        this.map.set(tableName, definitions);
-    }
 
-    getDefinitions(tableName: string): FieldDefinition[] {
-        return this.map.get(tableName);
-    }
 
     public persist(tableName: string, element: any): Observable<any> {
         const url = this.url + '/' + tableName;
