@@ -49,6 +49,8 @@ export class FormGenerationEditComponent implements OnInit {
 
             } 
         );
+        this.metadataService.buildSearch();
+        delete this.metadataService.search.uuid;
         this.uuid = this.route.snapshot.params['uuid'];
         this.regConfig = [];
         this.route.data
