@@ -29,14 +29,13 @@ export class FormGenerationListComponent implements OnInit {
         private route: ActivatedRoute,
         public apiService: ApiService,
         private dataListService: DataListService,
-        private metadataService: MetadataService
-    ) {
-
+        private metadataService: MetadataService) {
     }
 
 
     ngOnInit() {
         this.metadataName = this.route.snapshot.params['name'];
+        this.metadataService.buildSearch();
         this.metadataService.search.table_name = this.metadataName;
         this.metadataService.getList().subscribe(
             metadata => {

@@ -18,8 +18,7 @@ export class FormGenerationMetadataListComponent implements OnInit {
     constructor(
         protected router: Router,
         public dataListService: DataListService,
-        private apiService: ApiService
-    ) {
+        private apiService: ApiService) {
     }
 
     public loaddata(firstReload: boolean) {
