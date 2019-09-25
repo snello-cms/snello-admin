@@ -22,11 +22,11 @@ export class HomepageComponent implements OnInit {
                 public metadatasService: MetadataService,
                 public dataListService: DataListService,
                 private apiService: ApiService) {
-
         this.model = [];
     }
 
     ngOnInit() {
+        this.metadatasService.buildSearch();
         this.metadatasService.getList().subscribe(
             model => {
                 this.model = <Metadata[]>model;
