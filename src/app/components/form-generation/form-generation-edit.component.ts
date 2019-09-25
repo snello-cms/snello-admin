@@ -12,8 +12,8 @@ import {MetadataService} from '../../service/metadata.service';
     {
         templateUrl: './form-generation-edit.component.html',
         styleUrls: ['./form-generation-edit.component.css'],
-        providers:[MetadataService]
-    }, 
+        providers: [MetadataService]
+    },
 )
 export class FormGenerationEditComponent implements OnInit {
 
@@ -38,8 +38,8 @@ export class FormGenerationEditComponent implements OnInit {
 
         this.metadataService.buildSearch();
         delete this.metadataService.search.uuid;
-        this.metadataName = this.route.snapshot.params['name'];        
-        this.metadataService.search.table_name = this.metadataName; 
+        this.metadataName = this.route.snapshot.params['name'];
+        this.metadataService.search.table_name = this.metadataName;
 
         this.metadataService.getList().subscribe(
             metadata => {
@@ -47,7 +47,7 @@ export class FormGenerationEditComponent implements OnInit {
                     this.metadata = metadata[0];
                 }
 
-            } 
+            }
         );
         //todo: eliminare quando abbiamo capito la gerarchia delle iniezioni
         this.metadataService.buildSearch();
@@ -120,6 +120,7 @@ export class FormGenerationEditComponent implements OnInit {
     // TODO: lo riusciamo a portare in tags.component.ts?
     preSaveUpdate(): any {
         const objToSave = JSON.parse(JSON.stringify(this.form.value));
+        // tslint:disable-next-line:forin
         for (const k in objToSave) {
             for (const field of this.regConfig) {
                 delete field.is_edit;

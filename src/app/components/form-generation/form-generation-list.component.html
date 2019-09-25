@@ -6,9 +6,6 @@
 <div class="sidebar-subpage">
 
     <h3>Elenco {{metadataName}}</h3>
-    <p>
-
-    </p>
 
     <button (click)="newForm()" class="btn btn-add pull-right btn-block" pbutton>
         <i class="fa fa-plus-circle"></i>
@@ -58,11 +55,9 @@
                                 <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
                                     <tr>
                                         <td class="RowIndex">{{ rowIndex + 1 }}</td>
-
                                         <ng-container *ngFor="let def of regConfigList">
                                             <td *ngIf="def.show_in_list">{{dato(rowData, def)}}</td>
                                         </ng-container>
-
                                         <td>
                                             <button (click)="edit(metadataName, getTableKey(rowData))" class="btn btn-success" pbutton>
                                                 Modifica

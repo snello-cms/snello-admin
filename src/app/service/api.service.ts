@@ -37,7 +37,6 @@ export class ApiService implements OnInit {
     }
 
 
-
     public persist(tableName: string, element: any): Observable<any> {
         const url = this.url + '/' + tableName;
         const body = element;
