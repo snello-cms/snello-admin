@@ -15,9 +15,9 @@ export const USER_ROLES_API_PATH = 'user_roles_api_path';
 export const URL_MAP_RULES_API_PATH = 'url_map_rules_api_path';
 export const API_SERVICE_PATH = 'api_service_path';
 export const LOGIN_API_PATH = 'login_api_path';
-export const APP_VERSION = '1.0.RC3';
+export const APP_VERSION = '1.0.RC4';
 
-export const CONFIG_PATH = '/assets/config.json';
+export const CONFIG_PATH = '/snello-admin/assets/config.json';
 
 export const DROPPABLE_API_PATH = 'droppable_api_path';
 export const DRAGGABLE_API_PATH = 'draggable_api_path';
