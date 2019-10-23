@@ -21,7 +21,7 @@
     "@angular/platform-browser-dynamic": "^8.0.1",
     "@angular/router": "^8.0.1",
     "@tinymce/tinymce-angular": "^3.3.0",
-    "bootstrap": "3.3.7",
+    "bootstrap": "3.4.1",
     "chart.js": "^2.8.0",
     "core-js": "^2.6.3",
     "jquery": "^3.3.1",
