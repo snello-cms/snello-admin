@@ -13,6 +13,7 @@ import {TimeComponent} from '../time/time.component';
 import {MultiJoinComponent} from '../multi-join/multi-join.component';
 import {MediaComponent} from '../media/media.component';
 import {TinymceComponent} from '../tinymce/tinymce.component';
+import {AceComponent} from '../ace/ace.component';
 import {InputViewComponent} from '../input/input-view.component';
 import {HtmlViewComponent} from '../input/html-view.component';
 import { JoinViewComponent } from '../join/join-view.component';
@@ -63,6 +64,7 @@ const componentMapper = {
     checkbox: CheckboxComponent,
     textarea: TextAreaComponent,
     tinymce: TinymceComponent,
+    ace9: AceComponent,
     tags: TagComponent,
     join: JoinComponent,
     multijoin: MultiJoinComponent,
@@ -78,6 +80,7 @@ const componentVewMapper = {
     checkbox: CheckboxComponent,
     textarea: InputViewComponent,
     tinymce: HtmlViewComponent,
+    ace9: HtmlViewComponent,
     tags: InputViewComponent,
     join: JoinViewComponent,
     multijoin: MultiJoinViewComponent,

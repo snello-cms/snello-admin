@@ -96,6 +96,7 @@ import {HtmlViewComponent} from './generic.components/input/html-view.component'
 import {LinksViewComponent} from './components/links/links-view.component';
 import { JoinViewComponent } from './generic.components/join/join-view.component';
 import { MultiJoinViewComponent } from './generic.components/multi-join/multi-join-view.component';
+import { AceComponent } from './generic.components/ace/ace.component';
 
 registerLocaleData(localeIt);
 
@@ -223,7 +224,8 @@ export function loadConfigurations(configService: ConfigurationService) {
         TagComponent,
         TimeComponent,
         MediaComponent,
-        TinymceComponent
+        TinymceComponent,
+        AceComponent
     ],
     providers: [
         [MessageService, ConfirmationService,

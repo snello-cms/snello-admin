@@ -9,6 +9,7 @@ export const MAP_INPUT_TO_FIELD: Map<string, any> = new Map(
     ['email', ['input', 'email']],
     ['text', ['textarea', null]],
     ['tinymce', ['tinymce', null]],
+    ['ace9', ['ace9', null]],
     ['boolean', ['checkbox', null]],
     ['date', ['date', null]],
     ['datetime', ['datetime', null]],
