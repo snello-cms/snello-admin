@@ -32,7 +32,7 @@ export class JoinViewComponent implements OnInit {
 
     ngOnInit() {
         const splittedFields = this.field.join_table_select_fields.split(',');
-        this.labelField = splittedFields[0];
+        this.labelField = splittedFields[0]; 
         if (this.labelField === this.field.join_table_key && splittedFields.length > 1) {
             this.labelField = splittedFields[1];
         }

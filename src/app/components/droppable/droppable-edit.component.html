@@ -73,14 +73,6 @@
                                 <div class="form-group clearfix row">
                                     <label class="label-text col-sm-3">static values</label>
                                     <div class="col-sm-9">
-                                        <input [(ngModel)]="element.static_values" name="values" pInputText
-                                                placeholder="Values - var:value;">
-                                    </div>
-                                </div>
-
-                                <div class="form-group clearfix row">
-                                    <label class="label-text col-sm-3">static values</label>
-                                    <div class="col-sm-9">
                                         <ul *ngIf='variables'>
                                             <li *ngFor="let vv of variables">{{vv.draggable}} {{vv.name}}
                                                 <input name="{{vv.value}}"/></li>
@@ -91,11 +83,12 @@
                                 <div class="form-group clearfix row">
                                     <label class="label-text col-sm-3">dynamic values</label>
                                     <div class="col-sm-9">
-                                        <input [(ngModel)]="element.dynamic_values" name="dynamics" pInputText
-                                                placeholder="Dynamics - var:value;">
+                                        <ul *ngIf='variables'>
+                                            <li *ngFor="let vv of dynamics">{{vv.draggable}} {{vv.name}}
+                                                <input name="{{vv.value}}"/></li>
+                                        </ul>
                                     </div>
                                 </div>
-
 
                                 <div class="btn-group btn-actions pull-right">
                                     <button type="button" *ngIf="!element.uuid" [disabled]="!theform.form.valid" class="btn btn-success"
