@@ -97,6 +97,7 @@ import {LinksViewComponent} from './components/links/links-view.component';
 import { JoinViewComponent } from './generic.components/join/join-view.component';
 import { MultiJoinViewComponent } from './generic.components/multi-join/multi-join-view.component';
 import { AceComponent } from './generic.components/ace/ace.component';
+import {AceEditorModule} from 'ng2-ace-editor';
 
 registerLocaleData(localeIt);
 
@@ -166,6 +167,7 @@ export function loadConfigurations(configService: ConfigurationService) {
         DroppableListComponent,
         DroppableEditComponent,
         TinymceComponent,
+        AceComponent,
         LoginComponent
     ],
     imports: [
@@ -206,7 +208,8 @@ export function loadConfigurations(configService: ConfigurationService) {
         ToastModule,
         ButtonModule,
         RadioButtonModule,
-        SidebarModule
+        SidebarModule,
+        AceEditorModule
     ],
     entryComponents: [
         InputViewComponent,
