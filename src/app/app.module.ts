@@ -99,6 +99,7 @@ import { MultiJoinViewComponent } from './generic.components/multi-join/multi-jo
 import { AceComponent } from './generic.components/ace/ace.component';
 import {AceEditorModule} from 'ng2-ace-editor';
 import { MediaViewComponent } from './generic.components/media/media-view.component';
+import {CopyClipboardDirective} from './directives/copy-clipboard.directive';
 
 registerLocaleData(localeIt);
 
@@ -132,6 +133,7 @@ export function loadConfigurations(configService: ConfigurationService) {
         MediaViewComponent,
         TextAreaComponent,
         CheckboxComponent,
+        CopyClipboardDirective,
         DynamicFieldDirective,
         DynamicFormComponent,
         DynamicSearchFormComponent,

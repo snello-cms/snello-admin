@@ -184,7 +184,7 @@
                         <p-table [paginator]="true" [resizableColumns]="true" [responsive]="true" [rows]="10" [totalRecords]="fieldDefinitionService.listSize" [value]="fieldDefinitions">
                             <ng-template let-columns pTemplate="header">
                                 <tr class="sort-header">
-                                    <th pResizableColumn>Indice</th>
+                                    <th pResizableColumn>Index</th>
                                     <th pResizableColumn>Name</th>
                                     <th pResizableColumn>Metadata Name</th>
                                     <th pResizableColumn>Label</th>
@@ -195,7 +195,7 @@
                             </ng-template>
                             <ng-template pTemplate="emptymessage">
                                 <tr>
-                                    <td [attr.colspan]="colspan">Nessun risultato.</td>
+                                    <td [attr.colspan]="colspan">No results.</td>
                                 </tr>
                             </ng-template>
                             <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">

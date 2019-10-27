@@ -59,7 +59,7 @@
                             <p-table #datatable (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true" [resizableColumns]="true" [responsive]="true" [rows]="10" [totalRecords]="service.listSize" [value]="model">
                                 <ng-template let-columns pTemplate="header">
                                     <tr class="sort-header">
-                                        <th pResizableColumn>Indice</th>
+                                        <th pResizableColumn>Index</th>
                                         <th pResizableColumn>Name</th>
                                         <th pResizableColumn>Metadata Name</th>
                                         <th pResizableColumn>Label</th>
@@ -71,7 +71,7 @@
                                 <ng-template pTemplate="emptymessage">
                                     <tr>
                                         <td [attr.colspan]="colspan">
-                                            Nessun risultato.
+                                            No results.
                                         </td>
                                     </tr>
                                 </ng-template>

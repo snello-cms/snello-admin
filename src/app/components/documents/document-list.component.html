@@ -56,17 +56,17 @@
                             <p-table #datatable (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true" [resizableColumns]="true" [responsive]="true" [rows]="10" [totalRecords]="service.listSize" [value]="model">
                                 <ng-template let-columns pTemplate="header">
                                     <tr class="sort-header">
-                                        <th pResizableColumn>Indice</th>
+                                        <th pResizableColumn>Index</th>
                                         <th pResizableColumn>Table name/ key</th>
                                         <th pResizableColumn>Original name</th>
                                         <th pResizableColumn>Path</th>
                                         <th pResizableColumn>Mimetype / Size</th>
-                                        <th class="Operations">Operazioni</th>
+                                        <th class="Operations">Operations</th>
                                     </tr>
                                 </ng-template>
                                 <ng-template pTemplate="emptymessage">
                                     <tr>
-                                        <td colspan="9">Nessun risultato.</td>
+                                        <td colspan="9">No results.</td>
                                     </tr>
                                 </ng-template>
                                 <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
@@ -78,8 +78,12 @@
                                         <td class="ui-resizable-column">{{ rowData.original_name }}</td>
                                         <td class="ui-resizable-column">
                                             <button (click)="download(rowData.uuid)" class="btn btn-success btn-sm" pButton>
-                                                <i aria-hidden="true" class="fa fa-pencil"></i>  {{ rowData.path }}
+                                                <i aria-hidden="true" class="fa fa-download"></i>
                                             </button>
+                                            {{ rowData.path }}
+                                            <a role="button" [copy-clipboard]="downloadPath(rowData.uuid)"
+                                                    (copied)="notify($event)">
+                                                <i class="fa fa-clipboard"></i></a>
                                         </td>
                                         <td class="ui-resizable-column">{{ rowData.mimetype }}
                                             <br/> {{ rowData.size }}</td>

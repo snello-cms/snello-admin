@@ -2,9 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {AbstractListComponent} from '../../common/abstract-list-component';
 import {Router} from '@angular/router';
 import {Condition} from '../../model/condtion';
-import {ConfirmationService} from 'primeng/api';
-import {User} from "../../model/user";
-import {UserService} from "../../service/user.service";
+import {ConfirmationService, MessageService} from 'primeng/api';
+import {User} from '../../model/user';
+import {UserService} from '../../service/user.service';
 
 @Component(
     {
@@ -13,13 +13,13 @@ import {UserService} from "../../service/user.service";
     }
 )
 export class UserListComponent extends AbstractListComponent<User> implements OnInit {
-    
     constructor(
         public router: Router,
         public confirmationService: ConfirmationService,
-        public service: UserService) {
+        public service: UserService,
+        public messageService: MessageService) {
 
-        super(router, confirmationService, service, 'user');
+        super(messageService, router, confirmationService, service, 'user');
         this.filters = new Condition();
     }
 

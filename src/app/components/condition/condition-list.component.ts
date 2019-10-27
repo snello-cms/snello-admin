@@ -5,7 +5,8 @@ import {Router} from '@angular/router';
 import {Condition} from '../../model/condtion';
 import {ConditionService} from '../../service/condition.service';
 import {MetadataService} from '../../service/metadata.service';
-import { SelectItem, ConfirmationService } from 'primeng/api';
+import {SelectItem, ConfirmationService, MessageService} from 'primeng/api';
+import {DocumentService} from '../../service/document.service';
 
 @Component(
   {
@@ -29,9 +30,10 @@ export class ConditionListComponent extends AbstractListComponent<Condition> imp
       public router: Router,
       public confirmationService: ConfirmationService,
       public service: ConditionService,
-      public metadataService: MetadataService) {
+      public metadataService: MetadataService,
+      public messageService: MessageService) {
 
-    super(router, confirmationService, service, 'condition');
+    super(messageService, router, confirmationService, service, 'condition');
     this.filters = new Condition();
     this.metadatasItems = [];
     this.metadataService.buildSearch();

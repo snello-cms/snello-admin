@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {AbstractListComponent} from '../../common/abstract-list-component';
 import {Router} from '@angular/router';
-import {ConfirmationService} from 'primeng/api';
-import {Role} from "../../model/role";
-import {RoleService} from "../../service/role.service";
+import {ConfirmationService, MessageService} from 'primeng/api';
+import {Role} from '../../model/role';
+import {RoleService} from '../../service/role.service';
 
 @Component(
     {
@@ -16,9 +16,10 @@ export class RoleListComponent extends AbstractListComponent<Role> implements On
     constructor(
         public router: Router,
         public confirmationService: ConfirmationService,
-        public service: RoleService) {
+        public service: RoleService,
+        public messageService: MessageService) {
 
-        super(router, confirmationService, service, 'role');
+        super(messageService, router, confirmationService, service, 'role');
         this.filters = new Role();
     }
 

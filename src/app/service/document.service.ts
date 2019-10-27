@@ -101,6 +101,10 @@ export class DocumentService extends AbstractService<Document> {
         return this.httpClient.get(this.url + '/' + uuid + '/download', {responseType: 'blob'});
     }
 
+    public downloadPath(uuid: string): string {
+        return this.url + '/' + uuid + '/download';
+    }
+
     public download(uuid: string): Observable<any> {
         return this.simplDownload(uuid)
             .pipe(
