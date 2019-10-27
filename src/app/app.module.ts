@@ -98,6 +98,7 @@ import { JoinViewComponent } from './generic.components/join/join-view.component
 import { MultiJoinViewComponent } from './generic.components/multi-join/multi-join-view.component';
 import { AceComponent } from './generic.components/ace/ace.component';
 import {AceEditorModule} from 'ng2-ace-editor';
+import { MediaViewComponent } from './generic.components/media/media-view.component';
 
 registerLocaleData(localeIt);
 
@@ -128,6 +129,7 @@ export function loadConfigurations(configService: ConfigurationService) {
         DatetimeComponent,
         TimeComponent,
         MediaComponent,
+        MediaViewComponent,
         TextAreaComponent,
         CheckboxComponent,
         DynamicFieldDirective,
@@ -227,6 +229,7 @@ export function loadConfigurations(configService: ConfigurationService) {
         TagComponent,
         TimeComponent,
         MediaComponent,
+        MediaViewComponent,
         TinymceComponent,
         AceComponent
     ],

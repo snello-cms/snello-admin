@@ -18,6 +18,7 @@ import {InputViewComponent} from '../input/input-view.component';
 import {HtmlViewComponent} from '../input/html-view.component';
 import { JoinViewComponent } from '../join/join-view.component';
 import { MultiJoinViewComponent } from '../multi-join/multi-join-view.component';
+import { MediaViewComponent } from '../media/media-view.component';
 
 @Directive({
     selector: '[dynamicField]'
@@ -84,5 +85,5 @@ const componentVewMapper = {
     tags: InputViewComponent,
     join: JoinViewComponent,
     multijoin: MultiJoinViewComponent,
-    media: MediaComponent
+    media: MediaViewComponent
 };
