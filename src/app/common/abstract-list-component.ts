@@ -81,7 +81,7 @@ export abstract class AbstractListComponent<T> implements OnInit {
 
     public loaddata(firstReload: boolean, datatable: any) {
         this.preLoaddata();
-        console.log('loading data...', this.service.search);
+        // console.log('loading data...', this.service.search);
         this.firstReload = firstReload;
         this.service.getList().subscribe(
             model => {
@@ -97,7 +97,7 @@ export abstract class AbstractListComponent<T> implements OnInit {
     }
 
     public lazyLoad(event: any, datatable?: any) {
-        console.log('lazyLoad data...', this.service.search);
+        // console.log('lazyLoad data...', this.service.search);
         if (!this.firstReload) {
             this.service._start = event.first;
         }

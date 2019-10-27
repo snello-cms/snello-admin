@@ -148,12 +148,12 @@ export class ApiService implements OnInit {
             .pipe(
                 map(res => {
                     const keys = res.headers.keys();
-                    console.log(keys);
+                    // console.log(keys);
                     const headers = keys.map(key => {
                             `${key}: ${res.headers.get(key)}`;
                         }
                     );
-                    console.log(headers);
+                    // console.log(headers);
                     const ts: any[] = res.body; // json();
                     return ts;
                 }),
