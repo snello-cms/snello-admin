@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {FieldDefinition} from '../../model/field-definition';
-import {SelectItem} from "primeng/api";
-import {ApiService} from "../../service/api.service";
+import {SelectItem} from 'primeng/api';
+import {ApiService} from '../../service/api.service';
 import { of, forkJoin, Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { tap } from 'rxjs/operators';
@@ -10,7 +10,7 @@ import { tap } from 'rxjs/operators';
 @Component({
   selector: 'app-multijoin',
   template: `
-  <div class="form-group clearfix row" [formGroup]="group">
+  <div *ngIf="joinList$ | async" class="form-group clearfix row" [formGroup]="group">
   <div class="col-sm-12">
       <label class="col-sm-3">
         {{ field.name }}
@@ -18,7 +18,7 @@ import { tap } from 'rxjs/operators';
       <div class="col-sm-9">
 
       <p-autoComplete
-      [suggestions]="options" (completeMethod)="search($event)" [size]="30" 
+      [suggestions]="options" (completeMethod)="search($event)" [size]="30"
       [field]="labelField" [dataKey]="field.join_table_key" [dropdown]="true"
       [formControlName]="field.name" [forceSelection]="true" [multiple]="true">
 
@@ -42,7 +42,7 @@ export class MultiJoinComponent implements OnInit {
   values: string[] = [];
   filteredValue: string;
 
-  joinList: Observable<any[]>;
+  joinList$: Observable<any[]>;
 
   uuid: string;
   name: string;
@@ -52,6 +52,12 @@ export class MultiJoinComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    const splittedFields = this.field.join_table_select_fields.split(',');
+    this.labelField  = splittedFields[0];
+    if (this.labelField === this.field.join_table_key && splittedFields.length > 1) {
+      this.labelField  = splittedFields[1];
+    }
 
     this.uuid = this.activatedRoute.snapshot.params['uuid'];
     this.name = this.activatedRoute.snapshot.params['name'];
@@ -64,7 +70,7 @@ export class MultiJoinComponent implements OnInit {
       );
 
     const observables = [];
-      this.joinList =
+      this.joinList$ =
           this.apiService.fetchJoinList(this.name, this.uuid, this.field.join_table_name)
           .pipe(
               tap(join => this.group.get(this.field.name).setValue(join)),
@@ -82,7 +88,7 @@ export class MultiJoinComponent implements OnInit {
   }
 
   handleDropdown(event) {
-    //event.query = current value in input field
+    // event.query = current value in input field
   }
 
   selectRecord(event: any) {

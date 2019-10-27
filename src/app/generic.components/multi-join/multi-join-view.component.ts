@@ -3,12 +3,14 @@ import {FormGroup} from '@angular/forms';
 import {FieldDefinition} from '../../model/field-definition';
 import {SelectItem} from "primeng/api";
 import {ApiService} from "../../service/api.service";
-import { of, forkJoin } from 'rxjs';
+import { of, forkJoin, Observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: "app-multijoin",
   template: `
-  <div class="form-group clearfix row" [formGroup]="group">
+  <div *ngIf="joinList$ | async as values" class="form-group clearfix row" [formGroup]="group">
   <div class="col-sm-12">
       <label class="col-sm-3">
         {{ field.name }}
@@ -16,15 +18,16 @@ import { of, forkJoin } from 'rxjs';
       <div class="col-sm-9">
 
       <ul>
-        <li *ngFor="let c of values">{{ decodeName(c) }}
+        <li *ngFor="let c of values">
+          {{ c[labelField] }}
           <i class="pi pi-times"></i>
         </li>
       </ul>
-      
+
       </div>
   </div>
   <div class="col-sm-12">
-  
+
   </div>
 </div>
   `,
@@ -35,35 +38,34 @@ export class MultiJoinViewComponent implements OnInit {
   group: FormGroup;
 
   labelField: string = null;
-  values: any[] = [];
-  constructor(private apiService: ApiService) {
+  joinList$: Observable<any[]>;
+
+
+  uuid: string;
+  name: string;
+
+  constructor(private apiService: ApiService, private activatedRoute: ActivatedRoute) {
   }
+
 
   ngOnInit() {
-    let splittedFields = this.field.join_table_select_fields.split(",");
+    const splittedFields = this.field.join_table_select_fields.split(',');
     this.labelField  = splittedFields[0];
-    if (this.labelField == this.field.join_table_key && splittedFields.length > 1) {
+    if (this.labelField === this.field.join_table_key && splittedFields.length > 1) {
       this.labelField  = splittedFields[1];
     }
-    
-    let observables = [];
-    if (this.field.value && this.field.value.length > 0) {
 
-      for(let uuid of this.field.value.split(",")) { 
-        observables.push(this.apiService.fetchObject(this.field.join_table_name, uuid));
-      }
-      
-      forkJoin(
-        observables
-      ).subscribe( 
-        resolved =>  {
-          this.values = resolved;
-        }
-      );
-    }
+    this.uuid = this.activatedRoute.snapshot.params['uuid'];
+    this.name = this.activatedRoute.snapshot.params['name'];
+
+
+    const observables = [];
+      this.joinList$ =
+          this.apiService.fetchJoinList(this.name, this.uuid, this.field.join_table_name)
+          .pipe(
+              tap(join => this.group.get(this.field.name).setValue(join)),
+          );
+
   }
-  
-  decodeName(object: any) {
-    return object[this.labelField];
-  }
+
 }
