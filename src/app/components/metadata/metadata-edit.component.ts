@@ -48,6 +48,9 @@ export class MetadataEditComponent extends AbstractEditComponent<Metadata>
         super.ngOnInit();
         if (this.element.uuid) {
             this.newtable = this.element.already_exist;
+        } else {
+            this.element.table_key = 'uuid';
+            this.element.table_key_type = 'uuid';
         }
     }
 
