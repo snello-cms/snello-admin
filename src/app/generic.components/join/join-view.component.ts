@@ -44,10 +44,9 @@ export class JoinViewComponent implements OnInit {
         this.name = this.activatedRoute.snapshot.params['name'];
 
         this.join$ =
-            this.apiService.fetchJoinList(this.name, this.uuid, this.field.join_table_name)
+            this.apiService.fetchObject(this.field.join_table_name, this.field.value)
             .pipe(
                 tap(join => this.group.get(this.field.name).setValue(join)),
-                take(1)
             );
     }
 
