@@ -58,7 +58,6 @@ export class JoinComponent implements OnInit {
             this.apiService.fetchObject(this.field.join_table_name, this.field.value)
             .pipe(
                 tap(join => this.group.get(this.field.name).setValue(join)),
-                take(1)
             );
 
     }

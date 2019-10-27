@@ -38,8 +38,11 @@ export class FieldDefinitionResolver implements Resolve<FieldDefinition[]> {
                     if (element != null) {
                         for (const definition_1 of fieldDefinitionList) {
                             definition_1.is_edit = true;
-                            if (element.hasOwnProperty(definition_1.name)) {
+                            if (element.hasOwnProperty(definition_1.name) || element.hasOwnProperty(definition_1.name.toLowerCase())) {
                                 definition_1.value = element[definition_1.name];
+                            }
+                            if (element.hasOwnProperty(definition_1.name.toLowerCase())) {
+                                definition_1.value = element[definition_1.name.toLowerCase()];
                             }
                             definition_1.table_name = name;
                             definition_1.table_key_value = element.uuid;
