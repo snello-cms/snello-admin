@@ -43,6 +43,26 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         {label: 'contains', value: 'contains'},
         {label: 'contanins case insensitve', value: 'containss'}];
 
+    componentDefaultValuesMapper = {
+        string: 'containss',
+        text: 'containss',
+        number: '',
+        decimal: '',
+        password: '',
+        email: '',
+        select: '',
+        date: '',
+        datetime: '',
+        time: '',
+        boolean: '',
+        tinymce: 'containss',
+        ace9: 'containss',
+        tags: 'containss',
+        join: '',
+        multijoin: 'containss',
+        media: 'null'
+    };
+
     constructor(
         public router: Router,
         public route: ActivatedRoute,
@@ -320,5 +340,10 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         } else {
             this.router.navigate(['/' + this.path + '/list']);
         }
+    }
+
+    changedFieldType (event: any) {
+        this.element.search_condition = this.componentDefaultValuesMapper[event.value];
+        console.log(this.element.search_condition);
     }
 }

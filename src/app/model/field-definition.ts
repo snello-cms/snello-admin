@@ -78,6 +78,6 @@ export class FieldDefinition {
   show_in_list: boolean;
 
   // usato solo lato angular
-  is_edit?: boolean = false;
+  is_edit = false;
 }
 

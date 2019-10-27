@@ -52,7 +52,7 @@
                 <label class="label-text col-sm-3">Input Type (*)</label>
                 <div class="col-sm-9">
                   <p-dropdown [(ngModel)]="fieldType" [filter]="false" [options]="fieldTypes" [style]="{'width':'100%'}"
-                              filterBy="label" name="typeSelect" placeholder="Seleziona un tipo">
+                              filterBy="label" name="typeSelect" placeholder="Seleziona un tipo"  (onChange)="changedFieldType($event)">
                   </p-dropdown>
                 </div>
               </div>
@@ -107,7 +107,7 @@
                 </div>
               </div>
 
-              <div class="form-group clearfix row">
+              <div class="form-group clearfix row" *ngIf="fieldType !== 'media'">
                 <label class="label-text col-sm-3">Show In List</label>
                 <div class="col-sm-9">
                   <p-inputSwitch [(ngModel)]="element.show_in_list" name="show_in_list">Show In List</p-inputSwitch>
@@ -115,7 +115,7 @@
               </div>
 
 
-              <div class="form-group clearfix row">
+              <div class="form-group clearfix row" *ngIf="fieldType !== 'media'">
                 <label class="label-text col-sm-3">Is Searchable</label>
                 <div class="col-sm-9">
                   <p-inputSwitch [(ngModel)]="element.searchable" name="searchable">Searchable</p-inputSwitch>
@@ -123,7 +123,7 @@
               </div>
 
 
-              <div class="form-group clearfix row" *ngIf="element.searchable">
+              <div class="form-group clearfix row" *ngIf="element.searchable && fieldType !== 'media'>
                 <label class="label-text col-sm-3">Search Condition</label>
                 <div class="col-sm-9">
                   <p-dropdown [(ngModel)]="element.search_condition" [filter]="false" [options]="searchConditionItems"
