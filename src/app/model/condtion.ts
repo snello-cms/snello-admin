@@ -7,5 +7,6 @@ export class Condition {
   query_params: string;
   metadata_uuid: string;
   metadata_name: string;
+  metadata_multijoin_uuid: string;
 }
 

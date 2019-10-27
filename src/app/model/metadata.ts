@@ -1,5 +1,6 @@
 import {Condition} from './condtion';
-import {FieldDefinition} from "./field-definition";
+import {FieldDefinition} from './field-definition';
+
 export class Metadata {
   uuid: string;
   table_name: string;

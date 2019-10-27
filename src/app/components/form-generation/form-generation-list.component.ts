@@ -62,9 +62,14 @@ export class FormGenerationListComponent implements OnInit {
 
     dato(rowData: any, fieldDefinition: FieldDefinition): any {
         const fullValue = rowData[fieldDefinition.name];
+        if (!fullValue) {
+            return '';
+        }
         if (fieldDefinition.type === 'join') {
             // const splitted = fullValue.split(':');
             // TODO COME RECUPERO IL VALORE
+            // path da invocare per avere i dati:
+            // /api/{fieldDefinition.metadata_name}/{fullValue}
             return '[' + fullValue + ']';
         }
         if (fieldDefinition.type === 'multijoin') {
@@ -73,6 +78,8 @@ export class FormGenerationListComponent implements OnInit {
             for (let x = 0; x < splitted.length; x++) {
                 const label = splitted[x].split(':');
                 retVal = retVal + label[1] + ',';
+                // path da invocare per avere i dati:
+                // /api/{metadata.table}/{uuid}/{fieldDefinition.metadata_name}
             }
             return retVal.substr(0, retVal.length - 1);
         }

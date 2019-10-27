@@ -10,7 +10,8 @@ import {ConfigurationService} from '../../service/configuration.service';
         <div class="form-group clearfix row" [formGroup]="group">
             <label class="col-sm-3">{{ field.name }}</label>
             <div class="col-sm-9">
-                <editor [formControlName]="field.name" [init]="{ base_url: asset_path+'tinymce',suffix: '.min', entity_encoding: 'numeric', plugins: 'table hr link image',  menubar: 'false', height: 300, toolbar: 'image | table | hr | link | removeformat | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent'}"></editor>
+                <editor [formControlName]="field.name" 
+                        [init]="{ base_url: asset_path+'tinymce',suffix: '.min', entity_encoding: 'numeric', plugins: 'table hr link image',  menubar: 'false', height: 300, toolbar: 'image | table | hr | link | removeformat | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent'}"></editor>
                 <ng-container *ngFor="let validation of field.validations">
                 </ng-container>
             </div>

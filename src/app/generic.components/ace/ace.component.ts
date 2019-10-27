@@ -11,14 +11,13 @@ import {ConfigurationService} from '../../service/configuration.service';
             <label class="col-sm-3">{{ field.name }}</label>
             <div class="col-sm-9">
                 <div ace-editor
-                    [(text)]="text"
-                    [mode]="'sql'"
-                    [theme]="'eclipse'"
-                    [options]="options"
-                    [readOnly]="false"
-                    [autoUpdateContent]="true"
-                    [durationBeforeCallback]="1000"
-                    style="min-height: 200px; width:100%; overflow: auto;">
+                        [formControlName]="field.name"
+                        [mode]="'sql'"
+                        [theme]="'eclipse'"
+                        [readOnly]="false"
+                        [autoUpdateContent]="true"
+                        [durationBeforeCallback]="1000"
+                        style="min-height: 200px; width:100%; overflow: auto;">
                 </div>
                 <ng-container *ngFor="let validation of field.validations">
                 </ng-container>

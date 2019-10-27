@@ -1,0 +1,12 @@
+{
+  "/api": {
+    "target": "https://api.snello.io",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/login": {
+    "target": "https://api.snello.io",
+    "secure": false,
+    "changeOrigin": true
+  }
+}
