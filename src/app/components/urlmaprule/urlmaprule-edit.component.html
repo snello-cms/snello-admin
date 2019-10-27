@@ -57,17 +57,17 @@
                 <div class="btn-group btn-actions pull-right">
                   <button type="button" *ngIf="!element.uuid" [disabled]="!theform.form.valid"
                           (click)="save()" class="btn btn-success">
-                    SALVA
+                    Save
                   </button>
                   <button type="button" *ngIf="element.uuid" [disabled]="!theform.form.valid"
                           (click)="update()" class="btn btn-success">
                     MODIFICA
                   </button>
                   <button type="button" *ngIf="element.uuid" (click)="confirmDelete()" class="btn btn-danger">
-                    ELIMINA
+                    Delete
                   </button>
                   <button type="button" (click)="navigateToList()" class="btn btn-danger">
-                    ANNULLA
+                    Undo
                   </button>
                 </div>
               </form>

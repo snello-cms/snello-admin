@@ -11,7 +11,7 @@
 
     </p>
     <button pButton class="btn btn-add pull-right btn-block" (click)="new()"><i class="fa fa-plus-circle"></i>
-        Aggiungi
+        Add
     </button>
 </div>
 
@@ -43,8 +43,8 @@
                                     <div class="col-sm-4">
                                         <div class="btn-group pull-right">
 
-                                            <button type="button" class="btn btn-search" (click)="reload(datatable)" icon="ui-icon-search">Cerca</button>
-                                            <button type="button" class="btn btn-reset" (click)="reset(datatable)" icon="ui-icon-undo">Annulla</button>
+                                            <button type="button" class="btn btn-search" (click)="reload(datatable)" icon="ui-icon-search">Search</button>
+                                            <button type="button" class="btn btn-reset" (click)="reset(datatable)" icon="ui-icon-undo">Undo</button>
                                         </div>
                                     </div>
                                 </div>
@@ -85,7 +85,7 @@
                                             <br/> {{ rowData.size }}</td>
                                         <td>
                                             <button (click)="edit(rowData)" class="btn btn-success btn-sm" pButton>
-                                                <i aria-hidden="true" class="fa fa-pencil"></i> Modifica
+                                                <i aria-hidden="true" class="fa fa-pencil"></i> Modify
                                             </button>
 
                                             <button (click)="confirmDelete(rowData)" class="btn btn-warning btn-sm" pButton>

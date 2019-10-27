@@ -92,16 +92,16 @@
 
                                 <div class="btn-group btn-actions pull-right">
                                     <button type="button" *ngIf="!element.uuid" [disabled]="!theform.form.valid" class="btn btn-success"
-                                            (click)="save()">SALVA
+                                            (click)="save()">Save
                                     </button>&nbsp;&nbsp;
                                     <button type="button" *ngIf="element.uuid" [disabled]="!theform.form.valid" class="btn btn-success"
                                             (click)="update()">MODIFICA
                                     </button>&nbsp;&nbsp;&nbsp;&nbsp;
                                     <button type="button" *ngIf="element.uuid" [disabled]="!theform.form.valid" class="btn btn-danger"
-                                            (click)="confirmDelete()">ELIMINA
+                                            (click)="confirmDelete()">Delete
                                     </button>&nbsp;&nbsp;
 
-                                    <button type="button" class="btn btn-danger" (click)="navigateToList()">ANNULLA</button>
+                                    <button type="button" class="btn btn-danger" (click)="navigateToList()">Undo</button>
                                 </div>
                             </form>
                         </div>

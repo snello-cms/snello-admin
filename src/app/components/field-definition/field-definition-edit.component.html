@@ -184,13 +184,13 @@
 
 
               <div class="btn-group btn-actions pull-right">
-                <button (click)="navigateToList()" class="btn btn-danger" type="button">ANNULLA</button>
+                <button (click)="navigateToList()" class="btn btn-danger" type="button">Undo</button>
                 <button (click)="confirmDelete()" *ngIf="element.uuid" class="btn btn-warning" type="button">
-                  ELIMINA
+                  Delete
                 </button>
                 <button (click)="save()" [disabled]="!theform.form.valid" *ngIf="!element.uuid" class="btn btn-success"
                         type="button">
-                  SALVA
+                  Save
                 </button>
                 <button (click)="update()" [disabled]="!theform.form.valid" *ngIf="element.uuid" class="btn btn-success"
                         type="button">

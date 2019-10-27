@@ -51,7 +51,7 @@
 
                             <button (click)="save()" [disabled]="!theform.form.valid" *ngIf="!element.uuid" class="btn btn-success"
                                     type="button">
-                                SALVA
+                                Save
                             </button>
 
                             <button (click)="update()" [disabled]="!theform.form.valid" *ngIf="element.uuid" class="btn btn-success"
@@ -60,11 +60,11 @@
                             </button>
 
                             <button (click)="confirmDelete()" *ngIf="element.uuid" class="btn btn-danger" type="button">
-                                ELIMINA
+                                Delete
                             </button>
 
                             <button (click)="navigateToList()" class="btn btn-danger" type="button">
-                                ANNULLA
+                                Undo
                             </button>
                         </div>
                     </form>
