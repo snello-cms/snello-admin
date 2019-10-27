@@ -49,7 +49,7 @@ export class FormGenerationEditComponent implements OnInit {
 
             }
         );
-        //todo: eliminare quando abbiamo capito la gerarchia delle iniezioni
+        // todo: eliminare quando abbiamo capito la gerarchia delle iniezioni
         this.metadataService.buildSearch();
         delete this.metadataService.search.uuid;
         this.uuid = this.route.snapshot.params['uuid'];
@@ -129,8 +129,8 @@ export class FormGenerationEditComponent implements OnInit {
                         objToSave[field.name] = objToSave[field.name].join(',');
                     }
                     if (field.type === 'multijoin') {
-                        let values: any[] = [];
-                        for (let value of  objToSave[field.name]) {
+                        const values: any[] = [];
+                        for (const value of  objToSave[field.name]) {
                             values.push(value[field.join_table_key]);
                         }
                         objToSave[field.name] = values.join(',');

@@ -1,14 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {FieldDefinition} from '../../model/field-definition';
-import {SelectItem} from "primeng/api";
-import {ApiService} from "../../service/api.service";
+import {ApiService} from '../../service/api.service';
 import { of, forkJoin, Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: "app-multijoin",
+  selector: 'app-multijoin',
   template: `
   <div *ngIf="joinList$ | async as values" class="form-group clearfix row" [formGroup]="group">
   <div class="col-sm-12">

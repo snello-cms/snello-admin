@@ -1,6 +1,6 @@
 import {Injectable, OnInit} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {FieldDefinition} from '../model/field-definition';
 import {ConfigurationService} from './configuration.service';
@@ -29,11 +29,11 @@ export class ApiService implements OnInit {
 
     public handleError(error: HttpErrorResponse): Observable<any> {
         if (error.status === 401) {
-            return Observable.throw({status: error.status, error: 'Unauthorized'});
+            return throwError({status: error.status, error: 'Unauthorized'});
         } else if (error.status === 500) {
-            return Observable.throw({status: error.status, error: error.message || error.error});
+            return throwError({status: error.status, error: error.message || error.error});
         }
-        return Observable.throw(error.message /*json().msg*/ || error.error /*json().error*/ || 'Server error');
+        return throwError(error.message /*json().msg*/ || error.error /*json().error*/ || 'Server error');
     }
 
 
