@@ -73,6 +73,19 @@ export class ApiService implements OnInit {
         );
     }
 
+    public fetchJoin(metadata_from_name: string, metadata_uuid: string, metadata_to_name: string): Observable<any> {
+        const url = this.url + '/' + metadata_from_name + '/' + metadata_uuid + '/' + metadata_to_name;
+        return this.http.get(url, {
+            observe: 'response',
+        }).pipe(
+            map(res => {
+                const t: any = <any>res.body; // json();
+                return t;
+            }),
+            catchError(this.handleError)
+        );
+    }
+
 
     public getList(tableName: string, regConfigSearch: FieldDefinition[]) {
         let params = new HttpParams();

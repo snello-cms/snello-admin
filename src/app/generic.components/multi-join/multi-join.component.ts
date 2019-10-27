@@ -43,9 +43,9 @@ export class MultiJoinComponent implements OnInit {
   }
 
   ngOnInit() {
-    let splittedFields = this.field.join_table_select_fields.split(",");
+    const splittedFields = this.field.join_table_select_fields.split(',');
     this.labelField  = splittedFields[0];
-    if (this.labelField == this.field.join_table_key && splittedFields.length > 1) {
+    if (this.labelField === this.field.join_table_key && splittedFields.length > 1) {
       this.labelField  = splittedFields[1];
     }
     this.apiService.getJoinList(this.field)
@@ -53,20 +53,20 @@ export class MultiJoinComponent implements OnInit {
           this.options = options;
         }
       );
-    
-    let observables = [];
+
+    const observables = [];
     if (this.field.value && this.field.value.length > 0) {
 
-      for(let uuid of this.field.value.split(",")) { 
+      for (const uuid of this.field.value.split(",")) {
 
         observables.push(this.apiService.fetch(this.field.join_table_name, uuid));
       }
-      
+
       forkJoin(
         observables
       ).subscribe( 
         resolved =>  {
-          this.group.get(this.field.name).setValue(resolved);            
+          this.group.get(this.field.name).setValue(resolved);
         }
       );
     }
