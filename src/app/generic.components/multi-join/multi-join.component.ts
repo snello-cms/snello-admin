@@ -3,10 +3,12 @@ import {FormGroup} from '@angular/forms';
 import {FieldDefinition} from '../../model/field-definition';
 import {SelectItem} from "primeng/api";
 import {ApiService} from "../../service/api.service";
-import { of, forkJoin } from 'rxjs';
+import { of, forkJoin, Observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: "app-multijoin",
+  selector: 'app-multijoin',
   template: `
   <div class="form-group clearfix row" [formGroup]="group">
   <div class="col-sm-12">
@@ -23,7 +25,7 @@ import { of, forkJoin } from 'rxjs';
 
       </p-autoComplete>
 
-      
+
       </div>
   </div>
 </div>
@@ -39,15 +41,22 @@ export class MultiJoinComponent implements OnInit {
   labelMap: Map<string, any> = new Map();
   values: string[] = [];
   filteredValue: string;
-  constructor(private apiService: ApiService) {
+
+  joinList: Observable<any[]>;
+
+  uuid: string;
+  name: string;
+
+
+  constructor(private apiService: ApiService, private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit() {
-    const splittedFields = this.field.join_table_select_fields.split(',');
-    this.labelField  = splittedFields[0];
-    if (this.labelField === this.field.join_table_key && splittedFields.length > 1) {
-      this.labelField  = splittedFields[1];
-    }
+
+    this.uuid = this.activatedRoute.snapshot.params['uuid'];
+    this.name = this.activatedRoute.snapshot.params['name'];
+
+
     this.apiService.getJoinList(this.field)
       .subscribe(options => {
           this.options = options;
@@ -55,21 +64,12 @@ export class MultiJoinComponent implements OnInit {
       );
 
     const observables = [];
-    if (this.field.value && this.field.value.length > 0) {
+      this.joinList =
+          this.apiService.fetchJoinList(this.name, this.uuid, this.field.join_table_name)
+          .pipe(
+              tap(join => this.group.get(this.field.name).setValue(join)),
+          );
 
-      for (const uuid of this.field.value.split(",")) {
-
-        observables.push(this.apiService.fetch(this.field.join_table_name, uuid));
-      }
-
-      forkJoin(
-        observables
-      ).subscribe( 
-        resolved =>  {
-          this.group.get(this.field.name).setValue(resolved);
-        }
-      );
-    }
   }
 
 
@@ -86,11 +86,10 @@ export class MultiJoinComponent implements OnInit {
   }
 
   selectRecord(event: any) {
-    
+
   }
 
-  
   removeRecord(event: string) {
-    
+
   }
 }

@@ -38,7 +38,7 @@ export class JoinViewComponent implements OnInit {
         }
 
         if (this.field.value) {
-            this.apiService.fetch(this.field.join_table_name, this.field.value).subscribe(
+            this.apiService.fetchObject(this.field.join_table_name, this.field.value).subscribe(
                 value => {
                     this.outValue = value;
                 }

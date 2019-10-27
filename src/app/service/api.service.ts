@@ -60,7 +60,7 @@ export class ApiService implements OnInit {
             .pipe(catchError(this.handleError));
     }
 
-    public fetch(tableName: string, table_key: string) {
+    public fetchObject(tableName: string, table_key: string): Observable<any> {
         const url = this.url + '/' + tableName + '/' + table_key;
         return this.http.get(url, {
             observe: 'response',
@@ -73,7 +73,7 @@ export class ApiService implements OnInit {
         );
     }
 
-    public fetchJoin(metadata_from_name: string, metadata_uuid: string, metadata_to_name: string): Observable<any> {
+    public fetchJoinList(metadata_from_name: string, metadata_uuid: string, metadata_to_name: string): Observable<any[]> {
         const url = this.url + '/' + metadata_from_name + '/' + metadata_uuid + '/' + metadata_to_name;
         return this.http.get(url, {
             observe: 'response',

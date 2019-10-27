@@ -27,7 +27,7 @@ export class FieldDefinitionResolver implements Resolve<FieldDefinition[]> {
                 el => {
                     fieldDefinitionList = el;
                     if (name) {
-                        return this.apiService.fetch(name, key);
+                        return this.apiService.fetchObject(name, key);
                     } else {
                         return of(null);
                     }

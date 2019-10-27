@@ -4,7 +4,7 @@ import {FieldDefinition} from '../../model/field-definition';
 import {ApiService} from '../../service/api.service';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, of } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, take } from 'rxjs/operators';
 
 @Component({
     selector: 'app-join',
@@ -47,15 +47,12 @@ export class JoinComponent implements OnInit {
         this.uuid = this.activatedRoute.snapshot.params['uuid'];
         this.name = this.activatedRoute.snapshot.params['name'];
 
-        if (this.field.value) {
-            this.join =
-                this.apiService.fetchJoin(this.name, this.uuid, this.field.join_table_name)
-                .pipe(
-                    tap(join => this.group.get(this.field.name).setValue(join))
-                );
-        } else {
-            this.join = of(null);
-        }
+        this.join =
+            this.apiService.fetchJoinList(this.name, this.uuid, this.field.join_table_name)
+            .pipe(
+                tap(join => this.group.get(this.field.name).setValue(join)),
+                take(1)
+            );
 
     }
 

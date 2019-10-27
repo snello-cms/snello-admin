@@ -50,7 +50,7 @@ export class MultiJoinViewComponent implements OnInit {
     if (this.field.value && this.field.value.length > 0) {
 
       for(let uuid of this.field.value.split(",")) { 
-        observables.push(this.apiService.fetch(this.field.join_table_name, uuid));
+        observables.push(this.apiService.fetchObject(this.field.join_table_name, uuid));
       }
       
       forkJoin(
