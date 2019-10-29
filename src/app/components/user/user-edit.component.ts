@@ -2,12 +2,14 @@ import {Component, OnInit} from '@angular/core';
 import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ConfirmationService, SelectItem} from 'primeng/api';
-import {User} from "../../model/user";
-import {UserService} from "../../service/user.service";
-import {RoleService} from "../../service/role.service";
-import {UserRoleService} from "../../service/user-role.service";
-import {UserRole} from "../../model/user-role";
-import { map, switchMap } from 'rxjs/operators';
+import {User} from '../../model/user';
+import {UserService} from '../../service/user.service';
+import {RoleService} from '../../service/role.service';
+import {UserRoleService} from '../../service/user-role.service';
+import {UserRole} from '../../model/user-role';
+import {map, switchMap} from 'rxjs/operators';
+import {UserInSession} from '../../model/user-in-session';
+import {AuthenticationService} from '../../service/authentication.service';
 
 @Component(
     {
@@ -19,8 +21,10 @@ export class UserEditComponent extends AbstractEditComponent<User> implements On
 
     public roles: SelectItem[] = [];
     public userRoles: string[] = [];
+    public utente: UserInSession;
 
     constructor(
+        private authenticationService: AuthenticationService,
         public router: Router,
         public route: ActivatedRoute,
         public confirmationService: ConfirmationService,
@@ -28,7 +32,16 @@ export class UserEditComponent extends AbstractEditComponent<User> implements On
         public userRoleService: UserRoleService,
         public userService: UserService) {
         super(router, route, confirmationService, userService, 'user');
-
+        this.utente = new UserInSession();
+        this.authenticationService.getUtente().subscribe(
+            utente => {
+                if (utente) {
+                    console.log('utente: ' + utente.username);
+                    this.utente = utente;
+                } else {
+                    this.utente.username = 'sconosciuto';
+                }
+            });
     }
 
     ngOnInit() {
@@ -39,7 +52,7 @@ export class UserEditComponent extends AbstractEditComponent<User> implements On
         this.roleService.getList().subscribe(
             roles => {
                 if (roles && roles.length > 0) {
-                    for (let role of roles) {
+                    for (const role of roles) {
                         this.roles.push({label: role.name, value: role.name});
                     }
                 }
@@ -54,12 +67,12 @@ export class UserEditComponent extends AbstractEditComponent<User> implements On
 
     getId() {
         return this.element.username;
-      }
+    }
 
     delete() {
         this.clearMsgs();
         this.editMode = false;
-        let usernameToDelete = this.getId();
+        const usernameToDelete = this.getId();
         this.service.delete(usernameToDelete).pipe(
             switchMap(
                 () => {
@@ -68,57 +81,57 @@ export class UserEditComponent extends AbstractEditComponent<User> implements On
             )
         ).subscribe(
             element => {
-              this.postDelete();
-              this.navigateAfterDelete();
-              this.addInfo('Eliminazione completata con successo. ');
+                this.postDelete();
+                this.navigateAfterDelete();
+                this.addInfo('Eliminazione completata con successo. ');
             },
             error => {
-              this.addError(
-                'Impossibile completare la eliminazione. ' + (error || '')
-              );
+                this.addError(
+                    'Impossibile completare la eliminazione. ' + (error || '')
+                );
             }
         );
-      }
-
-  save() {
-    this.clearMsgs();
-    this.editMode = false;
-    if (!this.preSave()) {
-      return;
     }
-    this.service.persist(this.element).pipe(
-        map(
-            element => {
-                this.addInfo('Salvataggio completato con successo. ');
-                this.element = element;
-                return true;
-            }),
 
-        switchMap(
-            () => {
-                let role: UserRole = new UserRole();
-                role.role = this.userRoles.join(","); 
-                role.username = this.element.username;
-                return this.userRoleService.persist(role);
-            }
-        )
-    ).subscribe(
-        returned => {
-            this.postSave();
-            this.navigateAfterSave();
-
-        },
-        error => {
-          this.addError(
-            'Impossibile completare il salvataggio. ' + (error || '')
-          );
-          this.saveError();
+    save() {
+        this.clearMsgs();
+        this.editMode = false;
+        if (!this.preSave()) {
+            return;
         }
-    );
-  }
+        this.service.persist(this.element).pipe(
+            map(
+                element => {
+                    this.addInfo('Salvataggio completato con successo. ');
+                    this.element = element;
+                    return true;
+                }),
 
-  /**,
-      error => {
+            switchMap(
+                () => {
+                    const role: UserRole = new UserRole();
+                    role.role = this.userRoles.join(',');
+                    role.username = this.element.username;
+                    return this.userRoleService.persist(role);
+                }
+            )
+        ).subscribe(
+            returned => {
+                this.postSave();
+                this.navigateAfterSave();
+
+            },
+            error => {
+                this.addError(
+                    'Impossibile completare il salvataggio. ' + (error || '')
+                );
+                this.saveError();
+            }
+        );
+    }
+
+    /**,
+     error => {
         this.addError(
           'Impossibile completare il salvataggio. ' + (error || '')
         );
@@ -131,12 +144,12 @@ export class UserEditComponent extends AbstractEditComponent<User> implements On
         this.userRoleService.getList().subscribe(
             ur => {
                 if (ur && ur.length > 0) {
-                    for (let uurr of ur) {
+                    for (const uurr of ur) {
                         this.userRoles.push(uurr.role);
                     }
                 }
             }
-        )
+        );
     }
 
 
@@ -147,24 +160,24 @@ export class UserEditComponent extends AbstractEditComponent<User> implements On
 
     update() {
         if (!this.preUpdate()) {
-          return;
+            return;
         }
         this.service.update(this.element).pipe(
             map(
                 element => {
-                    this.addInfo('Modifica completata con successo. ');
+                    this.addInfo('Modify completata con successo. ');
                     this.element = element;
                     return true;
                 }),
-                switchMap(
-                    () => {
-                        return this.userRoleService.deleteForUsername(this.element.username);
-                    }
-                ),
             switchMap(
                 () => {
-                    let role: UserRole = new UserRole();
-                    role.role = this.userRoles.join(","); 
+                    return this.userRoleService.deleteForUsername(this.element.username);
+                }
+            ),
+            switchMap(
+                () => {
+                    const role: UserRole = new UserRole();
+                    role.role = this.userRoles.join(',');
                     role.username = this.element.username;
                     return this.userRoleService.persist(role);
                 }
@@ -175,11 +188,6 @@ export class UserEditComponent extends AbstractEditComponent<User> implements On
                 this.navigateAfterUpdate();
             }
         );
-        //elimino tutti i ruoli e poi li creo di nuovo con una obj
-        // {
-        // 'username': 'zzzzzz',
-        //    'roles': 'a,b,c'
-        // }
     }
 
 }

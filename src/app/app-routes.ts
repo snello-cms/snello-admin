@@ -35,6 +35,8 @@ import {SessionGuard} from './routes-guard/session.guard';
 import {FormGenerationViewComponent} from './components/form-generation/form-generation-view.component';
 import {LoginComponent} from './components/login/login.component';
 import {LinksViewComponent} from './components/links/links-view.component';
+import {ChangePasswordComponent} from './components/change-password/change.password.component';
+import {YourselfEditComponent} from './components/user/yourself-edit.component';
 
 export const MainRoutes: Routes = [
     {
@@ -44,6 +46,9 @@ export const MainRoutes: Routes = [
     },
     {
         path: 'login', component: LoginComponent,
+    },
+    {
+        path: 'change-password', component: ChangePasswordComponent,
     },
     {
         path: 'home',
@@ -121,7 +126,8 @@ export const MainRoutes: Routes = [
             {path: '', redirectTo: '/user/list', pathMatch: 'full'},
             {path: 'list', component: UserListComponent},
             {path: 'new', component: UserEditComponent},
-            {path: 'edit/:id', component: UserEditComponent}
+            {path: 'edit/:id', component: UserEditComponent},
+            {path: 'yourself/:id', component: YourselfEditComponent}
 
         ]
     },

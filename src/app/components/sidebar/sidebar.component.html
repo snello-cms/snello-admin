@@ -16,9 +16,9 @@
     </ul>
 
     <ul class="user-menu">
-
         <li [class]="''">
-            <a (click)="logout()"> <i class="fa fa-sign-out" aria-hidden="true"></i> logout</a>
+            <a (click)="edit()"> <i class="fa fa-user-circle" aria-hidden="true"></i> {{utente.username}}</a> &nbsp;<a
+                (click)="logout()">  logout <i class="fa fa-sign-out" aria-hidden="true"></i></a>
         </li>
 
     </ul>

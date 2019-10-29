@@ -94,12 +94,14 @@ import {ButtonModule} from 'primeng/button';
 import {SidebarModule} from 'primeng/sidebar';
 import {HtmlViewComponent} from './generic.components/input/html-view.component';
 import {LinksViewComponent} from './components/links/links-view.component';
-import { JoinViewComponent } from './generic.components/join/join-view.component';
-import { MultiJoinViewComponent } from './generic.components/multi-join/multi-join-view.component';
-import { AceComponent } from './generic.components/ace/ace.component';
+import {JoinViewComponent} from './generic.components/join/join-view.component';
+import {MultiJoinViewComponent} from './generic.components/multi-join/multi-join-view.component';
+import {AceComponent} from './generic.components/ace/ace.component';
 import {AceEditorModule} from 'ng2-ace-editor';
-import { MediaViewComponent } from './generic.components/media/media-view.component';
+import {MediaViewComponent} from './generic.components/media/media-view.component';
 import {CopyClipboardDirective} from './directives/copy-clipboard.directive';
+import {ChangePasswordComponent} from './components/change-password/change.password.component';
+import {YourselfEditComponent} from './components/user/yourself-edit.component';
 
 registerLocaleData(localeIt);
 
@@ -132,6 +134,7 @@ export function loadConfigurations(configService: ConfigurationService) {
         MediaComponent,
         MediaViewComponent,
         TextAreaComponent,
+        ChangePasswordComponent,
         CheckboxComponent,
         CopyClipboardDirective,
         DynamicFieldDirective,
@@ -172,7 +175,8 @@ export function loadConfigurations(configService: ConfigurationService) {
         DroppableEditComponent,
         TinymceComponent,
         AceComponent,
-        LoginComponent
+        LoginComponent,
+        YourselfEditComponent
     ],
     imports: [
         primengEditorModule,

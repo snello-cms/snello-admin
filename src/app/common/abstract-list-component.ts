@@ -214,13 +214,13 @@ export abstract class AbstractListComponent<T> implements OnInit {
         this.clearMsgs();
         this.service.update(this.element).subscribe(
             element => {
-                this.addInfo('Modifica completata con successo. ');
+                this.addInfo('Modify completata con successo. ');
                 this.element = this.newElement();
                 this.loaddata(false, null);
                 this.postUpdate();
             },
             error => {
-                this.addError('Impossibile completare la modifica. ');
+                this.addError('Impossibile completare la Modify. ');
             }
         );
     }
