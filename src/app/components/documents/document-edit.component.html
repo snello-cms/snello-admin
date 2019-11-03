@@ -29,16 +29,14 @@
                                 <div class="form-group clearfix row">
                                     <label class="label-text col-sm-3">Table (*)</label>
                                     <div class="col-sm-9">
-                                        <input [(ngModel)]="element.table_name" required label="Table (*)" name="table" pInputText
-                                                placeholder="Table (*)"/>
+                                        <input [(ngModel)]="element.table_name" required label="Table (*)" name="table" pInputText placeholder="Table (*)" />
                                     </div>
                                 </div>
 
                                 <div class="form-group clearfix row">
                                     <label class="label-text col-sm-3">Table key (*)</label>
                                     <div class="col-sm-9">
-                                        <input [(ngModel)]="element.table_key" [required]="true" name="table_key" pInputText
-                                                placeholder="table key  (*)"/>
+                                        <input [(ngModel)]="element.table_key" [required]="true" name="table_key" pInputText placeholder="table key  (*)" />
                                     </div>
                                 </div>
 
@@ -46,10 +44,7 @@
                                     <label class="label-text col-sm-3">Dcuments</label>
                                     <div class="col-sm-9">
                                         <div class="upload-box">
-                                            <p-fileUpload *ngIf="!uploading" #fup name="docs[]" customUpload="false" chooseLabel="Seleziona"
-                                                    cancelLabel="" multiple="false" [showCancelButton]="false" [showUploadButton]="false"
-                                                    (uploadHandler)="uploader($event)"
-                                                    (onUpload)="onBasicUpload($event)">
+                                            <p-fileUpload *ngIf="!uploading" #fup name="docs[]" customUpload="false" chooseLabel="Seleziona" cancelLabel="" multiple="false" [showCancelButton]="false" [showUploadButton]="false" (uploadHandler)="uploader($event)" (onUpload)="onBasicUpload($event)">
                                             </p-fileUpload>
                                         </div>
                                     </div>
@@ -63,16 +58,18 @@
                                         </div>
                                     </div>
                                 </ng-container>
-                                <br/>
 
-                                <button *ngIf="!uploading" (click)="process()" [disabled]="!theform.form.valid"
-                                        class="btn btn-success btn-sm" pButton>
+
+                                <div class="btn-group btn-actions pull-right">
+
+                                    <button *ngIf="!uploading" (click)="process()" [disabled]="!theform.form.valid" class="btn btn-upload btn-md" pButton>
                                     <i aria-hidden="true" class="fa fa-upload"></i> Upload
                                 </button>
 
-                                <button (click)="navigateToList()" class="btn btn-warning btn-sm" pButton>
+                                    <button (click)="navigateToList()" class="btn btn-warning" pButton>
                                     <i aria-hidden="true" class="fa fa-undo"></i> Undo
                                 </button>
+                                </div>
                             </form>
 
                             <ng-container *ngIf="processed">

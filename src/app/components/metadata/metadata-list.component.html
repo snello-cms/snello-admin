@@ -35,9 +35,7 @@
                                 <div class="filter-wrapper clearfix">
                                     <div class="col-sm-4">
                                         <div class="clearfix"></div>
-                                        <input id="nome" name="nome" type="text" placeholder="name"
-                                                class="form-control" [(ngModel)]="service.search.table_name_contains" pInputText
-                                            #nome="ngModel" *ngIf="service.search">
+                                        <input id="nome" name="nome" type="text" placeholder="name" class="form-control" [(ngModel)]="service.search.table_name_contains" pInputText #nome="ngModel" *ngIf="service.search">
                                     </div>
                                     <div class="col-sm-4">
                                     </div>
@@ -62,9 +60,7 @@
 
                         <div class="table-wrapper clearfix">
 
-                            <p-table #datatable (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true"
-                                    [resizableColumns]="true" [responsive]="true" [rows]="10" [totalRecords]="service.listSize"
-                                    [value]="model">
+                            <p-table #datatable (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true" [resizableColumns]="true" [responsive]="true" [rows]="10" [totalRecords]="service.listSize" [value]="model">
 
                                 <ng-template let-columns pTemplate="header">
                                     <tr class="sort-header">
@@ -89,7 +85,7 @@
                                     <tr>
                                         <td class="RowIndex">{{ rowIndex + 1 }}</td>
                                         <td class="ui-resizable-column">
-                                            <button type="button" class="btn btn-default" (click)="view(rowData)" title="visualizza">
+                                            <button type="button" class="btn btn-value" (click)="view(rowData)" title="visualizza">
                                                 <i aria-hidden="true" class="fa fa-info-circle"></i>  {{rowData.table_name}}
                                             </button>
                                         </td>
@@ -100,26 +96,21 @@
                                         <td class="ui-resizable-column">{{rowData.order_by}}</td>
                                         <td>
                                             <div class="btn-group">
-                                                <button type="button" class="btn btn-default" (click)="edit(rowData)" title="Modify"
-                                                        *ngIf="!rowData.created || rowData.already_exist">
+                                                <button type="button" class="btn btn-default btn-square" (click)="edit(rowData)" title="Modify" *ngIf="!rowData.created || rowData.already_exist">
                                                     <i aria-hidden="true" class="fa fa-pencil"></i>
                                                 </button>
-                                                <button type="button" class="btn btn-success" (click)="addField(rowData)"
-                                                        title="Add Field Definition" *ngIf="!rowData.created || rowData.already_exist">
-                                                    <i aria-hidden="true" class="fa fa-plus-square-o"></i>
+                                                <button type="button" class="btn btn-success btn-square" (click)="addField(rowData)" title="Add Field Definition" *ngIf="!rowData.created || rowData.already_exist">
+                                                    <i aria-hidden="true" class="fa fa-plus"></i>
                                                 </button>
-                                                <button type="button" class="btn btn-primary" (click)="confirmCreateTable(rowData)"
-                                                        title="Create Table on Database" *ngIf="!rowData.created && !rowData.already_exist">
-                                                    <i aria-hidden="true" class="fa fa-lock"></i>
+                                                <button type="button" class="btn btn-primary btn-square" (click)="confirmCreateTable(rowData)" title="Create Table on Database" *ngIf="!rowData.created && !rowData.already_exist">
+                                                    <i aria-hidden="true" class="fa fa-table"></i>
                                                 </button>
 
-                                                <button type="button" class="btn btn-warning" (click)="confirmTruncateTable(rowData)"
-                                                        title="Truncate Table Data" *ngIf="rowData.created && !rowData.already_exist">
+                                                <button type="button" class="btn btn-warning btn-square" (click)="confirmTruncateTable(rowData)" title="Truncate Table Data" *ngIf="rowData.created && !rowData.already_exist">
                                                     <i aria-hidden="true" class="fa fa-eraser"></i>
                                                 </button>
 
-                                                <button type="button" class="btn btn-danger" (click)="confirmDeleteTable(rowData)"
-                                                        title="Delete Table on Database" *ngIf="rowData.created && !rowData.already_exist">
+                                                <button type="button" class="btn btn-danger btn-square" (click)="confirmDeleteTable(rowData)" title="Delete Table on Database" *ngIf="rowData.created && !rowData.already_exist">
                                                     <i aria-hidden="true" class="fa fa-exclamation-triangle"></i>
                                                 </button>
                                             </div>
