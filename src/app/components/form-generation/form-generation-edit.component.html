@@ -1,6 +1,6 @@
 <sidebar></sidebar>
 <div class="sidebar">
-  <homepage-topbar></homepage-topbar>
+    <homepage-topbar></homepage-topbar>
 </div>
 
 <div class="sidebar-subpage">
@@ -9,31 +9,33 @@
     <p>
 
     </p>
-        
+
 
 </div>
 
 
 <div class="main">
 
-  <div class="container-fluid">
-    <div class="row">
+    <div class="container-fluid">
+        <div class="row">
 
-      <div class="col-md-12 col-sm-12">
-        <div class="content view">
-       
+            <div class="col-md-12 col-sm-12">
+                <div class="content view">
 
-          <div *ngIf="regConfig != null && regConfig.length > 0">
-            <dynamic-form [fields]="regConfig">
-            </dynamic-form>
 
-            <button type="button" class="btn btn-success" *ngIf="!uuid" (click)="save()">Save</button>
-            <button type="button" class="btn btn-success" *ngIf="uuid" (click)="update()">Update</button>
-            <button type="button" class="btn btn-success" *ngIf="uuid" (click)="confirmDelete()">Delete</button>
-            <button type="button" class="btn btn-warning" (click)="cancel()">Undo</button>
-          </div>
+                    <div *ngIf="regConfig != null && regConfig.length > 0">
+                        <dynamic-form [fields]="regConfig">
+                        </dynamic-form>
+                        <hr>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-success" *ngIf="!uuid" (click)="save()">Save</button>
+                            <button type="button" class="btn btn-success" *ngIf="uuid" (click)="update()">Update</button>
+                            <button type="button" class="btn btn-success" *ngIf="uuid" (click)="confirmDelete()">Delete</button>
+                            <button type="button" class="btn btn-warning" (click)="cancel()">Undo</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>
