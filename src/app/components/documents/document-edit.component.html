@@ -70,11 +70,11 @@
 
                 <button *ngIf="!uploading" class="btn btn-success" type="button" (click)="process()"
                         [disabled]="!enableProcess || !theform.form.valid">
-                  CARICA
+                  UPLOAD
                 </button>
 
                 <button (click)="navigateToList()" class="btn btn-warning" type="button">
-                  ANNULLA
+                  BACK TO LIST
                 </button>
               </form>
 
@@ -83,7 +83,7 @@
                   <div class="ui-g-6">
                     <p-panel header="File caricati">
                       <li style="list-style-type: none;" *ngIf="!okFileList || okFileList.length === 0">
-                        Nessuno.
+                        None
                       </li>
                       <li *ngFor="let file of okFileList; index as i">
                         {{ i + 1 }}. {{ file }}
@@ -94,7 +94,7 @@
                   <div class="ui-g-6">
                     <p-panel header="File in errore">
                       <li style="list-style-type: none;" *ngIf="!errorFileList || errorFileList.length === 0">
-                        Nessuno.
+                        None
                       </li>
                       <li *ngFor="let file of errorFileList; index as i">
                         {{ i + 1 }}. {{ file }}

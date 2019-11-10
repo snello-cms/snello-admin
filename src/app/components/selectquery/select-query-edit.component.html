@@ -24,7 +24,7 @@
                     <form #theform="ngForm">
 
                         <div class="form-group clearfix row">
-                            <label class="label-text col-sm-3">Nome (*)</label>
+                            <label class="label-text col-sm-3">Name (*)</label>
                             <div class="col-sm-9">
                                 <input [(ngModel)]="element.query_name" required label="Name (*)" name="query_name" pInputText
                                         placeholder="Name (*)">
@@ -51,20 +51,20 @@
 
                             <button (click)="save()" [disabled]="!theform.form.valid" *ngIf="!element.uuid" class="btn btn-success"
                                     type="button">
-                                SALVA
+                                SAVE
                             </button>
 
                             <button (click)="update()" [disabled]="!theform.form.valid" *ngIf="element.uuid" class="btn btn-success"
                                     type="button">
-                                MODIFICA
+                                UPDATE
                             </button>
 
                             <button (click)="confirmDelete()" *ngIf="element.uuid" class="btn btn-danger" type="button">
-                                ELIMINA
+                                DELETE
                             </button>
 
                             <button (click)="navigateToList()" class="btn btn-danger" type="button">
-                                ANNULLA
+                                BACK TO LIST
                             </button>
                         </div>
                     </form>

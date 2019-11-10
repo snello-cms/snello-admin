@@ -9,7 +9,7 @@
 
     <button (click)="newForm()" class="btn btn-add pull-right btn-block" pbutton>
         <i class="fa fa-plus-circle"></i>
-        Aggiungi
+        Add new
     </button>
 </div>
 <div class="main">
@@ -25,8 +25,8 @@
                             <dynamic-search-form [fields]="regConfigSearch">
                             </dynamic-search-form>
                             <div class="ui-g-12 TexAlCenter">
-                                <button pButton type="button" (click)="reload(table)" icon="ui-icon-search">Cerca</button>
-                                <button pButton type="button" (click)="reset(table)" icon="ui-icon-undo">Annulla</button>
+                                <button pButton type="button" (click)="reload(table)" icon="ui-icon-search">Search</button>
+                                <button pButton type="button" (click)="reset(table)" icon="ui-icon-undo">Reset</button>
                             </div>
                         </div>
 
@@ -37,18 +37,18 @@
 
                                 <ng-template let-columns pTemplate="header">
                                     <tr class="sort-header">
-                                        <th class="Operations">Indice</th>
+                                        <th class="Operations">Index</th>
                                         <ng-container *ngFor="let def of regConfigList">
                                             <th *ngIf="def.show_in_list">{{def.label}}</th>
                                         </ng-container>
 
-                                        <th class="Operations">Operazioni</th>
+                                        <th class="Operations">Operations</th>
                                     </tr>
                                 </ng-template>
                                 <ng-template pTemplate="emptymessage">
                                     <tr>
                                         <td [attr.colspan]="2">
-                                            Nessun risultato.
+                                            No results
                                         </td>
                                     </tr>
                                 </ng-template>
@@ -60,10 +60,10 @@
                                         </ng-container>
                                         <td>
                                             <button (click)="edit(metadataName, getTableKey(rowData))" class="btn btn-success" pbutton>
-                                                Modifica
+                                                Edit
                                             </button>
                                             <button (click)="view(metadataName, getTableKey(rowData))" class="btn btn-success" pbutton>
-                                                Visualizza
+                                                View
                                             </button>
 
                                         </td>

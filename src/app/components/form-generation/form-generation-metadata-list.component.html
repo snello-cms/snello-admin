@@ -8,7 +8,7 @@
     <div class="col-md-12">
   <div class="content list">
     <form>
-      <h3>Lista Metadati Generabili</h3>
+      <h3>Metadatas List</h3>
 
 
       <p-table #table [paginator]="true" [resizableColumns]="true"
@@ -16,18 +16,18 @@
 
         <ng-template let-columns pTemplate="header">
           <tr class="sort-header">
-            <th pResizableColumn>Indice</th>
-            <th pResizableColumn>Nome Tabella
+            <th pResizableColumn>Index</th>
+            <th pResizableColumn>Table name
             </th>
-            <th class="Operations">Operazioni</th>
-            <th class="Operations">Operazioni</th>
+            <th class="Operations">Operations</th>
+            <th class="Operations">Operations</th>
 
           </tr>
         </ng-template>
         <ng-template pTemplate="emptymessage">
           <tr>
             <td [attr.colspan]="4">
-              Nessun risultato.
+              No results
             </td>
           </tr>
         </ng-template>
@@ -38,13 +38,13 @@
             <td>
               <button (click)="toList(rowData)" class="btn btn-success btn-sm" pButton>
                 <i aria-hidden="true" class="fa fa-pencil"></i>
-                Lista
+                To List
               </button>
             </td>
             <td>
               <button (click)="toForm(rowData)" class="btn btn-info btn-sm" pButton>
                 <i aria-hidden="true" class="fa fa-table"></i>
-                Nuovo
+                Add new
               </button>
             </td>
           </tr>

@@ -8,13 +8,13 @@
 <div class="sidebar-subpage">
 
     <h3>
-        Lista Url Map Rules
+        Url Map Rules List
     </h3>
     <p>
 
     </p>
     <button pButton class="btn btn-add pull-right btn-block" (click)="new()"><i class="fa fa-plus-circle"></i>
-        Aggiungi</button>
+        Add new</button>
 </div>
 
 
@@ -47,8 +47,8 @@
                                     <div class="col-sm-3">
                                         <div class="btn-group">
 
-                                            <button type="button" class="btn btn-search" (click)="reload(datatable)" icon="ui-icon-search">Cerca</button>
-                                            <button type="button" class="btn btn-reset" (click)="reset(datatable)" icon="ui-icon-undo">Annulla</button>
+                                            <button type="button" class="btn btn-search" (click)="reload(datatable)" icon="ui-icon-search">Search</button>
+                                            <button type="button" class="btn btn-reset" (click)="reset(datatable)" icon="ui-icon-undo">Reset</button>
                                         </div>
                                     </div>
 
@@ -63,17 +63,17 @@
                             <p-table #datatable (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true" [resizableColumns]="true" [responsive]="true" [rows]="10" [totalRecords]="service.listSize" [value]="model">
                                 <ng-template let-columns pTemplate="header">
                                     <tr class="sort-header">
-                                        <th pResizableColumn>Indice</th>
+                                        <th pResizableColumn>Index</th>
                                         <th pResizableColumn>Pattern</th>
                                         <th pResizableColumn>Access</th>
                                         <th pResizableColumn>Http Methods</th>
-                                        <th class="Operations">Operazioni</th>
+                                        <th class="Operations">Operations</th>
                                     </tr>
                                 </ng-template>
                                 <ng-template pTemplate="emptymessage">
                                     <tr>
                                         <td colspan="7">
-                                            Nessun risultato.
+                                            No results
                                         </td>
                                     </tr>
                                 </ng-template>
@@ -86,7 +86,7 @@
                                         <td>
                                             <button (click)="edit(rowData)" class="btn btn-edit btn-sm" pButton>
                                                 <i aria-hidden="true" class="fa fa-pencil"></i>
-                                                Modifica
+                                                Edit
                                             </button>
                                         </td>
 

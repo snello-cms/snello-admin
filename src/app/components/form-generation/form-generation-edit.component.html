@@ -27,10 +27,10 @@
             <dynamic-form [fields]="regConfig">
             </dynamic-form>
 
-            <button type="button" class="btn btn-success" *ngIf="!uuid" (click)="save()">SALVA</button>
-            <button type="button" class="btn btn-success" *ngIf="uuid" (click)="update()">AGGIORNA</button>
-            <button type="button" class="btn btn-success" *ngIf="uuid" (click)="confirmDelete()">ELIMINA</button>
-            <button type="button" class="btn btn-warning" (click)="cancel()">ANNULLA</button>
+            <button type="button" class="btn btn-success" *ngIf="!uuid" (click)="save()">SAVE</button>
+            <button type="button" class="btn btn-success" *ngIf="uuid" (click)="update()">UPDATE</button>
+            <button type="button" class="btn btn-success" *ngIf="uuid" (click)="confirmDelete()">DELETE</button>
+            <button type="button" class="btn btn-warning" (click)="cancel()">BACK TO LIST</button>
           </div>
         </div>
       </div>
