@@ -8,7 +8,7 @@
     <div class="col-md-12">
   <div class="content list">
     <form>
-      <h3>Lista Metadati Generabili</h3>
+      <h3>Metadati Generabili List</h3>
 
 
       <p-table #table [paginator]="true" [resizableColumns]="true"
@@ -38,13 +38,13 @@
             <td>
               <button (click)="toList(rowData)" class="btn btn-success btn-sm" pButton>
                 <i aria-hidden="true" class="fa fa-pencil"></i>
-                Lista
+                List
               </button>
             </td>
             <td>
               <button (click)="toForm(rowData)" class="btn btn-info btn-sm" pButton>
                 <i aria-hidden="true" class="fa fa-table"></i>
-                Nuovo
+                New
               </button>
             </td>
           </tr>

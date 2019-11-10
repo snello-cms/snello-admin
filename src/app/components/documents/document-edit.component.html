@@ -77,7 +77,7 @@
                                     <div class="ui-g-6">
                                         <p-panel header="File caricati">
                                             <li style="list-style-type: none;" *ngIf="!okFileList || okFileList.length === 0">
-                                                Nessuno.
+                                                None
                                             </li>
                                             <li *ngFor="let file of okFileList; index as i">
                                                 {{ i + 1 }}. {{ file }}
@@ -88,7 +88,7 @@
                                     <div class="ui-g-6">
                                         <p-panel header="File in errore">
                                             <li style="list-style-type: none;" *ngIf="!errorFileList || errorFileList.length === 0">
-                                                Nessuno.
+                                                None
                                             </li>
                                             <li *ngFor="let file of errorFileList; index as i">
                                                 {{ i + 1 }}. {{ file }}
@@ -100,7 +100,7 @@
                                 <ng-container *ngIf="!okFileList || okFileList.length === 0">
                                     <div class="ui-g-12 TexAlCenter MarTop5">
                                         <button (click)="resetAll()" class="btn btn-warning btn-sm" pButton>
-                                            <i aria-hidden="true" class="fa fa-retweet"></i> Riprova
+                                            <i aria-hidden="true" class="fa fa-retweet"></i> Try again
                                         </button>
                                     </div>
                                 </ng-container>
@@ -108,7 +108,7 @@
                                 <ng-container *ngIf="okFileList && okFileList.length > 0">
                                     <div class="ui-g-12 TexAlCenter MarTop5">
                                         <button (click)="resetAll()" class="btn btn-warning btn-sm" pButton>
-                                            <i aria-hidden="true" class="fa fa-upload"></i> Carica un'altro file
+                                            <i aria-hidden="true" class="fa fa-upload"></i> Load Another file
                                         </button>
                                     </div>
                                 </ng-container>
