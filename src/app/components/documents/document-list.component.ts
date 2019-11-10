@@ -3,8 +3,7 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Document} from '../../model/document';
 import {DocumentService} from '../../service/document.service';
-import {ConfirmationService} from 'primeng/api';
-import {BASE_PATH} from "../../constants/constants";
+import {ConfirmationService, MessageService} from 'primeng/api';
 
 @Component(
     {
@@ -21,9 +20,10 @@ export class DocumentListComponent extends AbstractListComponent<Document> imple
     constructor(
         public router: Router,
         public confirmationService: ConfirmationService,
-        public service: DocumentService) {
+        public service: DocumentService,
+        public messageService: MessageService) {
 
-        super(router, confirmationService, service, 'document');
+        super(messageService, router, confirmationService, service, 'document');
         this.filters = new Document();
     }
 
@@ -38,10 +38,6 @@ export class DocumentListComponent extends AbstractListComponent<Document> imple
 
     postList() {
         super.postList();
-    }
-
-    webpath(name: string) {
-        return BASE_PATH + name;
     }
 
     download(uuid: string): void {
@@ -63,5 +59,31 @@ export class DocumentListComponent extends AbstractListComponent<Document> imple
             const downloadURL = URL.createObjectURL(response);
             window.open(downloadURL);
         });
+    }
+
+    downloadPath(uuid: string) {
+        return this.service.downloadPath(uuid);
+    }
+
+    public notify(info: string) {
+        const dwl =
+            // Might want to notify the user that something has been pushed to the clipboard
+            this.messageService.add({
+                severity: 'info',
+                summary: `'${info}' has been copied to clipboard`
+            });
+    }
+
+    delete(element: Document) {
+        this.clearMsgs();
+        this.service.delete(element.uuid).subscribe(
+            result => {
+                this.addInfo('Eliminazione completata con successo. ');
+                this.loaddata(false, null);
+            },
+            error => {
+                this.addError('Impossibile completare la eliminazione. ');
+            }
+        );
     }
 }

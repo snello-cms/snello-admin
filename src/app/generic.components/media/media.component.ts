@@ -26,7 +26,7 @@ import {BASE_PATH} from 'src/app/constants/constants';
                     <br>
                     <div class="clearfix"></div>
                     Uploaded file name: {{uploadedFile.original_name}}
-                    <a target="_blank" class="btn btn-default pull-right" href="{{downloadPath()}}">Scarica</a>
+                    <a target="_blank" class="btn btn-default pull-right" href="{{downloadPath()}}">Download</a>
                 </div>
             </div>
             <div *ngIf="!field.is_edit">
@@ -92,7 +92,7 @@ export class MediaComponent implements OnInit {
     }
 
     public downloadPath() {
-        return BASE_PATH + this.uploadedFile.path;
+        return this.documentService.downloadPath(this.uploadedFile.uuid);
     }
 
     private showMedia(documentUuid: string): Observable<any> {

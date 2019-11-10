@@ -33,27 +33,33 @@
                 <div role="tabpanel" class="tab-pane active" id="metadata">
                     <div class="content view">
                         <div class="row">
-                            <h3>
-                                {{element.table_name}}
-                            </h3>
-                            <button pButton class="btn btn-add pull-right btn-block" (click)="edit()">
-                                <i class="fa fa-plus-circle"></i> Edit
-                            </button>
-                            <button type="button" class="btn btn-add pull-right btn-block btn-primary" (click)="confirmCreateTable()"
-                                    title="Create Table on Database" *ngIf="!element.created && !element.already_exist">
-                                <i aria-hidden="true" class="fa fa-lock"></i> Create DB Table
-                            </button>
+                            <div class="col-sm-12">
+                                <div class="btn-group pull-right">
+                                    <button pButton class="btn btn-success pull-right" (click)="edit()">
+                                        <i class="fa fa-plus-circle"></i> Edit
+                                    </button>
+                                    <button type="button" class="btn btn-primary" (click)="confirmCreateTable()" title="Create Table on Database" *ngIf="!element.created && !element.already_exist">
+                                        <i aria-hidden="true" class="fa fa-lock"></i> Create DB Table
+                                    </button>
 
-                            <button type="button" class="btn btn-add pull-right btn-block btn-warning" (click)="confirmTruncateTable()"
-                                    title="Truncate Table Data" *ngIf="element.created && !element.already_exist">
-                                <i aria-hidden="true" class="fa fa-eraser"></i> Truncate DB Table Data
-                            </button>
+                                    <button type="button" class="btn btn-warning" (click)="confirmTruncateTable()" title="Truncate Table Data" *ngIf="element.created && !element.already_exist">
+                                        <i aria-hidden="true" class="fa fa-eraser"></i> Truncate DB Table Data
+                                    </button>
 
-                            <button type="button" class="btn btn-add pull-right btn-block btn-danger" (click)="confirmDeleteTable()"
-                                    title="Delete Table on Database" *ngIf="element.created && !element.already_exist">
-                                <i aria-hidden="true" class="fa fa-exclamation-triangle"></i> Delete DB Table
-                            </button>
+                                    <button type="button" class="btn btn-danger" (click)="confirmDeleteTable()" title="Delete Table on Database" *ngIf="element.created && !element.already_exist">
+                                        <i aria-hidden="true" class="fa fa-exclamation-triangle"></i> Delete DB Table
+                                    </button>
+                                </div>
+
+                                <h3>
+                                    {{element.table_name}}
+                                </h3>
+
+
+                            </div>
                         </div>
+                        <div class="clearfix"></div><br><br>
+                        <div class="clearfix"></div>
                         <div class="row">
                             <div class="col-sm-6">
 
@@ -174,13 +180,15 @@
                 </div>
                 <div role="tabpanel" class="tab-pane" id="fielddefintions">
                     <div class="content view">
+                        <button pButton class="btn btn-add pull-right" (click)="newFieldDefinition()" [disabled]="this.element.created">
+                                    <i class="fa fa-plus-circle"></i> Add New
+                                </button>
                         <h3>
                             Field Definitions
                         </h3>
-                        <button pButton class="btn btn-add pull-right btn-block" (click)="newFieldDefinition()"
-                                [disabled]="this.element.created">
-                            <i class="fa fa-plus-circle"></i> Add New
-                        </button>
+                        <div class="clearfix"></div><br>
+                        <div class="clearfix"></div>
+
                         <p-table [paginator]="true" [resizableColumns]="true" [responsive]="true" [rows]="10" [totalRecords]="fieldDefinitionService.listSize" [value]="fieldDefinitions">
                             <ng-template let-columns pTemplate="header">
                                 <tr class="sort-header">
@@ -195,7 +203,7 @@
                             </ng-template>
                             <ng-template pTemplate="emptymessage">
                                 <tr>
-                                    <td [attr.colspan]="colspan">No results </td>
+                                    <td [attr.colspan]="colspan">No results.</td>
                                 </tr>
                             </ng-template>
                             <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
@@ -207,8 +215,7 @@
                                     <td class="ui-resizable-column">{{rowData.table_key}}</td>
                                     <td class="ui-resizable-column">{{rowData.type}}</td>
                                     <td class="ui-resizable-column">
-                                        <button (click)="editField(rowData)" class="btn btn-success btn-sm"
-                                                [disabled]="this.element.created" pButton>
+                                        <button (click)="editField(rowData)" class="btn btn-success btn-sm" [disabled]="this.element.created" pButton>
                                             <i aria-hidden="true" class="fa fa-pencil"></i>
                                             Edit
                                         </button>

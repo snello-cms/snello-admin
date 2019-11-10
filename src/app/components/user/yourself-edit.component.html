@@ -5,7 +5,7 @@
 <div class="sidebar-subpage">
 
     <h3>
-        Edit User
+        Update Your Self
     </h3>
     <p>
 
@@ -23,7 +23,7 @@
                 <div class="content view">
                     <div class="row">
 
-                        <div class="col-md-12 col-sm-12">
+                        <div class="col-md-12 col-sm-12" *ngIf="element">
                             <form #theform="ngForm">
 
                                 <div class="form-group clearfix row">
@@ -67,38 +67,25 @@
                                     </div>
                                 </div>
 
-
                                 <div class="form-group clearfix row">
-                                    <label class="label-text col-sm-3">Roles</label>
+                                    <label class="label-text col-sm-3">Confirm Password</label>
                                     <div class="col-sm-9">
-
-                                        <p-multiSelect [(ngModel)]="userRoles" [options]="roles" [style]="{ width: '100%' }" appendTo="body"
-                                                name="roles">
-                                        </p-multiSelect>
+                                        <input [(ngModel)]="confirmPassword" label="Confirm Password" type="password"
+                                                pInputText name="confirmPassword"
+                                                pPassword>
                                     </div>
                                 </div>
 
 
                                 <div class="btn-group btn-actions pull-right">
-                                    <button type="button" *ngIf="!element.uuid_username" [disabled]="!theform.form.valid"
-                                            class="btn btn-success" (click)="save()">
-                                        Save
-                                    </button>
 
                                     <button type="button" *ngIf="element.uuid_username" [disabled]="!theform.form.valid"
                                             class="btn btn-success" (click)="update()">
                                         Modify
                                     </button>
 
-                                    <button type="button"
-                                            *ngIf="element.uuid_username && (utente.username != element.uuid_username)"
-                                            [disabled]="!theform.form.valid"
-                                            class="btn btn-danger"
-                                            (click)="confirmDelete()">
-                                        Delete
-                                    </button>
 
-                                    <button type="button" (click)="navigateToList()" class="btn btn-danger">Undo</button>
+                                    <button type="button" (click)="undo()" class="btn btn-danger">Undo</button>
                                 </div>
                             </form>
                         </div>

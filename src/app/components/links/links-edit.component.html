@@ -75,18 +75,18 @@
 
                                 <div class="btn-group btn-actions pull-right">
                                     <button type="button" *ngIf="!element.uuid_name" [disabled]="!registerForm.valid" (click)="save()"
-                                            class="btn btn-success">SAVE
+                                            class="btn btn-success">Save
                                     </button>
 
                                     <button type="button" *ngIf="element.uuid_name" [disabled]="!registerForm.valid"
-                                            class="btn btn-success" (click)="update()">UPDATE
+                                            class="btn btn-success" (click)="update()">Modify
                                     </button>
 
                                     <button type="button" *ngIf="element.uuid_name" (click)="confirmDelete()" class="btn btn-danger">
-                                        DELETE
+                                        Undo
                                     </button>
 
-                                    <button type="button" (click)="navigateToList()" class="btn btn-danger">BACK TO LIST</button>
+                                    <button type="button" (click)="navigateToList()" class="btn btn-danger">Undo</button>
                                 </div>
                             </div>
                         </form>

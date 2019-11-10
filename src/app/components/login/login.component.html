@@ -8,13 +8,12 @@
 
             <div class="login-wrapper">
                 <div class="logo-login">
-                    <a [routerLink]="'/adminpage'"><img class="logo" src="{{asset_path}}/assets/images/logo_white.svg"></a>
+                    <a [routerLink]="'/adminpage'"><img class="logo" src="{{asset_path}}/assets/images/logo_white_login.svg"></a>
                 </div>
                 <div class="logo-wrapper">
 
                 </div>
                 <div class="form-wrapper">
-
                     <form [formGroup]="mainForm" (ngSubmit)="onSubmit()">
                         <div class="form-group">
                             <input class="form-control" id="usernameIn" placeholder="Username" formControlName="username">
@@ -27,7 +26,8 @@
                     </form>
                 </div>
             </div>
-
+            <div class="col-sm-8 col-sm-offset-2 text-center"><br>
+                <a [routerLink]="'/change-password'">Reset Password</a>
+            </div>
         </div>
     </div>
-</div>

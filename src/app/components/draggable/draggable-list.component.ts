@@ -3,9 +3,10 @@ import {AbstractListComponent} from '../../common/abstract-list-component';
 import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 import {MetadataService} from '../../service/metadata.service';
-import { ConfirmationService } from 'primeng/api';
+import {ConfirmationService, MessageService} from 'primeng/api';
 import { Draggable } from 'src/app/model/draggable';
 import { DraggableService } from 'src/app/service/draggable.service';
+import {DocumentService} from '../../service/document.service';
 
 @Component(
   {
@@ -21,9 +22,10 @@ export class DraggableListComponent extends AbstractListComponent<Draggable> imp
       public router: Router,
       public confirmationService: ConfirmationService,
       public draggableService: DraggableService,
-      public metadataService: MetadataService) {
+      public metadataService: MetadataService,
+      public messageService: MessageService) {
 
-    super(router, confirmationService, draggableService, 'draggables');
+    super(messageService, router, confirmationService, draggableService, 'draggables');
     this.filters = new Draggable();
      }
 

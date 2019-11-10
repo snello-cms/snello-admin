@@ -4,8 +4,9 @@ import {Router} from '@angular/router';
 import {FieldDefinitionService} from '../../service/field-definition.service';
 import {FieldDefinition} from '../../model/field-definition';
 import {MetadataService} from '../../service/metadata.service';
-import {ConfirmationService, SelectItem} from 'primeng/api';
+import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
 import {Metadata} from '../../model/metadata';
+import {DocumentService} from '../../service/document.service';
 
 @Component(
     {
@@ -22,8 +23,9 @@ export class FieldDefinitionListComponent extends AbstractListComponent<FieldDef
         public router: Router,
         public confirmationService: ConfirmationService,
         public service: FieldDefinitionService,
-        public metadataService: MetadataService) {
-        super(router, confirmationService, service, 'fielddefinition');
+        public metadataService: MetadataService,
+        public messageService: MessageService) {
+        super(messageService, router, confirmationService, service, 'fielddefinition');
         this.filters = new FieldDefinition();
 
         this.metadatasItems = [];

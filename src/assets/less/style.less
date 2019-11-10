@@ -1,6 +1,6 @@
 @import "primeng.less";
 @white: #FFFFFF;
-@lightgrey: #F3F6F7;
+@lightgrey: #f5f5fb;
 @lightgrey2: #D4D8DF;
 @label-color: #9DAAB6;
 @bluegrey: #999999;
@@ -12,7 +12,7 @@
 @yellow: #FCC200;
 @blue: #9DAAB6;
 @blue: #43c5e6;
-@green: #44C455;
+@green: #31394D;
 @red: #FF6A6B;
 @yellow: #ffb932;
 @lightblue: #43c5e6;
@@ -20,6 +20,8 @@
 @grey: #9B9B9B;
 @grey_snello: #31394D;
 @red_snello: #F5445F;
+@grey_snello2: #9DAAB6;
+
 @text-color: #39454E;
 body {
     margin: 0px;
@@ -87,10 +89,100 @@ html {
 }
 
 .main {
-    margin-left:390px;
+    margin-left:340px;
     padding: 50px 30px;
 
+
+
+.nav-tabs {
+    margin: 0 auto;
+    border: 0px;
+}
+
+.nav-tabs > li {
+	z-index: 2;
+	float: none;
+	display: inline-block;
+}
+
+.nav-tabs > li > a {
+	padding: 16px 25px 12px;
+	font-size: 14px;
+	font-weight: 700;
+	font-style: normal;
+	text-transform: uppercase;
+	color: @grey_snello2;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border-radius: 0;
+	border: none !important;
+	border-bottom: 4px solid transparent !important;
+}
+
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+	background-color: transparent;
+    border-bottom: 4px solid @red_snello !important;
+    color: @grey_snello;
+
+}
+
+.nav > li > a:hover,
+.nav > li > a:focus {
+	outline: 0;
+}
+
+.tab-content {
+	padding-left: 0;
+	padding-right: 0;
+	border: none;
+}
+
+.tab-pane {
+	padding: 20px 0;
+}
+
     
+}
+
+.ui-chips-input-token {
+    display: inline-block;
+    vertical-align: middle;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.ui-chips-token .ui-chips-token-label {
+    display: block;
+    background-color: #efefef;
+    margin-right: 7px;
+    padding: 0px 16px 0px 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    height: 24px;
+    line-height: 24px;
+}
+
+.ui-chips-token {
+    cursor: default;
+    display: inline-block;
+    vertical-align: middle;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    border: 0 none;
+    font-size: 0.9em;
+}
+
+.ui-chips-token .ui-chips-token-icon {
+    margin-top: -0.5em;
+    position: absolute;
+    right:  8px;
+    top: 50%;
+    cursor: pointer;
 }
 
 .sidebar-subpage {
@@ -99,7 +191,7 @@ html {
     position: fixed;
     z-index: 1;
     top: 60px;
-    left: 110px;
+    left: 70px;
     background: #E5E9F2;
     align-items: stretch;
     border-right: 1px solid #E6ECF1;
@@ -108,6 +200,8 @@ html {
 
     h3 {
         font-size: 17px;
+        margin: 0px;
+        margin-top: 5px;
         margin-bottom: 20px;
         line-height: 25px;
     }
@@ -171,7 +265,7 @@ html {
 }
 .sidebar {
     height: 100%;
-    width: 110px;
+    width: 70px;
     position: fixed;
     z-index: 1;
     top: 0;
@@ -190,6 +284,7 @@ html {
         .list-group-item {
             background-color: transparent;
             border: 0px;
+            padding: 0px;
             border-bottom: 0px solid #ccc;
             -webkit-transition: color 300ms, background-color 300ms;
             -moz-transition: color 300ms, background-color 300ms;
@@ -214,7 +309,7 @@ html {
                 border-left: 4px solid transparent;
 
                 i {
-                    font-size: 26px;
+                    font-size: 20px;
                     margin-bottom: 6px;
                 }
                 span {
@@ -242,18 +337,25 @@ html {
     z-index: 100;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     top: 0px;
-    .logo-header {
+    .red-base {
+        width: 69px;
+        height: 60px;
         background-color: @red_snello;
-        width: 109px;
+        float: left;
+
+    }
+    .logo-header {
         height: 60px;
         line-height: 50px;
         text-align: left;
-        position: absolute;
-        top: 0px;
+        width: 140px;
+        margin-left: 10px;
+        float: left;
+
         img {
-            opacity: 0.4;
+            opacity: 0.3;
             margin-top: 10px;
-            height: 20px;
+            height: 26px;
             margin-left: 15px;
         }
     }
@@ -269,8 +371,8 @@ html {
     .nav-tabs {
         margin: 0 auto;
         border: 0px;
-        float: left !important;
-        margin-left: 140px;
+        float: none !important;
+        margin-left: 0px;
         li {
             z-index: 2;
             float: none;
@@ -453,32 +555,14 @@ table {
                     }
                 }
 
-                .btn-success {
-                    background-color: @white;
-                    color: @green;
-                }
+                .btn {
+                    height: 32px !important;
+                    line-height: 26px !important;
+                    padding: 0px 8px;
 
-                .btn-danger {
-                    background-color: @white;
-                    color: @red_snello;
-                }
-
-                .btn-warning {
-                    background-color: @white;
-                    color: @grey;
-                }
-
-                .btn-default {
-                    background-color: @white;
-                    color: @grey_snello;
-                    border: 0px;
-
-                }
-
-                .btn-primary {
-                    background-color: @white;
-                    color: @grey_snello;
-                    border: 0px;
+                    i {
+                        line-height: 30px;
+                    }
                 }
 
                 p {
@@ -583,6 +667,14 @@ table {
     }
 }
 
+.btn {
+    border-radius: 4px !important;
+    margin: 0px 4px !important;
+    padding: 0px 14px !important;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+}
 
 .btn-success-outline {
     color: @green;
@@ -599,6 +691,7 @@ table {
 
 .ui-dropdown label.ui-dropdown-label {
     padding: 0px 10px;
+    min-width: 200px;
 }
 
 .ui-multiselect{
@@ -619,6 +712,22 @@ table {
     }
 
     
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #cfdadd;
+    border-radius: 4px;
+    box-shadow: none !important; 
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 
 .ui-multiselect-panel {
@@ -662,11 +771,30 @@ table {
 
 .btn-success {
     color: @white;
-    background-color: @green;
+    background-color: @red_snello;
+    border-color: @red_snello;
+    border: 1px solid @red_snello;
+    i {
+        color: @white;
+    }
+    &:hover {
+        color: @white;
+        background-color: darken(@green, 20%);
+        border-color: @green;
+        i {
+            color: @white;
+        }
+    }
+}
+
+
+.btn-upload {
+    color: @white;
+    background-color: @blue;
     border-color: @grey_snello;
     border: 0px solid @green;
     i {
-        color: @green;
+        color: @white;
     }
     &:hover {
         color: @white;
@@ -678,18 +806,154 @@ table {
     }
 }
 
-.btn-edit {
-    color: @grey_snello;
-    background-color: transparent;
+.btn-warning {
+    color: @white;
+    background-color: @grey_snello2;
     border-color: @grey_snello;
     border: 0px solid @green;
+    i {
+        color: @white;
+    }
+    &:hover {
+        color: @white;
+        background-color: @red_snello;
+        border-color: @green;
+        i {
+            color: @white;
+        }
+    }
+}
+
+
+.btn-value {
+    color: @white;
+    width: 90%;
+    text-align: left !important;
+    background-color: @grey_snello2;
+    border-color: @grey_snello;
+    border: 0px solid @green;
+    i {
+        color: @white;
+    }
+    &:hover {
+        color: @white;
+        background-color: @red_snello;
+        border-color: @green;
+        i {
+            color: @white;
+        }
+    }
+}
+
+
+.btn-square {
+    width: 30px;
+    padding: 0px 5px !important;
+}
+
+.btn-default,
+.btn-primary {
+    color: @white;
+    background-color: @grey_snello;
+    border-color: @grey_snello;
+    border: 0px solid @grey_snello;
+    i {
+        color: @white;
+    }
+    &:hover {
+        color: @white;
+        background-color: @red_snello;
+        border-color: @red_snello;
+        i {
+            color: @white;
+        }
+    }
+}
+
+
+.btn-danger {
+    color: @grey_snello2;
+    background-color: @white;
+    border-color: @grey_snello2;
+    border: 1px solid @grey_snello2;
+    i {
+        color: @red_snello;
+    }
+    &:hover {
+        color: @white;
+        background-color: @red_snello;
+        border-color: @red_snello;
+        i {
+            color: @white;
+        }
+    }
+}
+
+
+
+.btn-search {
+    color: @white;
+    background-color: @grey_snello;
+    border-color: @grey_snello;
+    border: 0px solid @grey_snello;
+    padding: 8px 0px;
+    height: 34px;
+    line-height: 34px;
+
+    i {
+        color: @grey_snello;
+    }
+    &:hover {
+        color: @white;
+        background-color: @red_snello;
+        border-color: @red_snello;
+        i {
+            color: @white;
+        }
+    }
+}
+
+.btn-reset {
+    color: @white;
+    background-color: fade(@grey_snello,70%);
+    border-color: @grey_snello;
+    border: 0px solid @grey_snello;
+    padding: 8px 0px;
+    height: 34px;
+    line-height: 34px;
     i {
         color: @green;
     }
     &:hover {
         color: @white;
-        background-color: @green;
+        background-color: @grey_snello;
         border-color: @green;
+        i {
+            color: @white;
+        }
+    }
+}
+
+.btn-info {
+    color: @white;
+    background-color: @lightblue;
+    border-color: @lightblue;
+    border: 1px solid @lightblue;
+}
+
+
+.btn-edit {
+    color: @red_snello;
+    background-color: transparent;
+    border-color: @red_snello;
+    border: 1px solid @red_snello;
+    i {
+        color: @red_snello;
+    }
+    &:hover {
+        color: @white;
+        background-color: @grey_snello;
+        border-color: @grey_snello;
         i {
             color: @white;
         }
@@ -713,113 +977,15 @@ table {
     margin-top: 20px;
     width: 100%;
     text-align: center;
+    border-top: 1px dotted #ccc;
+    padding-top: 15px;
+
+    &.btn-group {
+        float: right !important;
+    }
+    
 }
 
-.btn-warning {
-    color: @white;
-    background-color: @yellow;
-    border-color: @grey_snello;
-    border: 0px solid @green;
-    i {
-        color: @green;
-    }
-    &:hover {
-        color: @white;
-        background-color: @green;
-        border-color: @green;
-        i {
-            color: @white;
-        }
-    }
-}
-
-
-
-.btn-default {
-    color: @white;
-    background-color: @yellow;
-    border-color: @grey_snello;
-    border: 0px solid @green;
-    i {
-        color: @green;
-    }
-    &:hover {
-        color: @white;
-        background-color: @green;
-        border-color: @green;
-        i {
-            color: @white;
-        }
-    }
-}
-
-
-.btn-danger {
-    color: @white;
-    background-color: @red_snello;
-    border-color: @red_snello;
-    border: 0px solid @green;
-    i {
-        color: @green;
-    }
-    &:hover {
-        color: @white;
-        background-color: darken(@red_snello, 20%);
-        border-color: @red_snello;
-        i {
-            color: @white;
-        }
-    }
-}
-
-.btn {
-    margin: 0 4px;
-}
-
-.btn-search {
-    color: @white;
-    background-color: @green;
-    border-color: @grey_snello;
-    border: 0px solid @grey_snello;
-    padding: 8px 14px;
-    i {
-        color: @grey_snello;
-    }
-    &:hover {
-        color: @white;
-        background-color: @green;
-        border-color: @green;
-        i {
-            color: @white;
-        }
-    }
-}
-
-.btn-reset {
-    color: @white;
-    background-color: fade(@grey_snello,70%);
-    border-color: @grey_snello;
-    border: 0px solid @grey_snello;
-    padding: 8px 14px;
-    i {
-        color: @green;
-    }
-    &:hover {
-        color: @white;
-        background-color: @grey_snello;
-        border-color: @green;
-        i {
-            color: @white;
-        }
-    }
-}
-
-.btn-info {
-    color: @white;
-    background-color: @lightblue;
-    border-color: @lightblue;
-    border: 1px solid @lightblue;
-}
 
 .ui-paginator-bottom {
     padding: 25px 0px;

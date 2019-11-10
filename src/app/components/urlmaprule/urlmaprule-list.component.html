@@ -8,13 +8,13 @@
 <div class="sidebar-subpage">
 
     <h3>
-        Url Map Rules List
+        Lista Url Map Rules
     </h3>
     <p>
 
     </p>
     <button pButton class="btn btn-add pull-right btn-block" (click)="new()"><i class="fa fa-plus-circle"></i>
-        Add new</button>
+        Add</button>
 </div>
 
 
@@ -48,7 +48,7 @@
                                         <div class="btn-group">
 
                                             <button type="button" class="btn btn-search" (click)="reload(datatable)" icon="ui-icon-search">Search</button>
-                                            <button type="button" class="btn btn-reset" (click)="reset(datatable)" icon="ui-icon-undo">Reset</button>
+                                            <button type="button" class="btn btn-reset" (click)="reset(datatable)" icon="ui-icon-undo">Undo</button>
                                         </div>
                                     </div>
 
@@ -73,7 +73,7 @@
                                 <ng-template pTemplate="emptymessage">
                                     <tr>
                                         <td colspan="7">
-                                            No results
+                                            No results.
                                         </td>
                                     </tr>
                                 </ng-template>
@@ -86,7 +86,7 @@
                                         <td>
                                             <button (click)="edit(rowData)" class="btn btn-edit btn-sm" pButton>
                                                 <i aria-hidden="true" class="fa fa-pencil"></i>
-                                                Edit
+                                                Modify
                                             </button>
                                         </td>
 

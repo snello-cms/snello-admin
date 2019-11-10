@@ -6,12 +6,12 @@
 
 <div class="sidebar-subpage">
 
-    <h3>Document List</h3>
+    <h3>Lista Documents</h3>
     <p>
 
     </p>
     <button pButton class="btn btn-add pull-right btn-block" (click)="new()"><i class="fa fa-plus-circle"></i>
-        Add new
+        Add
     </button>
 </div>
 
@@ -44,7 +44,7 @@
                                         <div class="btn-group pull-right">
 
                                             <button type="button" class="btn btn-search" (click)="reload(datatable)" icon="ui-icon-search">Search</button>
-                                            <button type="button" class="btn btn-reset" (click)="reset(datatable)" icon="ui-icon-undo">Reset</button>
+                                            <button type="button" class="btn btn-reset" (click)="reset(datatable)" icon="ui-icon-undo">Undo</button>
                                         </div>
                                     </div>
                                 </div>
@@ -66,7 +66,7 @@
                                 </ng-template>
                                 <ng-template pTemplate="emptymessage">
                                     <tr>
-                                        <td colspan="9">No results </td>
+                                        <td colspan="9">No results.</td>
                                     </tr>
                                 </ng-template>
                                 <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
@@ -78,18 +78,22 @@
                                         <td class="ui-resizable-column">{{ rowData.original_name }}</td>
                                         <td class="ui-resizable-column">
                                             <button (click)="download(rowData.uuid)" class="btn btn-success btn-sm" pButton>
-                                                <i aria-hidden="true" class="fa fa-pencil"></i>  {{ rowData.path }}
+                                                <i aria-hidden="true" class="fa fa-download"></i>
                                             </button>
+                                            {{ rowData.path }}
+                                            <a role="button" [copy-clipboard]="downloadPath(rowData.uuid)"
+                                                    (copied)="notify($event)">
+                                                <i class="fa fa-clipboard"></i></a>
                                         </td>
                                         <td class="ui-resizable-column">{{ rowData.mimetype }}
                                             <br/> {{ rowData.size }}</td>
                                         <td>
                                             <button (click)="edit(rowData)" class="btn btn-success btn-sm" pButton>
-                                                <i aria-hidden="true" class="fa fa-pencil"></i> Edit
+                                                <i aria-hidden="true" class="fa fa-pencil"></i> Modify
                                             </button>
 
                                             <button (click)="confirmDelete(rowData)" class="btn btn-warning btn-sm" pButton>
-                                                <i aria-hidden="true" class="fa fa-trash"></i> Delete
+                                                <i aria-hidden="true" class="fa fa-trash"></i> Elimina
                                             </button>
 
                                         </td>

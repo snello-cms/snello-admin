@@ -2,9 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {AbstractListComponent} from '../../common/abstract-list-component';
 import {Router} from '@angular/router';
 import {Condition} from '../../model/condtion';
-import {UrlMapRule} from "../../model/url-map-rule";
-import {UrlMapRuleService} from "../../service/url-map-rule.service";
-import {ConfirmationService} from "primeng/api";
+import {UrlMapRule} from '../../model/url-map-rule';
+import {UrlMapRuleService} from '../../service/url-map-rule.service';
+import {ConfirmationService, MessageService} from 'primeng/api';
 
 @Component(
     {
@@ -13,13 +13,13 @@ import {ConfirmationService} from "primeng/api";
     }
 )
 export class UrlmapruleListComponent extends AbstractListComponent<UrlMapRule> implements OnInit {
-    
     constructor(
         public router: Router,
         public confirmationService: ConfirmationService,
-        public service: UrlMapRuleService) {
+        public service: UrlMapRuleService,
+        public messageService: MessageService) {
 
-        super(router, confirmationService, service, 'urlmaprules');
+        super(messageService, router, confirmationService, service, 'urlmaprules');
         this.filters = new Condition();
     }
 

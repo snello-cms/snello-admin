@@ -104,13 +104,13 @@ export class MetadataEditComponent extends AbstractEditComponent<Metadata>
         }
         this.service.update(this.element).subscribe(
             element => {
-                this.addInfo('Modifica completata con successo. ');
+                this.addInfo('Modify completata con successo. ');
                 this.element = <Metadata>element;
                 this.postUpdate();
                 this.navigateAfterSaveOrUpdate();
             },
             error => {
-                this.addError('Impossibile completare la modifica. ' + (error || ''));
+                this.addError('Impossibile completare la Modify. ' + (error || ''));
                 this.saveError();
             }
         );

@@ -1,4 +1,4 @@
-import {UserRole} from "./user-role";
+import {UserRole} from './user-role';
 
 export class User {
 
@@ -7,7 +7,7 @@ export class User {
   name: string;
   surname: string;
   email: string;
-  uuid_username:string;
+  uuid_username: string;
   active: boolean;
 
   user_roles: UserRole[];

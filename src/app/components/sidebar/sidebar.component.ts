@@ -3,6 +3,7 @@ import {APP_VERSION, ASSET_PATH} from '../../constants/constants';
 import {AuthenticationService} from '../../service/authentication.service';
 import {Router} from '@angular/router';
 import {ConfigurationService} from '../../service/configuration.service';
+import {UserInSession} from '../../model/user-in-session';
 
 @Component({
     selector: 'sidebar',
@@ -11,6 +12,7 @@ import {ConfigurationService} from '../../service/configuration.service';
 export class SideBarComponent {
     public selected = 'home';
     public asset_path: string;
+    public utente: UserInSession;
 
     constructor(private authenticationService: AuthenticationService,
                 private configurationService: ConfigurationService,
@@ -18,6 +20,16 @@ export class SideBarComponent {
         configurationService.getValue(ASSET_PATH).subscribe(
             ass => this.asset_path = ass
         );
+        this.utente = new UserInSession();
+        this.authenticationService.getUtente().subscribe(
+            utente => {
+                if (utente) {
+                    console.log('utente: ' + utente.username);
+                    this.utente = utente;
+                } else {
+                    this.utente.username = 'sconosciuto';
+                }
+            });
     }
 
     logout() {
@@ -27,6 +39,10 @@ export class SideBarComponent {
 
     public select(page: string) {
         this.selected = page;
+    }
+
+    public edit() {
+        this.router.navigate(['/user/yourself', this.utente.username]);
     }
 
     version(): string {

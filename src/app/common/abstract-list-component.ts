@@ -1,7 +1,8 @@
-import {ConfirmationService} from 'primeng/api';
+import {ConfirmationService, MessageService} from 'primeng/api';
 import {AbstractService} from './abstract-service';
 import {Router} from '@angular/router';
 import {OnInit} from '@angular/core';
+import {DocumentService} from '../service/document.service';
 
 export abstract class AbstractListComponent<T> implements OnInit {
 
@@ -67,6 +68,7 @@ export abstract class AbstractListComponent<T> implements OnInit {
     public filters: any;
 
     constructor(
+        public messageService: MessageService,
         public router: Router,
         public confirmationService: ConfirmationService,
         public service: AbstractService<T>,
@@ -212,13 +214,13 @@ export abstract class AbstractListComponent<T> implements OnInit {
         this.clearMsgs();
         this.service.update(this.element).subscribe(
             element => {
-                this.addInfo('Modifica completata con successo. ');
+                this.addInfo('Modify completata con successo. ');
                 this.element = this.newElement();
                 this.loaddata(false, null);
                 this.postUpdate();
             },
             error => {
-                this.addError('Impossibile completare la modifica. ');
+                this.addError('Impossibile completare la Modify. ');
             }
         );
     }
@@ -227,27 +229,27 @@ export abstract class AbstractListComponent<T> implements OnInit {
     }
 
     public addInfo(message: string) {
-        /*  this.msgs.push({
+        this.messageService.add({
             severity: 'info',
             summary: 'Informazioni: ',
             detail: message
-          });*/
+        });
     }
 
     public addWarn(message: string) {
-        /*this.msgs.push({
-          severity: 'warn',
-          summary: 'Attenzione: ',
-          detail: message
-        });*/
+        this.messageService.add({
+            severity: 'warn',
+            summary: 'Attenzione: ',
+            detail: message
+        });
     }
 
     public addError(message: string) {
-        // this.msgs.push({ severity: 'error', summary: 'Errore: ', detail: message });
+        this.messageService.add({severity: 'error', summary: 'Errore: ', detail: message});
     }
 
     public clearMsgs() {
-        // this.msgs = [];
+        this.messageService.clear();
     }
 
     public view(element: T) {

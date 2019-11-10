@@ -94,13 +94,13 @@ export abstract class AbstractEditComponent<T> implements OnInit {
         }
         this.service.update(this.element).subscribe(
             element => {
-                this.addInfo('Modifica completata con successo. ');
+                this.addInfo('Modify completata con successo. ');
                 this.element = <T>element;
                 this.postUpdate();
                 this.navigateAfterUpdate();
             },
             error => {
-                this.addError('Impossibile completare la modifica. ' + (error || ''));
+                this.addError('Impossibile completare la Modify. ' + (error || ''));
                 this.saveError();
             }
         );

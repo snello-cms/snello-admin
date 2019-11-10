@@ -1,4 +1,4 @@
-import {ConfirmationService} from 'primeng/api';
+import {ConfirmationService, MessageService} from 'primeng/api';
 import {AbstractListComponent} from '../../common/abstract-list-component';
 import {Component, OnInit} from '@angular/core';
 import {Metadata} from '../../model/metadata';
@@ -16,9 +16,10 @@ export class MetadataListComponent extends AbstractListComponent<Metadata> imple
     constructor(
         public  router: Router,
         public confirmationService: ConfirmationService,
-        public service: MetadataService) {
+        public service: MetadataService,
+        public messageService: MessageService) {
 
-        super(router, confirmationService, service, 'metadata');
+        super(messageService, router, confirmationService, service, 'metadata');
         this.filters = new Metadata();
     }
 
@@ -42,16 +43,23 @@ export class MetadataListComponent extends AbstractListComponent<Metadata> imple
     public createTable(metadata: Metadata) {
         this.service.createTable(metadata).subscribe(
             element => {
-                console.log('table created: ' + element);
+                console.log();
                 this.reloadListData(metadata, element);
+                this.messageService.add({
+                    severity: 'info',
+                    summary: 'table created: ' + element
+                });
             });
     }
 
     public truncateTable(metadata: Metadata) {
         this.service.truncateTable(metadata.uuid).subscribe(
             element => {
-                console.log('table truncated: ' + element);
                 this.reloadListData(metadata, element);
+                this.messageService.add({
+                    severity: 'info',
+                    summary: 'table truncated: ' + element
+                });
             });
     }
 
@@ -60,6 +68,10 @@ export class MetadataListComponent extends AbstractListComponent<Metadata> imple
             element => {
                 console.log('table deleted: ' + element);
                 this.reloadListData(metadata, element);
+                this.messageService.add({
+                    severity: 'info',
+                    summary: 'table deleted: ' + element
+                });
             });
     }
 

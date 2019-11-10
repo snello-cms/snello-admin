@@ -272,12 +272,12 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         }
         this.service.update(this.element).subscribe(
             element => {
-                this.addInfo('Modifica completata con successo. ');
+                this.addInfo('Modify completata con successo. ');
                 this.element = <FieldDefinition>element;
                 this.post();
             },
             error => {
-                this.addError('Impossibile completare la modifica. ' + (error || ''));
+                this.addError('Impossibile completare la Modify. ' + (error || ''));
                 this.saveError();
             }
         );

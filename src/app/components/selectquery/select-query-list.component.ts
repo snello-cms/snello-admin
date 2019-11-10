@@ -1,9 +1,9 @@
-import {ConfirmationService} from 'primeng/api';
+import {ConfirmationService, MessageService} from 'primeng/api';
 import {AbstractListComponent} from '../../common/abstract-list-component';
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {SelectQueryService} from "../../service/select-query.service";
-import {SelectQuery} from "../../model/select-query";
+import {SelectQueryService} from '../../service/select-query.service';
+import {SelectQuery} from '../../model/select-query';
 
 @Component(
   {
@@ -19,9 +19,10 @@ export class SelectQueryListComponent extends AbstractListComponent<SelectQuery>
   constructor(
       public  router: Router,
       public confirmationService: ConfirmationService,
-      public service: SelectQueryService) {
+      public service: SelectQueryService,
+      public messageService: MessageService) {
 
-    super(router, confirmationService, service, 'selectqueries');
+    super(messageService, router, confirmationService, service, 'selectqueries');
     this.filters = new SelectQuery();
   }
 

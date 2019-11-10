@@ -1,5 +1,7 @@
 {
   "asset_path": "",
+  "login_api_path": "http://localhost:4200/login",
+  "changepassword_api_path": "http://localhost:4200/changepassword",
   "condition_api_path": "http://localhost:4200/api/conditions",
   "document_api_path": "http://localhost:4200/api/documents",
   "field_definition_api_path": "http://localhost:4200/api/fielddefinitions",
@@ -14,7 +16,6 @@
   "url_map_rules_api_path": "http://localhost:4200/api/urlmaprules",
   "api_service_path": "http://localhost:4200/api",
   "identity_api_path": "http://localhost:4200/api/users",
-  "login_api_path": "http://localhost:4200/login",
   "draggable_api_path": "http://localhost:4200/api/draggables",
   "droppable_api_path": "http://localhost:4200/api/droppables"
 }

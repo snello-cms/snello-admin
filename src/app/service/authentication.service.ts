@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {Observable, of, throwError} from 'rxjs';
-import {LOGIN_API_PATH, REFRESH_TOKEN_ITEM, TOKEN_ITEM, USER_ITEM} from '../constants/constants';
+import {CHANGEPASSWORD_API_PATH, LOGIN_API_PATH, REFRESH_TOKEN_ITEM, TOKEN_ITEM, USER_ITEM} from '../constants/constants';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {UserInSession} from '../model/user-in-session';
 import {ConfigurationService} from './configuration.service';
@@ -15,10 +15,14 @@ export class AuthenticationService {
     private access_token: any;
     private refresh_token: any;
     private logi_api_path: string;
+    private changepassword_api_path: string;
 
     constructor(private http: HttpClient, configurationService: ConfigurationService) {
         configurationService.getValue(LOGIN_API_PATH).subscribe(
             path => this.logi_api_path = path
+        );
+        configurationService.getValue(CHANGEPASSWORD_API_PATH).subscribe(
+            reset_path => this.changepassword_api_path = reset_path
         );
     }
 
@@ -60,6 +64,11 @@ export class AuthenticationService {
                 }),
                 catchError(this.handleError)
             );
+    }
+
+    changepassword(username: string): Observable<any> {
+        const body: HttpParams = new HttpParams();
+        return this.http.post(this.changepassword_api_path, body);
     }
 
     public checkToken(): Observable<boolean> {
