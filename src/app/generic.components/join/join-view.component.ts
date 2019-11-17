@@ -2,9 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {FieldDefinition} from '../../model/field-definition';
 import {ApiService} from '../../service/api.service';
-import { Observable } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
-import { tap, take } from 'rxjs/operators';
+import {Observable} from 'rxjs';
+import {ActivatedRoute} from '@angular/router';
+import {tap, take} from 'rxjs/operators';
+import {FieldDefinitionService} from "../../service/field-definition.service";
 
 @Component({
     selector: 'app-join',
@@ -30,24 +31,21 @@ export class JoinViewComponent implements OnInit {
     uuid: string;
     name: string;
 
-    constructor(private apiService: ApiService, private activatedRoute: ActivatedRoute) {
+    constructor(private apiService: ApiService, private activatedRoute: ActivatedRoute, private fieldDefinitionService: FieldDefinitionService) {
     }
 
     ngOnInit() {
-        const splittedFields = this.field.join_table_select_fields.split(',');
-        this.labelField  = splittedFields[0];
-        if (this.labelField === this.field.join_table_key && splittedFields.length > 1) {
-          this.labelField  = splittedFields[1];
-        }
-
+        this.labelField = this.fieldDefinitionService.fetchFirstLabel(this.field);
+        //key of the record
         this.uuid = this.activatedRoute.snapshot.params['uuid'];
+        //Metadata name
         this.name = this.activatedRoute.snapshot.params['name'];
 
         this.join$ =
             this.apiService.fetchObject(this.field.join_table_name, this.field.value)
-            .pipe(
-                tap(join => this.group.get(this.field.name).setValue(join)),
-            );
+                .pipe(
+                    tap(join => this.group.get(this.field.name).setValue(join)),
+                );
     }
 
     handleDropdown(event) {

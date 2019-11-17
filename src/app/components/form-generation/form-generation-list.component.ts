@@ -6,6 +6,9 @@ import {DataListService} from '../../service/data-list.service';
 import {MetadataService} from '../../service/metadata.service';
 import {Metadata} from '../../model/metadata';
 import {DynamicSearchFormComponent} from '../../generic.components/dynamic-form/dynamic-search-form.component';
+import {map, tap} from "rxjs/operators";
+import {Observable, of} from "rxjs";
+import {FieldDefinitionService} from "../../service/field-definition.service";
 
 @Component(
     {
@@ -29,9 +32,32 @@ export class FormGenerationListComponent implements OnInit {
         private route: ActivatedRoute,
         public apiService: ApiService,
         private dataListService: DataListService,
-        private metadataService: MetadataService) {
+        private metadataService: MetadataService,
+        private fieldDefintionService: FieldDefinitionService) {
     }
 
+
+    dato$(rowData: any, fieldDefinition: FieldDefinition): Observable<any> {
+        const fullValue = rowData[fieldDefinition.name];
+        if (!fullValue) {
+            return of('');
+        }
+
+        if (fieldDefinition.type === 'join') {
+            return this.apiService.fetchObject(this.metadataName, fieldDefinition.value)
+                .pipe(
+                    map(join => join[this.fieldDefintionService.fetchFirstLabel(fieldDefinition)])
+                );
+        }
+        if (fieldDefinition.type === 'multijoin') {
+            return this.apiService.fetchJoinList(this.metadataName, this.getTableKey(rowData), fieldDefinition.join_table_name)
+                .pipe(
+                    map(join => join[this.fieldDefintionService.fetchFirstLabel(fieldDefinition)])
+                );
+
+        }
+        return of(fullValue);
+    }
 
     ngOnInit() {
         this.metadataName = this.route.snapshot.params['name'];
@@ -60,32 +86,6 @@ export class FormGenerationListComponent implements OnInit {
             );
     }
 
-    dato(rowData: any, fieldDefinition: FieldDefinition): any {
-        const fullValue = rowData[fieldDefinition.name];
-        if (!fullValue) {
-            return '';
-        }
-        if (fieldDefinition.type === 'join') {
-            // const splitted = fullValue.split(':');
-            // TODO COME RECUPERO IL VALORE
-            // path da invocare per avere i dati:
-            // /api/{fieldDefinition.metadata_name}/{fullValue}
-            return '[' + fullValue + ']';
-        }
-        if (fieldDefinition.type === 'multijoin') {
-            let retVal = '';
-            const splitted = fullValue.split(',');
-            for (let x = 0; x < splitted.length; x++) {
-                const label = splitted[x].split(':');
-                retVal = retVal + label[1] + ',';
-                // path da invocare per avere i dati:
-                // /api/{metadata.table}/{uuid}/{fieldDefinition.metadata_name}
-            }
-            return retVal.substr(0, retVal.length - 1);
-        }
-        return fullValue;
-    }
-
     public newForm() {
         if (this.regConfigList) {
             this.router.navigate(['datalist/new', this.metadataName]);
@@ -93,12 +93,12 @@ export class FormGenerationListComponent implements OnInit {
 
     }
 
-    public edit(name: string, uuid: string) {
-        this.router.navigate(['datalist/edit', name, uuid]);
+    public edit(rowData: any) {
+        this.router.navigate(['datalist/edit', this.metadataName, this.getTableKey(rowData)]);
     }
 
-    public view(name: string, uuid: string) {
-        this.router.navigate(['datalist/view', name, uuid]);
+    public view(rowData: any) {
+        this.router.navigate(['datalist/view', this.metadataName, this.getTableKey(rowData)]);
     }
 
     public loaddata(firstReload: boolean, datatable: any) {

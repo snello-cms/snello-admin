@@ -85,13 +85,13 @@
                                 <tr>
                                     <td class="RowIndex">{{ rowIndex + 1 }}</td>
                                     <ng-container *ngFor="let def of regConfigList">
-                                        <td *ngIf="def.show_in_list">{{dato(rowData, def)}}</td>
+                                        <td *ngIf="def.show_in_list">{{dato$(rowData, def) | async}}</td>
                                     </ng-container>
                                     <td>
-                                        <button (click)="edit(metadataName, getTableKey(rowData))" class="btn btn-success" pbutton>
+                                        <button (click)="edit(rowData)" class="btn btn-success" pbutton>
                                                 Modify
                                             </button>
-                                        <button (click)="view(metadataName, getTableKey(rowData))" class="btn btn-success" pbutton>
+                                        <button (click)="view(rowData)" class="btn btn-success" pbutton>
                                                 View
                                             </button>
 

@@ -29,4 +29,12 @@ export class FieldDefinitionService extends AbstractService<FieldDefinition> {
         };
     }
 
+    public fetchFirstLabel(fieldDefinition: FieldDefinition): string {
+        const splittedFields = fieldDefinition.join_table_select_fields.split(',');
+        let labelField = splittedFields[0];
+        if (labelField === fieldDefinition.join_table_key && splittedFields.length > 1) {
+            labelField = splittedFields[1];
+        }
+        return labelField
+    }
 }
