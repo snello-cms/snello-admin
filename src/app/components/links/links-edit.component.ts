@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ConfirmationService, SelectItem} from 'primeng/api';
+import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
 import {Link} from '../../model/link';
 import {LinksService} from '../../service/links.service';
 import {MetadataService} from '../../service/metadata.service';
@@ -32,8 +32,9 @@ export class LinksEditComponent extends AbstractEditComponent<Link> implements O
         public metadataService: MetadataService,
         public userService: LinksService,
         private formBuilder: FormBuilder,
+        public messageService: MessageService,
         public dataListService: DataListService) {
-        super(router, route, confirmationService, userService, 'links');
+        super(router, route, confirmationService, userService, messageService, 'links');
 
     }
 

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ConfirmationService, SelectItem} from 'primeng/api';
+import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
 import {FONT_AWESOME_ICONS} from '../../constants/constants';
 import {Extension} from "../../model/extension";
 import {ExtensionService} from "../../service/extension.service";
@@ -19,9 +19,10 @@ export class ExtensionsEditComponent extends AbstractEditComponent<Extension> im
         route: ActivatedRoute,
         confirmationService: ConfirmationService,
         extensionService: ExtensionService,
-        private documentService: DocumentService
+        private documentService: DocumentService,
+        public messageService: MessageService,
     ) {
-        super(router, route, confirmationService, extensionService, 'extensions_admin');
+        super(router, route, confirmationService, extensionService, messageService, 'extensions_admin');
     }
 
     iconItems: SelectItem[] = FONT_AWESOME_ICONS;

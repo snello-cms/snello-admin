@@ -4,7 +4,7 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
 import {FieldDefinitionService} from '../../service/field-definition.service';
 import {MetadataService} from '../../service/metadata.service';
 import {FieldDefinition, MAP_INPUT_TO_FIELD} from '../../model/field-definition';
-import {ConfirmationService, SelectItem} from 'primeng/api';
+import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
 import {map, switchMap} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {Metadata} from '../../model/metadata';
@@ -68,9 +68,10 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         public route: ActivatedRoute,
         public confirmationService: ConfirmationService,
         public fieldDefinitionService: FieldDefinitionService,
-        public metadataService: MetadataService
+        public metadataService: MetadataService,
+        public messageService: MessageService,
     ) {
-        super(router, route, confirmationService, fieldDefinitionService, 'fielddefinition');
+        super(router, route, confirmationService, fieldDefinitionService, messageService, 'fielddefinition');
         for (const key of Array.from(MAP_INPUT_TO_FIELD.keys())) {
             this.fieldTypes.push({value: key, label: key});
             this.mapFieldToType.set(MAP_INPUT_TO_FIELD.get(key)[0] + MAP_INPUT_TO_FIELD.get(key)[1], key);

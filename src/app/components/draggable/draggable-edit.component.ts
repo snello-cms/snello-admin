@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MetadataService} from '../../service/metadata.service';
-import {ConfirmationService} from 'primeng/api';
+import {ConfirmationService, MessageService} from 'primeng/api';
 import {Draggable} from 'src/app/model/draggable';
 import {DraggableService} from 'src/app/service/draggable.service';
 
@@ -19,9 +19,10 @@ export class DraggableEditComponent extends AbstractEditComponent<Draggable> imp
         public route: ActivatedRoute,
         public confirmationService: ConfirmationService,
         public theService: DraggableService,
-        public metadataService: MetadataService
+        public metadataService: MetadataService,
+        public messageService: MessageService,
     ) {
-        super(router, route, confirmationService, theService, 'draggables');
+        super(router, route, confirmationService, theService, messageService, 'draggables');
 
     }
 

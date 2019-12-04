@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MetadataService} from '../../service/metadata.service';
-import {ConfirmationService, SelectItem} from 'primeng/api';
+import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
 import {Draggable} from 'src/app/model/draggable';
 import {DraggableService} from 'src/app/service/draggable.service';
 import {Droppable} from '../../model/droppable';
@@ -29,9 +29,11 @@ export class DroppableEditComponent extends AbstractEditComponent<Droppable> imp
         public confirmationService: ConfirmationService,
         public theService: DroppableService,
         public draggableService: DraggableService,
-        public metadataService: MetadataService
+        public metadataService: MetadataService,
+        public messageService: MessageService,
+
     ) {
-        super(router, route, confirmationService, theService, 'droppables');
+        super(router, route, confirmationService, theService, messageService, 'droppables');
         this.draggableService.getAllList().subscribe(result => {
             for (const draggable of result) {
                 this.mapDraggable.set(draggable.uuid, draggable);

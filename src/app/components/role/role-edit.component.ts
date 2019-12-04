@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ConfirmationService, SelectItem} from 'primeng/api';
+import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
 import {RoleService} from "../../service/role.service";
 import {Role} from "../../model/role";
 import {MetadataService} from "../../service/metadata.service";
@@ -25,8 +25,9 @@ export class RoleEditComponent extends AbstractEditComponent<Role> implements On
         public metadataService: MetadataService,
         public selectQueryService: SelectQueryService,
         public confirmationService: ConfirmationService,
-        public roleService: RoleService) {
-        super(router, route, confirmationService, roleService, 'role');
+        public roleService: RoleService,
+        public messageService: MessageService) {
+        super(router, route, confirmationService, roleService, messageService, 'role');
     }
 
     public objectTypeSelect: SelectItem[] = [

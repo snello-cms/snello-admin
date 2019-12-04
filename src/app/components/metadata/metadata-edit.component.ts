@@ -3,7 +3,7 @@ import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {Metadata} from '../../model/metadata';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MetadataService} from '../../service/metadata.service';
-import {ConfirmationService, SelectItem} from 'primeng/api';
+import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
 import {FONT_AWESOME_ICONS} from '../../constants/constants';
 
 @Component({
@@ -26,9 +26,10 @@ export class MetadataEditComponent extends AbstractEditComponent<Metadata>
         router: Router,
         route: ActivatedRoute,
         confirmationService: ConfirmationService,
-        metadataService: MetadataService
+        metadataService: MetadataService,
+        public messageService: MessageService,
     ) {
-        super(router, route, confirmationService, metadataService, 'metadata');
+        super(router, route, confirmationService, metadataService, messageService, 'metadata');
     }
 
     iconItems: SelectItem[] = FONT_AWESOME_ICONS;

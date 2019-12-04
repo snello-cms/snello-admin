@@ -42,8 +42,5 @@ export class DroppableListComponent extends AbstractListComponent<Droppable> imp
         super.postList();
     }
 
-    uploadFiles() {
-        documentService
-    }
 }
 

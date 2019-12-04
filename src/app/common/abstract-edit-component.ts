@@ -13,6 +13,7 @@ export abstract class AbstractEditComponent<T> implements OnInit {
         public route: ActivatedRoute,
         public confirmationService: ConfirmationService,
         public service: AbstractService<T>,
+        public messageService: MessageService,
         public path?: string,
     ) {
     }
@@ -137,23 +138,23 @@ export abstract class AbstractEditComponent<T> implements OnInit {
     }
 
     public addInfo(message: string) {
-        /*this.msgs.push({
-          severity: 'info',
-          summary: 'Informazioni: ',
-          detail: message
-        });*/
+        this.messageService.add({
+            severity: 'info',
+            summary: 'Informazioni: ',
+            detail: message
+        });
     }
 
     public addWarn(message: string) {
-        /*    this.msgs.push({
-              severity: 'warn',
-              summary: 'Attenzione: ',
-              detail: message
-            });*/
+        this.messageService.add({
+            severity: 'warn',
+            summary: 'Attenzione: ',
+            detail: message
+        });
     }
 
     public addError(message: string) {
-        /*this.msgs.push({ severity: 'error', summary: 'Errore: ', detail: message });*/
+        this.messageService.add({severity: 'error', summary: 'Errore: ', detail: message});
     }
 
     abstract createInstance(): T;
