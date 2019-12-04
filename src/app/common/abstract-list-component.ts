@@ -245,7 +245,7 @@ export abstract class AbstractListComponent<T> implements OnInit {
     }
 
     public addError(message: string) {
-        this.messageService.add({severity: 'error', summary: 'Errore: ', detail: message});
+        this.messageService.add({severity: 'error', summary: 'Error: ', detail: message});
     }
 
     public clearMsgs() {

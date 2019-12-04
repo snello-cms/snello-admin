@@ -27,11 +27,11 @@ export abstract class AbstractViewComponent<T> implements OnInit {
                     this.postFind();
                 },
                 error => {
-                    this.addError('Errore nel caricamento dei dati.' + (error || ''));
+                    this.addError('Error while loading data' + (error || ''));
                 }
             );
         } else {
-            this.addError('Errore nel caricamento dei dati.');
+            this.addError('Error while loading data');
         }
     }
 
@@ -64,7 +64,7 @@ export abstract class AbstractViewComponent<T> implements OnInit {
     }
 
     public addError(message: string) {
-        this.messageService.add({severity: 'error', summary: 'Errore: ', detail: message});
+        this.messageService.add({severity: 'error', summary: 'Error: ', detail: message});
     }
 
     abstract getId();

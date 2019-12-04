@@ -136,7 +136,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
                 console.log(this.element);
             },
             error => {
-                this.addError('Errore nel caricamento dei dati.' + (error || ''));
+                this.addError('Error while loading data' + (error || ''));
             });
     }
 

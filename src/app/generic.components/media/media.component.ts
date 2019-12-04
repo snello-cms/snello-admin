@@ -84,7 +84,7 @@ export class MediaComponent implements OnInit {
             .catch(error => {
                 this.messageService.add({
                     severity: 'info',
-                    summary: 'Errore durante il caricamento del documento ',
+                    summary: 'Error while loading document ',
                     detail: ''
                 });
                 return of({});

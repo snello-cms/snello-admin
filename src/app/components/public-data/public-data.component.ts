@@ -38,14 +38,14 @@ export class PublicDataComponent implements OnInit {
       .then(res => {
         this.messageService.add({
           severity: 'info',
-          summary: 'File Caricato con successo',
+          summary: 'File loaded successfully',
           detail: ''
         });
       })
       .catch(error => {
         this.messageService.add({
           severity: 'info',
-          summary: 'Errore durante il caricamento del documento ',
+          summary: 'Error while loading document ',
           detail: ''
         });
         return of({});
