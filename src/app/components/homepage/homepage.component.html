@@ -40,7 +40,7 @@
                     <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
                         <div class="card-home">
                             <i class="{{extension.icon}} fa-3x pull-right"></i>
-                            <a [routerLink]="'/extensions/' + extension.id">
+                            <a [routerLink]="'/extensions/' + extension.uuid">
                                 <h3>{{extension.name}}</h3>
                                 <p *ngIf="extension.description">
                                     {{extension.description}}
