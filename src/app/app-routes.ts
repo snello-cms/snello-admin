@@ -37,6 +37,7 @@ import {LoginComponent} from './components/login/login.component';
 import {LinksViewComponent} from './components/links/links-view.component';
 import {ChangePasswordComponent} from './components/change-password/change.password.component';
 import {YourselfEditComponent} from './components/user/yourself-edit.component';
+import {ExtensionsViewComponent} from './components/extensions/extensions-view.component';
 
 export const MainRoutes: Routes = [
     {
@@ -53,6 +54,11 @@ export const MainRoutes: Routes = [
     {
         path: 'home',
         component: HomepageComponent,
+        canActivate: [SessionGuard]
+    },
+    {
+        path: 'extensions/:id',
+        component: ExtensionsViewComponent,
         canActivate: [SessionGuard]
     },
     {

@@ -4,6 +4,7 @@ import {DataListService} from '../../service/data-list.service';
 import {ApiService} from '../../service/api.service';
 import {MetadataService} from '../../service/metadata.service';
 import {Metadata} from '../../model/metadata';
+import {ExtensionService} from '../../service/extension.service';
 
 @Component(
     {
@@ -14,15 +15,17 @@ import {Metadata} from '../../model/metadata';
 export class HomepageComponent implements OnInit {
 
     model: any[] = [];
+    extensions: any[] = [];
     errorMessage: string;
 
 
     constructor(private _route: ActivatedRoute,
                 public router: Router,
                 public metadatasService: MetadataService,
-                public dataListService: DataListService,
+                private extensionService: ExtensionService,
                 private apiService: ApiService) {
         this.model = [];
+        this.extensions = [];
     }
 
     ngOnInit() {
@@ -32,6 +35,9 @@ export class HomepageComponent implements OnInit {
                 this.model = <Metadata[]>model;
             },
             error => (this.errorMessage = <any>error)
+        );
+        this.extensionService.getAllList().subscribe(
+            list => this.extensions = list
         );
     }
 

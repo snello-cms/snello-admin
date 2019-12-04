@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Condition} from '../../model/condtion';
-import {PublicDatasService} from "../../service/public-data.service";
-import {from, of} from "rxjs";
-import {MessageService} from "primeng/api";
+import {PublicDatasService} from '../../service/public-data.service';
+import {from, of} from 'rxjs';
+import {MessageService} from 'primeng/api';
+
 @Component(
   {
     templateUrl: './public-data.component.html',
