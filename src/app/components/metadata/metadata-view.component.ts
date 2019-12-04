@@ -5,7 +5,7 @@ import {MetadataService} from '../../service/metadata.service';
 import {AbstractViewComponent} from '../../common/abstract-view-component';
 import {FieldDefinitionService} from '../../service/field-definition.service';
 import {FieldDefinition} from '../../model/field-definition';
-import {ConfirmationService} from 'primeng/api';
+import {ConfirmationService, MessageService} from 'primeng/api';
 
 @Component({
     templateUrl: './metadata-view.component.html',
@@ -22,9 +22,10 @@ export class MetadataViewComponent extends AbstractViewComponent<Metadata>
         route: ActivatedRoute,
         public metadataService: MetadataService,
         public confirmationService: ConfirmationService,
+        protected messageService: MessageService,
         public fieldDefinitionService: FieldDefinitionService
     ) {
-        super(router, route, metadataService, 'metadata');
+        super(router, route, metadataService, messageService, 'metadata');
         this.element = new Metadata();
     }
 
