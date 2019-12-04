@@ -2,9 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {FormGroup} from '@angular/forms';
 import {FieldDefinition} from '../../model/field-definition';
 import {ApiService} from '../../service/api.service';
-import { ActivatedRoute } from '@angular/router';
-import { Observable, of } from 'rxjs';
-import { tap, take } from 'rxjs/operators';
+import {ActivatedRoute} from '@angular/router';
+import {Observable, of} from 'rxjs';
+import {tap} from 'rxjs/operators';
 
 @Component({
     selector: 'app-join',
@@ -46,9 +46,9 @@ export class JoinComponent implements OnInit {
     ngOnInit() {
 
         const splittedFields = this.field.join_table_select_fields.split(',');
-        this.labelField  = splittedFields[0];
+        this.labelField = splittedFields[0];
         if (this.labelField === this.field.join_table_key && splittedFields.length > 1) {
-          this.labelField  = splittedFields[1];
+            this.labelField = splittedFields[1];
         }
 
         this.uuid = this.activatedRoute.snapshot.params['uuid'];
