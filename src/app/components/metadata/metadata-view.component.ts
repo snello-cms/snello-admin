@@ -85,7 +85,7 @@ export class MetadataViewComponent extends AbstractViewComponent<Metadata>
             return this.truncateTable();
         }
         this.confirmationService.confirm({
-            message: 'Confermi la truncate table?',
+            message: 'do you really want to truncate this table?',
             accept: () => {
                 return this.truncateTable();
             }
@@ -98,7 +98,7 @@ export class MetadataViewComponent extends AbstractViewComponent<Metadata>
             return this.createTable();
         }
         this.confirmationService.confirm({
-            message: 'Confermi la create table?',
+            message: 'do you really want to create this table',
             accept: () => {
                 return this.createTable();
             }
@@ -111,7 +111,7 @@ export class MetadataViewComponent extends AbstractViewComponent<Metadata>
             return this.deleteTable();
         }
         this.confirmationService.confirm({
-            message: 'Confermi la delete table?',
+            message: 'do you really want to delete this table',
             accept: () => {
                 return this.deleteTable();
             }

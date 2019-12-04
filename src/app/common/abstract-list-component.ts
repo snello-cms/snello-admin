@@ -187,7 +187,7 @@ export abstract class AbstractListComponent<T> implements OnInit {
             return this.delete(element);
         }
         this.confirmationService.confirm({
-            message: 'Confermi la cancellazione?',
+            message: 'Do you really want to delete this record?',
             accept: () => {
                 this.delete(element);
             }
