@@ -3,6 +3,7 @@ import {SelectItem} from 'primeng/api';
 export const ASSET_PATH = 'asset_path';
 export const CONDITION_API_PATH = 'condition_api_path';
 export const DOCUMENT_API_PATH = 'document_api_path';
+export const EXTENSION_API_PATH = 'extension_api_path';
 export const FIELD_DEFINITION_API_PATH = 'field_definition_api_path';
 export const LINKS_API_PATH = 'links_api_path';
 export const METADATA_API_PATH = 'metadata_api_path';

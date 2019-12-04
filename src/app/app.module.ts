@@ -102,6 +102,7 @@ import {MediaViewComponent} from './generic.components/media/media-view.componen
 import {CopyClipboardDirective} from './directives/copy-clipboard.directive';
 import {ChangePasswordComponent} from './components/change-password/change.password.component';
 import {YourselfEditComponent} from './components/user/yourself-edit.component';
+import {ExtensionsViewComponent} from './components/extensions/extensions-view.component';
 
 registerLocaleData(localeIt);
 
@@ -118,6 +119,7 @@ export function loadConfigurations(configService: ConfigurationService) {
         AdminhomeTopBar,
         HomepageTopBar,
         HomepageComponent,
+        ExtensionsViewComponent,
         TagComponent,
         InputComponent,
         InputViewComponent,

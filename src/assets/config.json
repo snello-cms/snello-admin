@@ -4,6 +4,7 @@
   "changepassword_api_path": "http://localhost:4200/changepassword",
   "condition_api_path": "http://localhost:4200/api/conditions",
   "document_api_path": "http://localhost:4200/api/documents",
+  "extension_api_path": "http://localhost:4200/api/extensions",
   "field_definition_api_path": "http://localhost:4200/api/fielddefinitions",
   "links_api_path": "http://localhost:4200/api/links",
   "metadata_api_path": "http://localhost:4200/api/metadatas",

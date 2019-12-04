@@ -23,8 +23,6 @@ export class AdminpageComponent {
                 public router: Router,
                 private authenticationService: AuthenticationService,
                 private messageService: MessageService) {
-
-
         this.utente = new UserInSession();
         this.authenticationService.getUtente().subscribe(
             utente => {
