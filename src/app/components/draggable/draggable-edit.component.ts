@@ -7,33 +7,33 @@ import {Draggable} from 'src/app/model/draggable';
 import {DraggableService} from 'src/app/service/draggable.service';
 
 @Component(
-  {
-    templateUrl: './draggable-edit.component.html',
-    styleUrls: ['./draggable-edit.component.css']
-  }
+    {
+        templateUrl: './draggable-edit.component.html',
+        styleUrls: ['./draggable-edit.component.css']
+    }
 )
 export class DraggableEditComponent extends AbstractEditComponent<Draggable> implements OnInit {
 
-  constructor(
-      public router: Router,
-      public route: ActivatedRoute,
-      public confirmationService: ConfirmationService,
-      public theService: DraggableService,
-      public metadataService: MetadataService
-  ) {
-    super(router, route, confirmationService, theService, 'draggables');
+    constructor(
+        public router: Router,
+        public route: ActivatedRoute,
+        public confirmationService: ConfirmationService,
+        public theService: DraggableService,
+        public metadataService: MetadataService
+    ) {
+        super(router, route, confirmationService, theService, 'draggables');
 
-  }
+    }
 
-  ngOnInit() {
-    this.element = new Draggable();
-    super.ngOnInit();
-  }
+    ngOnInit() {
+        this.element = new Draggable();
+        super.ngOnInit();
+    }
 
 
-  createInstance(): Draggable {
-    return new Draggable();
-  }
+    createInstance(): Draggable {
+        return new Draggable();
+    }
 
 }
 

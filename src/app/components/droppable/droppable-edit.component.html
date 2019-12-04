@@ -28,7 +28,7 @@
                                     <label class="label-text col-sm-3">Name (*)</label>
                                     <div class="col-sm-9">
                                         <input [(ngModel)]="element.name" [required]="true" name="name" pInputText
-                                                placeholder="Name (*)">
+                                               placeholder="Name (*)">
                                     </div>
                                 </div>
 
@@ -36,7 +36,7 @@
                                     <label class="label-text col-sm-3">Description </label>
                                     <div class="col-sm-9">
                                         <input [(ngModel)]="element.description" name="description" pInputText
-                                                placeholder="Description">
+                                               placeholder="Description">
                                     </div>
                                 </div>
 
@@ -44,10 +44,12 @@
                                     <label class="label-text col-sm-3">Input Type (*)</label>
                                     <div class="col-sm-9">
                                         <p-dropdown [(ngModel)]="draggable" [filter]="false" [options]="draggableSelect"
-                                                [style]="{'width':'100%'}"
-                                                filterBy="label" name="typeSelect" placeholder="Seleziona un draggable">
+                                                    [style]="{'width':'100%'}"
+                                                    filterBy="label" name="typeSelect"
+                                                    placeholder="Seleziona un draggable">
                                         </p-dropdown>
-                                        <button (click)="addDraggable()" *ngIf="draggable" class="btn btn-success" type="button">
+                                        <button (click)="addDraggable()" *ngIf="draggable" class="btn btn-success"
+                                                type="button">
                                             ADD
                                         </button>
                                     </div>
@@ -57,8 +59,8 @@
                                     <label class="label-text col-sm-3"> Draggables</label>
                                     <div class="col-sm-9">
                     <textarea pInputTextarea [(ngModel)]="element.draggables"
-                            name="template" placeholder="draggables" [required]="true"
-                            required></textarea>
+                              name="template" placeholder="draggables" [required]="true"
+                              required></textarea>
                                     </div>
                                 </div>
 
@@ -66,7 +68,7 @@
                                     <label class="label-text col-sm-3">Html</label>
                                     <div class="col-sm-9">
                     <textarea pInputTextarea [(ngModel)]="element.html"
-                            name="html" placeholder="Html"></textarea>
+                              name="html" placeholder="Html"></textarea>
                                     </div>
                                 </div>
 
@@ -91,17 +93,21 @@
                                 </div>
 
                                 <div class="btn-group btn-actions pull-right">
-                                    <button type="button" *ngIf="!element.uuid" [disabled]="!theform.form.valid" class="btn btn-success"
+                                    <button type="button" *ngIf="!element.uuid" [disabled]="!theform.form.valid"
+                                            class="btn btn-success"
                                             (click)="save()">Save
                                     </button>&nbsp;&nbsp;
-                                    <button type="button" *ngIf="element.uuid" [disabled]="!theform.form.valid" class="btn btn-success"
+                                    <button type="button" *ngIf="element.uuid" [disabled]="!theform.form.valid"
+                                            class="btn btn-success"
                                             (click)="update()">Modify
                                     </button>&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <button type="button" *ngIf="element.uuid" [disabled]="!theform.form.valid" class="btn btn-danger"
+                                    <button type="button" *ngIf="element.uuid" [disabled]="!theform.form.valid"
+                                            class="btn btn-danger"
                                             (click)="confirmDelete()">Delete
                                     </button>&nbsp;&nbsp;
 
-                                    <button type="button" class="btn btn-danger" (click)="navigateToList()">Undo</button>
+                                    <button type="button" class="btn btn-danger" (click)="navigateToList()">Undo
+                                    </button>
                                 </div>
                             </form>
                         </div>

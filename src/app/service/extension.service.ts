@@ -2,11 +2,9 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {AbstractService} from '../common/abstract-service';
 import {MessageService} from 'primeng/api';
-import {User} from '../model/user';
 import {ConfigurationService} from './configuration.service';
-import {EXTENSION_API_PATH, USER_API_PATH} from '../constants/constants';
+import {EXTENSION_API_PATH} from '../constants/constants';
 import {Extension} from '../model/extension';
-import {Metadata} from '../model/metadata';
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +12,6 @@ import {Metadata} from '../model/metadata';
 export class ExtensionService extends AbstractService<Extension> {
 
     extensionsMap: Map<string, Extension> = new Map();
-
 
     constructor(protected http: HttpClient, messageService: MessageService, configurationService: ConfigurationService) {
         super(configurationService.getValue(EXTENSION_API_PATH), http, messageService);

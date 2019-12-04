@@ -1,13 +1,12 @@
-import {OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AbstractListComponent} from '../../common/abstract-list-component';
-import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 import {MetadataService} from '../../service/metadata.service';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {Draggable} from 'src/app/model/draggable';
 import {DroppableService} from '../../service/droppable.service';
 import {Droppable} from '../../model/droppable';
-import {DocumentService} from '../../service/document.service';
+import {DocumentService} from "../../service/document.service";
 
 @Component(
     {
@@ -23,7 +22,8 @@ export class DroppableListComponent extends AbstractListComponent<Droppable> imp
         public confirmationService: ConfirmationService,
         public droppableService: DroppableService,
         public metadataService: MetadataService,
-        public messageService: MessageService) {
+        public messageService: MessageService,
+        private documentService: DocumentService) {
 
         super(messageService, router, confirmationService, droppableService, 'droppables');
         this.filters = new Draggable();
@@ -40,6 +40,10 @@ export class DroppableListComponent extends AbstractListComponent<Droppable> imp
 
     postList() {
         super.postList();
+    }
+
+    uploadFiles() {
+        documentService
     }
 }
 

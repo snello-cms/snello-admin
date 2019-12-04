@@ -5,8 +5,6 @@ import {FieldDefinitionService} from '../../service/field-definition.service';
 import {FieldDefinition} from '../../model/field-definition';
 import {MetadataService} from '../../service/metadata.service';
 import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
-import {Metadata} from '../../model/metadata';
-import {DocumentService} from '../../service/document.service';
 
 @Component(
     {

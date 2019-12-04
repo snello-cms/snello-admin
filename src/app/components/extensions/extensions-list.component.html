@@ -1,22 +1,26 @@
 <sidebar></sidebar>
+
 <div class="sidebar">
     <adminhome-topbar></adminhome-topbar>
 </div>
 
 <div class="sidebar-subpage">
     <h3>
-        Draggable List
+        Field Definitions List
     </h3>
-
-    <button pButton class="btn btn-add pull-right btn-block" (click)="new()"><i
-            class="fa fa-plus-circle"></i> Add
+    <p>
+    </p>
+    <button pButton class="btn btn-add pull-right btn-block" (click)="new()">
+        <i class="fa fa-plus-circle"></i> Add
     </button>
 </div>
+
 
 <div class="main">
 
     <div class="container-fluid">
         <div class="row">
+
             <div class="col-md-12 col-sm-12">
                 <div class="content list">
 
@@ -24,26 +28,43 @@
                         <div class="row">
                             <div class="clearfix"></div>
                             <div class="col-sm-12">
+
                                 <div class="filter-wrapper clearfix">
+                                    <div class="col-sm-4">
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="clearfix"></div>
+                                    </div>
+
+                                    <div class="col-sm-4">
+                                        <div class="btn-group pull-right">
+                                            <button type="button" class="btn btn-search" (click)="reload(datatable)" icon="ui-icon-search">Search</button>
+                                            <button type="button" class="btn btn-reset" (click)="reset(datatable)" icon="ui-icon-undo">Undo</button>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
 
+
                         <div class="table-wrapper clearfix">
-                            <p-table #datatable (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true"
-                                     [resizableColumns]="true" [responsive]="true" [rows]="10"
-                                     [totalRecords]="service.listSize" [value]="model">
+
+                            <p-table #datatable (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true" [resizableColumns]="true" [responsive]="true" [rows]="10" [totalRecords]="service.listSize" [value]="model">
                                 <ng-template let-columns pTemplate="header">
                                     <tr class="sort-header">
-                                        <th pResizableColumn>Index</th>
+                                        <th pResizableColumn>Indice</th>
+                                        <th pResizableColumn>Icon</th>
                                         <th pResizableColumn>Name</th>
                                         <th pResizableColumn>Description</th>
-                                        <th class="Operations">Operations</th>
+                                        <th pResizableColumn>Tag</th>
+                                        <th pResizableColumn>Operations</th>
                                     </tr>
                                 </ng-template>
                                 <ng-template pTemplate="emptymessage">
                                     <tr>
-                                        <td colspan="7">
+                                        <td [attr.colspan]="colspan">
                                             No results.
                                         </td>
                                     </tr>
@@ -51,8 +72,10 @@
                                 <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
                                     <tr>
                                         <td class="RowIndex">{{ rowIndex + 1 }}</td>
+                                        <td class="ui-resizable-column">{{rowData.icon}}</td>
                                         <td class="ui-resizable-column">{{rowData.name}}</td>
                                         <td class="ui-resizable-column">{{rowData.description}}</td>
+                                        <td class="ui-resizable-column">{{rowData.tag_name}}</td>
                                         <td>
                                             <button (click)="edit(rowData)" class="btn btn-success btn-sm" pButton>
                                                 <i aria-hidden="true" class="fa fa-pencil"></i>
@@ -63,9 +86,9 @@
                                 </ng-template>
                             </p-table>
                         </div>
-
                     </form>
                 </div>
             </div>
         </div>
     </div>
+</div>

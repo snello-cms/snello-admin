@@ -103,6 +103,8 @@ import {CopyClipboardDirective} from './directives/copy-clipboard.directive';
 import {ChangePasswordComponent} from './components/change-password/change.password.component';
 import {YourselfEditComponent} from './components/user/yourself-edit.component';
 import {ExtensionsViewComponent} from './components/extensions/extensions-view.component';
+import {ExtensionsEditComponent} from "./components/extensions/extensions-edit.component";
+import {ExtensionsListComponent} from "./components/extensions/extensions-list.component";
 
 registerLocaleData(localeIt);
 
@@ -178,7 +180,9 @@ export function loadConfigurations(configService: ConfigurationService) {
         TinymceComponent,
         AceComponent,
         LoginComponent,
-        YourselfEditComponent
+        YourselfEditComponent,
+        ExtensionsListComponent,
+        ExtensionsEditComponent
     ],
     imports: [
         primengEditorModule,
