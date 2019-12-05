@@ -103,6 +103,8 @@ import {ChangePasswordComponent} from './components/change-password/change.passw
 import {YourselfEditComponent} from './components/user/yourself-edit.component';
 import {ExtensionsViewComponent} from './components/extensions/extensions-view.component';
 import {MonacoEditorModule} from 'ngx-monaco-editor';
+import {ExtensionsListComponent} from './components/extensions/extensions-list.component';
+import {ExtensionsEditComponent} from './components/extensions/extensions-edit.component';
 
 registerLocaleData(localeIt);
 
@@ -120,11 +122,14 @@ export function loadConfigurations(configService: ConfigurationService) {
         HomepageTopBar,
         HomepageComponent,
         ExtensionsViewComponent,
+        ExtensionsEditComponent,
+        ExtensionsListComponent,
         TagComponent,
         InputComponent,
         InputViewComponent,
         HtmlViewComponent,
         MultiJoinViewComponent,
+        MonacoComponent,
         JoinViewComponent,
         SelectComponent,
         JoinComponent,
@@ -176,7 +181,7 @@ export function loadConfigurations(configService: ConfigurationService) {
         DroppableListComponent,
         DroppableEditComponent,
         TinymceComponent,
-        AceComponent,
+
         LoginComponent,
         YourselfEditComponent
     ],
@@ -219,7 +224,7 @@ export function loadConfigurations(configService: ConfigurationService) {
         ButtonModule,
         RadioButtonModule,
         SidebarModule,
-        AceEditorModule
+        MonacoEditorModule
     ],
     entryComponents: [
         InputViewComponent,
