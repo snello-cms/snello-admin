@@ -23,11 +23,15 @@ export abstract class AbstractService<T> {
         this.init();
     }
 
-    public getList() {
+    public getList(): Observable<any> {
+        return this.getListSearch(this.search, this._start, this._limit);
+    }
+
+    public getListSearch(search: any, start: number, limit: number): Observable<any> {
         let params = new HttpParams();
-        params = params.set('_start', this.toQueryParam('_start', this._start));
-        params = params.set('_limit', this.toQueryParam('_limit', this._limit));
-        params = this.applyRestrictions(params, this.search);
+        params = params.set('_start', this.toQueryParam('_start', start));
+        params = params.set('_limit', this.toQueryParam('_limit', limit));
+        params = this.applyRestrictions(params, search);
 
         return this.httpClient
             .get<T[]>(this.url, {
@@ -46,6 +50,7 @@ export abstract class AbstractService<T> {
                 catchError(this.handleError.bind(this))
             );
     }
+
 
     public size(): Observable<number> {
         let params = new HttpParams();

@@ -24,7 +24,7 @@ export class HomepageTopBar {
     }
 
     ngOnInit() {
-        this.metadatasService.getList().subscribe(
+        this.metadatasService.getListSearch({}, 0, 100).subscribe(
             model => {
                 this.model = <Metadata[]>model;
             },
