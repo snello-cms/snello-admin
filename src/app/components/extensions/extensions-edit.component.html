@@ -95,14 +95,6 @@
                             </div>
                         </div>
 
-                        <div class="form-group clearfix row">
-                            <label class="label-text col-sm-3">Tag Name</label>
-                            <div class="col-sm-9">
-                                <input [(ngModel)]="element.tag_name" name="tag_name" pInputText placeholder="Tag Name">
-                            </div>
-                        </div>
-
-
 
                         <div class="btn-group btn-actions pull-right">
                             <button (click)="save()" [disabled]="!theform.form.valid" *ngIf="!element.uuid" class="btn btn-success" type="button">Save
