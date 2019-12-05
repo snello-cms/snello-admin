@@ -22,10 +22,10 @@
 
 
             <div class="form-group clearfix row">
-                <label class="label-text col-sm-3">Dcuments</label>
+                <label class="label-text col-sm-3">Documents</label>
                 <div class="col-sm-9">
                     <div class="upload-box">
-                        <p-fileUpload *ngIf="!uploading" #fup name="docs[]" customUpload="false" chooseLabel="Seleziona"
+                        <p-fileUpload *ngIf="!uploading" #fup name="files[]" customUpload="false" chooseLabel="Seleziona"
                                       cancelLabel="" multiple="false" [showCancelButton]="false"
                                       [showUploadButton]="false" (uploadHandler)="uploader($event)"
                                       (onUpload)="onBasicUpload($event)">
@@ -94,14 +94,6 @@
                                 <input [(ngModel)]="element.tag_name" name="tag_name" pInputText placeholder="Tag Name">
                             </div>
                         </div>
-
-                        <div class="form-group clearfix row">
-                            <label class="label-text col-sm-3">Tag Name</label>
-                            <div class="col-sm-9">
-                                <input [(ngModel)]="element.tag_name" name="tag_name" pInputText placeholder="Tag Name">
-                            </div>
-                        </div>
-
 
 
                         <div class="btn-group btn-actions pull-right">

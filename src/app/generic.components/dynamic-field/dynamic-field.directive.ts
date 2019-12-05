@@ -13,7 +13,7 @@ import {TimeComponent} from '../time/time.component';
 import {MultiJoinComponent} from '../multi-join/multi-join.component';
 import {MediaComponent} from '../media/media.component';
 import {TinymceComponent} from '../tinymce/tinymce.component';
-import {AceComponent} from '../ace/ace.component';
+import {MonacoComponent} from '../monaco/monaco.component';
 import {InputViewComponent} from '../input/input-view.component';
 import {HtmlViewComponent} from '../input/html-view.component';
 import { JoinViewComponent } from '../join/join-view.component';
@@ -65,7 +65,7 @@ const componentMapper = {
     checkbox: CheckboxComponent,
     textarea: TextAreaComponent,
     tinymce: TinymceComponent,
-    ace9: AceComponent,
+    monaco: MonacoComponent,
     tags: TagComponent,
     join: JoinComponent,
     multijoin: MultiJoinComponent,
