@@ -81,7 +81,7 @@ export class MetadataListComponent extends AbstractListComponent<Metadata> imple
             return this.truncateTable(metadata);
         }
         this.confirmationService.confirm({
-            message: 'Confermi la truncate table?',
+            message: 'do you really want to truncate this table?',
             accept: () => {
                 return this.truncateTable(metadata);
             }
@@ -94,7 +94,7 @@ export class MetadataListComponent extends AbstractListComponent<Metadata> imple
             return this.createTable(metadata);
         }
         this.confirmationService.confirm({
-            message: 'Confermi la create table?',
+            message: 'do you really want to create this table',
             accept: () => {
                 return this.createTable(metadata);
             }
@@ -107,7 +107,7 @@ export class MetadataListComponent extends AbstractListComponent<Metadata> imple
             return this.deleteTable(metadata);
         }
         this.confirmationService.confirm({
-            message: 'Confermi la delete table?',
+            message: 'do you really want to delete this table',
             accept: () => {
                 return this.deleteTable(metadata);
             }

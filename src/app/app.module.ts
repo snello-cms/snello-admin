@@ -176,7 +176,7 @@ export function loadConfigurations(configService: ConfigurationService) {
         DroppableListComponent,
         DroppableEditComponent,
         TinymceComponent,
-        MonacoComponent,
+        AceComponent,
         LoginComponent,
         YourselfEditComponent
     ],
@@ -219,7 +219,7 @@ export function loadConfigurations(configService: ConfigurationService) {
         ButtonModule,
         RadioButtonModule,
         SidebarModule,
-        MonacoEditorModule.forRoot()
+        AceEditorModule
     ],
     entryComponents: [
         InputViewComponent,

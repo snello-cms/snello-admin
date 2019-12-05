@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ConfirmationService, SelectItem} from 'primeng/api';
+import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
 import {User} from '../../model/user';
 import {UserService} from '../../service/user.service';
 import {RoleService} from '../../service/role.service';
@@ -30,8 +30,9 @@ export class UserEditComponent extends AbstractEditComponent<User> implements On
         public confirmationService: ConfirmationService,
         public roleService: RoleService,
         public userRoleService: UserRoleService,
-        public userService: UserService) {
-        super(router, route, confirmationService, userService, 'user');
+        public userService: UserService,
+        public messageService: MessageService) {
+        super(router, route, confirmationService, userService, messageService, 'user');
         this.utente = new UserInSession();
         this.authenticationService.getUtente().subscribe(
             utente => {

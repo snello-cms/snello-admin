@@ -38,6 +38,8 @@ import {LinksViewComponent} from './components/links/links-view.component';
 import {ChangePasswordComponent} from './components/change-password/change.password.component';
 import {YourselfEditComponent} from './components/user/yourself-edit.component';
 import {ExtensionsViewComponent} from './components/extensions/extensions-view.component';
+import {ExtensionsListComponent} from "./components/extensions/extensions-list.component";
+import {ExtensionsEditComponent} from "./components/extensions/extensions-edit.component";
 
 export const MainRoutes: Routes = [
     {
@@ -55,6 +57,17 @@ export const MainRoutes: Routes = [
         path: 'home',
         component: HomepageComponent,
         canActivate: [SessionGuard]
+    },
+    {
+        path: 'extensions_admin',
+        component: OutletComponent,
+        canActivate: [SessionGuard],
+        children: [
+            {path: '', redirectTo: '/extensions_admin/list', pathMatch: 'full'},
+            {path: 'list', component: ExtensionsListComponent},
+            {path: 'edit/:id', component: ExtensionsEditComponent},
+            {path: 'new', component: ExtensionsEditComponent}
+        ]
     },
     {
         path: 'extensions/:id',

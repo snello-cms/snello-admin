@@ -1,11 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {Metadata} from '../../model/metadata';
-import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
-import {MetadataService} from '../../service/metadata.service';
+import {ActivatedRoute, Router} from '@angular/router';
 import {AbstractViewComponent} from '../../common/abstract-view-component';
 import {FieldDefinitionService} from '../../service/field-definition.service';
-import {FieldDefinition} from '../../model/field-definition';
-import {ConfirmationService} from 'primeng/api';
+import {ConfirmationService, MessageService} from 'primeng/api';
 import {Link} from '../../model/link';
 import {LinksService} from '../../service/links.service';
 
@@ -20,9 +18,10 @@ export class LinksViewComponent extends AbstractViewComponent<Link>
         route: ActivatedRoute,
         public linksService: LinksService,
         public confirmationService: ConfirmationService,
+        protected messageService: MessageService,
         public fieldDefinitionService: FieldDefinitionService
     ) {
-        super(router, route, linksService, 'links');
+        super(router, route, linksService, messageService, 'links');
         this.element = new Link();
     }
 

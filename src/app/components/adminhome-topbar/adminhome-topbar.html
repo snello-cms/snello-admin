@@ -53,4 +53,9 @@
             class="fa fa-shopping-basket"></i>
         <div class="clearfix"></div> <span>Droppables</span>
     </a></li>
+
+    <li *permit="'extensions_edit, extensions_view'" class="list-group-item"><a [routerLink]="'/extensions_admin/list'"><i
+            class="fa fa-plus-circle"></i>
+        <div class="clearfix"></div> <span>Extensions</span>
+    </a></li>
 </ul>

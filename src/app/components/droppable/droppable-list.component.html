@@ -9,7 +9,8 @@
     </h3>
 
     <button pButton class="btn btn-add pull-right btn-block" (click)="new()"><i
-        class="fa fa-plus-circle"></i> Add</button>
+            class="fa fa-plus-circle"></i> Add
+    </button>
 </div>
 
 <div class="main">
@@ -29,7 +30,9 @@
                         </div>
 
                         <div class="table-wrapper clearfix">
-                            <p-table #datatable (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true" [resizableColumns]="true" [responsive]="true" [rows]="10" [totalRecords]="service.listSize" [value]="model">
+                            <p-table #datatable (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true"
+                                     [resizableColumns]="true" [responsive]="true" [rows]="10"
+                                     [totalRecords]="service.listSize" [value]="model">
                                 <ng-template let-columns pTemplate="header">
                                     <tr class="sort-header">
                                         <th pResizableColumn>Index</th>

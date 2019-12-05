@@ -30,7 +30,7 @@ export class DocumentEditComponent extends AbstractEditComponent<Document>
         confirmationService: ConfirmationService,
         private documentService: DocumentService,
         public messageService: MessageService) {
-        super(router, route, confirmationService, documentService, 'document');
+        super(router, route, confirmationService, documentService, messageService, 'document');
     }
 
     createInstance(): Document {

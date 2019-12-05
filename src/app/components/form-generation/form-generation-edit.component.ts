@@ -77,7 +77,7 @@ export class FormGenerationEditComponent implements OnInit {
             return this.delete();
         }
         this.confirmationService.confirm({
-            message: 'Confermi la cancellazione?',
+            message: 'Do you really want to delete this record?',
             accept: () => {
                 this.delete();
             }

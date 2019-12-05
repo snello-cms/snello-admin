@@ -1,6 +1,7 @@
 import {AbstractService} from './abstract-service';
-import {Router, ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {OnInit} from '@angular/core';
+import {MessageService} from "primeng/api";
 
 export abstract class AbstractViewComponent<T> implements OnInit {
 
@@ -12,6 +13,7 @@ export abstract class AbstractViewComponent<T> implements OnInit {
     constructor(protected router: Router,
                 protected route: ActivatedRoute,
                 protected service: AbstractService<T>,
+                protected messageService: MessageService,
                 public path?: string) {
     }
 
@@ -25,11 +27,11 @@ export abstract class AbstractViewComponent<T> implements OnInit {
                     this.postFind();
                 },
                 error => {
-                    this.addError('Errore nel caricamento dei dati.' + (error || ''));
+                    this.addError('Error while loading data' + (error || ''));
                 }
             );
         } else {
-            this.addError('Errore nel caricamento dei dati.');
+            this.addError('Error while loading data');
         }
     }
 
@@ -46,15 +48,23 @@ export abstract class AbstractViewComponent<T> implements OnInit {
     }
 
     public addInfo(message: string) {
-        //    this.msgs.push({severity: 'info', summary: 'Informazioni: ', detail: message});
+        this.messageService.add({
+            severity: 'info',
+            summary: 'Informazioni: ',
+            detail: message
+        });
     }
 
     public addWarn(message: string) {
-        // this.msgs.push({severity: 'warn', summary: 'Attenzione: ', detail: message});
+        this.messageService.add({
+            severity: 'warn',
+            summary: 'Attenzione: ',
+            detail: message
+        });
     }
 
     public addError(message: string) {
-        // this.msgs.push({severity: 'error', summary: 'Errore: ', detail: message});
+        this.messageService.add({severity: 'error', summary: 'Error: ', detail: message});
     }
 
     abstract getId();

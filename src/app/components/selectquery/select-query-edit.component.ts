@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ConfirmationService} from 'primeng/api';
+import {ConfirmationService, MessageService} from 'primeng/api';
 import {SelectQueryService} from "../../service/select-query.service";
 import {SelectQuery} from "../../model/select-query";
 
@@ -16,9 +16,10 @@ export class SelectQueryEditComponent extends AbstractEditComponent<SelectQuery>
     router: Router,
     route: ActivatedRoute,
     confirmationService: ConfirmationService,
-    selectQueryService: SelectQueryService
+    selectQueryService: SelectQueryService,
+    public messageService: MessageService
   ) {
-    super(router, route, confirmationService, selectQueryService, 'selectqueries');
+    super(router, route, confirmationService, selectQueryService, messageService, 'selectqueries');
   }
 
   createInstance(): SelectQuery {

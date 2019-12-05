@@ -5,7 +5,7 @@ import {Condition} from '../../model/condtion';
 import {ConditionService} from '../../service/condition.service';
 import {MetadataService} from '../../service/metadata.service';
 import {Metadata} from '../../model/metadata';
-import {ConfirmationService, SelectItem} from 'primeng/api';
+import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
 
 @Component(
     {
@@ -24,9 +24,10 @@ export class ConditionEditComponent extends AbstractEditComponent<Condition> imp
         public route: ActivatedRoute,
         public confirmationService: ConfirmationService,
         public conditionService: ConditionService,
-        public metadataService: MetadataService
+        public messageService: MessageService,
+        public metadataService: MetadataService,
     ) {
-        super(router, route, confirmationService, conditionService, 'condition');
+        super(router, route, confirmationService, conditionService, messageService, 'condition');
 
     }
 

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ConfirmationService, SelectItem} from 'primeng/api';
+import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
 import {UrlMapRule} from "../../model/url-map-rule";
 import {UrlMapRuleService} from "../../service/url-map-rule.service";
 
@@ -17,8 +17,9 @@ export class UrlmapruleEditComponent extends AbstractEditComponent<UrlMapRule> i
         public router: Router,
         public route: ActivatedRoute,
         public confirmationService: ConfirmationService,
-        public urlMapRuleService: UrlMapRuleService) {
-        super(router, route, confirmationService, urlMapRuleService, 'urlmaprules');
+        public urlMapRuleService: UrlMapRuleService,
+        public messageService: MessageService) {
+        super(router, route, confirmationService, urlMapRuleService, messageService, 'urlmaprules');
 
     }
 

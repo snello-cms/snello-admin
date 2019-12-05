@@ -132,6 +132,14 @@ export const ADMIN_ITEMS: any[] = [
         name: 'Droppables',
         summary: 'Droppables',
         roles: 'droppables_edit, droppables_view'
+    },
+    {
+        id: 'list',
+        icon: 'fa fa-plus-circle',
+        section: 'extensions_admin',
+        name: 'Extensions',
+        summary: 'Extensions',
+        roles: 'extensions_edit, extensions_view'
     }
 ];
 
