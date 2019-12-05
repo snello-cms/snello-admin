@@ -60,6 +60,7 @@
                                         <th pResizableColumn>Description</th>
                                         <th pResizableColumn>Tag</th>
                                         <th pResizableColumn>Operations</th>
+                                        <th pResizableColumn>Download</th>
                                     </tr>
                                 </ng-template>
                                 <ng-template pTemplate="emptymessage">
@@ -82,6 +83,16 @@
                                                 Modify
                                             </button>
                                         </td>
+                                        <td class="ui-resizable-column">
+                                            <button (click)="download(rowData.library_path)" class="btn btn-success btn-sm" pButton>
+                                                <i aria-hidden="true" class="fa fa-download"></i>
+                                            </button>
+                                            <a role="button" [copy-clipboard]="downloadPath(rowData.library_path)"
+                                               (copied)="notify($event)">
+                                                <i class="fa fa-clipboard"></i></a>
+                                        </td>
+
+
                                     </tr>
                                 </ng-template>
                             </p-table>
