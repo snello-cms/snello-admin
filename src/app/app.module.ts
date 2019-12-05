@@ -96,13 +96,13 @@ import {HtmlViewComponent} from './generic.components/input/html-view.component'
 import {LinksViewComponent} from './components/links/links-view.component';
 import {JoinViewComponent} from './generic.components/join/join-view.component';
 import {MultiJoinViewComponent} from './generic.components/multi-join/multi-join-view.component';
-import {AceComponent} from './generic.components/ace/ace.component';
-import {AceEditorModule} from 'ng2-ace-editor';
+import {MonacoComponent} from './generic.components/monaco/monaco.component';
 import {MediaViewComponent} from './generic.components/media/media-view.component';
 import {CopyClipboardDirective} from './directives/copy-clipboard.directive';
 import {ChangePasswordComponent} from './components/change-password/change.password.component';
 import {YourselfEditComponent} from './components/user/yourself-edit.component';
 import {ExtensionsViewComponent} from './components/extensions/extensions-view.component';
+import {MonacoEditorModule} from 'ngx-monaco-editor';
 
 registerLocaleData(localeIt);
 
@@ -176,7 +176,7 @@ export function loadConfigurations(configService: ConfigurationService) {
         DroppableListComponent,
         DroppableEditComponent,
         TinymceComponent,
-        AceComponent,
+        MonacoComponent,
         LoginComponent,
         YourselfEditComponent
     ],
@@ -219,7 +219,7 @@ export function loadConfigurations(configService: ConfigurationService) {
         ButtonModule,
         RadioButtonModule,
         SidebarModule,
-        AceEditorModule
+        MonacoEditorModule.forRoot()
     ],
     entryComponents: [
         InputViewComponent,
@@ -239,7 +239,7 @@ export function loadConfigurations(configService: ConfigurationService) {
         MediaComponent,
         MediaViewComponent,
         TinymceComponent,
-        AceComponent
+        MonacoComponent
     ],
     providers: [
         [MessageService, ConfirmationService,

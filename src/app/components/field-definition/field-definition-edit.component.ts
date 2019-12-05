@@ -56,7 +56,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         time: '',
         boolean: '',
         tinymce: 'containss',
-        ace9: 'containss',
+        monaco: 'containss',
         tags: 'containss',
         join: '',
         multijoin: 'containss',
