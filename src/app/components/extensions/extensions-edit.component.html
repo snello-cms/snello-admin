@@ -25,11 +25,10 @@
                 <label class="label-text col-sm-3">Documents</label>
                 <div class="col-sm-9">
                     <div class="upload-box">
-                        <p-fileUpload *ngIf="!uploading" #fup name="files[]" customUpload="false" chooseLabel="Seleziona"
-                                      cancelLabel="" multiple="false" [showCancelButton]="false"
-                                      [showUploadButton]="false" (uploadHandler)="uploader($event)"
-                                      (onUpload)="onBasicUpload($event)">
+                        <p-fileUpload #fup customUpload="true" (uploadHandler)="uploader($event)"
+                                      [disabled]="uploading" maxFileSize="10000000" auto="true">
                         </p-fileUpload>
+
                     </div>
                 </div>
             </div>
@@ -97,11 +96,16 @@
 
 
                         <div class="btn-group btn-actions pull-right">
-                            <button (click)="save()" [disabled]="!theform.form.valid" *ngIf="!element.uuid" class="btn btn-success" type="button">Save
+                            <button (click)="save()" [disabled]="!theform.form.valid || uploading"
+                                    *ngIf="!element.uuid" class="btn btn-success" type="button">
+                                Save
                             </button>
-                            <button (click)="update()" [disabled]="!theform.form.valid" *ngIf="element.uuid" class="btn btn-success" type="button">Modify
+                            <button (click)="update()" [disabled]="!theform.form.valid || uploading"
+                                    *ngIf="element.uuid" class="btn btn-success" type="button">
+                                Modify
                             </button>
-                            <button (click)="confirmDelete()" *ngIf="element.uuid" class="btn btn-danger" type="button">Delete
+                            <button (click)="confirmDelete()" *ngIf="element.uuid" class="btn btn-danger" type="button">
+                                Delete
                             </button>
                             <button (click)="navigateToList()" class="btn btn-default" type="button">Undo</button>
                         </div>
