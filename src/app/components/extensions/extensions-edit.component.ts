@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
@@ -8,6 +8,7 @@ import {ExtensionService} from '../../service/extension.service';
 import {DocumentService} from '../../service/document.service';
 import {flatMap} from 'rxjs/operators';
 import {from, Observable, of} from 'rxjs';
+import {FileUpload} from "primeng/fileupload";
 
 @Component({
     templateUrl: './extensions-edit.component.html'
@@ -24,6 +25,9 @@ export class ExtensionsEditComponent extends AbstractEditComponent<Extension> im
     ) {
         super(router, route, confirmationService, extensionService, messageService, 'extensions_admin');
     }
+
+    @ViewChild('fup', {static: false})
+    fup: FileUpload;
 
     iconItems: SelectItem[] = FONT_AWESOME_ICONS;
 
@@ -47,7 +51,6 @@ export class ExtensionsEditComponent extends AbstractEditComponent<Extension> im
     }
 
     public uploader(event) {
-        this.uploading = true;
         this.processed = false;
         this.okFileList = [];
         this.errorFileList = [];
@@ -56,9 +59,11 @@ export class ExtensionsEditComponent extends AbstractEditComponent<Extension> im
 
 
     public save() {
+        this.uploading = true;
         this.service.persist(this.element).pipe(
             flatMap(
                 extensionSaved => {
+
                     console.log('extension seaved', extensionSaved);
                     this.element = extensionSaved;
                     return from(this.uploadAFile(this.uploadedFiles[0], extensionSaved.uuid));
@@ -74,8 +79,11 @@ export class ExtensionsEditComponent extends AbstractEditComponent<Extension> im
         ).subscribe(
             extension => {
                 console.log('saved extension ', extension);
+                this.uploading = false;
+                this.navigateAfterSave();
             },
             error => {
+                this.uploading = false;
                 this.addError(error);
             }
         );
@@ -104,7 +112,7 @@ export class ExtensionsEditComponent extends AbstractEditComponent<Extension> im
         ).subscribe(
             extension => {
                 console.log('saved extension ', extension);
-                this.router.navigate(['/' + this.path + '/list']);
+                this.navigateAfterUpdate();
             },
             error => {
                 this.addError(error);
