@@ -8,5 +8,15 @@
     "target": "https://api.snello.io",
     "secure": false,
     "changeOrigin": true
+  },
+  "/password/change": {
+    "target": "https://api.snello.io",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/password/reset": {
+    "target": "https://api.snello.io",
+    "secure": false,
+    "changeOrigin": true
   }
 }

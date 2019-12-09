@@ -17,6 +17,7 @@ export const URL_MAP_RULES_API_PATH = 'url_map_rules_api_path';
 export const API_SERVICE_PATH = 'api_service_path';
 export const LOGIN_API_PATH = 'login_api_path';
 export const CHANGEPASSWORD_API_PATH = 'changepassword_api_path';
+export const RESETPASSWORD_API_PATH = 'resetpassword_api_path';
 export const APP_VERSION = '1.0.RC4';
 
 export const CONFIG_PATH = '/assets/config.json';
