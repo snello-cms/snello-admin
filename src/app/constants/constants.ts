@@ -43,7 +43,7 @@ export const ADMIN_ITEMS: any[] = [
         icon: 'fa fa-book',
         section: 'metadata',
         name: 'Metadati',
-        summary: 'Gestione dei metadati sulle tabelle',
+        summary: 'Metadata management on tables',
         roles: 'metadatas_edit, metadatas_view'
     },
     {
@@ -51,7 +51,7 @@ export const ADMIN_ITEMS: any[] = [
         icon: 'fa fa-cogs',
         section: 'fielddefinition',
         name: 'Field Definitions',
-        summary: 'Gestione definizione dei campi per popolare le form',
+        summary: 'Field definition management to populate forms',
         roles: 'fielddefinitions_edit, fielddefinitions_view'
     },
     {
@@ -59,7 +59,7 @@ export const ADMIN_ITEMS: any[] = [
         icon: 'fa fa-hand-spock-o',
         section: 'condition',
         name: 'Condition',
-        summary: 'Gestione delle condizioni di filtro delle tabelle',
+        summary: 'Management of table filter conditions',
         roles: 'conditions_edit, conditions_view'
     },
     {
@@ -67,14 +67,14 @@ export const ADMIN_ITEMS: any[] = [
         icon: 'fa fa-files-o',
         section: 'document',
         name: 'Document',
-        summary: 'Gestione dei documenti',
+        summary: 'Documents management',
         roles: 'documents_edit, documents_view'
     },
     {
         id: 'edit',
         icon: 'fa fa-globe',
         section: 'publicdata',
-        name: 'Public Data',
+        name: 'Public Data Management',
         summary: 'Upload di dati',
         roles: 'publicdata_edit'
     },
@@ -83,7 +83,7 @@ export const ADMIN_ITEMS: any[] = [
         icon: 'fa fa-list',
         section: 'selectqueries',
         name: 'SelectQuery',
-        summary: 'Query di selezione',
+        summary: 'Select Queries Management',
         roles: 'selectqueries_edit, selectqueries_view'
     },
     {
@@ -91,7 +91,7 @@ export const ADMIN_ITEMS: any[] = [
         icon: 'fa fa-user-circle-o',
         section: 'user',
         name: 'User',
-        summary: 'Users',
+        summary: 'Users Management',
         roles: 'users_edit, users_view'
     },
     {
@@ -99,7 +99,7 @@ export const ADMIN_ITEMS: any[] = [
         icon: 'fa fa-address-card-o',
         section: 'role',
         name: 'Role',
-        summary: 'Roles',
+        summary: 'Roles Management',
         roles: 'roles_edit,roles_view'
     },
     {
@@ -115,7 +115,7 @@ export const ADMIN_ITEMS: any[] = [
         icon: 'fa fa-link',
         section: 'links',
         name: 'Links',
-        summary: 'Links',
+        summary: 'Links Management',
         roles: 'links_edit, links_view'
     },
     {
@@ -123,7 +123,7 @@ export const ADMIN_ITEMS: any[] = [
         icon: 'fa fa-puzzle-piece',
         section: 'draggables',
         name: 'Draggables',
-        summary: 'Draggables',
+        summary: 'Draggables Management',
         roles: 'draggables_edit, draggables_view'
     },
     {
@@ -131,7 +131,7 @@ export const ADMIN_ITEMS: any[] = [
         icon: 'fa fa-shopping-basket',
         section: 'droppables',
         name: 'Droppables',
-        summary: 'Droppables',
+        summary: 'Droppables Management',
         roles: 'droppables_edit, droppables_view'
     },
     {
@@ -139,7 +139,7 @@ export const ADMIN_ITEMS: any[] = [
         icon: 'fa fa-plus-circle',
         section: 'extensions_admin',
         name: 'Extensions',
-        summary: 'Extensions',
+        summary: 'Extensions Management',
         roles: 'extensions_edit, extensions_view'
     }
 ];
