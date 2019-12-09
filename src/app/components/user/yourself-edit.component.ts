@@ -3,7 +3,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {User} from '../../model/user';
 import {UserService} from '../../service/user.service';
-import {UserInSession} from '../../model/user-in-session';
 import {AuthenticationService} from '../../service/authentication.service';
 
 @Component(
