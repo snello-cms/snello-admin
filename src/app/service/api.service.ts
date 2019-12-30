@@ -60,10 +60,15 @@ export class ApiService implements OnInit {
             .pipe(catchError(this.handleError));
     }
 
-    public fetchObject(tableName: string, table_key: string): Observable<any> {
+    public fetchObject(tableName: string, table_key: string,  select_fields?: string): Observable<any> {
+        let params = new HttpParams();
+        if(select_fields && select_fields.length > 0) {
+            params = params.set('select_fields', select_fields);
+        }
         const url = this.url + '/' + tableName + '/' + table_key;
         return this.http.get(url, {
             observe: 'response',
+            params: params,
         }).pipe(
             map(res => {
                 const t: any = <any>res.body; // json();
@@ -73,10 +78,16 @@ export class ApiService implements OnInit {
         );
     }
 
-    public fetchJoinList(metadata_from_name: string, metadata_uuid: string, metadata_to_name: string): Observable<any[]> {
+    public fetchJoinList(metadata_from_name: string, metadata_uuid: string, metadata_to_name: string, select_fields?: string): Observable<any[]> {
+        let params = new HttpParams();
+        // per ora senza ricerca e non paginate, in futuro chissà..
+        if(select_fields && select_fields.length > 0) {
+            params = params.set('select_fields', select_fields);
+        }
         const url = this.url + '/' + metadata_from_name + '/' + metadata_uuid + '/' + metadata_to_name;
         return this.http.get(url, {
             observe: 'response',
+            params: params,
         }).pipe(
             map(res => {
                 const t: any = <any>res.body; // json();

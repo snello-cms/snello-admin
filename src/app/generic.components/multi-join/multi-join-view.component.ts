@@ -56,7 +56,7 @@ export class MultiJoinViewComponent implements OnInit {
 
     const observables = [];
       this.joinList$ =
-          this.apiService.fetchJoinList(this.name, this.uuid, this.field.join_table_name)
+          this.apiService.fetchJoinList(this.name, this.uuid, this.field.join_table_name, this.field.join_table_select_fields)
           .pipe(
               tap(join => this.group.get(this.field.name).setValue(join)),
           );

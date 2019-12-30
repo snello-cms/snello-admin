@@ -3,7 +3,7 @@ import {FormGroup} from '@angular/forms';
 import {FieldDefinition} from '../../model/field-definition';
 import {SelectItem} from 'primeng/api';
 import {ApiService} from '../../service/api.service';
-import {of, forkJoin, Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {tap} from 'rxjs/operators';
 import {FieldDefinitionService} from "../../service/field-definition.service";
@@ -69,7 +69,7 @@ export class MultiJoinComponent implements OnInit {
 
         if (this.uuid) {
             this.joinList$ =
-                this.apiService.fetchJoinList(this.name, this.uuid, this.field.join_table_name)
+                this.apiService.fetchJoinList(this.name, this.uuid, this.field.join_table_name, this.field.join_table_select_fields)
                     .pipe(
                         tap(join => this.group.get(this.field.name).setValue(join)),
                     );

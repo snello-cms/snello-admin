@@ -6,7 +6,7 @@ import {DataListService} from '../../service/data-list.service';
 import {MetadataService} from '../../service/metadata.service';
 import {Metadata} from '../../model/metadata';
 import {DynamicSearchFormComponent} from '../../generic.components/dynamic-form/dynamic-search-form.component';
-import {map, tap} from "rxjs/operators";
+import {map} from "rxjs/operators";
 import {Observable, of} from "rxjs";
 import {FieldDefinitionService} from "../../service/field-definition.service";
 
@@ -44,17 +44,14 @@ export class FormGenerationListComponent implements OnInit {
         }
 
         if (fieldDefinition.type === 'join') {
-            return this.apiService.fetchObject(this.metadataName, fieldDefinition.value)
+            return this.apiService.fetchObject(this.metadataName, fieldDefinition.value, fieldDefinition.join_table_select_fields)
                 .pipe(
                     map(join => join[this.fieldDefintionService.fetchFirstLabel(fieldDefinition)])
                 );
         }
         if (fieldDefinition.type === 'multijoin') {
-            return this.apiService.fetchJoinList(this.metadataName, this.getTableKey(rowData), fieldDefinition.join_table_name)
-                .pipe(
-                    map(join => join[this.fieldDefintionService.fetchFirstLabel(fieldDefinition)])
-                );
-
+            return this.apiService.fetchJoinList(this.metadataName, this.getTableKey(rowData), fieldDefinition.join_table_name, fieldDefinition.join_table_select_fields)
+                .pipe(map(join => join[this.fieldDefintionService.fetchFirstLabel(fieldDefinition)]));
         }
         return of(fullValue);
     }

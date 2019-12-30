@@ -33,12 +33,13 @@
                         <div class="col-sm-4">
                             <div class="btn-group pull-right">
 
-                                <button type="button" class="btn btn-search" (click)="reload(table)" icon="ui-icon-search">
-                                                Search
-                                            </button>
+                                <button type="button" class="btn btn-search" (click)="reload(table)"
+                                        icon="ui-icon-search">
+                                    Search
+                                </button>
                                 <button type="button" class="btn btn-reset" (click)="reset(table)" icon="ui-icon-undo">
-                                                Undo
-                                            </button>
+                                    Undo
+                                </button>
                             </div>
                         </div>
 
@@ -58,11 +59,11 @@
                     <div class="clearfix"></div>
 
 
-
-
                     <div class="table-wrapper clearfix">
 
-                        <p-table #table [paginator]="true" [resizableColumns]="true" lazy="true" (onLazyLoad)="lazyLoad($event)" [responsive]="true" [rows]="10" [totalRecords]="apiService.listSize" [value]="model">
+                        <p-table #table [paginator]="true" [resizableColumns]="true" lazy="true"
+                                 (onLazyLoad)="lazyLoad($event)" [responsive]="true" [rows]="10"
+                                 [totalRecords]="apiService.listSize" [value]="model">
 
                             <ng-template let-columns pTemplate="header">
                                 <tr class="sort-header">
@@ -89,11 +90,11 @@
                                     </ng-container>
                                     <td>
                                         <button (click)="edit(rowData)" class="btn btn-success" pbutton>
-                                                Modify
-                                            </button>
+                                            Modify
+                                        </button>
                                         <button (click)="view(rowData)" class="btn btn-success" pbutton>
-                                                View
-                                            </button>
+                                            View
+                                        </button>
 
                                     </td>
 
