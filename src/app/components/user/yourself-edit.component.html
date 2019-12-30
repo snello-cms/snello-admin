@@ -30,7 +30,7 @@
                                     <label class="label-text col-sm-3">Username</label>
                                     <div class="col-sm-9">
                                         <input [(ngModel)]="element.username" label="Username" name="username" pInputText
-                                                placeholder="Username">
+                                                placeholder="Username" readonly="true">
                                     </div>
                                 </div>
 
@@ -79,11 +79,10 @@
 
                                 <div class="btn-group btn-actions pull-right">
 
-                                    <button type="button" *ngIf="element.uuid_username" [disabled]="!theform.form.valid"
+                                    <button type="button" [disabled]="!theform.form.valid"
                                             class="btn btn-success" (click)="update()">
                                         Modify
                                     </button>
-
 
                                     <button type="button" (click)="undo()" class="btn btn-danger">Undo</button>
                                 </div>

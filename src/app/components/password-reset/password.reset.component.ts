@@ -7,9 +7,9 @@ import {AuthenticationService} from '../../service/authentication.service';
 import {ConfigurationService} from '../../service/configuration.service';
 
 @Component({
-    templateUrl: './change.password.component.html'
+    templateUrl: './password.reset.component.html'
 })
-export class ChangePasswordComponent implements OnInit {
+export class PasswordResetComponent implements OnInit {
 
     public mainForm: FormGroup;
     public logging = false;
@@ -26,14 +26,15 @@ export class ChangePasswordComponent implements OnInit {
         );
     }
 
-    public changepassword(username: string) {
-        this.authenticationService.changepassword(username)
+    public resetpassword(username: string) {
+        this.authenticationService.resetpassword(username)
             .subscribe(() => {
                 this.sent = true;
                 this.messageService.add({
                     severity: 'info',
                     summary: 'reset password executed successfully',
                 });
+                this.router.navigate(['/password-change', username]);
             }, error => {
                 this.messageService.add({
                     severity: 'error',
@@ -44,7 +45,7 @@ export class ChangePasswordComponent implements OnInit {
     }
 
     public onSubmit() {
-        this.changepassword(this.mainForm.get('username').value);
+        this.resetpassword(this.mainForm.get('username').value);
     }
 
     public oneMoreTime() {

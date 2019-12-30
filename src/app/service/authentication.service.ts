@@ -1,10 +1,18 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {Observable, of, throwError} from 'rxjs';
-import {CHANGEPASSWORD_API_PATH, LOGIN_API_PATH, REFRESH_TOKEN_ITEM, TOKEN_ITEM, USER_ITEM} from '../constants/constants';
+import {
+    CHANGEPASSWORD_API_PATH,
+    LOGIN_API_PATH,
+    REFRESH_TOKEN_ITEM,
+    RESETPASSWORD_API_PATH,
+    TOKEN_ITEM,
+    USER_ITEM
+} from '../constants/constants';
 import {catchError, map, switchMap} from 'rxjs/operators';
 import {UserInSession} from '../model/user-in-session';
 import {ConfigurationService} from './configuration.service';
+import {ChangePassword} from '../model/change-password';
 
 @Injectable({
     providedIn: 'root'
@@ -15,6 +23,7 @@ export class AuthenticationService {
     private access_token: any;
     private refresh_token: any;
     private logi_api_path: string;
+    private resetpassword_api_path: string;
     private changepassword_api_path: string;
 
     constructor(private http: HttpClient, configurationService: ConfigurationService) {
@@ -22,7 +31,10 @@ export class AuthenticationService {
             path => this.logi_api_path = path
         );
         configurationService.getValue(CHANGEPASSWORD_API_PATH).subscribe(
-            reset_path => this.changepassword_api_path = reset_path
+            change_path => this.changepassword_api_path = change_path
+        );
+        configurationService.getValue(RESETPASSWORD_API_PATH).subscribe(
+            reset_path => this.resetpassword_api_path = reset_path
         );
     }
 
@@ -66,10 +78,17 @@ export class AuthenticationService {
             );
     }
 
-    changepassword(username: string): Observable<any> {
+    resetpassword(username: string): Observable<any> {
         const body: HttpParams = new HttpParams();
-        return this.http.post(this.changepassword_api_path, body);
+        return this.http.post(this.resetpassword_api_path + '/' + username, body)
+            .pipe(catchError(this.handleError.bind(this)));
     }
+
+    changepassword(username: string, changePassword: ChangePassword): Observable<any> {
+        return this.http.post(this.changepassword_api_path + '/' + username, changePassword)
+            .pipe(catchError(this.handleError.bind(this)));
+    }
+
 
     public checkToken(): Observable<boolean> {
         const token: string = sessionStorage.getItem(TOKEN_ITEM);

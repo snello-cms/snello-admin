@@ -99,12 +99,13 @@ import {MultiJoinViewComponent} from './generic.components/multi-join/multi-join
 import {MonacoComponent} from './generic.components/monaco/monaco.component';
 import {MediaViewComponent} from './generic.components/media/media-view.component';
 import {CopyClipboardDirective} from './directives/copy-clipboard.directive';
-import {ChangePasswordComponent} from './components/change-password/change.password.component';
 import {YourselfEditComponent} from './components/user/yourself-edit.component';
 import {ExtensionsViewComponent} from './components/extensions/extensions-view.component';
 import {MonacoEditorModule} from 'ngx-monaco-editor';
 import {ExtensionsListComponent} from './components/extensions/extensions-list.component';
 import {ExtensionsEditComponent} from './components/extensions/extensions-edit.component';
+import {PasswordResetComponent} from './components/password-reset/password.reset.component';
+import {PasswordChangeComponent} from './components/password-change/password.change.component';
 
 registerLocaleData(localeIt);
 
@@ -141,7 +142,8 @@ export function loadConfigurations(configService: ConfigurationService) {
         MediaComponent,
         MediaViewComponent,
         TextAreaComponent,
-        ChangePasswordComponent,
+        PasswordChangeComponent,
+        PasswordResetComponent,
         CheckboxComponent,
         CopyClipboardDirective,
         DynamicFieldDirective,

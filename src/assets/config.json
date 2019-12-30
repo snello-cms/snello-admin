@@ -1,7 +1,8 @@
 {
   "asset_path": "",
   "login_api_path": "http://localhost:4200/login",
-  "changepassword_api_path": "http://localhost:4200/changepassword",
+  "changepassword_api_path": "http://localhost:4200/password/change",
+  "resetpassword_api_path": "http://localhost:4200/password/reset",
   "condition_api_path": "http://localhost:4200/api/conditions",
   "document_api_path": "http://localhost:4200/api/documents",
   "extension_api_path": "http://localhost:4200/api/extensions",

@@ -35,11 +35,12 @@ import {SessionGuard} from './routes-guard/session.guard';
 import {FormGenerationViewComponent} from './components/form-generation/form-generation-view.component';
 import {LoginComponent} from './components/login/login.component';
 import {LinksViewComponent} from './components/links/links-view.component';
-import {ChangePasswordComponent} from './components/change-password/change.password.component';
 import {YourselfEditComponent} from './components/user/yourself-edit.component';
 import {ExtensionsViewComponent} from './components/extensions/extensions-view.component';
-import {ExtensionsListComponent} from "./components/extensions/extensions-list.component";
-import {ExtensionsEditComponent} from "./components/extensions/extensions-edit.component";
+import {ExtensionsListComponent} from './components/extensions/extensions-list.component';
+import {ExtensionsEditComponent} from './components/extensions/extensions-edit.component';
+import {PasswordChangeComponent} from './components/password-change/password.change.component';
+import {PasswordResetComponent} from './components/password-reset/password.reset.component';
 
 export const MainRoutes: Routes = [
     {
@@ -51,7 +52,10 @@ export const MainRoutes: Routes = [
         path: 'login', component: LoginComponent,
     },
     {
-        path: 'change-password', component: ChangePasswordComponent,
+        path: 'password-change/:id', component: PasswordChangeComponent,
+    },
+    {
+        path: 'password-reset', component: PasswordResetComponent,
     },
     {
         path: 'home',

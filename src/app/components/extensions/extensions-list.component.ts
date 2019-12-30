@@ -33,10 +33,6 @@ export class ExtensionsListComponent extends AbstractListComponent<Extension> im
         this.router.navigate(['/' + this.path + '/new']);
     }
 
-    downloadPath(uuid: string) {
-        return this.documentService.downloadPath(uuid);
-    }
-
     download(uuid: string): void {
         this.documentService.simplDownload(uuid).subscribe(response => {
 

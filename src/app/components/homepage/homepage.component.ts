@@ -41,6 +41,7 @@ export class HomepageComponent implements OnInit {
             },
             error => (this.errorMessage = <any>error)
         );
+        this.extensionService.search._sort = 'name asc';
         this.extensionService.getAllList().subscribe(
             list => this.extensions = list
         );
