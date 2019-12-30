@@ -14,7 +14,7 @@
             <div class="col-md-12 col-sm-12">
                 <div class="content list">
                     <div *ngFor="let component of model">
-                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" *ngIf="component.created || component.already_exist">
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
                             <div class="card-home-user">
                                 <a [routerLink]="'/datalist/new/' + component.table_name" class="btn btn-add pull-right">
                                     Add

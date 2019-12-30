@@ -32,7 +32,12 @@ export class HomepageComponent implements OnInit {
         this.metadatasService.buildSearch();
         this.metadatasService.getList().subscribe(
             model => {
-                this.model = <Metadata[]>model;
+                this.model = [];
+                for(let element of model) {
+                    if(element.created || element.already_exist) {
+                        this.model.push(element);
+                    }
+                }
             },
             error => (this.errorMessage = <any>error)
         );
