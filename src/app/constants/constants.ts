@@ -1,4 +1,5 @@
 import {SelectItem} from 'primeng/api';
+import {environment} from '../../environments/environment';
 
 export const ASSET_PATH = 'asset_path';
 export const CONDITION_API_PATH = 'condition_api_path';
@@ -18,9 +19,9 @@ export const API_SERVICE_PATH = 'api_service_path';
 export const LOGIN_API_PATH = 'login_api_path';
 export const CHANGEPASSWORD_API_PATH = 'changepassword_api_path';
 export const RESETPASSWORD_API_PATH = 'resetpassword_api_path';
-export const APP_VERSION = '1.0.RC4';
+export const APP_VERSION = '1.0.RC5';
 
-export const CONFIG_PATH = '/assets/config.json';
+export const CONFIG_PATH = environment.imgPath + '/assets/config.json';
 
 export const DROPPABLE_API_PATH = 'droppable_api_path';
 export const DRAGGABLE_API_PATH = 'draggable_api_path';

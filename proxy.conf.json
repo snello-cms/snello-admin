@@ -18,5 +18,10 @@
     "target": "https://api.snello.io",
     "secure": false,
     "changeOrigin": true
+  },
+  "/files": {
+    "target": "https://api.snello.io",
+    "secure": false,
+    "changeOrigin": true
   }
 }
