@@ -45,7 +45,7 @@ export class FormGenerationListComponent implements OnInit {
 
         if (fieldDefinition.type === 'join') {
             const labelField = this.fieldDefintionService.fetchFirstLabel(fieldDefinition);
-            return this.apiService.fetchObject(this.metadataName, fullValue, fieldDefinition.join_table_select_fields)
+            return this.apiService.fetchObject(fieldDefinition.join_table_name, fullValue, fieldDefinition.join_table_select_fields)
                 .pipe(
                     map(join => join[labelField])
                 );
