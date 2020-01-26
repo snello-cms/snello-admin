@@ -33,8 +33,8 @@ export class HomepageComponent implements OnInit {
         this.metadatasService.getList().subscribe(
             model => {
                 this.model = [];
-                for(let element of model) {
-                    if(element.created || element.already_exist) {
+                for (const element of model) {
+                    if (element.created || element.already_exist) {
                         this.model.push(element);
                     }
                 }
