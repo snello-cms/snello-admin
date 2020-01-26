@@ -78,7 +78,8 @@ export class ApiService implements OnInit {
         );
     }
 
-    public fetchJoinList(metadata_from_name: string, metadata_uuid: string, metadata_to_name: string, select_fields?: string): Observable<any[]> {
+    public fetchJoinList(metadata_from_name: string, metadata_uuid: string, metadata_to_name: string,
+                         select_fields?: string): Observable<any[]> {
         let params = new HttpParams();
         // per ora senza ricerca e non paginate, in futuro chissà..
         if (select_fields && select_fields.length > 0) {
