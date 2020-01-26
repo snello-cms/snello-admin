@@ -35,6 +35,6 @@ export class FieldDefinitionService extends AbstractService<FieldDefinition> {
         if (labelField === fieldDefinition.join_table_key && splittedFields.length > 1) {
             labelField = splittedFields[1];
         }
-        return labelField
+        return labelField;
     }
 }
