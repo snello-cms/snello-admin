@@ -62,7 +62,7 @@ export class JoinComponent implements OnInit {
                     );
 
         } else {
-            return of({});
+            this.join$ = of({});
         }
 
     }
