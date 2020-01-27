@@ -69,7 +69,9 @@
                                 <tr class="sort-header">
                                     <th class="Operations">Index</th>
                                     <ng-container *ngFor="let def of regConfigList">
-                                        <th *ngIf="def.show_in_list">{{def.label}}</th>
+                                        <ng-container *ngIf="def.show_in_list">
+                                            <th>{{def.label}}</th>
+                                        </ng-container>
                                     </ng-container>
 
                                     <th class="Operations">Operations</th>
@@ -86,9 +88,11 @@
                                 <tr>
                                     <td class="RowIndex">{{ rowIndex + 1 }}</td>
                                     <ng-container *ngFor="let def of regConfigList">
-                                        <td *ngIf="dato$(rowData, def) | async as variabile">
-                                        {{variabile}}
-                                        </td>
+                                        <ng-container *ngIf="def.show_in_list">
+                                            <td *ngIf="dato$(rowData, def) | async as variabile">
+                                                {{variabile}}
+                                            </td>
+                                        </ng-container>
                                     </ng-container>
                                     <td>
                                         <button (click)="edit(rowData)" class="btn btn-success" pbutton>
