@@ -16,7 +16,7 @@
 
     <div class="container-fluid">
 
-        <div *ngIf="regConfigSearch && regConfigSearch.length > 0">
+        <div *ngIf="fieldDefinitionsSearch && fieldDefinitionsSearch.length > 0">
             <div class="row">
                 <div class="clearfix"></div>
                 <div class="col-sm-12">
@@ -24,7 +24,7 @@
                     <div class="filter-wrapper clearfix">
                         <div class="col-sm-4">
                             <div class="clearfix"></div>
-                            <dynamic-search-form [fields]="regConfigSearch">
+                            <dynamic-search-form [fields]="fieldDefinitionsSearch">
                             </dynamic-search-form>
                         </div>
                         <div class="col-sm-4">
@@ -68,7 +68,7 @@
                             <ng-template let-columns pTemplate="header">
                                 <tr class="sort-header">
                                     <th class="Operations">Index</th>
-                                    <ng-container *ngFor="let def of regConfigList">
+                                    <ng-container *ngFor="let def of fieldDefinitionsList">
                                         <ng-container *ngIf="def.show_in_list">
                                             <th>{{def.label}}</th>
                                         </ng-container>
@@ -87,11 +87,11 @@
                             <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
                                 <tr>
                                     <td class="RowIndex">{{ rowIndex + 1 }}</td>
-                                    <ng-container *ngFor="let def of regConfigList">
+                                    <ng-container *ngFor="let def of fieldDefinitionsList">
                                         <td *ngIf="def.show_in_list">
-                                            <ng-container *ngIf="dato$(rowData, def) | async as variabile">
+                                            <div *ngIf="dato$(rowData, def) | async as variabile">
                                                 {{variabile}}
-                                            </ng-container>
+                                            </div>
                                         </td>
                                     </ng-container>
                                     <td>

@@ -17,8 +17,8 @@ import {FieldDefinitionService} from '../../service/field-definition.service';
     }
 )
 export class FormGenerationListComponent implements OnInit {
-    regConfigList: FieldDefinition[] = [];
-    regConfigSearch: FieldDefinition[] = [];
+    fieldDefinitionsList: FieldDefinition[] = [];
+    fieldDefinitionsSearch: FieldDefinition[] = [];
 
     metadataName: string;
     model: any[] = [];
@@ -47,16 +47,20 @@ export class FormGenerationListComponent implements OnInit {
             const labelField = this.fieldDefintionService.fetchFirstLabel(fieldDefinition);
             return this.apiService.fetchObject(fieldDefinition.join_table_name, fullValue, fieldDefinition.join_table_select_fields)
                 .pipe(
-                    map(join => join[labelField])
+                    map(join => {
+                        console.log(join);
+                        return join[labelField];
+                    })
                 );
-        }
-        if (fieldDefinition.type === 'multijoin') {
+        } else if (fieldDefinition.type === 'multijoin') {
             return this.apiService.fetchJoinList(this.metadataName, this.getTableKey(rowData),
                 fieldDefinition.join_table_name,
                 fieldDefinition.join_table_select_fields)
                 .pipe(map(join => join[this.fieldDefintionService.fetchFirstLabel(fieldDefinition)]));
+        } else {
+            return of(fullValue);
         }
-        return of(fullValue);
+
     }
 
     ngOnInit() {
@@ -70,16 +74,15 @@ export class FormGenerationListComponent implements OnInit {
                 }
             }
         );
-        this.apiService._start = 0;
-        this.apiService._limit = 10;
+
 
         this.route.data
             .subscribe(
                 (data: { fieldDefinitionValorized: FieldDefinition[] }) => {
-                    this.regConfigList = data.fieldDefinitionValorized;
-                    for (const field of this.regConfigList) {
+                    this.fieldDefinitionsList = data.fieldDefinitionValorized;
+                    for (const field of this.fieldDefinitionsList) {
                         if (field.searchable) {
-                            this.regConfigSearch.push(field);
+                            this.fieldDefinitionsSearch.push(field);
                         }
                     }
                 }
@@ -87,7 +90,7 @@ export class FormGenerationListComponent implements OnInit {
     }
 
     public newForm() {
-        if (this.regConfigList) {
+        if (this.fieldDefinitionsList) {
             this.router.navigate(['datalist/new', this.metadataName]);
         }
 
@@ -105,20 +108,23 @@ export class FormGenerationListComponent implements OnInit {
         this.firstReload = firstReload;
         this.preLoaddata();
 
-        if (this.searchForm && this.searchForm.value) {
-            const objToSearch = JSON.parse(JSON.stringify(this.searchForm.value));
-            for (const k in objToSearch) {
-                if (objToSearch.hasOwnProperty(k)) {
-                    for (const field of this.regConfigSearch) {
-                        if (field.name === k) {
-                            field.value = objToSearch[field.name];
-                        }
-                    }
-                }
-            }
-        }
+        // if (this.searchForm && this.searchForm.value) {
+        //     const objToSearch = JSON.parse(JSON.stringify(this.searchForm.value));
+        //     for (const k in objToSearch) {
+        //         if (objToSearch.hasOwnProperty(k)) {
+        //             for (const field of this.fieldDefinitionsSearch) {
+        //                 if (field.name === k) {
+        //                     field.value = objToSearch[field.name];
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        // valorizza valiri di ricerca con le fileddefinitions
         this.preSearch();
-        this.apiService.getList(this.metadataName, this.regConfigSearch).subscribe(
+        this.apiService._start = 0;
+        this.apiService._limit = 10;
+        this.apiService.getList(this.metadataName, this.fieldDefinitionsSearch).subscribe(
             model => {
                 console.log(model);
                 this.model = model;
@@ -175,14 +181,15 @@ export class FormGenerationListComponent implements OnInit {
         // this.msgs = [];
     }
 
+    // ribalta le proprieta dal form di ricerca in alto, sulla fieldDefinitionsSearch
     private preSearch() {
         if (this.searchForm && this.searchForm.value) {
-            const objToSave = JSON.parse(JSON.stringify(this.searchForm.value));
-            for (const k in objToSave) {
-                if (objToSave.hasOwnProperty(k)) {
-                    for (const field of this.regConfigSearch) {
+            const objToSearch = JSON.parse(JSON.stringify(this.searchForm.value));
+            for (const k in objToSearch) {
+                if (objToSearch.hasOwnProperty(k)) {
+                    for (const field of this.fieldDefinitionsSearch) {
                         if (field.name === k) {
-                            field.value = objToSave[field.name];
+                            field.value = objToSearch[field.name];
                         }
                     }
                 }
