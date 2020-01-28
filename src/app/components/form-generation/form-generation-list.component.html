@@ -89,9 +89,7 @@
                                     <td class="RowIndex">{{ rowIndex + 1 }}</td>
                                     <ng-container *ngFor="let def of fieldDefinitionsList">
                                         <td *ngIf="def.show_in_list">
-                                            <div *ngIf="dato$(rowData, def) | async as variabile">
-                                                {{variabile}}
-                                            </div>
+                                                {{rowData[def.name] | async  }}
                                         </td>
                                     </ng-container>
                                     <td>

@@ -37,7 +37,7 @@ export class FormGenerationListComponent implements OnInit {
     }
 
 
-    dato$(rowData: any, fieldDefinition: FieldDefinition): Observable<any> {
+    private datoAsObservableOfValue(rowData: any, fieldDefinition: FieldDefinition): Observable<any> {
         const fullValue = rowData[fieldDefinition.name];
         if (!fullValue) {
             return of('');
@@ -126,6 +126,18 @@ export class FormGenerationListComponent implements OnInit {
         this.apiService._limit = 10;
         this.apiService.getList(this.metadataName, this.fieldDefinitionsSearch).subscribe(
             model => {
+                for(let element of model) {
+                    if (element != null) {
+                        for (const definition_1 of this.fieldDefinitionsList) {
+                            definition_1.is_edit = true;
+                            //cerco la field defintion
+                            if (element.hasOwnProperty(definition_1.name) || element.hasOwnProperty(definition_1.name.toLowerCase())) {
+                                // Se è la mia devo scrivere il dato come observable
+                                element[definition_1.name] = this.datoAsObservableOfValue(element, definition_1);
+                            }
+                        }
+                    }
+                }
                 console.log(model);
                 this.model = model;
             }
