@@ -19,7 +19,7 @@ export const API_SERVICE_PATH = 'api_service_path';
 export const LOGIN_API_PATH = 'login_api_path';
 export const CHANGEPASSWORD_API_PATH = 'changepassword_api_path';
 export const RESETPASSWORD_API_PATH = 'resetpassword_api_path';
-export const APP_VERSION = '1.0.RC5';
+export const APP_VERSION = '1.0.0.RC6';
 
 export const CONFIG_PATH = environment.imgPath + '/assets/config.json';
 

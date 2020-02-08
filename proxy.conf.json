@@ -1,26 +1,26 @@
 {
   "/api": {
-    "target": "https://battuti.si-portal.it/snello-api",
+    "target": "https://api.snello.io",
     "secure": false,
     "changeOrigin": true
   },
   "/login": {
-    "target": "https://battuti.si-portal.it/snello-api",
+    "target": "https://api.snello.io",
     "secure": false,
     "changeOrigin": true
   },
   "/password/change": {
-    "target": "https://battuti.si-portal.it/snello-api",
+    "target": "https://api.snello.io",
     "secure": false,
     "changeOrigin": true
   },
   "/password/reset": {
-    "target": "https://battuti.si-portal.it/snello-api",
+    "target": "https://api.snello.io",
     "secure": false,
     "changeOrigin": true
   },
   "/files": {
-    "target": "https://battuti.si-portal.it/snello-api",
+    "target": "https://api.snello.io",
     "secure": false,
     "changeOrigin": true
   }
