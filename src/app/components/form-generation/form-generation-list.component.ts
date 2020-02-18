@@ -122,7 +122,7 @@ export class FormGenerationListComponent implements OnInit {
         // }
         // valorizza valiri di ricerca con le fileddefinitions
         this.preSearch();
-        this.apiService._start = 0;
+
         this.apiService._limit = 10;
         this.apiService.getList(this.metadataName, this.fieldDefinitionsSearch).subscribe(
             model => {
@@ -149,8 +149,11 @@ export class FormGenerationListComponent implements OnInit {
 
     public lazyLoad(
         event: any, datatable?: any) {
+
         if (!this.firstReload) {
             this.apiService._start = event.first;
+        } else {
+            this.apiService._start = 0;
         }
         this.apiService._limit = event.rows;
         // this.service.search.pageSize = event.rows;
