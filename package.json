@@ -28,7 +28,7 @@
     "core-js": "^2.6.10",
     "jquery": "^3.3.1",
     "less": "^3.9.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "moment-timezone": "^0.5.27",
     "ngx-monaco-editor": "^8.0.0",
     "primeicons": "^2.0.0",
