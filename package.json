@@ -24,7 +24,7 @@
     "@angular/router": "^8.2.14",
     "@tinymce/tinymce-angular": "^3.3.1",
     "bootstrap": "3.4.1",
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
     "core-js": "^2.6.10",
     "jquery": "^3.3.1",
     "keycloak-angular": "^7.0.1",
