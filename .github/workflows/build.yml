@@ -23,7 +23,7 @@ jobs:
 
       - name: Build Project
         run: |
-          npm install
+          npm install  --legacy-peer-deps
           npm run build
       - name: Publish Image
         uses: matootie/github-docker@v3.0.0
