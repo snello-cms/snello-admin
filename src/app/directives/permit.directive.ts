@@ -1,5 +1,6 @@
 import {Directive, Input, TemplateRef, ViewContainerRef} from '@angular/core';
-import {AuthenticationService} from '../service/authentication.service';
+import {KeycloakService} from 'keycloak-angular';
+import {KeycloakProfile} from 'keycloak-js';
 
 @Directive({
     selector: '[permit]'
@@ -7,20 +8,21 @@ import {AuthenticationService} from '../service/authentication.service';
 export class PermitDirective {
 
     private _prevCondition: boolean = null;
+    userDetails: KeycloakProfile;
+    roles: string[];
 
-    constructor(private viewContainerRef: ViewContainerRef,
+    constructor(private keycloakService: KeycloakService,
+                private viewContainerRef: ViewContainerRef,
                 private templateRef: TemplateRef<any>,
-                private authenticationService: AuthenticationService,
     ) {
+        this.keycloakService.loadUserProfile().then(
+            user => this.userDetails = user
+        );
+        this.roles = this.keycloakService.getUserRoles();
     }
 
     @Input() set permit(aclName: string) {
-        this.authenticationService.getUtente().subscribe(
-            utente => {
-                if (utente) {
-                    this.checkRoles(utente.roles, aclName);
-                }
-            });
+        this.checkRoles(this.roles, aclName);
     }
 
     checkRoles(userRoles: string[], aclRole: string) {

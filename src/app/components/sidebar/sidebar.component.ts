@@ -1,9 +1,9 @@
 import {Component} from '@angular/core';
 import {APP_VERSION, ASSET_PATH} from '../../constants/constants';
-import {AuthenticationService} from '../../service/authentication.service';
 import {Router} from '@angular/router';
 import {ConfigurationService} from '../../service/configuration.service';
-import {UserInSession} from '../../model/user-in-session';
+import {KeycloakService} from 'keycloak-angular';
+import {KeycloakProfile} from 'keycloak-js';
 
 @Component({
     selector: 'sidebar',
@@ -12,38 +12,33 @@ import {UserInSession} from '../../model/user-in-session';
 export class SideBarComponent {
     public selected = 'home';
     public asset_path: string;
-    public utente: UserInSession;
+    userDetails: KeycloakProfile;
+    roles: string[];
 
-    constructor(private authenticationService: AuthenticationService,
+    constructor( private keycloakService: KeycloakService,
                 private configurationService: ConfigurationService,
                 protected router: Router) {
         configurationService.getValue(ASSET_PATH).subscribe(
             ass => this.asset_path = ass
         );
-        this.utente = new UserInSession();
-        this.authenticationService.getUtente().subscribe(
-            utente => {
-                if (utente) {
-                    console.log('utente: ' + utente.username);
-                    this.utente = utente;
-                } else {
-                    this.utente.username = 'sconosciuto';
-                }
-            });
+        this.refreshKeycloak();
     }
 
-    logout() {
-        this.authenticationService.logout();
-        this.router.navigate(['/login']);
+    async refreshKeycloak() {
+        if (await this.keycloakService.isLoggedIn()) {
+            this.userDetails = await this.keycloakService.loadUserProfile();
+            this.roles = this.keycloakService.getUserRoles();
+        }
+    }
+
+    async logout() {
+        await this.keycloakService.logout();
     }
 
     public select(page: string) {
         this.selected = page;
     }
 
-    public edit() {
-        this.router.navigate(['/user/yourself', this.utente.username]);
-    }
 
     version(): string {
         return APP_VERSION;

@@ -5,20 +5,24 @@
             <img class="logo" src="{{asset_path}}/assets/images/logo_white.svg"></a>
     </div>
     <ul class="nav nav-tabs text-center">
-        <li *permit="'metadatas_edit, metadatas_view,fielddefinitions_edit, fielddefinitions_view,conditions_edit, conditions_view,documents_edit, documents_view,publicdata_edit,selectqueries_edit, selectqueries_view,users_edit, users_view,roles_edit,roles_view,urlmaprules_edit, urlmaprules_view,links_edit, links_view,draggables_edit, draggables_view'">
+        <li *permit="'Admin, metadatas_edit, metadatas_view,fielddefinitions_edit, fielddefinitions_view,conditions_edit, conditions_view,documents_edit, documents_view,publicdata_edit,selectqueries_edit, selectqueries_view,users_edit, users_view,roles_edit,roles_view,urlmaprules_edit, urlmaprules_view,links_edit, links_view,draggables_edit, draggables_view'">
             <a [routerLink]="'/adminpage'" (click)="select('adminpage')" [className]="isAdminPage()">
-                <i class="fa fa-bookmark" aria-hidden="true"></i> ADMIN
+                <i class="fa fa-bookmark" aria-hidden="true"></i>
+                ADMIN
             </a>
         </li>
-        <li *permit="'contents_edit, contents_view'">
-            <a [routerLink]="'/home'" (click)="select('home')" [className]="isContenPage()"><i class="fa fa-bookmark-o" aria-hidden="true"></i> CONTENTS
+        <li *permit="'Admin, contents_edit, contents_view'">
+            <a [routerLink]="'/home'" (click)="select('home')" [className]="isContenPage()">
+                <i class="fa fa-bookmark-o" aria-hidden="true"></i>
+                CONTENTS
             </a>
         </li>
     </ul>
 
     <ul class="user-menu">
         <li [class]="''">
-            <a (click)="edit()"> <i class="fa fa-user-circle" aria-hidden="true"></i> {{utente.username}}</a> &nbsp;<a (click)="logout()">  logout <i class="fa fa-sign-out" aria-hidden="true"></i></a>
+            <i class="fa fa-user-circle" aria-hidden="true"></i> {{userDetails.username}}
+            &nbsp;<a (click)="logout()"> logout <i class="fa fa-sign-out" aria-hidden="true"></i></a>
         </li>
 
     </ul>

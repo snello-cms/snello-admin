@@ -9,7 +9,6 @@ import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
 @Component(
     {
         templateUrl: './field-definition-list.component.html',
-        styleUrls: ['./field-definition-list.component.css']
     }
 )
 export class FieldDefinitionListComponent extends AbstractListComponent<FieldDefinition> implements OnInit {

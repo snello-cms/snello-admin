@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {DataListService} from '../../service/data-list.service';
 import {ApiService} from '../../service/api.service';
@@ -7,9 +7,9 @@ import {Metadata} from '../../model/metadata';
 
 @Component({
     selector: 'homepage-topbar',
-    templateUrl: './homepage-topbar.html'
+    templateUrl: './homepage-topbar.component.html'
 })
-export class HomepageTopBar {
+export class HomepageTopBar implements OnInit{
     model: any[] = [];
     errorMessage: string;
 
@@ -23,7 +23,7 @@ export class HomepageTopBar {
         this.model = [];
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.metadatasService.getListSearch({}, 0, 100).subscribe(
             model => {
                 this.model = <Metadata[]>model;

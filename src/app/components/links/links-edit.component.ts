@@ -14,7 +14,6 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 @Component(
     {
         templateUrl: './links-edit.component.html',
-        styleUrls: ['./links-edit.component.css']
     }
 )
 export class LinksEditComponent extends AbstractEditComponent<Link> implements OnInit {

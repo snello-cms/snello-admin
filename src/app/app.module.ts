@@ -10,7 +10,7 @@ import {DateComponent} from './generic.components/date/date.component';
 import {CheckboxComponent} from './generic.components/checkbox/checkbox.component';
 import {DynamicFieldDirective} from './generic.components/dynamic-field/dynamic-field.directive';
 import {DynamicFormComponent} from './generic.components/dynamic-form/dynamic-form.component';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {HttpClientModule} from '@angular/common/http';
 import {MetadataEditComponent} from './components/metadata/metadata-edit.component';
 import {MetadataListComponent} from './components/metadata/metadata-list.component';
 import {OutletComponent} from './common/outlet.component';
@@ -38,17 +38,9 @@ import {MetadataViewComponent} from './components/metadata/metadata-view.compone
 import {TimeComponent} from './generic.components/time/time.component';
 import {MultiJoinComponent} from './generic.components/multi-join/multi-join.component';
 import {MediaComponent} from './generic.components/media/media.component';
-import {PublicDataComponent} from './components/public-data/public-data.component';
 import {SelectQueryEditComponent} from './components/selectquery/select-query-edit.component';
 import {SelectQueryListComponent} from './components/selectquery/select-query-list.component';
 import {DynamicSearchFormComponent} from './generic.components/dynamic-form/dynamic-search-form.component';
-import {UserEditComponent} from './components/user/user-edit.component';
-import {UserListComponent} from './components/user/user-list.component';
-import {RoleEditComponent} from './components/role/role-edit.component';
-import {RoleListComponent} from './components/role/role-list.component';
-import {UrlmapruleEditComponent} from './components/urlmaprule/urlmaprule-edit.component';
-import {UrlmapruleListComponent} from './components/urlmaprule/urlmaprule-list.component';
-import {AuthenticationInterceptor} from './service/http-interceptors/authentication-interceptor.service';
 import {MainComponent} from './components/main/main.component';
 import {LinksEditComponent} from './components/links/links-edit.component';
 import {LinksListComponent} from './components/links/links-list.component';
@@ -82,7 +74,6 @@ import {PanelModule} from 'primeng/panel';
 import {FileUploadModule} from 'primeng/fileupload';
 import {MultiSelectModule} from 'primeng/multiselect';
 import {ToastModule} from 'primeng/toast';
-import {LoginComponent} from './components/login/login.component';
 import {EditorModule as primengEditorModule} from 'primeng/editor';
 import {ChartModule} from 'primeng/chart';
 import {BlockUIModule} from 'primeng/blockui';
@@ -104,14 +95,51 @@ import {ExtensionsViewComponent} from './components/extensions/extensions-view.c
 import {MonacoEditorModule} from 'ngx-monaco-editor';
 import {ExtensionsListComponent} from './components/extensions/extensions-list.component';
 import {ExtensionsEditComponent} from './components/extensions/extensions-edit.component';
-import {PasswordResetComponent} from './components/password-reset/password.reset.component';
-import {PasswordChangeComponent} from './components/password-change/password.change.component';
+import {environment} from '../environments/environment';
+import {KeycloakAngularModule, KeycloakService} from 'keycloak-angular';
 
 registerLocaleData(localeIt);
+
+export function initializer(keycloak: KeycloakService): () => Promise<any> {
+    return (): Promise<any> => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await keycloak.init({
+                    config: environment.keycloakConfig,
+                    initOptions: {
+                        onLoad: 'login-required',
+                        checkLoginIframe: false
+                    },
+                    loadUserProfileAtStartUp: true,
+                    bearerExcludedUrls: ['assets/config.json']
+                });
+                resolve();
+            } catch (error) {
+                console.log(error);
+                reject(error);
+            }
+        });
+    };
+    // return (): Promise<any> => keycloak.init(
+    //     {
+    //         config: keycloakConfig,
+    //         initOptions: {
+    //             checkLoginIframe: false
+    //         },
+    //         bearerExcludedUrls: ['assets/config.json']
+    //     }).then(auth => {
+    //     if (!auth) {
+    //         keycloak.login({
+    //             scope: environment.scope,
+    //         });
+    //     }
+    // });
+}
 
 export function loadConfigurations(configService: ConfigurationService) {
     return () => configService.getConfigs();
 }
+
 
 @NgModule({
     declarations: [
@@ -142,8 +170,6 @@ export function loadConfigurations(configService: ConfigurationService) {
         MediaComponent,
         MediaViewComponent,
         TextAreaComponent,
-        PasswordChangeComponent,
-        PasswordResetComponent,
         CheckboxComponent,
         CopyClipboardDirective,
         DynamicFieldDirective,
@@ -164,16 +190,9 @@ export function loadConfigurations(configService: ConfigurationService) {
         FormGenerationViewComponent,
         SelectQueryEditComponent,
         SelectQueryListComponent,
-        PublicDataComponent,
         OutletComponent,
         FormGenerationListGeneralComponent,
         RouterOutletComponent,
-        UserEditComponent,
-        UserListComponent,
-        RoleEditComponent,
-        RoleListComponent,
-        UrlmapruleEditComponent,
-        UrlmapruleListComponent,
         LinksEditComponent,
         LinksListComponent,
         LinksViewComponent,
@@ -184,10 +203,10 @@ export function loadConfigurations(configService: ConfigurationService) {
         DroppableEditComponent,
         TinymceComponent,
 
-        LoginComponent,
         YourselfEditComponent
     ],
     imports: [
+        KeycloakAngularModule,
         primengEditorModule,
         ChartModule,
         BrowserModule,
@@ -252,14 +271,15 @@ export function loadConfigurations(configService: ConfigurationService) {
         [MessageService, ConfirmationService,
             {
                 provide: APP_INITIALIZER,
+                useFactory: initializer,
+                multi: true,
+                deps: [KeycloakService]
+            },
+            {
+                provide: APP_INITIALIZER,
                 useFactory: loadConfigurations,
                 multi: true,
                 deps: [ConfigurationService]
-            },
-            {
-                provide: HTTP_INTERCEPTORS,
-                useClass: AuthenticationInterceptor,
-                multi: true
             }
         ]
     ],

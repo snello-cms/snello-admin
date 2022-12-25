@@ -36,8 +36,8 @@
                                     <div class="col-sm-5">
                                         <div class="clearfix"></div>
                                         <input id="nome" name="name" type="text" class="form-control"
-                                                placeholder="name" [(ngModel)]="service.search.query_name_contains"
-                                                pInputText #name="ngModel" *ngIf="service.search">
+                                               placeholder="name" [(ngModel)]="service.search.query_name_contains"
+                                               pInputText #name="ngModel" *ngIf="service.search">
                                     </div>
                                     <div class="col-sm-3">
 
@@ -46,8 +46,12 @@
                                     <div class="col-sm-3">
                                         <div class="btn-group">
 
-                                            <button type="button" class="btn btn-search" (click)="reload(datatable)" icon="ui-icon-search">Search</button>
-                                            <button type="button" class="btn btn-reset" (click)="reset(datatable)" icon="ui-icon-undo">Undo</button>
+                                            <button type="button" class="btn btn-search" (click)="reload(datatable)"
+                                                    icon="ui-icon-search">Search
+                                            </button>
+                                            <button type="button" class="btn btn-reset" (click)="reset(datatable)"
+                                                    icon="ui-icon-undo">Undo
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -55,12 +59,14 @@
                         </div>
 
                         <div class="table-wrapper clearfix">
-                            <p-table #datatable (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true" [resizableColumns]="true" [responsive]="true" [rows]="10" [totalRecords]="service.listSize" [value]="model">
+                            <p-table #datatable (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true"
+                                     [resizableColumns]="true" [responsive]="true" [rows]="10"
+                                     [totalRecords]="service.listSize" [value]="model">
 
                                 <ng-template let-columns pTemplate="header">
                                     <tr class="sort-header">
                                         <th pResizableColumn>Index</th>
-                                        <th pResizableColumn>Query Name/th>
+                                        <th pResizableColumn>Query Name</th>
                                         <th pResizableColumn>Query</th>
                                         <th pResizableColumn>With params</th>
                                         <th class="Operations">Operations</th>

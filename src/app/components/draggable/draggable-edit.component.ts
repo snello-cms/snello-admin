@@ -8,8 +8,7 @@ import {DraggableService} from 'src/app/service/draggable.service';
 
 @Component(
     {
-        templateUrl: './draggable-edit.component.html',
-        styleUrls: ['./draggable-edit.component.css']
+        templateUrl: './draggable-edit.component.html'
     }
 )
 export class DraggableEditComponent extends AbstractEditComponent<Draggable> implements OnInit {

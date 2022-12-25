@@ -9,7 +9,6 @@ import {DraggableService} from 'src/app/service/draggable.service';
 @Component(
     {
         templateUrl: './draggable-list.component.html',
-        styleUrls: ['./draggable-list.component.css']
     }
 )
 export class DraggableListComponent extends AbstractListComponent<Draggable> implements OnInit {

@@ -6,7 +6,6 @@ import {ApiService} from '../../service/api.service';
 @Component(
     {
         templateUrl: './form-generation-metadata-list.component.html',
-        styleUrls: ['./form-generation-metadata-list.component.css']
     }
 )
 export class FormGenerationMetadataListComponent implements OnInit {

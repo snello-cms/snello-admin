@@ -13,7 +13,6 @@ import {FieldDefinitionService} from '../../service/field-definition.service';
 @Component(
     {
         templateUrl: './form-generation-list.component.html',
-        styleUrls: ['./form-generation-list.component.css']
     }
 )
 export class FormGenerationListComponent implements OnInit {

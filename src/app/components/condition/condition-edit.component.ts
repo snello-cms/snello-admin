@@ -10,7 +10,6 @@ import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
 @Component(
     {
         templateUrl: './condition-edit.component.html',
-        styleUrls: ['./condition-edit.component.css']
     }
 )
 export class ConditionEditComponent extends AbstractEditComponent<Condition> implements OnInit {

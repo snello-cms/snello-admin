@@ -8,8 +8,7 @@ import {ExtensionService} from '../../service/extension.service';
 
 @Component(
     {
-        templateUrl: './homepage.component.html',
-        styleUrls: ['./homepage.component.css']
+        templateUrl: './homepage.component.html'
     }
 )
 export class HomepageComponent implements OnInit {

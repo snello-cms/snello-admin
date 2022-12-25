@@ -11,7 +11,6 @@ import {MetadataService} from '../../service/metadata.service';
 @Component(
     {
         templateUrl: './form-generation-edit.component.html',
-        styleUrls: ['./form-generation-edit.component.css'],
         providers: [MetadataService]
     },
 )

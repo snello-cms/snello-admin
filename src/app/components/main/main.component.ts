@@ -6,7 +6,6 @@ import {MessageService} from 'primeng/api';
 
 @Component({
     templateUrl: './main.component.html',
-    styleUrls: ['./main.component.css']
 })
 export class MainComponent {
 

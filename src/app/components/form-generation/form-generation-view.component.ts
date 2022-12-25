@@ -1,13 +1,11 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Data, Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {FieldDefinition} from '../../model/field-definition';
 import {DynamicFormComponent} from '../../generic.components/dynamic-form/dynamic-form.component';
-import {Observable} from 'rxjs';
 
 @Component(
     {
         templateUrl: './form-generation-view.component.html',
-        styleUrls: ['./form-generation-view.component.css']
     }
 )
 export class FormGenerationViewComponent implements OnInit {
