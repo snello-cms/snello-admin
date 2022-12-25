@@ -6,7 +6,7 @@ ng build --prod --base-href /snello-admin --deploy-url /snello-admin/
 docker build --no-cache -t snellocms/snello-admin -f Dockerfile-local .
 ID="$(docker images | grep 'snellocms/snello-admin' | head -n 1 | awk '{print $3}')"
 
-docker tag snellocms/snello-admin snellocms/snello-admin:2.0.0
+docker tag snellocms/snello-admin snellocms/snello-admin:3.0.0
 docker tag snellocms/snello-admin snellocms/snello-admin:latest
 docker push snellocms/snello-admin:latest
-docker push snellocms/snello-admin:2.0.0
+docker push snellocms/snello-admin:3.0.0
