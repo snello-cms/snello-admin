@@ -26,53 +26,30 @@ export class DocumentService extends AbstractService<Document> {
         this.updateProgress = this.updateProgress.bind(this);
     }
 
-    public upload(
-        blob: any,
-        table_name: string,
-        table_key: string
-    ): Promise<any> {
+
+    uploadFile(document: Document, body: FormData): Observable<any> {
+        if (document.uuid) {
+            return this.httpClient.put<FormData>(this.url + '/' + document.uuid, body)
+                .pipe(catchError(this.handleError));
+        } else {
+            return this.httpClient.post<FormData>(this.url, body)
+                .pipe(catchError(this.handleError));
+        }
+
+    }
+
+    public upload(blob: any, table_name: string, table_key: string): Promise<any> {
         return new Promise((resolve, reject) => {
             if (blob) {
                 this.updateProgress(0);
-
-                const formData: FormData = new FormData(),
-                    xhr: XMLHttpRequest = new XMLHttpRequest();
-
+                const formData: FormData = new FormData();
                 formData.append('file', blob);
                 formData.append('table_name', table_name);
                 formData.append('table_key', table_key);
-
-                xhr.onreadystatechange = () => {
-                    if (xhr.readyState === 4) {
-                        if (xhr.status === 200) {
-                            resolve(JSON.parse(xhr.response));
-                        } else {
-                            reject(xhr.response);
-                        }
-                    }
-                };
-
-                this.setUploadUpdateInterval(500);
-
-                xhr.upload.onprogress = event => {
-                    this.updateProgress(Math.round((event.loaded / event.total) * 100));
-                };
-
-                xhr.open(
-                    'POST',
-                    encodeURI(
-                        this.url
-                    ),
-                    true
-                );
-                xhr.send(formData);
+                // multipart/form-data
+                return this.httpClient.post<FormData>(this.url, formData).toPromise();
             }
         });
-    }
-
-    private setUploadUpdateInterval(interval: number): void {
-        setInterval(() => {
-        }, interval);
     }
 
     private updateProgress(progress: number): void {
@@ -80,10 +57,6 @@ export class DocumentService extends AbstractService<Document> {
         if (this.progressObserver) {
             this.progressObserver.next(this.progress);
         }
-    }
-
-    public getObserver(): Observable<number> {
-        return this.progress$;
     }
 
     getId(element: Document) {

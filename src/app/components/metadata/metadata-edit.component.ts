@@ -8,7 +8,6 @@ import {FONT_AWESOME_ICONS} from '../../constants/constants';
 
 @Component({
     templateUrl: './metadata-edit.component.html',
-    styleUrls: ['./metadata-edit.component.css']
 })
 export class MetadataEditComponent extends AbstractEditComponent<Metadata>
     implements OnInit {

@@ -15,15 +15,8 @@ import {AdminpageComponent} from './components/admin-home/adminpage.component';
 import {DocumentEditComponent} from './components/documents/document-edit.component';
 import {FormGenerationListGeneralComponent} from './components/form-generation/form-generation-list-general.component';
 import {MetadataViewComponent} from './components/metadata/metadata-view.component';
-import {PublicDataComponent} from './components/public-data/public-data.component';
 import {SelectQueryListComponent} from './components/selectquery/select-query-list.component';
 import {SelectQueryEditComponent} from './components/selectquery/select-query-edit.component';
-import {UserListComponent} from './components/user/user-list.component';
-import {UserEditComponent} from './components/user/user-edit.component';
-import {RoleListComponent} from './components/role/role-list.component';
-import {RoleEditComponent} from './components/role/role-edit.component';
-import {UrlmapruleListComponent} from './components/urlmaprule/urlmaprule-list.component';
-import {UrlmapruleEditComponent} from './components/urlmaprule/urlmaprule-edit.component';
 import {NgModule} from '@angular/core';
 import {LinksListComponent} from './components/links/links-list.component';
 import {LinksEditComponent} from './components/links/links-edit.component';
@@ -31,41 +24,28 @@ import {DraggableEditComponent} from './components/draggable/draggable-edit.comp
 import {DraggableListComponent} from './components/draggable/draggable-list.component';
 import {DroppableListComponent} from './components/droppable/droppable-list.component';
 import {DroppableEditComponent} from './components/droppable/droppable-edit.component';
-import {SessionGuard} from './routes-guard/session.guard';
 import {FormGenerationViewComponent} from './components/form-generation/form-generation-view.component';
-import {LoginComponent} from './components/login/login.component';
 import {LinksViewComponent} from './components/links/links-view.component';
-import {YourselfEditComponent} from './components/user/yourself-edit.component';
 import {ExtensionsViewComponent} from './components/extensions/extensions-view.component';
 import {ExtensionsListComponent} from './components/extensions/extensions-list.component';
 import {ExtensionsEditComponent} from './components/extensions/extensions-edit.component';
-import {PasswordChangeComponent} from './components/password-change/password.change.component';
-import {PasswordResetComponent} from './components/password-reset/password.reset.component';
+import {AppAuthGuard} from './service/app.authguard';
 
 export const MainRoutes: Routes = [
     {
         path: '',
-        redirectTo: 'login',
+        redirectTo: 'home',
         pathMatch: 'full'
-    },
-    {
-        path: 'login', component: LoginComponent,
-    },
-    {
-        path: 'password-change/:id', component: PasswordChangeComponent,
-    },
-    {
-        path: 'password-reset', component: PasswordResetComponent,
     },
     {
         path: 'home',
         component: HomepageComponent,
-        canActivate: [SessionGuard]
+        canActivate: [AppAuthGuard]
     },
     {
         path: 'extensions_admin',
         component: OutletComponent,
-        canActivate: [SessionGuard],
+        canActivate: [AppAuthGuard],
         children: [
             {path: '', redirectTo: '/extensions_admin/list', pathMatch: 'full'},
             {path: 'list', component: ExtensionsListComponent},
@@ -76,17 +56,17 @@ export const MainRoutes: Routes = [
     {
         path: 'extensions/:id',
         component: ExtensionsViewComponent,
-        canActivate: [SessionGuard]
+        canActivate: [AppAuthGuard]
     },
     {
         path: 'adminpage',
         component: AdminpageComponent,
-        canActivate: [SessionGuard]
+        canActivate: [AppAuthGuard]
     },
     {
         path: 'metadata',
         component: OutletComponent,
-        canActivate: [SessionGuard],
+        canActivate: [AppAuthGuard],
         children: [
             {path: '', redirectTo: '/metadata/list', pathMatch: 'full'},
             {path: 'list', component: MetadataListComponent},
@@ -98,7 +78,7 @@ export const MainRoutes: Routes = [
     {
         path: 'fielddefinition',
         component: OutletComponent,
-        canActivate: [SessionGuard],
+        canActivate: [AppAuthGuard],
         children: [
             {path: '', redirectTo: '/fielddefinition/list', pathMatch: 'full'},
             {path: 'list', component: FieldDefinitionListComponent},
@@ -109,7 +89,7 @@ export const MainRoutes: Routes = [
     {
         path: 'condition',
         component: OutletComponent,
-        canActivate: [SessionGuard],
+        canActivate: [AppAuthGuard],
         children: [
             {path: '', redirectTo: '/condition/list', pathMatch: 'full'},
             {path: 'list', component: ConditionListComponent},
@@ -121,7 +101,7 @@ export const MainRoutes: Routes = [
     {
         path: 'document',
         component: OutletComponent,
-        canActivate: [SessionGuard],
+        canActivate: [AppAuthGuard],
         children: [
             {path: '', redirectTo: '/document/list', pathMatch: 'full'},
             {path: 'list', component: DocumentListComponent},
@@ -133,7 +113,7 @@ export const MainRoutes: Routes = [
     {
         path: 'selectqueries',
         component: OutletComponent,
-        canActivate: [SessionGuard],
+        canActivate: [AppAuthGuard],
         children: [
             {path: '', redirectTo: '/selectqueries/list', pathMatch: 'full'},
             {path: 'list', component: SelectQueryListComponent},
@@ -143,45 +123,9 @@ export const MainRoutes: Routes = [
         ]
     },
     {
-        path: 'user',
-        component: OutletComponent,
-        children: [
-            {path: '', redirectTo: '/user/list', pathMatch: 'full'},
-            {path: 'list', component: UserListComponent},
-            {path: 'new', component: UserEditComponent},
-            {path: 'edit/:id', component: UserEditComponent},
-            {path: 'yourself/:id', component: YourselfEditComponent}
-
-        ]
-    },
-    {
-        path: 'urlmaprules',
-        component: OutletComponent,
-        canActivate: [SessionGuard],
-        children: [
-            {path: '', redirectTo: '/urlmaprules/list', pathMatch: 'full'},
-            {path: 'list', component: UrlmapruleListComponent},
-            {path: 'new', component: UrlmapruleEditComponent},
-            {path: 'edit/:id', component: UrlmapruleEditComponent}
-
-        ]
-    },
-    {
-        path: 'role',
-        component: OutletComponent,
-        canActivate: [SessionGuard],
-        children: [
-            {path: '', redirectTo: '/role/list', pathMatch: 'full'},
-            {path: 'list', component: RoleListComponent},
-            {path: 'new', component: RoleEditComponent},
-            {path: 'edit/:id', component: RoleEditComponent}
-
-        ]
-    },
-    {
         path: 'links',
         component: OutletComponent,
-        canActivate: [SessionGuard],
+        canActivate: [AppAuthGuard],
         children: [
             {path: '', redirectTo: '/links/list', pathMatch: 'full'},
             {path: 'list', component: LinksListComponent},
@@ -193,7 +137,7 @@ export const MainRoutes: Routes = [
     {
         path: 'draggables',
         component: OutletComponent,
-        canActivate: [SessionGuard],
+        canActivate: [AppAuthGuard],
         children: [
             {path: '', redirectTo: '/draggables/list', pathMatch: 'full'},
             {path: 'list', component: DraggableListComponent},
@@ -205,7 +149,7 @@ export const MainRoutes: Routes = [
     {
         path: 'droppables',
         component: OutletComponent,
-        canActivate: [SessionGuard],
+        canActivate: [AppAuthGuard],
         children: [
             {path: '', redirectTo: '/droppables/list', pathMatch: 'full'},
             {path: 'list', component: DroppableListComponent},
@@ -216,19 +160,13 @@ export const MainRoutes: Routes = [
     },
     {
         path: 'datalistgeneral/list/:name',
-        canActivate: [SessionGuard],
+        canActivate: [AppAuthGuard],
         component: FormGenerationListGeneralComponent,
-    },
-
-    {
-        path: 'publicdata/edit',
-        canActivate: [SessionGuard],
-        component: PublicDataComponent,
     },
     {
         path: 'datalist',
         component: OutletComponent,
-        canActivate: [SessionGuard],
+        canActivate: [AppAuthGuard],
         children: [
             {
                 path: 'list/:name',
@@ -257,7 +195,7 @@ export const MainRoutes: Routes = [
                 resolve: {
                     fieldDefinitionValorized: FieldDefinitionResolver
                 }
-            },
+            }
         ]
     }
 ];

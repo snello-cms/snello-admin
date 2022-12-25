@@ -13,6 +13,8 @@ import {catchError, map, switchMap} from 'rxjs/operators';
 import {UserInSession} from '../model/user-in-session';
 import {ConfigurationService} from './configuration.service';
 import {ChangePassword} from '../model/change-password';
+import {KeycloakProfile} from 'keycloak-js';
+import {KeycloakService} from 'keycloak-angular';
 
 @Injectable({
     providedIn: 'root'
@@ -20,13 +22,24 @@ import {ChangePassword} from '../model/change-password';
 export class AuthenticationService {
 
     public utente: UserInSession;
+
+    public userDetails: KeycloakProfile;
+    public roles: string[];
+    public decodedToken: any;
+    public decodedRefreshToken: string;
+    public extraroles: string[];
+    public token: string;
+    public expirationDate: any;
+    public refreshToken: string;
+
+
     private access_token: any;
     private refresh_token: any;
     private logi_api_path: string;
     private resetpassword_api_path: string;
     private changepassword_api_path: string;
 
-    constructor(private http: HttpClient, configurationService: ConfigurationService) {
+    constructor(private keycloakService: KeycloakService, private http: HttpClient, configurationService: ConfigurationService) {
         configurationService.getValue(LOGIN_API_PATH).subscribe(
             path => this.logi_api_path = path
         );
@@ -36,6 +49,20 @@ export class AuthenticationService {
         configurationService.getValue(RESETPASSWORD_API_PATH).subscribe(
             reset_path => this.resetpassword_api_path = reset_path
         );
+        this.refreshKeycloak();
+    }
+
+    async refreshKeycloak() {
+        if (await this.keycloakService.isLoggedIn()) {
+            this.userDetails = await this.keycloakService.loadUserProfile();
+            this.roles = this.keycloakService.getUserRoles();
+            this.keycloakService.getToken().then(
+                token => {
+                    this.token = token;
+                    this.extraroles = this.decodedToken.extraroles;
+                });
+            this.refreshToken = this.keycloakService.getKeycloakInstance().refreshToken;
+        }
     }
 
     public getUtente(): Observable<UserInSession> {
@@ -48,87 +75,10 @@ export class AuthenticationService {
         return of(this.utente);
     }
 
-    public login(username: string, password: string): Observable<boolean> {
-        const body: HttpParams = new HttpParams().set('username', username).set('password', password);
-        return this.http.post(this.logi_api_path, body, {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
-            .pipe(
-                map((res: any) => {
-                        const utente = new UserInSession();
-                        utente.username = res.username;
-                        utente.roles = res.roles;
-                        this.access_token = res.access_token;
-                        this.refresh_token = res.refresh_token;
-                        sessionStorage.setItem(TOKEN_ITEM, this.access_token);
-                        sessionStorage.setItem(REFRESH_TOKEN_ITEM, this.refresh_token);
-                        sessionStorage.setItem(USER_ITEM, JSON.stringify(utente));
-                    }
-                ),
-                switchMap(() => {
-                    return this.getUtente()
-                        .pipe(
-                            map(() => {
-                                return true;
-                            }),
-                            catchError(() => {
-                                return of(false);
-                            })
-                        );
-                }),
-                catchError(this.handleError)
-            );
+
+    public async logout() {
+        await this.keycloakService.logout();
     }
-
-    resetpassword(username: string): Observable<any> {
-        const body: HttpParams = new HttpParams();
-        return this.http.post(this.resetpassword_api_path + '/' + username, body)
-            .pipe(catchError(this.handleError.bind(this)));
-    }
-
-    changepassword(username: string, changePassword: ChangePassword): Observable<any> {
-        return this.http.post(this.changepassword_api_path + '/' + username, changePassword)
-            .pipe(catchError(this.handleError.bind(this)));
-    }
-
-
-    public checkToken(): Observable<boolean> {
-        const token: string = sessionStorage.getItem(TOKEN_ITEM);
-        if (!token) {
-            this.logout();
-            return of(false);
-        }
-        this.access_token = token;
-        return this.getUtente()
-            .pipe(
-                map(() => {
-                    return true;
-                })
-            );
-    }
-
-    public checkLogged(): boolean {
-        const token: string = sessionStorage.getItem(TOKEN_ITEM);
-        if (!token) {
-            return false;
-        }
-        return true;
-    }
-
-    public logout() {
-        this.access_token = undefined;
-        this.refresh_token = undefined;
-        this.utente = undefined;
-        sessionStorage.removeItem(TOKEN_ITEM);
-        sessionStorage.removeItem(REFRESH_TOKEN_ITEM);
-        sessionStorage.removeItem(USER_ITEM);
-    }
-
-    public isLogged(): Observable<boolean> {
-        if (this.utente) {
-            return of(true);
-        }
-        return of(false);
-    }
-
 
     public handleError(error: HttpErrorResponse): Observable<any> {
         return throwError(error || 'Server error');

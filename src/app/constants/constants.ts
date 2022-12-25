@@ -19,7 +19,7 @@ export const API_SERVICE_PATH = 'api_service_path';
 export const LOGIN_API_PATH = 'login_api_path';
 export const CHANGEPASSWORD_API_PATH = 'changepassword_api_path';
 export const RESETPASSWORD_API_PATH = 'resetpassword_api_path';
-export const APP_VERSION = '1.0.0.RC6';
+export const APP_VERSION = '3.0.0';
 
 export const CONFIG_PATH = environment.imgPath + '/assets/config.json';
 
@@ -45,7 +45,7 @@ export const ADMIN_ITEMS: any[] = [
         section: 'metadata',
         name: 'Metadati',
         summary: 'Metadata management on tables',
-        roles: 'metadatas_edit, metadatas_view'
+        roles: 'Admin, metadatas_edit, metadatas_view'
     },
     {
         id: 'list',
@@ -53,7 +53,7 @@ export const ADMIN_ITEMS: any[] = [
         section: 'fielddefinition',
         name: 'Field Definitions',
         summary: 'Field definition management to populate forms',
-        roles: 'fielddefinitions_edit, fielddefinitions_view'
+        roles: 'Admin, fielddefinitions_edit, fielddefinitions_view'
     },
     {
         id: 'list',
@@ -61,7 +61,7 @@ export const ADMIN_ITEMS: any[] = [
         section: 'condition',
         name: 'Condition',
         summary: 'Management of table filter conditions',
-        roles: 'conditions_edit, conditions_view'
+        roles: 'Admin, conditions_edit, conditions_view'
     },
     {
         id: 'list',
@@ -69,15 +69,7 @@ export const ADMIN_ITEMS: any[] = [
         section: 'document',
         name: 'Document',
         summary: 'Documents management',
-        roles: 'documents_edit, documents_view'
-    },
-    {
-        id: 'edit',
-        icon: 'fa fa-globe',
-        section: 'publicdata',
-        name: 'Public Data Management',
-        summary: 'Upload di dati',
-        roles: 'publicdata_edit'
+        roles: 'Admin, documents_edit, documents_view'
     },
     {
         id: 'list',
@@ -85,31 +77,7 @@ export const ADMIN_ITEMS: any[] = [
         section: 'selectqueries',
         name: 'SelectQuery',
         summary: 'Select Queries Management',
-        roles: 'selectqueries_edit, selectqueries_view'
-    },
-    {
-        id: 'list',
-        icon: 'fa fa-user-circle-o',
-        section: 'user',
-        name: 'User',
-        summary: 'Users Management',
-        roles: 'users_edit, users_view'
-    },
-    {
-        id: 'list',
-        icon: 'fa fa-address-card-o',
-        section: 'role',
-        name: 'Role',
-        summary: 'Roles Management',
-        roles: 'roles_edit,roles_view'
-    },
-    {
-        id: 'list',
-        icon: 'fa fa-map-signs',
-        section: 'urlmaprules',
-        name: 'Url Map Rules',
-        summary: 'Url Map Rules',
-        roles: 'urlmaprules_edit, urlmaprules_view'
+        roles: 'Admin, selectqueries_edit, selectqueries_view'
     },
     {
         id: 'list',
@@ -117,32 +85,32 @@ export const ADMIN_ITEMS: any[] = [
         section: 'links',
         name: 'Links',
         summary: 'Links Management',
-        roles: 'links_edit, links_view'
+        roles: 'Admin, links_edit, links_view'
     },
-    {
-        id: 'list',
-        icon: 'fa fa-puzzle-piece',
-        section: 'draggables',
-        name: 'Draggables',
-        summary: 'Draggables Management',
-        roles: 'draggables_edit, draggables_view'
-    },
-    {
-        id: 'list',
-        icon: 'fa fa-shopping-basket',
-        section: 'droppables',
-        name: 'Droppables',
-        summary: 'Droppables Management',
-        roles: 'droppables_edit, droppables_view'
-    },
-    {
-        id: 'list',
-        icon: 'fa fa-plus-circle',
-        section: 'extensions_admin',
-        name: 'Extensions',
-        summary: 'Extensions Management',
-        roles: 'extensions_edit, extensions_view'
-    }
+    // {
+    //     id: 'list',
+    //     icon: 'fa fa-puzzle-piece',
+    //     section: 'draggables',
+    //     name: 'Draggables',
+    //     summary: 'Draggables Management',
+    //     roles: 'Admin, draggables_edit, draggables_view'
+    // },
+    // {
+    //     id: 'list',
+    //     icon: 'fa fa-shopping-basket',
+    //     section: 'droppables',
+    //     name: 'Droppables',
+    //     summary: 'Droppables Management',
+    //     roles: 'Admin, droppables_edit, droppables_view'
+    // },
+    // {
+    //     id: 'list',
+    //     icon: 'fa fa-plus-circle',
+    //     section: 'extensions_admin',
+    //     name: 'Extensions',
+    //     summary: 'Extensions Management',
+    //     roles: 'Admin, extensions_edit, extensions_view'
+    // }
 ];
 
 export const FONT_AWESOME_ICONS: SelectItem[] = [

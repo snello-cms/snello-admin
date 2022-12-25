@@ -44,7 +44,9 @@ export abstract class AbstractService<T> {
                     // return res.body;
                     this.listSize = res.headers.get('x-total-count') != null ? +res.headers.get('x-total-count') : 0;
                     const ts: T[] = res.body; // json();
-                    this.postList(ts);
+                    if (ts) {
+                        this.postList(ts);
+                    }
                     return ts;
                 }),
                 catchError(this.handleError.bind(this))

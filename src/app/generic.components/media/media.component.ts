@@ -9,7 +9,6 @@ import {MessageService} from 'primeng/api';
 import {DomSanitizer} from '@angular/platform-browser';
 import {FileUpload} from 'primeng/fileupload';
 import {Document} from 'src/app/model/document';
-import {BASE_PATH} from 'src/app/constants/constants';
 
 @Component({
     selector: 'app-media',
@@ -72,10 +71,14 @@ export class MediaComponent implements OnInit {
         from(this.uploadFile(event.files[0])).subscribe();
     }
 
-    private uploadFile(fileToUpload: any): Promise<any> {
-
-        return this.documentService
-            .upload(fileToUpload, this.field.table_name, this.field.table_key_value)
+    private uploadFile(fileToUpload: FileUpload): Promise<any> {
+        const formData = new FormData();
+        formData.append('filename', this.fileInput.files[0].name);
+        formData.append('table_name', this.field.table_key_value);
+        formData.append('table_key', this.field.table_key_value);
+        formData.append('mimeType', this.fileInput.files[0].type);
+        formData.append('file', this.fileInput.files[0]);
+        return this.documentService.uploadFile(new Document(), formData).toPromise()
             .then(res => {
                 this.group.value[this.field.name] = res.uuid;
                 this.field.value = res.uuid;

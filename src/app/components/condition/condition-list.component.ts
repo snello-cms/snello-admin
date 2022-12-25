@@ -1,17 +1,14 @@
-import { OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AbstractListComponent} from '../../common/abstract-list-component';
-import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 import {Condition} from '../../model/condtion';
 import {ConditionService} from '../../service/condition.service';
 import {MetadataService} from '../../service/metadata.service';
-import {SelectItem, ConfirmationService, MessageService} from 'primeng/api';
-import {DocumentService} from '../../service/document.service';
+import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
 
 @Component(
   {
     templateUrl: './condition-list.component.html',
-    styleUrls: ['./condition-list.component.css']
   }
 )
 export class ConditionListComponent extends AbstractListComponent<Condition> implements OnInit {

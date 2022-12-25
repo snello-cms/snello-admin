@@ -1,0 +1,15 @@
+<ul class="list-group">
+    <li class="list-group-item">
+        <a [routerLink]="'/adminpage'"> <i class="fa fa-home"></i>
+            <div class="clearfix"></div><span>Home</span>
+        </a>
+    </li>
+    <ng-container *ngFor="let component of items">
+        <li  *permit="component.roles" class="list-group-item">
+            <a [routerLink]="'/' + component.section + '/' + component.id">
+                <i class="{{component.icon}}"></i>
+                <div class="clearfix"></div><span>{{component.name}}</span>
+            </a>
+        </li>
+    </ng-container>
+</ul>

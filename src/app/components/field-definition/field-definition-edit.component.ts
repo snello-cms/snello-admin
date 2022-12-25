@@ -12,7 +12,6 @@ import {Metadata} from '../../model/metadata';
 @Component(
     {
         templateUrl: './field-definition-edit.component.html',
-        styleUrls: ['./field-definition-edit.component.css']
     }
 )
 export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDefinition> implements OnInit {

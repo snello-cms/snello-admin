@@ -3,7 +3,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {User} from '../../model/user';
 import {UserService} from '../../service/user.service';
-import {AuthenticationService} from '../../service/authentication.service';
 
 @Component(
     {
@@ -16,7 +15,7 @@ export class YourselfEditComponent {
     public confirmPassword: string;
 
     constructor(
-        private authenticationService: AuthenticationService,
+
         public router: Router,
         public route: ActivatedRoute,
         public confirmationService: ConfirmationService,

@@ -8,7 +8,6 @@ import {LinksService} from '../../service/links.service';
 @Component(
     {
         templateUrl: './links-list.component.html',
-        styleUrls: ['./links-list.component.css']
     }
 )
 export class LinksListComponent extends AbstractListComponent<Link> implements OnInit {

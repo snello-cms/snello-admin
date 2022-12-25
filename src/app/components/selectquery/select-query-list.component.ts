@@ -7,8 +7,7 @@ import {SelectQuery} from '../../model/select-query';
 
 @Component(
   {
-    templateUrl: './select-query-list.component.html',
-    styleUrls: ['./select-query-list.component.css']
+    templateUrl: './select-query-list.component.html'
   }
 )
 export class SelectQueryListComponent extends AbstractListComponent<SelectQuery> implements OnInit {

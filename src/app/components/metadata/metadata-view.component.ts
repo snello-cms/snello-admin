@@ -9,7 +9,6 @@ import {ConfirmationService, MessageService} from 'primeng/api';
 
 @Component({
     templateUrl: './metadata-view.component.html',
-    styleUrls: ['./metadata-view.component.css']
 })
 export class MetadataViewComponent extends AbstractViewComponent<Metadata>
     implements OnInit {

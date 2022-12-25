@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "proxy": "ng serve --proxy-config proxy.conf.json/",
+    "proxy": "ng serve --proxy-config proxy.conf.json",
     "proxy-local": "ng serve --proxy-config proxy.conf-local.json",
     "build": "ng build",
     "test": "ng test",
@@ -27,6 +27,8 @@
     "chart.js": "^2.9.3",
     "core-js": "^2.6.10",
     "jquery": "^3.3.1",
+    "keycloak-angular": "^7.0.1",
+    "keycloak-js": "^7.0.1",
     "less": "^3.9.0",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.27",

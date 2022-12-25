@@ -6,12 +6,11 @@ import {ConfirmationService, MessageService} from 'primeng/api';
 import {Draggable} from 'src/app/model/draggable';
 import {DroppableService} from '../../service/droppable.service';
 import {Droppable} from '../../model/droppable';
-import {DocumentService} from "../../service/document.service";
+import {DocumentService} from '../../service/document.service';
 
 @Component(
     {
         templateUrl: './droppable-list.component.html',
-        styleUrls: ['./droppable-list.component.css']
     }
 )
 export class DroppableListComponent extends AbstractListComponent<Droppable> implements OnInit {

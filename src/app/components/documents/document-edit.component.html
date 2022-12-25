@@ -29,14 +29,16 @@
                                 <div class="form-group clearfix row">
                                     <label class="label-text col-sm-3">Table (*)</label>
                                     <div class="col-sm-9">
-                                        <input [(ngModel)]="element.table_name" required label="Table (*)" name="table" pInputText placeholder="Table (*)" />
+                                        <input [(ngModel)]="element.table_name" required label="Table (*)" name="table"
+                                               pInputText placeholder="Table (*)"/>
                                     </div>
                                 </div>
 
                                 <div class="form-group clearfix row">
                                     <label class="label-text col-sm-3">Table key (*)</label>
                                     <div class="col-sm-9">
-                                        <input [(ngModel)]="element.table_key" [required]="true" name="table_key" pInputText placeholder="table key  (*)" />
+                                        <input [(ngModel)]="element.table_key" [required]="true" name="table_key"
+                                               pInputText placeholder="table key  (*)"/>
                                     </div>
                                 </div>
 
@@ -44,7 +46,8 @@
                                     <label class="label-text col-sm-3">Dcuments</label>
                                     <div class="col-sm-9">
                                         <div class="upload-box">
-                                            <p-fileUpload *ngIf="!uploading" #fup name="docs[]" customUpload="false" chooseLabel="Seleziona" cancelLabel="" multiple="false" [showCancelButton]="false" [showUploadButton]="false" (uploadHandler)="uploader($event)" (onUpload)="onBasicUpload($event)">
+                                            <p-fileUpload #fileUploader name="file" [showUploadButton]="false"
+                                                          [showCancelButton]="false">
                                             </p-fileUpload>
                                         </div>
                                     </div>
@@ -62,13 +65,15 @@
 
                                 <div class="btn-group btn-actions pull-right">
 
-                                    <button *ngIf="!uploading" (click)="process()" [disabled]="!theform.form.valid" class="btn btn-upload btn-md" pButton>
-                                    <i aria-hidden="true" class="fa fa-upload"></i> Upload
-                                </button>
+                                    <button (click)="uploadFiles()"
+                                            [disabled]="!theform.valid || !fileUploader.files || !(fileUploader.files.length > 0)"
+                                            class="btn btn-upload btn-md" pButton>
+                                        <i aria-hidden="true" class="fa fa-upload"></i> Upload
+                                    </button>
 
                                     <button (click)="navigateToList()" class="btn btn-warning" pButton>
-                                    <i aria-hidden="true" class="fa fa-undo"></i> Undo
-                                </button>
+                                        <i aria-hidden="true" class="fa fa-undo"></i> Undo
+                                    </button>
                                 </div>
                             </form>
 
@@ -76,7 +81,8 @@
                                 <div class="ui-g-12">
                                     <div class="ui-g-6">
                                         <p-panel header="File loaded">
-                                            <li style="list-style-type: none;" *ngIf="!okFileList || okFileList.length === 0">
+                                            <li style="list-style-type: none;"
+                                                *ngIf="!okFileList || okFileList.length === 0">
                                                 None
                                             </li>
                                             <li *ngFor="let file of okFileList; index as i">
@@ -87,7 +93,8 @@
 
                                     <div class="ui-g-6">
                                         <p-panel header="File in errore">
-                                            <li style="list-style-type: none;" *ngIf="!errorFileList || errorFileList.length === 0">
+                                            <li style="list-style-type: none;"
+                                                *ngIf="!errorFileList || errorFileList.length === 0">
                                                 None
                                             </li>
                                             <li *ngFor="let file of errorFileList; index as i">

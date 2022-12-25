@@ -8,7 +8,6 @@ import {FileUpload} from 'primeng/fileupload';
 
 @Component({
     templateUrl: './document-edit.component.html',
-    styleUrls: ['./document-edit.component.css']
 })
 export class DocumentEditComponent extends AbstractEditComponent<Document>
     implements OnInit {
@@ -17,11 +16,11 @@ export class DocumentEditComponent extends AbstractEditComponent<Document>
     public uploadedFile: string;
     public progress: number;
     public processed = false;
-    public okFileList: string[];
-    public errorFileList: string[];
 
-    @ViewChild('fup', {static: false})
-    fup: FileUpload;
+
+    public displayProgressBar: boolean;
+
+    @ViewChild('fileUploader', { static: false }) fileUploader: FileUpload = null;
 
 
     constructor(
@@ -41,75 +40,49 @@ export class DocumentEditComponent extends AbstractEditComponent<Document>
         this.element = new Document();
         super.ngOnInit();
     }
+    uploadFiles(): void {
+        this.displayProgressBar = true;
 
-    public uploader(event) {
-        this.uploading = true;
-        this.processed = false;
-        this.fup.clear();
-        this.okFileList = [];
-        this.errorFileList = [];
-        this.uploadAllFiles(event.files);
-    }
-
-    public resetAll() {
-        this.uploading = false;
-        this.uploadedFile = null;
-        this.processed = false;
-        this.errorFileList = [];
-        this.okFileList = [];
-    }
-
-    private async uploadAllFiles(files) {
-        for (const file of files) {
-            await this.uploadAFile(file);
+        if (!this.fileUploader) {
+            this.displayProgressBar = false;
+            return;
         }
-        this.uploadedFile = null;
-        this.processed = true;
-    }
 
-    private uploadAFile(file): Promise<any> {
-        this.uploadedFile = file.name;
-        return this.documentService
-            .upload(file, this.element.table_name, this.element.table_key)
-            .then(res => {
-                this.okFileList = [this.uploadedFile, ...this.okFileList];
-                this.uploading = false;
-            })
-            .catch(error => {
-                this.errorFileList = [this.uploadedFile, ...this.errorFileList];
-                this.uploading = false;
-            });
-    }
+        if (this.fileUploader && this.fileUploader.files.length > 0) {
+            const formData = new FormData();
 
-    public process() {
-        this.fup.upload();
-    }
+            formData.append('filename', this.fileUploader.files[0].name);
+            formData.append('table_name', this.element.table_name);
+            formData.append('table_key', this.element.table_key);
+            if (this.fileUploader.files[0].type) {
+                formData.append('mimeType', this.fileUploader.files[0].type);
+            } else {
+                formData.append('mimeType', 'application/octet-stream');
+            }
+            formData.append('file', this.fileUploader.files[0]);
+            this.documentService.uploadFile(this.element, formData).subscribe(
+                ok => {
+                    this.addInfo('File caricato con successo');
+                    this.displayProgressBar = false;
 
-    public get enableProcess(): boolean {
-        const ok = this.fup && this.fup.files && this.fup.files.length > 0;
-        if (ok) {
-            this.messageService.add({
-                severity: 'info',
-                summary: 'Informazioni: ',
-                detail: 'files: ' + this.fup.files.length
-            });
+                    if (this.element.uuid) {
+                        // sto modificando quindi ho già l'uuid
+                        this.navigateAfterUpdate();
+                    } else {
+                        // sto creando e l'endpoint di upload lancia un evento async, non conosce l'uuid dell'attachment creato
+                        // riporto l'utente alla lista
+                        this.navigateToList();
+                    }
+                },
+                error => {
+                    this.addError('Errore caricamento file,' + error);
+                    this.displayProgressBar = false;
+                }
+            );
         } else {
-            this.messageService.add({
-                severity: 'info',
-                summary: 'Informazioni: ',
-                detail: 'no files'
-            });
+            this.displayProgressBar = false;
         }
-        return ok;
     }
 
-    public onBasicUpload(event: any) {
-      this.messageService.add({
-        severity: 'info',
-        summary: 'Informazioni: ',
-        detail: 'event: ' + event
-      });
-        console.log(event);
-    }
 
 }

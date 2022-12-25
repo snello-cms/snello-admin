@@ -8,7 +8,6 @@ import {MetadataService} from '../../service/metadata.service';
 @Component(
     {
         templateUrl: './metadata-list.component.html',
-        styleUrls: ['./metadata-list.component.css']
     }
 )
 export class MetadataListComponent extends AbstractListComponent<Metadata> implements OnInit {

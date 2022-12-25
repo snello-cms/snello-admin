@@ -11,7 +11,6 @@ import {DroppableService} from '../../service/droppable.service';
 @Component(
     {
         templateUrl: './droppable-edit.component.html',
-        styleUrls: ['./droppable-edit.component.css']
     }
 )
 export class DroppableEditComponent extends AbstractEditComponent<Droppable> implements OnInit {

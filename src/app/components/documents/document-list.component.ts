@@ -8,7 +8,6 @@ import {ConfirmationService, MessageService} from 'primeng/api';
 @Component(
     {
         templateUrl: './document-list.component.html',
-        styleUrls: ['./document-list.component.css']
     }
 )
 export class DocumentListComponent extends AbstractListComponent<Document> implements OnInit {

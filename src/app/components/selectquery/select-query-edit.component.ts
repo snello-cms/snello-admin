@@ -6,8 +6,7 @@ import {SelectQueryService} from "../../service/select-query.service";
 import {SelectQuery} from "../../model/select-query";
 
 @Component({
-  templateUrl: './select-query-edit.component.html',
-  styleUrls: ['./select-query-edit.component.css']
+  templateUrl: './select-query-edit.component.html'
 })
 export class SelectQueryEditComponent extends AbstractEditComponent<SelectQuery>
   implements OnInit {
