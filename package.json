@@ -6,7 +6,7 @@
     "start": "ng serve",
     "proxy": "ng serve --proxy-config proxy.conf.json",
     "proxy-local": "ng serve --proxy-config proxy.conf-local.json",
-    "build": "ng build",
+    "build": "ng build --prod --base-href /snello-admin --deploy-url /snello-admin/",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
