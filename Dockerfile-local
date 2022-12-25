@@ -1,4 +1,4 @@
-FROM nginx:1.14.1-alpine
+FROM nginx:1.23.3-alpine-slim
 
 ## Remove default nginx website
 RUN rm -rf /usr/share/nginx/html/*
