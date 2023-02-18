@@ -6,3 +6,5 @@ npm install
 ng build --prod
 
 
+multiplatform
+
