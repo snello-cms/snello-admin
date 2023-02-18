@@ -50,6 +50,6 @@ jobs:
           platforms: linux/amd64,linux/arm64
           file: ./Dockerfile-local
           push: true
-          tags: snellocms/snello-admin:3.0.0
+          tags: snellocms/snello-admin:latest,snellocms/snello-admin:3.0.0
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
