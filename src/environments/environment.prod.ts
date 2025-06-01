@@ -1,8 +1,8 @@
 import {KeycloakConfig} from 'keycloak-angular';
 
 export const keycloakConfig: KeycloakConfig = {
-    url: 'https://sso.inline.help/auth/',
-    realm: 'inlinehelp',
+    url: 'https://sso.kayak.love/auth/',
+    realm: 'kayak',
     clientId: 'website'
 };
 
