@@ -197,7 +197,8 @@ export const MainRoutes: Routes = [
                 }
             }
         ]
-    }
+    },
+    { path: "**", component: HomepageComponent,  canActivate: [AppAuthGuard]}
 ];
 
 @NgModule({
