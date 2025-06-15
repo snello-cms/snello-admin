@@ -68,6 +68,7 @@
                                         <th pResizableColumn>Index</th>
                                         <th pResizableColumn>Query Name</th>
                                         <th pResizableColumn>Query</th>
+                                        <th pResizableColumn>Count Query</th>
                                         <th pResizableColumn>With params</th>
                                         <th class="Operations">Operations</th>
                                     </tr>
@@ -84,6 +85,7 @@
                                         <td class="RowIndex">{{ rowIndex + 1 }}</td>
                                         <td class="ui-resizable-column">{{rowData.query_name}}</td>
                                         <td class="ui-resizable-column">{{rowData.select_query}}</td>
+                                        <td class="ui-resizable-column">{{rowData.select_query_count}}</td>
                                         <td class="ui-resizable-column">{{rowData.with_params}}</td>
                                         <td>
                                             <button type="button" pButton (click)="edit(rowData)" title="Modify">
