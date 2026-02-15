@@ -29,7 +29,7 @@ export class HomepageComponent implements OnInit {
 
     ngOnInit() {
         this.metadatasService.buildSearch();
-        this.metadatasService.getList().subscribe(
+        this.metadatasService.getAllList().subscribe(
             model => {
                 this.model = [];
                 for (const element of model) {
