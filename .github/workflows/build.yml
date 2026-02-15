@@ -28,8 +28,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      # Moved to Node 24 (Active LTS as of Feb 2026)
-      - name: Use Node.js 24
+      # Moved to Node 16
+      - name: Use Node.js 16
         uses: actions/setup-node@v4
         with:
           node-version: '24'
