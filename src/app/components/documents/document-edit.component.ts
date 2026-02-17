@@ -1,88 +1,104 @@
-import {DocumentService} from './../../service/document.service';
-import {Document} from './../../model/document';
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {AbstractEditComponent} from '../../common/abstract-edit-component';
-import {ActivatedRoute, Router} from '@angular/router';
-import {ConfirmationService, MessageService} from 'primeng/api';
-import {FileUpload} from 'primeng/fileupload';
+import { DocumentService } from "./../../service/document.service";
+import { Document } from "./../../model/document";
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { AbstractEditComponent } from "../../common/abstract-edit-component";
+import { ActivatedRoute, Router } from "@angular/router";
+import { ConfirmationService, MessageService } from "primeng/api";
+import { FileUpload } from "primeng/fileupload";
+import { catchError } from "rxjs/operators";
+import { forkJoin, of } from "rxjs";
 
 @Component({
-    templateUrl: './document-edit.component.html',
+  templateUrl: "./document-edit.component.html",
 })
-export class DocumentEditComponent extends AbstractEditComponent<Document>
-    implements OnInit {
+export class DocumentEditComponent
+  extends AbstractEditComponent<Document>
+  implements OnInit
+{
+  public uploading = false;
+  public uploadedFile: string;
+  public progress: number;
+  public processed = false;
 
-    public uploading = false;
-    public uploadedFile: string;
-    public progress: number;
-    public processed = false;
+  public displayProgressBar: boolean;
 
+  @ViewChild("fileUploader", { static: false }) fileUploader: FileUpload = null;
 
-    public displayProgressBar: boolean;
+  constructor(
+    router: Router,
+    route: ActivatedRoute,
+    confirmationService: ConfirmationService,
+    private documentService: DocumentService,
+    public messageService: MessageService,
+  ) {
+    super(
+      router,
+      route,
+      confirmationService,
+      documentService,
+      messageService,
+      "document",
+    );
+  }
 
-    @ViewChild('fileUploader', { static: false }) fileUploader: FileUpload = null;
+  createInstance(): Document {
+    return new Document();
+  }
 
+  ngOnInit() {
+    this.element = new Document();
+    super.ngOnInit();
+  }
+  uploadFiles(): void {
+    this.displayProgressBar = true;
 
-    constructor(
-        router: Router,
-        route: ActivatedRoute,
-        confirmationService: ConfirmationService,
-        private documentService: DocumentService,
-        public messageService: MessageService) {
-        super(router, route, confirmationService, documentService, messageService, 'document');
+    if (!this.fileUploader) {
+      this.displayProgressBar = false;
+      return;
     }
 
-    createInstance(): Document {
-        return new Document();
-    }
-
-    ngOnInit() {
-        this.element = new Document();
-        super.ngOnInit();
-    }
-    uploadFiles(): void {
-        this.displayProgressBar = true;
-
-        if (!this.fileUploader) {
-            this.displayProgressBar = false;
-            return;
-        }
-
-        if (this.fileUploader && this.fileUploader.files.length > 0) {
-            const formData = new FormData();
-
-            formData.append('filename', this.fileUploader.files[0].name);
-            formData.append('table_name', this.element.table_name);
-            formData.append('table_key', this.element.table_key);
-            if (this.fileUploader.files[0].type) {
-                formData.append('mimeType', this.fileUploader.files[0].type);
-            } else {
-                formData.append('mimeType', 'application/octet-stream');
-            }
-            formData.append('file', this.fileUploader.files[0]);
-            this.documentService.uploadFile(this.element, formData).subscribe(
-                ok => {
-                    this.addInfo('File caricato con successo');
-                    this.displayProgressBar = false;
-
-                    if (this.element.uuid) {
-                        // sto modificando quindi ho già l'uuid
-                        this.navigateAfterUpdate();
-                    } else {
-                        // sto creando e l'endpoint di upload lancia un evento async, non conosce l'uuid dell'attachment creato
-                        // riporto l'utente alla lista
-                        this.navigateToList();
-                    }
-                },
-                error => {
-                    this.addError('Errore caricamento file,' + error);
-                    this.displayProgressBar = false;
-                }
-            );
+    if (this.fileUploader && this.fileUploader.files.length > 0) {
+      const queries: any = {};
+      for (let file of this.fileUploader.files) {
+        const formData = new FormData();
+        formData.append("filename", file.name);
+        formData.append("table_name", this.element.table_name);
+        formData.append("table_key", this.element.table_key);
+        if (file.type) {
+          formData.append("mimeType", file.type);
         } else {
-            this.displayProgressBar = false;
+          formData.append("mimeType", "application/octet-stream");
         }
+        formData.append("file", file);
+        queries[file.name] = this.documentService
+          .uploadFile(this.element, formData)
+          .pipe(
+            catchError(() => {
+              return of(null);
+            }),
+          );
+      }
+      forkJoin(queries).subscribe(
+        (queriesResponse) => {
+          this.addInfo("File caricato con successo");
+          this.displayProgressBar = false;
+
+          if (this.element.uuid) {
+            // sto modificando quindi ho già l'uuid
+            this.navigateAfterUpdate();
+          } else {
+            // sto creando e l'endpoint di upload lancia un evento async, non conosce l'uuid dell'attachment creato
+            // riporto l'utente alla lista
+            this.navigateToList();
+          }
+        },
+        (error) => {
+          this.addError("Errore caricamento file," + error);
+          this.displayProgressBar = false;
+        },
+      );
+    } else {
+      this.displayProgressBar = false;
     }
-
-
+  }
 }
