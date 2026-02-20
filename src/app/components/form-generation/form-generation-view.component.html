@@ -20,8 +20,10 @@
                     <div *ngIf="regConfig != null && regConfig.length > 0">
                         <dynamic-form [fields]="regConfig" [view]="true">
                         </dynamic-form>
-                        <button type="button" class="btn btn-warning" (click)="cancel()">Back</button><br/>
-                        <button type="button" (click)="galleria()">galleria</button>
+                         <div class="btn-group">
+                            <button type="button" class="btn btn-warning" (click)="cancel()">Back</button>
+                            <button type="button" class="btn btn-success" (click)="galleria()">Galleria</button>
+                        </div>
                     </div>
                 </div>
             </div>
