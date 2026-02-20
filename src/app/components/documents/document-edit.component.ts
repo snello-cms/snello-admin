@@ -7,6 +7,7 @@ import { ConfirmationService, MessageService } from "primeng/api";
 import { FileUpload } from "primeng/fileupload";
 import { catchError } from "rxjs/operators";
 import { forkJoin, of } from "rxjs";
+import { Location } from "@angular/common";
 
 @Component({
   templateUrl: "./document-edit.component.html",
@@ -19,7 +20,6 @@ export class DocumentEditComponent
   public uploadedFile: string;
   public progress: number;
   public processed = false;
-
   public displayProgressBar: boolean;
 
   @ViewChild("fileUploader", { static: false }) fileUploader: FileUpload = null;
@@ -29,6 +29,7 @@ export class DocumentEditComponent
     route: ActivatedRoute,
     confirmationService: ConfirmationService,
     private documentService: DocumentService,
+    private location: Location,
     public messageService: MessageService,
   ) {
     super(
@@ -49,6 +50,26 @@ export class DocumentEditComponent
     this.element = new Document();
     super.ngOnInit();
   }
+
+  /**
+   * @todo refactor how "new" is being detected. Right now this reflects src/app/common/abstract-edit-component.ts to keep consistency
+   */
+  postCreate() {
+    const id: string = this.route.snapshot.params["id"];
+    if (!id) {
+      const { table_key, table_name } =
+        this.route.snapshot.queryParamMap.keys.reduce(
+          (acc, key) => {
+            acc[key] = this.route.snapshot.queryParamMap.get(key);
+            return acc;
+          },
+          {} as Record<string, string | null>,
+        );
+      if (table_key) this.element.table_key = table_key;
+      if (table_name) this.element.table_name = table_name;
+    }
+  }
+
   uploadFiles(): void {
     this.displayProgressBar = true;
 
@@ -89,7 +110,7 @@ export class DocumentEditComponent
           } else {
             // sto creando e l'endpoint di upload lancia un evento async, non conosce l'uuid dell'attachment creato
             // riporto l'utente alla lista
-            this.navigateToList();
+            this.handleBackNavigation();
           }
         },
         (error) => {
@@ -99,6 +120,21 @@ export class DocumentEditComponent
       );
     } else {
       this.displayProgressBar = false;
+    }
+  }
+
+  /**
+   * When table_key or table_name query params are provided
+   * handles redirect to previous location instead of list
+   */
+  handleBackNavigation() {
+    if (
+      this.route.snapshot.queryParamMap.has("table_key") ||
+      this.route.snapshot.queryParamMap.has("table_name")
+    ) {
+      this.location.back();
+    } else {
+      this.navigateToList();
     }
   }
 }

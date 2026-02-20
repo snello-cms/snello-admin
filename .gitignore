@@ -4,3 +4,5 @@ dist
 .idea
 .idea/snello-admin.iml
 /.idea/
+
+mise.toml
