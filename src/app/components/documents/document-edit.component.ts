@@ -156,17 +156,29 @@ export class DocumentEditComponent
     if (!this.confirmationService) {
       this.documentService.softDelete(document).subscribe({
         next: () => {
-          this.gallery = this.gallery.filter((item) => item.uuid !== document.uuid);
+          this.gallery = this.gallery.filter(
+            (item) => item.uuid !== document.uuid,
+          );
+        },
+        error: (error) => {
+          this.addError("Error during iteme deletion" + (error || ""));
         },
       });
     }
     this.confirmationService.confirm({
       message:
-        "Do you really want to delete this record with id: " + document.uuid + "?",
+        "Do you really want to delete this record with id: " +
+        document.uuid +
+        "?",
       accept: () => {
         return this.documentService.softDelete(document).subscribe({
           next: (response) => {
-            this.gallery = this.gallery.filter((item) => item.uuid !== document.uuid);
+            this.gallery = this.gallery.filter(
+              (item) => item.uuid !== document.uuid,
+            );
+          },
+          error: (error) => {
+            this.addError("Error during iteme deletion" + (error || ""));
           },
         });
       },
