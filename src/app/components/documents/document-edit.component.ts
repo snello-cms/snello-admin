@@ -22,7 +22,10 @@ export class DocumentEditComponent
   public processed = false;
   public displayProgressBar: boolean;
 
+  protected galleryImages: Document[] = [];
+
   @ViewChild("fileUploader", { static: false }) fileUploader: FileUpload = null;
+
 
   constructor(
     router: Router,
@@ -67,6 +70,13 @@ export class DocumentEditComponent
         );
       if (table_key) this.element.table_key = table_key;
       if (table_name) this.element.table_name = table_name;
+      if(table_key && table_name) {
+        this.documentService.getDocumentsByTable(table_name, table_key).subscribe(
+          (documents) => {
+            this.galleryImages = documents;
+          }
+        );
+      } 
     }
   }
 
