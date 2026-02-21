@@ -1,129 +1,183 @@
 <sidebar></sidebar>
 <div class="sidebar">
-    <adminhome-topbar></adminhome-topbar>
+  <adminhome-topbar></adminhome-topbar>
 </div>
 <div class="sidebar-subpage">
-
-    <h3>
-        Upload Dcuments
-    </h3>
-    <p>
-
-    </p>
-
+  <h3>Upload Dcuments</h3>
+  <p></p>
 </div>
 
-
 <div class="main">
-
-    <div class="container-fluid">
-        <div class="row">
-
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <div class="content view">
+          <div class="row">
             <div class="col-md-12 col-sm-12">
-                <div class="content view">
-                    <div class="row">
-
-                        <div class="col-md-12 col-sm-12">
-
-                            <form #theform="ngForm">
-                                <div class="form-group clearfix row">
-                                    <label class="label-text col-sm-3">Table (*)</label>
-                                    <div class="col-sm-9">
-                                        <input [(ngModel)]="element.table_name" required label="Table (*)" name="table"
-                                               pInputText placeholder="Table (*)"/>
-                                    </div>
-                                </div>
-
-                                <div class="form-group clearfix row">
-                                    <label class="label-text col-sm-3">Table key (*)</label>
-                                    <div class="col-sm-9">
-                                        <input [(ngModel)]="element.table_key" [required]="true" name="table_key"
-                                               pInputText placeholder="table key  (*)"/>
-                                    </div>
-                                </div>
-
-                                <div class="form-group clearfix row">
-                                    <label class="label-text col-sm-3">Dcuments</label>
-                                    <div class="col-sm-9">
-                                        <div class="upload-box">
-                                            <p-fileUpload #fileUploader name="file" [showUploadButton]="false" multiple="multiple"
-                                                          [showCancelButton]="false">
-                                            </p-fileUpload>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <ng-container *ngIf="uploading">
-                                    <div class="ui-g-12">
-                                        <div class="ui-g-6">Uploading file {{ uploadedFile }} ...</div>
-                                        <div class="ui-g-6">
-                                            <p-progressBar *ngIf="uploadedFile" [value]="progress"></p-progressBar>
-                                        </div>
-                                    </div>
-                                </ng-container>
-
-
-                                <div class="btn-group btn-actions pull-right">
-
-                                    <button (click)="uploadFiles()"
-                                            [disabled]="!theform.valid || !fileUploader.files || !(fileUploader.files.length > 0)"
-                                            class="btn btn-upload btn-md" pButton>
-                                        <i aria-hidden="true" class="fa fa-upload"></i> Upload
-                                    </button>
-
-                                    <button (click)="handleBackNavigation()" class="btn btn-warning" pButton>
-                                        <i aria-hidden="true" class="fa fa-undo"></i> Undo
-                                    </button>
-                                </div>
-                            </form>
-
-                            <ng-container *ngIf="processed">
-                                <div class="ui-g-12">
-                                    <div class="ui-g-6">
-                                        <p-panel header="File loaded">
-                                            <li style="list-style-type: none;"
-                                                *ngIf="!okFileList || okFileList.length === 0">
-                                                None
-                                            </li>
-                                            <li *ngFor="let file of okFileList; index as i">
-                                                {{ i + 1 }}. {{ file }}
-                                            </li>
-                                        </p-panel>
-                                    </div>
-
-                                    <div class="ui-g-6">
-                                        <p-panel header="File in errore">
-                                            <li style="list-style-type: none;"
-                                                *ngIf="!errorFileList || errorFileList.length === 0">
-                                                None
-                                            </li>
-                                            <li *ngFor="let file of errorFileList; index as i">
-                                                {{ i + 1 }}. {{ file }}
-                                            </li>
-                                        </p-panel>
-                                    </div>
-                                </div>
-
-                                <ng-container *ngIf="!okFileList || okFileList.length === 0">
-                                    <div class="ui-g-12 TexAlCenter MarTop5">
-                                        <button (click)="resetAll()" class="btn btn-warning btn-sm" pButton>
-                                            <i aria-hidden="true" class="fa fa-retweet"></i> Try again
-                                        </button>
-                                    </div>
-                                </ng-container>
-
-                                <ng-container *ngIf="okFileList && okFileList.length > 0">
-                                    <div class="ui-g-12 TexAlCenter MarTop5">
-                                        <button (click)="resetAll()" class="btn btn-warning btn-sm" pButton>
-                                            <i aria-hidden="true" class="fa fa-upload"></i> Load Another file
-                                        </button>
-                                    </div>
-                                </ng-container>
-                            </ng-container>
-                        </div>
-                    </div>
+              <form #theform="ngForm">
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Table (*)</label>
+                  <div class="col-sm-9">
+                    <input
+                      [(ngModel)]="element.table_name"
+                      required
+                      label="Table (*)"
+                      name="table"
+                      pInputText
+                      placeholder="Table (*)"
+                    />
+                  </div>
                 </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Table key (*)</label>
+                  <div class="col-sm-9">
+                    <input
+                      [(ngModel)]="element.table_key"
+                      [required]="true"
+                      name="table_key"
+                      pInputText
+                      placeholder="table key  (*)"
+                    />
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Dcuments</label>
+                  <div class="col-sm-9">
+                    <div class="upload-box">
+                      <p-fileUpload
+                        #fileUploader
+                        name="file"
+                        [showUploadButton]="false"
+                        multiple="multiple"
+                        [showCancelButton]="false"
+                      >
+                      </p-fileUpload>
+                    </div>
+                  </div>
+                </div>
+
+                <ng-container *ngIf="uploading">
+                  <div class="ui-g-12">
+                    <div class="ui-g-6">
+                      Uploading file {{ uploadedFile }} ...
+                    </div>
+                    <div class="ui-g-6">
+                      <p-progressBar
+                        *ngIf="uploadedFile"
+                        [value]="progress"
+                      ></p-progressBar>
+                    </div>
+                  </div>
+                </ng-container>
+
+                <div class="btn-group btn-actions pull-right">
+                  <button
+                    (click)="uploadFiles()"
+                    [disabled]="
+                      !theform.valid ||
+                      !fileUploader.files ||
+                      !(fileUploader.files.length > 0)
+                    "
+                    class="btn btn-upload btn-md"
+                    pButton
+                  >
+                    <i aria-hidden="true" class="fa fa-upload"></i> Upload
+                  </button>
+
+                  <button
+                    (click)="handleBackNavigation()"
+                    class="btn btn-warning"
+                    pButton
+                  >
+                    <i aria-hidden="true" class="fa fa-undo"></i> Undo
+                  </button>
+                </div>
+              </form>
+
+              <ng-container *ngIf="processed">
+                <div class="ui-g-12">
+                  <div class="ui-g-6">
+                    <p-panel header="File loaded">
+                      <li
+                        style="list-style-type: none"
+                        *ngIf="!okFileList || okFileList.length === 0"
+                      >
+                        None
+                      </li>
+                      <li *ngFor="let file of okFileList; index as i">
+                        {{ i + 1 }}. {{ file }}
+                      </li>
+                    </p-panel>
+                  </div>
+
+                  <div class="ui-g-6">
+                    <p-panel header="File in errore">
+                      <li
+                        style="list-style-type: none"
+                        *ngIf="!errorFileList || errorFileList.length === 0"
+                      >
+                        None
+                      </li>
+                      <li *ngFor="let file of errorFileList; index as i">
+                        {{ i + 1 }}. {{ file }}
+                      </li>
+                    </p-panel>
+                  </div>
+                </div>
+
+                <ng-container *ngIf="!okFileList || okFileList.length === 0">
+                  <div class="ui-g-12 TexAlCenter MarTop5">
+                    <button
+                      (click)="resetAll()"
+                      class="btn btn-warning btn-sm"
+                      pButton
+                    >
+                      <i aria-hidden="true" class="fa fa-retweet"></i> Try again
+                    </button>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngIf="okFileList && okFileList.length > 0">
+                  <div class="ui-g-12 TexAlCenter MarTop5">
+                    <button
+                      (click)="resetAll()"
+                      class="btn btn-warning btn-sm"
+                      pButton
+                    >
+                      <i aria-hidden="true" class="fa fa-upload"></i> Load
+                      Another file
+                    </button>
+                  </div>
+                </ng-container>
+              </ng-container>
             </div>
+          </div>
         </div>
+        <ng-container *ngIf="gallery.length > 0">
+          <div class="content view gallery-container">
+            <div
+              class="gallery-image-container"
+              *ngFor="let document of gallery; trackBy: $index"
+            >
+              <img [src]="document.path" />
+              <div class="gallery-image-buttons-container">
+                <button (click)="navigateToDocumentEdit(document.uuid)" pButton>
+                  Edit
+                </button>
+                <button
+                  class="btn-danger"
+                  (click)="deleteDocument(document)"
+                  pButton
+                >
+                  <i aria-hidden="true" class="fa fa-times"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </div>
     </div>
+  </div>
 </div>

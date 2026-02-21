@@ -113,4 +113,19 @@ export class DocumentService extends AbstractService<Document> {
     };
     return this.getAllList(search);
   }
+
+  /**
+   * This method handles a "soft delete"
+   * by removing table_name and table_key
+   * @param document
+   * @returns
+   */
+  public softDelete(document: Document): Observable<Document> {
+    let body = this.marshall(document);
+    delete body.table_key;
+    delete body.table_name;
+    return this.httpClient
+      .put<Document>(this.url + "/" + this.getId(document), body)
+      .pipe(catchError(this.handleError.bind(this)));
+  }
 }
