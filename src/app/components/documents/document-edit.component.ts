@@ -22,7 +22,7 @@ export class DocumentEditComponent
   public processed = false;
   public displayProgressBar: boolean;
 
-  protected gallery: Document[] = [];
+  public gallery: Document[] = [];
 
   @ViewChild("fileUploader", { static: false }) fileUploader: FileUpload = null;
 
