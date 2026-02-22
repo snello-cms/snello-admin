@@ -125,7 +125,7 @@ export class DocumentService extends AbstractService<Document> {
     delete body.table_key;
     delete body.table_name;
     return this.httpClient
-      .put<Document>(this.url + "/" + this.getId(document), body)
+      .put<Document>(this.url + "/" + this.getId(document) + '/data', body)
       .pipe(catchError(this.handleError.bind(this)));
   }
 }
