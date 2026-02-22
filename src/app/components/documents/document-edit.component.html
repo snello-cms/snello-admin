@@ -161,7 +161,7 @@
               class="gallery-image-container"
               *ngFor="let document of gallery; trackBy: $index"
             >
-              <img [src]="document.path" />
+              <img [src]="downloadPath(document.uuid)" />
               <div class="gallery-image-buttons-container">
                 <button (click)="navigateToDocumentEdit(document.uuid)" pButton>
                   Edit
