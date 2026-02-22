@@ -5,7 +5,7 @@ import { AbstractEditComponent } from "../../common/abstract-edit-component";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ConfirmationService, MessageService } from "primeng/api";
 import { FileUpload } from "primeng/fileupload";
-import { catchError } from "rxjs/operators";
+import { catchError, tap } from "rxjs/operators";
 import { forkJoin, of } from "rxjs";
 import { Location } from "@angular/common";
 
@@ -21,6 +21,8 @@ export class DocumentEditComponent
   public progress: number;
   public processed = false;
   public displayProgressBar: boolean;
+
+  protected gallery: Document[] = [];
 
   @ViewChild("fileUploader", { static: false }) fileUploader: FileUpload = null;
 
@@ -67,6 +69,13 @@ export class DocumentEditComponent
         );
       if (table_key) this.element.table_key = table_key;
       if (table_name) this.element.table_name = table_name;
+      if (table_key && table_name) {
+        this.documentService
+          .getDocumentsByTable(table_name, table_key)
+          .subscribe((documents) => {
+            this.gallery = documents;
+          });
+      }
     }
   }
 
@@ -136,5 +145,43 @@ export class DocumentEditComponent
     } else {
       this.navigateToList();
     }
+  }
+
+  navigateToDocumentEdit(uuid: string) {
+    this.router.navigate(["/document/edit", uuid]);
+  }
+
+  deleteDocument(document: Document) {
+    this.clearMsgs();
+    if (!this.confirmationService) {
+      this.documentService.softDelete(document).subscribe({
+        next: () => {
+          this.gallery = this.gallery.filter(
+            (item) => item.uuid !== document.uuid,
+          );
+        },
+        error: (error) => {
+          this.addError("Error during iteme deletion" + (error || ""));
+        },
+      });
+    }
+    this.confirmationService.confirm({
+      message:
+        "Do you really want to delete this record with id: " +
+        document.uuid +
+        "?",
+      accept: () => {
+        return this.documentService.softDelete(document).subscribe({
+          next: (response) => {
+            this.gallery = this.gallery.filter(
+              (item) => item.uuid !== document.uuid,
+            );
+          },
+          error: (error) => {
+            this.addError("Error during iteme deletion" + (error || ""));
+          },
+        });
+      },
+    });
   }
 }
