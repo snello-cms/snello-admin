@@ -151,6 +151,10 @@ export class DocumentEditComponent
     this.router.navigate(["/document/edit", uuid]);
   }
 
+  downloadPath(uuid: string) {
+    return this.documentService.downloadPath(uuid);
+  }
+
   deleteDocument(document: Document) {
     this.clearMsgs();
     if (!this.confirmationService) {
