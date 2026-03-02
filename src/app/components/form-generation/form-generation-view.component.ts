@@ -39,4 +39,8 @@ export class FormGenerationViewComponent implements OnInit {
      galleria() {
         this.router.navigate(['/document/new'], { queryParams: { table_key: this.uuid, table_name: this.metadataName} });
     }
+
+    public edit() {
+        this.router.navigate(['datalist/edit', this.metadataName, this.uuid]);
+    }
 }
