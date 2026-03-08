@@ -26,7 +26,7 @@ export class FieldDefinitionResolver implements Resolve<FieldDefinition[]> {
             switchMap(
                 el => {
                     fieldDefinitionList = el;
-                    if (name) {
+                    if (name && key) {
                         return this.apiService.fetchObject(name, key);
                     } else {
                         return of(null);
