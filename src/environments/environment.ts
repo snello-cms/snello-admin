@@ -4,9 +4,9 @@
 import {KeycloakConfig} from 'keycloak-angular';
 
 export const keycloakConfig: KeycloakConfig = {
-  url: 'https://sso.inline.help/auth/',
-  realm: 'inlinehelp',
-  clientId: 'website'
+  url: 'https://sso.kayak.love/',
+  realm: 'kayak',
+  clientId: 'snello-admin'
 };
 
 

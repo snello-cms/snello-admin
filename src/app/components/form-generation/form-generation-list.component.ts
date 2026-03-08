@@ -125,7 +125,7 @@ export class FormGenerationListComponent implements OnInit {
         this.apiService._limit = 10;
         this.apiService.getList(this.metadataName, this.fieldDefinitionsSearch).subscribe(
             model => {
-                for(let element of model) {
+                for (let element of model) {
                     if (element != null) {
                         for (const definition_1 of this.fieldDefinitionsList) {
                             definition_1.is_edit = true;
@@ -203,7 +203,11 @@ export class FormGenerationListComponent implements OnInit {
                 if (objToSearch.hasOwnProperty(k)) {
                     for (const field of this.fieldDefinitionsSearch) {
                         if (field.name === k) {
-                            field.value = objToSearch[field.name];
+                            if (field.join_table_key != null && objToSearch[field.name]) {
+                                field.value = objToSearch[field.name][field.join_table_key];
+                            } else {
+                                field.value = objToSearch[field.name];
+                            }
                         }
                     }
                 }

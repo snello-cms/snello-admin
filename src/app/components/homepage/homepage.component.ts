@@ -21,7 +21,6 @@ export class HomepageComponent implements OnInit {
     constructor(private _route: ActivatedRoute,
                 public router: Router,
                 public metadatasService: MetadataService,
-                private extensionService: ExtensionService,
                 private apiService: ApiService) {
         this.model = [];
         this.extensions = [];
@@ -39,10 +38,6 @@ export class HomepageComponent implements OnInit {
                 }
             },
             error => (this.errorMessage = <any>error)
-        );
-        this.extensionService.search._sort = 'name asc';
-        this.extensionService.getAllList().subscribe(
-            list => this.extensions = list
         );
     }
 
