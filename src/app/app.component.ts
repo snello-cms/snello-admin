@@ -1,14 +1,33 @@
-import {Component} from '@angular/core';
-import {Router} from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {filter} from 'rxjs/internal/operators';
+import {take} from 'rxjs/operators';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html'
 })
-export class AppComponent {
-
-    constructor(protected router: Router) {
+export class AppComponent implements OnInit {
+    constructor(private router: Router) {
     }
 
+    ngOnInit() {
+        // We listen for the first successful navigation completion
+        this.router.events.pipe(
+            filter(event => event instanceof NavigationEnd),
+            take(1)
+        ).subscribe(() => {
+            const currentUrl = this.router.url;
+
+            // Check if the URL ends with or contains the &iss flag
+            if (currentUrl.includes('&iss')) {
+                const cleanUrl = currentUrl.replace('&iss', '');
+
+                // Navigate to the clean URL
+                // replaceUrl: true ensures the "dirty" URL isn't saved in browser history
+                this.router.navigateByUrl(cleanUrl, {replaceUrl: true});
+            }
+        });
+    }
 
 }
