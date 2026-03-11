@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
+import {NavigationEnd, Router} from '@angular/router';
 import {filter} from 'rxjs/internal/operators';
 import {take} from 'rxjs/operators';
 
