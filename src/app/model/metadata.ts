@@ -16,6 +16,9 @@ export class Metadata {
   table_key_type: string;
   table_key_addition: string;
 
+  api_protected: boolean;
+  username_field: string;
+
   icon: string;
   tab_groups: string;
   created: boolean;

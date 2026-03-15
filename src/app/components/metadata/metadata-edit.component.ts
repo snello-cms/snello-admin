@@ -15,11 +15,13 @@ export class MetadataEditComponent extends AbstractEditComponent<Metadata>
     tableTypeSelect: SelectItem[] = [
         {value: 'uuid', label: 'uuid'},
         {value: 'slug', label: 'slug'},
-        {value: 'autoincrement', label: 'auto increment'}
+        {value: 'autoincrement', label: 'auto increment'},
+        {value: 'userdefined', label: 'user defined'}
     ];
 
     public newtable = true;
     public advanced = false;
+    public api_protected = false;
 
     constructor(
         router: Router,
@@ -55,11 +57,13 @@ export class MetadataEditComponent extends AbstractEditComponent<Metadata>
     }
 
     preSave(): boolean {
+        this.element.api_protected = this.api_protected;
         this.element.already_exist = !this.newtable;
         return true;
     }
 
     preUpdate(): boolean {
+        this.element.api_protected = this.api_protected;
         this.element.already_exist = !this.newtable;
         return true;
     }

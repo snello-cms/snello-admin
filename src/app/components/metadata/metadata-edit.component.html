@@ -26,14 +26,16 @@
                         <div class="form-group clearfix row">
                             <label class="label-text col-sm-3">Label (*)</label>
                             <div class="col-sm-9">
-                                <input [(ngModel)]="element.table_name" required label="Table (*)" name="table" pInputText placeholder="Table (*)">
+                                <input [(ngModel)]="element.table_name" required label="Table (*)" name="table"
+                                       pInputText placeholder="Table (*)">
                             </div>
                         </div>
 
                         <div class="form-group clearfix row">
                             <label class="label-text col-sm-3">Description</label>
                             <div class="col-sm-9">
-                                <input [(ngModel)]="element.description" name="Description" pInputText placeholder="Description">
+                                <input [(ngModel)]="element.description" name="Description" pInputText
+                                       placeholder="Description">
                             </div>
                         </div>
 
@@ -41,15 +43,16 @@
                             <label class="label-text col-sm-3">
                                 <i class="{{element.icon}}" *ngIf="element.icon"></i>&nbsp;&nbsp; Icon (*)</label>
                             <div class="col-sm-9">
-                                <p-dropdown [options]="iconItems" [(ngModel)]="element.icon" filter="true" name="icon" required>
+                                <p-dropdown [options]="iconItems" [(ngModel)]="element.icon" filter="true" name="icon"
+                                            required>
                                     <ng-template let-item pTemplate="selectedItem">
                                         <i class="{{item.value}}"></i>
-                                        <span style="vertical-align:middle; margin-left: .5em">{{item.label}}</span>
+                                        <span style="vertical-align:middle; margin-left: .5em">{{ item.label }}</span>
                                     </ng-template>
                                     <ng-template let-icon pTemplate="element.icon">
                                         <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
                                             <i class="{{icon.value}}"></i>
-                                            <div style="font-size:14px;float:right;margin-top:4px">{{icon.label}}</div>
+                                            <div style="font-size:14px;float:right;margin-top:4px">{{ icon.label }}</div>
                                         </div>
                                     </ng-template>
                                 </p-dropdown>
@@ -63,18 +66,35 @@
                             </div>
                         </div>
 
+                        <div class="form-group clearfix row">
+                            <label class="label-text col-sm-3">It's a api protected?</label>
+                            <div class="col-sm-9">
+                                <p-inputSwitch name="api_protected" [(ngModel)]="api_protected"></p-inputSwitch>
+                            </div>
+                        </div>
+
+                        <div class="form-group clearfix row" *ngIf="api_protected">
+                            <label class="label-text col-sm-3">Username Field</label>
+                            <div class="col-sm-9">
+                                <input [(ngModel)]="element.username_field" name="username_field" pInputText
+                                       placeholder="Username Field">
+                            </div>
+                        </div>
+
 
                         <div class="form-group clearfix row" *ngIf="!newtable">
                             <label class="label-text col-sm-3">Select Fields</label>
                             <div class="col-sm-9">
-                                <input [(ngModel)]="element.select_fields" name="SelFields" pInputText placeholder="Select Fields">
+                                <input [(ngModel)]="element.select_fields" name="SelFields" pInputText
+                                       placeholder="Select Fields">
                             </div>
                         </div>
 
                         <div class="form-group clearfix row" *ngIf="!newtable">
                             <label class="label-text col-sm-3">Search Fields</label>
                             <div class="col-sm-9">
-                                <input [(ngModel)]="element.search_fields" name="SearchFields" pInputText placeholder="Search Fields">
+                                <input [(ngModel)]="element.search_fields" name="SearchFields" pInputText
+                                       placeholder="Search Fields">
                             </div>
                         </div>
 
@@ -82,7 +102,8 @@
                         <div class="form-group clearfix row" *ngIf="!newtable">
                             <label class="label-text col-sm-3">Alias table</label>
                             <div class="col-sm-9">
-                                <input [(ngModel)]="element.alias_table" name="alias_table" pInputText placeholder="Alias table">
+                                <input [(ngModel)]="element.alias_table" name="alias_table" pInputText
+                                       placeholder="Alias table">
                             </div>
                         </div>
 
@@ -90,21 +111,25 @@
                         <div class="form-group clearfix row" *ngIf="!newtable">
                             <label class="label-text col-sm-3">Alias condition</label>
                             <div class="col-sm-9">
-                                <input [(ngModel)]="element.alias_condition" name="alias_condition" pInputText placeholder="Alias condition">
+                                <input [(ngModel)]="element.alias_condition" name="alias_condition" pInputText
+                                       placeholder="Alias condition">
                             </div>
                         </div>
 
                         <div class="form-group clearfix row">
                             <label class="label-text col-sm-3">Table key (*)</label>
                             <div class="col-sm-9">
-                                <input [(ngModel)]="element.table_key" [required]="true" name="table_key" pInputText placeholder="table key  (*)">
+                                <input [(ngModel)]="element.table_key" [required]="true" name="table_key" pInputText
+                                       placeholder="table key  (*)">
                             </div>
                         </div>
 
                         <div class="form-group clearfix row">
                             <label class="label-text col-sm-3">Table key Type(*)</label>
                             <div class="col-sm-9">
-                                <p-dropdown [(ngModel)]="element.table_key_type" [filter]="false" [options]="tableTypeSelect" [style]="{'width':'100%'}" filterBy="label" [required]="true" name="tableKeyType" placeholder="Select table key type">
+                                <p-dropdown [(ngModel)]="element.table_key_type" [filter]="false"
+                                            [options]="tableTypeSelect" [style]="{'width':'100%'}" filterBy="label"
+                                            [required]="true" name="tableKeyType" placeholder="Select table key type">
                                 </p-dropdown>
                             </div>
                         </div>
@@ -112,7 +137,8 @@
                         <div *ngIf="newtable && element.table_key_type == 'slug'" class="form-group clearfix row">
                             <label class="label-text col-sm-3">Table key Addition (*)</label>
                             <div class="col-sm-9">
-                                <input [(ngModel)]="element.table_key_addition" name="table_key_addition" pInputText placeholder="table key addition">
+                                <input [(ngModel)]="element.table_key_addition" name="table_key_addition" pInputText
+                                       placeholder="table key addition">
                             </div>
                         </div>
 
@@ -126,14 +152,16 @@
                         <div class="form-group clearfix row" *ngIf="advanced && newtable">
                             <label class="label-text col-sm-3">Creation query</label>
                             <div class="col-sm-9">
-                                <input [(ngModel)]="element.creation_query" name="creation_query" pInputText placeholder="Creation query">
+                                <input [(ngModel)]="element.creation_query" name="creation_query" pInputText
+                                       placeholder="Creation query">
                             </div>
                         </div>
 
                         <div class="form-group clearfix row" *ngIf="advanced">
                             <label class="label-text col-sm-3">Tab & Groups</label>
                             <div class="col-sm-9">
-                                <input [(ngModel)]="element.tab_groups" name="tab_groups" pInputText placeholder="(tab1:group0,group1;tab2:group3,group4)">
+                                <input [(ngModel)]="element.tab_groups" name="tab_groups" pInputText
+                                       placeholder="(tab1:group0,group1;tab2:group3,group4)">
                             </div>
                         </div>
 
@@ -147,11 +175,14 @@
 
 
                         <div class="btn-group btn-actions pull-right">
-                            <button (click)="save()" [disabled]="!theform.form.valid" *ngIf="!element.uuid" class="btn btn-success" type="button">Save
+                            <button (click)="save()" [disabled]="!theform.form.valid" *ngIf="!element.uuid"
+                                    class="btn btn-success" type="button">Save
                             </button>
-                            <button (click)="update()" [disabled]="!theform.form.valid" *ngIf="element.uuid" class="btn btn-success" type="button">Modify
+                            <button (click)="update()" [disabled]="!theform.form.valid" *ngIf="element.uuid"
+                                    class="btn btn-success" type="button">Modify
                             </button>
-                            <button (click)="confirmDelete()" *ngIf="element.uuid" class="btn btn-danger" type="button">Delete
+                            <button (click)="confirmDelete()" *ngIf="element.uuid" class="btn btn-danger" type="button">
+                                Delete
                             </button>
                             <button (click)="navigateToList()" class="btn btn-default" type="button">Undo</button>
                         </div>

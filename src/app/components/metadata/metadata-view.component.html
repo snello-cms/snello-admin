@@ -38,27 +38,34 @@
                                     <button pButton class="btn btn-success pull-right" (click)="edit()">
                                         <i class="fa fa-plus-circle"></i> Edit
                                     </button>
-                                    <button type="button" class="btn btn-primary" (click)="confirmCreateTable()" title="Create Table on Database" *ngIf="!element.created && !element.already_exist">
+                                    <button type="button" class="btn btn-primary" (click)="confirmCreateTable()"
+                                            title="Create Table on Database"
+                                            *ngIf="!element.created && !element.already_exist">
                                         <i aria-hidden="true" class="fa fa-lock"></i> Create DB Table
                                     </button>
 
-                                    <button type="button" class="btn btn-warning" (click)="confirmTruncateTable()" title="Truncate Table Data" *ngIf="element.created && !element.already_exist">
+                                    <button type="button" class="btn btn-warning" (click)="confirmTruncateTable()"
+                                            title="Truncate Table Data"
+                                            *ngIf="element.created && !element.already_exist">
                                         <i aria-hidden="true" class="fa fa-eraser"></i> Truncate DB Table Data
                                     </button>
 
-                                    <button type="button" class="btn btn-danger" (click)="confirmDeleteTable()" title="Delete Table on Database" *ngIf="element.created && !element.already_exist">
+                                    <button type="button" class="btn btn-danger" (click)="confirmDeleteTable()"
+                                            title="Delete Table on Database"
+                                            *ngIf="element.created && !element.already_exist">
                                         <i aria-hidden="true" class="fa fa-exclamation-triangle"></i> Delete DB Table
                                     </button>
                                 </div>
 
                                 <h3>
-                                    {{element.table_name}}
+                                    {{ element.table_name }}
                                 </h3>
 
 
                             </div>
                         </div>
-                        <div class="clearfix"></div><br><br>
+                        <div class="clearfix"></div>
+                        <br><br>
                         <div class="clearfix"></div>
                         <div class="row">
                             <div class="col-sm-6">
@@ -66,7 +73,7 @@
                                 <div class="form-group clearfix row">
                                     <label class="label-text col-sm-3">Label (*)</label>
                                     <div class="col-sm-9">
-                                        {{element.table_name}}
+                                        {{ element.table_name }}
                                     </div>
                                 </div>
 
@@ -80,14 +87,14 @@
                                 <div class="form-group clearfix row">
                                     <label class="label-text col-sm-3">Select Fields</label>
                                     <div class="col-sm-9">
-                                        {{element.select_fields}}
+                                        {{ element.select_fields }}
                                     </div>
                                 </div>
 
                                 <div class="form-group clearfix row">
                                     <label class="label-text col-sm-3">Search Fields</label>
                                     <div class="col-sm-9">
-                                        {{element.search_fields}}
+                                        {{ element.search_fields }}
                                     </div>
                                 </div>
 
@@ -95,7 +102,7 @@
                                 <div class="form-group clearfix row">
                                     <label class="label-text col-sm-3">Description</label>
                                     <div class="col-sm-9">
-                                        {{element.description}}
+                                        {{ element.description }}
                                     </div>
                                 </div>
 
@@ -103,14 +110,14 @@
                                 <div class="form-group clearfix row">
                                     <label class="label-text col-sm-3">Alias table</label>
                                     <div class="col-sm-9">
-                                        {{element.alias_table}}
+                                        {{ element.alias_table }}
                                     </div>
                                 </div>
 
                                 <div class="form-group clearfix row">
                                     <label class="label-text col-sm-3">Alias condition</label>
                                     <div class="col-sm-9">
-                                        {{element.alias_condition}}
+                                        {{ element.alias_condition }}
                                     </div>
                                 </div>
 
@@ -122,28 +129,43 @@
                                 <div class="form-group clearfix row">
                                     <label class="label-text col-sm-3">Table key (*)</label>
                                     <div class="col-sm-9">
-                                        {{element.table_key}}
+                                        {{ element.table_key }}
                                     </div>
                                 </div>
 
                                 <div class="form-group clearfix row">
                                     <label class="label-text col-sm-3">Table key Type(*)</label>
                                     <div class="col-sm-9">
-                                        {{element.table_key_type}}
+                                        {{ element.table_key_type }}
                                     </div>
                                 </div>
+
+                                <div class="form-group clearfix row">
+                                    <label class="label-text col-sm-3">Api Protected</label>
+                                    <div class="col-sm-9">
+                                        {{ element.api_protected }}
+                                    </div>
+                                </div>
+
+                                <div class="form-group clearfix row">
+                                    <label class="label-text col-sm-3">Username Field</label>
+                                    <div class="col-sm-9">
+                                        {{ element.username_field }}
+                                    </div>
+                                </div>
+
 
                                 <div *ngIf="element.table_key_type == 'slug'" class="form-group clearfix row">
                                     <label class="label-text col-sm-3">Table key Addition (*)</label>
                                     <div class="col-sm-9">
-                                        {{element.table_key_addition}}
+                                        {{ element.table_key_addition }}
                                     </div>
                                 </div>
 
                                 <div class="form-group clearfix row">
                                     <label class="label-text col-sm-3">Creation query</label>
                                     <div class="col-sm-9">
-                                        {{element.creation_query}}
+                                        {{ element.creation_query }}
                                     </div>
                                 </div>
 
@@ -151,27 +173,27 @@
                                 <div class="form-group clearfix row">
                                     <label class="label-text col-sm-3">Tab & Groups</label>
                                     <div class="col-sm-9">
-                                        {{element.tab_groups}}
+                                        {{ element.tab_groups }}
                                     </div>
                                 </div>
 
                                 <div class="form-group clearfix row">
                                     <label class="label-text col-sm-3">Order By</label>
                                     <div class="col-sm-9">
-                                        {{element.order_by}}
+                                        {{ element.order_by }}
                                     </div>
                                 </div>
 
                                 <div class="form-group clearfix row">
                                     <label class="label-text col-sm-3">Created?</label>
                                     <div class="col-sm-9">
-                                        {{element.created}}
+                                        {{ element.created }}
                                     </div>
                                 </div>
                                 <div class="form-group clearfix row">
                                     <label class="label-text col-sm-3">Already exist?</label>
                                     <div class="col-sm-9">
-                                        {{element.already_exist}}
+                                        {{ element.already_exist }}
                                     </div>
                                 </div>
                             </div>
@@ -180,16 +202,19 @@
                 </div>
                 <div role="tabpanel" class="tab-pane" id="fielddefintions">
                     <div class="content view">
-                        <button pButton class="btn btn-add pull-right" (click)="newFieldDefinition()" [disabled]="this.element.created">
-                                    <i class="fa fa-plus-circle"></i> Add New
-                                </button>
+                        <button pButton class="btn btn-add pull-right" (click)="newFieldDefinition()"
+                                [disabled]="this.element.created">
+                            <i class="fa fa-plus-circle"></i> Add New
+                        </button>
                         <h3>
                             Field Definitions
                         </h3>
-                        <div class="clearfix"></div><br>
+                        <div class="clearfix"></div>
+                        <br>
                         <div class="clearfix"></div>
 
-                        <p-table [paginator]="true" [resizableColumns]="true" [responsive]="true" [rows]="10" [totalRecords]="fieldDefinitionService.listSize" [value]="fieldDefinitions">
+                        <p-table [paginator]="true" [resizableColumns]="true" [responsive]="true" [rows]="10"
+                                 [totalRecords]="fieldDefinitionService.listSize" [value]="fieldDefinitions">
                             <ng-template let-columns pTemplate="header">
                                 <tr class="sort-header">
                                     <th pResizableColumn>Index</th>
@@ -209,13 +234,14 @@
                             <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
                                 <tr>
                                     <td class="RowIndex">{{ rowIndex + 1 }}</td>
-                                    <td class="ui-resizable-column">{{rowData.name}}</td>
-                                    <td class="ui-resizable-column">{{rowData.metadata_name}}</td>
-                                    <td class="ui-resizable-column">{{rowData.label}}</td>
-                                    <td class="ui-resizable-column">{{rowData.table_key}}</td>
-                                    <td class="ui-resizable-column">{{rowData.type}}</td>
+                                    <td class="ui-resizable-column">{{ rowData.name }}</td>
+                                    <td class="ui-resizable-column">{{ rowData.metadata_name }}</td>
+                                    <td class="ui-resizable-column">{{ rowData.label }}</td>
+                                    <td class="ui-resizable-column">{{ rowData.table_key }}</td>
+                                    <td class="ui-resizable-column">{{ rowData.type }}</td>
                                     <td class="ui-resizable-column">
-                                        <button (click)="editField(rowData)" class="btn btn-success btn-sm" [disabled]="this.element.created" pButton>
+                                        <button (click)="editField(rowData)" class="btn btn-success btn-sm"
+                                                [disabled]="this.element.created" pButton>
                                             <i aria-hidden="true" class="fa fa-pencil"></i>
                                             Edit
                                         </button>
