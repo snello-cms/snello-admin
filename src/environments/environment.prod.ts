@@ -1,7 +1,7 @@
 import {KeycloakConfig} from 'keycloak-angular';
 
 export const keycloakConfig: KeycloakConfig = {
-    url: 'https://sso.kayak.love/',
+    url: 'https://accounts.kayak.love/',
     realm: 'kayak',
     clientId: 'snello-admin'
 };
