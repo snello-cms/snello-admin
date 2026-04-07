@@ -1,12 +1,13 @@
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {AbstractService} from './abstract-service';
 import {Router} from '@angular/router';
-import {OnInit} from '@angular/core';
+import { ChangeDetectorRef, OnInit, Directive } from '@angular/core';
 import {DocumentService} from '../service/document.service';
 
+@Directive()
 export abstract class AbstractListComponent<T> implements OnInit {
 
-    element: T = null;
+    element!: T;
     errorMessage: string;
     model: T[] = [];
     listSize: number;
@@ -72,7 +73,8 @@ export abstract class AbstractListComponent<T> implements OnInit {
         public router: Router,
         public confirmationService: ConfirmationService,
         public service: AbstractService<T>,
-        public path?: string
+        public path?: string,
+        protected cdr?: ChangeDetectorRef
     ) {
     }
 
@@ -90,6 +92,7 @@ export abstract class AbstractListComponent<T> implements OnInit {
                 this.model = <T[]>model;
                 this.listSize = this.service.listSize;
                 this.postList();
+                this.cdr?.detectChanges();
             },
             error => (this.errorMessage = <any>error)
         );
@@ -262,8 +265,8 @@ export abstract class AbstractListComponent<T> implements OnInit {
         this.router.navigate(['/' + this.path + '/edit', this.getId()]);
     }
 
-    getId() {
-        return this.element['uuid'];
+    getId(): string {
+        return String((this.element as unknown as { uuid: unknown }).uuid);
     }
 
     /*

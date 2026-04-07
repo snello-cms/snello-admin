@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {NavigationEnd, Router} from '@angular/router';
-import {filter} from 'rxjs/internal/operators';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import {filter} from 'rxjs/operators';
 import {take} from 'rxjs/operators';
 
 @Component({
     selector: 'app-root',
-    templateUrl: './app.component.html'
+    templateUrl: './app.component.html',
+    imports: [RouterOutlet]
 })
 export class AppComponent implements OnInit {
     constructor(private router: Router) {

@@ -1,15 +1,19 @@
-import {ConfirmationService, MessageService} from 'primeng/api';
+import { ConfirmationService, MessageService, PrimeTemplate } from 'primeng/api';
 import {AbstractListComponent} from '../../common/abstract-list-component';
 import {Component, OnInit} from '@angular/core';
 import {Metadata} from '../../model/metadata';
 import {NavigationExtras, Router} from '@angular/router';
 import {MetadataService} from '../../service/metadata.service';
+import { SideBarComponent } from '../sidebar/sidebar.component';
+import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { InputText } from 'primeng/inputtext';
+import { TableModule } from 'primeng/table';
 
-@Component(
-    {
-        templateUrl: './metadata-list.component.html',
-    }
-)
+@Component({
+    templateUrl: './metadata-list.component.html',
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, TableModule, PrimeTemplate]
+})
 export class MetadataListComponent extends AbstractListComponent<Metadata> implements OnInit {
 
     constructor(

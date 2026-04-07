@@ -26,8 +26,8 @@
                   <label class="label-text col-sm-3">Metadata(*)</label>
                   <div class="col-sm-9">
                     <p-dropdown [(ngModel)]="element.metadata_uuid" [filter]="false" [options]="metadatasSelect"
-                                [required]="true" [style]="{'width':'100%'}" filterBy="label" name="metadata_uuid"
-                                placeholder="Seleziona un metadato">
+                      [required]="true" [style]="{'width':'100%'}" filterBy="label" name="metadata_uuid"
+                      placeholder="Seleziona un metadato">
                     </p-dropdown>
                   </div>
                 </div>
@@ -37,7 +37,7 @@
                   <div class="col-sm-9">
 
                     <input [(ngModel)]="element.condition" [required]="true" name="condition" pInputText
-                           placeholder="Condition  (*)">
+                      placeholder="Condition  (*)">
                   </div>
                 </div>
 
@@ -46,7 +46,7 @@
                   <div class="col-sm-9">
 
                     <input [(ngModel)]="element.sub_query" [required]="true" name="sub_query" pInputText
-                           placeholder="SubQuery  (*)">
+                      placeholder="SubQuery  (*)">
                   </div>
                 </div>
 
@@ -67,23 +67,29 @@
                 </div>
 
                 <div class="btn-group btn-actions pull-right">
-                  <button type="button" *ngIf="!element.uuid" [disabled]="!theform.form.valid" class="btn btn-success"
-                          (click)="save()">Save
-                  </button>&nbsp;&nbsp;
-                  <button type="button" *ngIf="element.uuid" [disabled]="!theform.form.valid" class="btn btn-success"
-                          (click)="update()">Modify
-                  </button>&nbsp;&nbsp;&nbsp;&nbsp;
-                  <button type="button" *ngIf="element.uuid" [disabled]="!theform.form.valid" class="btn btn-danger"
+                  @if (!element.uuid) {
+                    <button type="button" [disabled]="!theform.form.valid" class="btn btn-success"
+                      (click)="save()">Save
+                    </button>
+                    }&nbsp;&nbsp;
+                    @if (element.uuid) {
+                      <button type="button" [disabled]="!theform.form.valid" class="btn btn-success"
+                        (click)="update()">Modify
+                      </button>
+                      }&nbsp;&nbsp;&nbsp;&nbsp;
+                      @if (element.uuid) {
+                        <button type="button" [disabled]="!theform.form.valid" class="btn btn-danger"
                           (click)="confirmDelete()">Delete
-                  </button>&nbsp;&nbsp;
+                        </button>
+                        }&nbsp;&nbsp;
 
-                  <button type="button" class="btn btn-danger" (click)="navigateToList()">Undo</button>
+                        <button type="button" class="btn btn-danger" (click)="navigateToList()">Undo</button>
+                      </div>
+                    </form>
+                  </div>
                 </div>
-              </form>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>

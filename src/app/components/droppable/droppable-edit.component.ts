@@ -3,24 +3,31 @@ import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MetadataService} from '../../service/metadata.service';
 import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
-import {Draggable} from 'src/app/model/draggable';
-import {DraggableService} from 'src/app/service/draggable.service';
+import {Draggable} from '../../model/draggable';
+import {DraggableService} from '../../service/draggable.service';
 import {Droppable} from '../../model/droppable';
 import {DroppableService} from '../../service/droppable.service';
+import { SideBarComponent } from '../sidebar/sidebar.component';
+import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { InputText } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputTextarea } from 'primeng/inputtextarea';
 
-@Component(
-    {
-        templateUrl: './droppable-edit.component.html',
-    }
-)
+type VariableEntry = { name: string; draggable: string; value: string };
+
+@Component({
+    templateUrl: './droppable-edit.component.html',
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, DropdownModule, InputTextarea]
+})
 export class DroppableEditComponent extends AbstractEditComponent<Droppable> implements OnInit {
 
-    draggables = [];
+    draggables: Draggable[] = [];
     draggableSelect: SelectItem[] = [];
     mapDraggable: Map<string, Draggable> = new Map();
-    draggable: string;
-    variables: { name, draggable, value }[] = [];
-    dynamics: { name, draggable, value }[] = [];
+    draggable = '';
+    variables: VariableEntry[] = [];
+    dynamics: VariableEntry[] = [];
 
     constructor(
         public router: Router,
@@ -56,6 +63,9 @@ export class DroppableEditComponent extends AbstractEditComponent<Droppable> imp
         }
         if (this.draggable && this.mapDraggable.has(this.draggable)) {
             const draggableScelto = this.mapDraggable.get(this.draggable);
+            if (!draggableScelto) {
+                return;
+            }
             if (this.element.draggables && this.element.draggables.length > 0) {
                 this.element.draggables += ',';
             }

@@ -8,17 +8,23 @@ import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
 import {map, switchMap} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {Metadata} from '../../model/metadata';
+import { SideBarComponent } from '../sidebar/sidebar.component';
+import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputText } from 'primeng/inputtext';
+import { InputTextarea } from 'primeng/inputtextarea';
+import { InputSwitch } from 'primeng/inputswitch';
 
-@Component(
-    {
-        templateUrl: './field-definition-edit.component.html',
-    }
-)
+@Component({
+    templateUrl: './field-definition-edit.component.html',
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, DropdownModule, InputText, InputTextarea, InputSwitch]
+})
 export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDefinition> implements OnInit {
 
     metadatas: Metadata[] = [];
     metadatasSelect: SelectItem[] = [];
-    fieldType: string;
+    fieldType?: string;
     pageBack: string;
     uuidBack: string;
     public advanced = false;
@@ -152,8 +158,9 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
     preSave(): boolean {
         this.pre();
         if (this.element.searchable) {
+            const elementName = this.element.name ?? '';
             this.element.search_field_name =
-                this.element.search_condition === '' ? this.element.name : this.element.name + '_' + this.element.search_condition;
+                this.element.search_condition === '' ? elementName : elementName + '_' + this.element.search_condition;
         }
         return super.preSave();
     }
@@ -162,19 +169,25 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
     preUpdate(): boolean {
         this.pre();
         if (this.element.searchable) {
+            const elementName = this.element.name ?? '';
             this.element.search_field_name =
-                this.element.search_condition === '' ? this.element.name : this.element.name + '_' + this.element.search_condition;
+                this.element.search_condition === '' ? elementName : elementName + '_' + this.element.search_condition;
         }
         return super.preUpdate();
     }
 
     pre() {
-        const fieldDefTypes = MAP_INPUT_TO_FIELD.get(this.fieldType);
-        this.element.metadata_name = this.mapMetadata.get(this.element.metadata_uuid).table_name;
-        this.element.type = fieldDefTypes[0];
-        this.element.input_type = fieldDefTypes[1];
+        const fieldDefTypes = this.fieldType ? MAP_INPUT_TO_FIELD.get(this.fieldType) : undefined;
+        const metadata = this.mapMetadata.get(this.element.metadata_uuid);
+        if (metadata) {
+            this.element.metadata_name = metadata.table_name;
+        }
+        if (fieldDefTypes) {
+            this.element.type = fieldDefTypes[0];
+            this.element.input_type = fieldDefTypes[1];
+        }
         delete this.element.value;
-        delete this.element.is_edit;
+        this.element.is_edit = false;
     }
 
     createInstance(): FieldDefinition {
@@ -183,21 +196,21 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
 
     postFind() {
         if (!this.element.input_type) {
-            this.element.input_type = null;
+            this.element.input_type = undefined;
         }
         this.fieldType = this.mapFieldToType.get(this.element.type + this.element.input_type);
         super.postFind();
     }
 
     changedMetadata(event: any) {
-        this.element.tab_name = null;
-        this.element.group_name = null;
+        this.element.tab_name = undefined;
+        this.element.group_name = undefined;
         this.tabs = [];
         this.groups = [];
         const meta = this.mapMetadata.get(event.value);
 
         // Se la stringa contine un ';': ho sicuramente la divisione in tab. Splitto tutto, tiro fuori i tab e valuto le sottostringhe
-        if (!meta.tab_groups) {
+        if (!meta || !meta.tab_groups) {
             return;
         }
         if (meta.tab_groups.includes(';')) {
@@ -218,8 +231,8 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
     }
 
     changedTab(event: any) {
-        this.element.group_name = null;
-        this.groups = this.tabToGroups.get(event.value);
+        this.element.group_name = undefined;
+        this.groups = this.tabToGroups.get(event.value) ?? [];
     }
 
     private splitTabsAndGroups(singleTabAndGroups: string) {
@@ -250,7 +263,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
                 this.element = element;
                 this.element = this.createInstance();
                 this.element.metadata_uuid = uuid;
-                this.fieldType = null;
+                this.fieldType = undefined;
                 this.postCreate();
 
             },
@@ -343,7 +356,8 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
     }
 
     changedFieldType (event: any) {
-        this.element.search_condition = this.componentDefaultValuesMapper[event.value];
+        const key = event.value as keyof typeof this.componentDefaultValuesMapper;
+        this.element.search_condition = this.componentDefaultValuesMapper[key] ?? '';
         console.log(this.element.search_condition);
     }
 }

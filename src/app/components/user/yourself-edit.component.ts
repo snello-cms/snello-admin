@@ -3,12 +3,15 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {User} from '../../model/user';
 import {UserService} from '../../service/user.service';
+import { SideBarComponent } from '../sidebar/sidebar.component';
+import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { InputText } from 'primeng/inputtext';
 
-@Component(
-    {
-        templateUrl: './yourself-edit.component.html'
-    }
-)
+@Component({
+    templateUrl: './yourself-edit.component.html',
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText]
+})
 export class YourselfEditComponent {
 
     public element: User;

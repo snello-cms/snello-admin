@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import {FieldDefinition} from '../../model/field-definition';
 import {SelectItem} from 'primeng/api';
 import {ApiService} from '../../service/api.service';
@@ -7,38 +7,38 @@ import {Observable, of} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {tap} from 'rxjs/operators';
 import {FieldDefinitionService} from "../../service/field-definition.service";
+import { AutoComplete } from 'primeng/autocomplete';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-multijoin',
     template: `
-        <div *ngIf="joinList$ | async" class="form-group clearfix row" [formGroup]="group">
+        @if (joinList$ | async) {
+          <div class="form-group clearfix row" [formGroup]="group">
             <div class="col-sm-12">
-                <label class="col-sm-3">
-                    {{ field.name }}
-                </label>
-                <div class="col-sm-9">
-
-                    <p-autoComplete
-                            [suggestions]="options" (completeMethod)="search($event)" [size]="30"
-                            [field]="labelField" [dataKey]="field.join_table_key" [dropdown]="true"
-                            [formControlName]="field.name" [forceSelection]="true" [multiple]="true">
-
-
-                    </p-autoComplete>
-
-
-                </div>
+              <label class="col-sm-3">
+                {{ field.name }}
+              </label>
+              <div class="col-sm-9">
+                <p-autoComplete
+                  [suggestions]="options" (completeMethod)="search($event)" [size]="30"
+                  [field]="labelField" [dataKey]="field.join_table_key" [dropdown]="true"
+                  [formControlName]="field.name" [forceSelection]="true" [multiple]="true">
+                </p-autoComplete>
+              </div>
             </div>
-        </div>
-    `,
-    styles: []
+          </div>
+        }
+        `,
+    styles: [],
+    imports: [ReactiveFormsModule, AutoComplete, AsyncPipe]
 })
 export class MultiJoinComponent implements OnInit {
     field: FieldDefinition;
-    group: FormGroup;
+    group: UntypedFormGroup;
 
     options: SelectItem[] = [];
-    labelField: string = null;
+    labelField = '';
     labelMap: Map<string, any> = new Map();
     values: string[] = [];
     filteredValue: string;
@@ -57,6 +57,7 @@ export class MultiJoinComponent implements OnInit {
         this.labelField = this.fieldDefinitionService.fetchFirstLabel(this.field);
         this.uuid = this.activatedRoute.snapshot.params['uuid'];
         this.name = this.activatedRoute.snapshot.params['name'];
+        const fieldName = this.field.name;
 
 
         this.apiService.getJoinList(this.field)
@@ -67,11 +68,11 @@ export class MultiJoinComponent implements OnInit {
 
         const observables = [];
 
-        if (this.uuid) {
+        if (this.uuid && fieldName) {
             this.joinList$ =
                 this.apiService.fetchJoinList(this.name, this.uuid, this.field.join_table_name, this.field.join_table_select_fields)
                     .pipe(
-                        tap(join => this.group.get(this.field.name).setValue(join)),
+                        tap(join => this.group.get(fieldName)?.setValue(join)),
                     );
 
         } else {
@@ -81,7 +82,7 @@ export class MultiJoinComponent implements OnInit {
     }
 
 
-    search(event) {
+    search(event: { query?: string }) {
         this.apiService.getJoinList(this.field, event.query, this.labelField)
             .subscribe(options => {
                     this.options = options;
@@ -89,7 +90,8 @@ export class MultiJoinComponent implements OnInit {
             );
     }
 
-    handleDropdown(event) {
+    handleDropdown(event: unknown) {
+        void event;
         // event.query = current value in input field
     }
 

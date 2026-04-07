@@ -5,10 +5,14 @@ import {MetadataService} from '../../service/metadata.service';
 import {AbstractViewComponent} from '../../common/abstract-view-component';
 import {FieldDefinitionService} from '../../service/field-definition.service';
 import {FieldDefinition} from '../../model/field-definition';
-import {ConfirmationService, MessageService} from 'primeng/api';
+import { ConfirmationService, MessageService, PrimeTemplate } from 'primeng/api';
+import { SideBarComponent } from '../sidebar/sidebar.component';
+import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
+import { TableModule } from 'primeng/table';
 
 @Component({
     templateUrl: './metadata-view.component.html',
+    imports: [SideBarComponent, AdminhomeTopBar, TableModule, PrimeTemplate]
 })
 export class MetadataViewComponent extends AbstractViewComponent<Metadata>
     implements OnInit {

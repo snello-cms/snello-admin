@@ -1,34 +1,39 @@
 import {Component, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import {FieldDefinition} from '../../model/field-definition';
 import {ApiService} from '../../service/api.service';
 import {ActivatedRoute} from '@angular/router';
 import {Observable, of} from 'rxjs';
 import {tap} from 'rxjs/operators';
+import { AutoComplete } from 'primeng/autocomplete';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-join',
     template: `
-        <div *ngIf="join$ | async as value" class="form-group clearfix" [formGroup]="group">
+        @if (join$ | async; as value) {
+          <div class="form-group clearfix" [formGroup]="group">
             <div class="row">
-                <label class="col-sm-3">
-                    {{ field.name }}
-                </label>
-                <div class="col-sm-9">
-                    <p-autoComplete
-                            [suggestions]="options" (completeMethod)="search($event)" [size]="30"
-                            [field]="labelField" [dataKey]="field.join_table_key" [dropdown]="true"
-                            [formControlName]="field.name" [forceSelection]="true">
-                    </p-autoComplete>
-                </div>
+              <label class="col-sm-3">
+                {{ field.name }}
+              </label>
+              <div class="col-sm-9">
+                <p-autoComplete
+                  [suggestions]="options" (completeMethod)="search($event)" [size]="30"
+                  [field]="labelField" [dataKey]="field.join_table_key" [dropdown]="true"
+                  [formControlName]="field.name" [forceSelection]="true">
+                </p-autoComplete>
+              </div>
             </div>
-        </div>
-    `,
-    styles: []
+          </div>
+        }
+        `,
+    styles: [],
+    imports: [ReactiveFormsModule, AutoComplete, AsyncPipe]
 })
 export class JoinComponent implements OnInit {
     field: FieldDefinition;
-    group: FormGroup;
+    group: UntypedFormGroup;
 
     join$: Observable<any>;
     options: any[] = [];
@@ -53,12 +58,13 @@ export class JoinComponent implements OnInit {
 
         this.uuid = this.activatedRoute.snapshot.params['uuid'];
         this.name = this.activatedRoute.snapshot.params['name'];
+        const fieldName = this.field.name;
 
-        if (this.uuid) {
+        if (this.uuid && fieldName) {
             this.join$ =
                 this.apiService.fetchObject(this.field.join_table_name, this.field.value, this.field.join_table_select_fields)
                     .pipe(
-                        tap(join => this.group.get(this.field.name).setValue(join)),
+                        tap(join => this.group.get(fieldName)?.setValue(join)),
                     );
 
         } else {
@@ -68,12 +74,13 @@ export class JoinComponent implements OnInit {
     }
 
 
-    handleDropdown(event) {
+    handleDropdown(event: unknown) {
+        void event;
         // event.query = current value in input field
     }
 
 
-    search(event) {
+    search(event: { query?: string }) {
         this.apiService.getJoinList(this.field, event.query, this.labelField)
             .subscribe(options => {
                     if (options != null && options.length > 0) {

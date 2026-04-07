@@ -121,9 +121,12 @@ export class DocumentService extends AbstractService<Document> {
    * @returns
    */
   public softDelete(document: Document): Observable<Document> {
-    let body = this.marshall(document);
-    delete body.table_key;
-    delete body.table_name;
+    const { table_key, table_name, ...body } = this.marshall(document) as Document & {
+      table_key?: string;
+      table_name?: string;
+    };
+    void table_key;
+    void table_name;
     return this.httpClient
       .put<Document>(this.url + "/" + this.getId(document) + '/data', body)
       .pipe(catchError(this.handleError.bind(this)));

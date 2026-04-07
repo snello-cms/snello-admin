@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {Metadata} from '../model/metadata';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {AbstractService} from '../common/abstract-service';
 import {FieldDefinition} from '../model/field-definition';
 import {catchError, map} from 'rxjs/operators';
@@ -19,7 +19,7 @@ export class MetadataService extends AbstractService<Metadata> {
         super(configurationService.getValue(METADATA_API_PATH), http, messageService);
     }
 
-    getId(element: Metadata) {
+    getId(element: Metadata): string {
         return element.uuid;
     }
 
@@ -28,19 +28,27 @@ export class MetadataService extends AbstractService<Metadata> {
         valuesMap: Map<string, any>,
         visualization: string
     ): FieldDefinition[] {
+        void visualization;
         let i;
         for (i = 0; i < arrayFromServer.length; i++) {
-            arrayFromServer[i].value = valuesMap.get(arrayFromServer[i].name);
+            const fieldName = arrayFromServer[i].name;
+            if (!fieldName) {
+                continue;
+            }
+            arrayFromServer[i].value = valuesMap.get(fieldName);
         }
-        return;
+        return arrayFromServer;
     }
 
     viewMetadata(name: string, id: string): Observable<FieldDefinition[]> {
-        return null;
+        void name;
+        void id;
+        return of([]);
     }
 
     newMetadata(name: string): Observable<FieldDefinition[]> {
-        return null;
+        void name;
+        return of([]);
     }
 
     buildSearch() {
@@ -51,7 +59,7 @@ export class MetadataService extends AbstractService<Metadata> {
         };
     }
 
-    public getMetadataFromName(name: string): Metadata {
+    public getMetadataFromName(name: string): Metadata | undefined {
         return this.nameToMetadata.get(name);
     }
 

@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import {catchError, map} from 'rxjs/operators';
 import {Metadata} from '../model/metadata';
-import {Observable} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 import {FieldDefinition} from '../model/field-definition';
 import {ConfigurationService} from './configuration.service';
 import {DATA_LIST_API_PATH} from '../constants/constants';
@@ -12,7 +12,7 @@ import {DATA_LIST_API_PATH} from '../constants/constants';
 })
 export class DataListService {
 
-    url: string;
+    url = '';
 
     constructor(protected httpClient: HttpClient, configurationService: ConfigurationService) {
        configurationService.getValue(DATA_LIST_API_PATH).subscribe(
@@ -30,7 +30,7 @@ export class DataListService {
             })
             .pipe(
                 map(res => {
-                    const ts: string[] = res.body; // json();
+                    const ts: string[] = res.body ?? []; // json();
                     return ts;
                 }),
                 catchError(this.handleError)
@@ -43,7 +43,7 @@ export class DataListService {
             observe: 'response',
         }).pipe(
             map(res => {
-                const t: Metadata = <Metadata>res.body; // json();
+                const t: Metadata | null = res.body; // json();
                 return t;
             }),
             catchError(this.handleError)
@@ -61,7 +61,7 @@ export class DataListService {
             })
             .pipe(
                 map(res => {
-                    const ts: FieldDefinition[] = res.body; // json();
+                    const ts: FieldDefinition[] = res.body ?? []; // json();
                     return ts;
                 }),
                 catchError(this.handleError)
@@ -70,7 +70,7 @@ export class DataListService {
 
     protected handleError(error: HttpErrorResponse): Observable<any> {
         console.error(error);
-        return Observable.throw(error['msg'] || 'Server error');
+        return throwError(() => error.message || 'Server error');
     }
 
 }

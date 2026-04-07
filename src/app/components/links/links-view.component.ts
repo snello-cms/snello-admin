@@ -6,9 +6,12 @@ import {FieldDefinitionService} from '../../service/field-definition.service';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {Link} from '../../model/link';
 import {LinksService} from '../../service/links.service';
+import { SideBarComponent } from '../sidebar/sidebar.component';
+import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
 
 @Component({
-    templateUrl: './links-view.component.html'
+    templateUrl: './links-view.component.html',
+    imports: [SideBarComponent, AdminhomeTopBar]
 })
 export class LinksViewComponent extends AbstractViewComponent<Link>
     implements OnInit {

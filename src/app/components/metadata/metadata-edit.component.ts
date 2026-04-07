@@ -3,11 +3,18 @@ import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {Metadata} from '../../model/metadata';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MetadataService} from '../../service/metadata.service';
-import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
+import { ConfirmationService, MessageService, SelectItem, PrimeTemplate } from 'primeng/api';
 import {FONT_AWESOME_ICONS} from '../../constants/constants';
+import { SideBarComponent } from '../sidebar/sidebar.component';
+import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { InputText } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputSwitch } from 'primeng/inputswitch';
 
 @Component({
     templateUrl: './metadata-edit.component.html',
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, DropdownModule, PrimeTemplate, InputSwitch]
 })
 export class MetadataEditComponent extends AbstractEditComponent<Metadata>
     implements OnInit {

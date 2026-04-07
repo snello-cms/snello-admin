@@ -1,38 +1,42 @@
 <sidebar></sidebar>
 <div class="sidebar">
-    <adminhome-topbar></adminhome-topbar>
+  <adminhome-topbar></adminhome-topbar>
 </div>
 
 <div class="sidebar-subpage">
-    <h3>Welcome<br><b> {{userDetails.firstName}} {{userDetails.lastName}}</b></h3>
-    <p>
-        Snello version: {{version()}}
-    </p>
+  <h3>Welcome<br><b> {{userDetails.firstName}} {{userDetails.lastName}}</b></h3>
+  <p>
+    Snello version: {{version()}}
+  </p>
 
 </div>
 
 <div class="main">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-12 col-sm-12">
-                <div class="content list">
-                    <div *ngFor="let component of items">
-                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" *permit="component.roles">
-                            <div class="card-home">
-                                <i class="{{component.icon}} fa-3x pull-right"></i>
-                                <a [routerLink]="'/' + component.section + '/' + component.id">
-                                    <h3>{{component.name}}</h3>
-                                    <p *ngIf="component.summary">
-                                        {{component.summary}}
-                                    </p>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <p-messages [showTransitionOptions]="'300ms'" [hideTransitionOptions]="'300ms'"></p-messages>
-
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <div class="content list">
+          @for (component of items; track component) {
+            <div>
+              <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" *permit="component.roles">
+                <div class="card-home">
+                  <i class="{{component.icon}} fa-3x pull-right"></i>
+                  <a [routerLink]="'/' + component.section + '/' + component.id">
+                    <h3>{{component.name}}</h3>
+                    @if (component.summary) {
+                      <p>
+                        {{component.summary}}
+                      </p>
+                    }
+                  </a>
                 </div>
+              </div>
             </div>
+          }
+          <p-messages [showTransitionOptions]="'300ms'" [hideTransitionOptions]="'300ms'"></p-messages>
+
         </div>
+      </div>
     </div>
+  </div>
 </div>

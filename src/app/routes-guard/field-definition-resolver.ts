@@ -1,4 +1,4 @@
-import {ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot} from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import {Observable, of} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
 import {FieldDefinition} from '../model/field-definition';
@@ -10,7 +10,7 @@ import {MetadataService} from '../service/metadata.service';
 @Injectable({
     providedIn: 'root'
 })
-export class FieldDefinitionResolver implements Resolve<FieldDefinition[]> {
+export class FieldDefinitionResolver  {
     constructor(private dataListService: DataListService,
                 private metadataSerive: MetadataService,
                 private router: Router,

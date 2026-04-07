@@ -1,16 +1,19 @@
 import {Component, OnInit} from '@angular/core';
 import {AbstractListComponent} from '../../common/abstract-list-component';
 import {Router} from '@angular/router';
-import {ConfirmationService, MessageService} from 'primeng/api';
+import { ConfirmationService, MessageService, PrimeTemplate } from 'primeng/api';
 import {Extension} from "../../model/extension";
 import {ExtensionService} from "../../service/extension.service";
 import {DocumentService} from "../../service/document.service";
+import { SideBarComponent } from '../sidebar/sidebar.component';
+import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { TableModule } from 'primeng/table';
 
-@Component(
-    {
-        templateUrl: './extensions-list.component.html'
-    }
-)
+@Component({
+    templateUrl: './extensions-list.component.html',
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, TableModule, PrimeTemplate]
+})
 export class ExtensionsListComponent extends AbstractListComponent<Extension> implements OnInit {
 
 
@@ -42,8 +45,9 @@ export class ExtensionsListComponent extends AbstractListComponent<Extension> im
 
             // IE doesn't allow using a blob object directly as link href
             // instead it is necessary to use msSaveOrOpenBlob
-            if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-                window.navigator.msSaveOrOpenBlob(newBlob);
+            const nav = window.navigator as Navigator & { msSaveOrOpenBlob?: (blob: Blob) => void };
+            if (nav.msSaveOrOpenBlob) {
+                nav.msSaveOrOpenBlob(newBlob);
                 return;
             }
 

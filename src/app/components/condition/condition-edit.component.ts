@@ -6,15 +6,19 @@ import {ConditionService} from '../../service/condition.service';
 import {MetadataService} from '../../service/metadata.service';
 import {Metadata} from '../../model/metadata';
 import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
+import { SideBarComponent } from '../sidebar/sidebar.component';
+import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputText } from 'primeng/inputtext';
 
-@Component(
-    {
-        templateUrl: './condition-edit.component.html',
-    }
-)
+@Component({
+    templateUrl: './condition-edit.component.html',
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, DropdownModule, InputText]
+})
 export class ConditionEditComponent extends AbstractEditComponent<Condition> implements OnInit {
 
-    metadatas = [];
+    metadatas: Metadata[] = [];
     metadatasSelect: SelectItem[] = [];
     mapMetadata: Map<string, Metadata> = new Map();
 
@@ -50,7 +54,10 @@ export class ConditionEditComponent extends AbstractEditComponent<Condition> imp
     }
 
     pre() {
-        this.element.metadata_name = this.mapMetadata.get(this.element.metadata_uuid).table_name;
+        const metadata = this.mapMetadata.get(this.element.metadata_uuid);
+        if (metadata) {
+            this.element.metadata_name = metadata.table_name;
+        }
     }
 
     preSave(): boolean {

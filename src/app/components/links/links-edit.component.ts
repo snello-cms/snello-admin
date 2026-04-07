@@ -9,20 +9,23 @@ import {map, switchMap} from 'rxjs/operators';
 import {Metadata} from '../../model/metadata';
 import {DataListService} from '../../service/data-list.service';
 import {Observable} from 'rxjs';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { SideBarComponent } from '../sidebar/sidebar.component';
+import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
+import { InputText } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
 
-@Component(
-    {
-        templateUrl: './links-edit.component.html',
-    }
-)
+@Component({
+    templateUrl: './links-edit.component.html',
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, InputText, DropdownModule]
+})
 export class LinksEditComponent extends AbstractEditComponent<Link> implements OnInit {
 
     public metadatas: SelectItem[] = [];
     public fieldDefinitions: SelectItem[] = [];
     public mapMetadata: Map<string, Metadata> = new Map();
 
-    registerForm: FormGroup;
+    registerForm: UntypedFormGroup;
 
     constructor(
         public router: Router,
@@ -30,7 +33,7 @@ export class LinksEditComponent extends AbstractEditComponent<Link> implements O
         public confirmationService: ConfirmationService,
         public metadataService: MetadataService,
         public userService: LinksService,
-        private formBuilder: FormBuilder,
+        private formBuilder: UntypedFormBuilder,
         public messageService: MessageService,
         public dataListService: DataListService) {
         super(router, route, confirmationService, userService, messageService, 'links');
