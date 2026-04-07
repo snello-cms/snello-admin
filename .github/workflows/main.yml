@@ -66,9 +66,9 @@ jobs:
           push: true
           tags: |
             snellocms/snello-admin:latest
-            snellocms/snello-admin:3.0.0
+            snellocms/snello-admin:3.0.1
             ghcr.io/${{ github.repository }}:latest
-            ghcr.io/${{ github.repository }}:3.0.0
+            ghcr.io/${{ github.repository }}:3.0.1
 
       - name: Image digest
         run: echo ${{ steps.docker_build1.outputs.digest }}
