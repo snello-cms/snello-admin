@@ -1,13 +1,15 @@
 import {Component} from '@angular/core';
 import {APP_VERSION, ASSET_PATH} from '../../constants/constants';
-import {Router} from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import {ConfigurationService} from '../../service/configuration.service';
 import {KeycloakService} from 'keycloak-angular';
 import {KeycloakProfile} from 'keycloak-js';
+import { PermitDirective } from '../../directives/permit.directive';
 
 @Component({
     selector: 'sidebar',
-    templateUrl: './sidebar.component.html'
+    templateUrl: './sidebar.component.html',
+    imports: [RouterLink, PermitDirective]
 })
 export class SideBarComponent {
     public selected = 'home';

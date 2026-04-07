@@ -1,5 +1,69 @@
 import {SelectItem} from 'primeng/api';
-import {environment} from '../../environments/environment';
+
+const FA6_BRAND_ICONS = new Set<string>([
+    '500px', 'adn', 'amazon', 'android', 'angellist', 'apple', 'bandcamp', 'behance', 'behance-square',
+    'bitbucket', 'bitbucket-square', 'black-tie', 'bluetooth', 'bluetooth-b', 'buysellads', 'cc-amex',
+    'cc-diners-club', 'cc-discover', 'cc-jcb', 'cc-mastercard', 'cc-paypal', 'cc-stripe', 'cc-visa', 'chrome',
+    'codepen', 'codiepie', 'connectdevelop', 'contao', 'css3', 'dashcube', 'delicious', 'deviantart', 'digg',
+    'discord', 'dribbble', 'dropbox', 'drupal', 'edge', 'eercast', 'empire', 'envira', 'etsy', 'expeditedssl',
+    'facebook', 'facebook-f', 'facebook-official', 'facebook-square', 'firefox', 'flickr', 'font-awesome',
+    'fonticons', 'fort-awesome', 'forumbee', 'foursquare', 'free-code-camp', 'git', 'git-square', 'github',
+    'github-alt', 'github-square', 'gitlab', 'glide', 'glide-g', 'google', 'google-plus', 'google-plus-circle',
+    'google-plus-official', 'google-plus-square', 'google-wallet', 'gratipay', 'grav', 'hacker-news', 'houzz',
+    'html5', 'imdb', 'instagram', 'internet-explorer', 'ioxhost', 'joomla', 'jsfiddle', 'lastfm',
+    'lastfm-square', 'leanpub', 'linode', 'linkedin', 'linkedin-square', 'linux', 'maxcdn', 'meanpath', 'medium',
+    'meetup', 'mixcloud', 'modx', 'odnoklassniki', 'odnoklassniki-square', 'opencart', 'opera', 'optin-monster',
+    'pagelines', 'paypal', 'pied-piper', 'pied-piper-alt', 'pied-piper-pp', 'pinterest', 'pinterest-p',
+    'pinterest-square', 'product-hunt', 'qq', 'quora', 'ravelry', 'rebel', 'reddit', 'reddit-alien',
+    'reddit-square', 'renren', 'safari', 'scribd', 'sellsy', 'shirtsinbulk', 'simplybuilt', 'skyatlas', 'skype',
+    'slack', 'slideshare', 'snapchat', 'snapchat-ghost', 'snapchat-square', 'soundcloud', 'spotify',
+    'stack-exchange', 'stack-overflow', 'steam', 'steam-square', 'stumbleupon', 'stumbleupon-circle',
+    'superpowers', 'telegram', 'tencent-weibo', 'themeisle', 'trello', 'tripadvisor', 'tumblr',
+    'tumblr-square', 'twitch', 'twitter', 'twitter-square', 'usb', 'viacoin', 'viadeo', 'viadeo-square', 'vimeo',
+    'vimeo-square', 'vine', 'vk', 'wechat', 'weibo', 'weixin', 'whatsapp', 'wikipedia-w', 'windows',
+    'wordpress', 'wpbeginner', 'wpexplorer', 'wpforms', 'xing', 'xing-square', 'y-combinator', 'yahoo', 'yelp',
+    'yoast', 'youtube', 'youtube-play', 'youtube-square'
+]);
+
+const FA6_ICON_RENAMES: Record<string, string> = {
+    'close': 'xmark',
+    'remove': 'xmark',
+    'mail-forward': 'share',
+    'mail-reply': 'reply',
+    'mail-reply-all': 'reply-all',
+    'warning': 'triangle-exclamation',
+    'dashboard': 'gauge-high',
+    'chain-broken': 'link-slash',
+    'automobile': 'car',
+    'navicon': 'bars',
+    'photo': 'image',
+    'soccer-ball': 'futbol',
+    'window-close': 'window-closed',
+    'files': 'copy'
+};
+
+function toFa6IconClass(iconClass: string): string {
+    const match = iconClass.match(/\bfa fa-([a-z0-9-]+)/);
+    if (!match) {
+        return iconClass;
+    }
+
+    let iconName = match[1];
+    let style = 'fa-solid';
+
+    if (iconName.endsWith('-o')) {
+        iconName = iconName.slice(0, -2);
+        style = 'fa-regular';
+    }
+
+    iconName = FA6_ICON_RENAMES[iconName] ?? iconName;
+
+    if (FA6_BRAND_ICONS.has(iconName)) {
+        style = 'fa-brands';
+    }
+
+    return `${style} fa-${iconName}`;
+}
 
 export const ASSET_PATH = 'asset_path';
 export const CONDITION_API_PATH = 'condition_api_path';
@@ -20,7 +84,7 @@ export const LOGIN_API_PATH = 'login_api_path';
 export const CHANGEPASSWORD_API_PATH = 'changepassword_api_path';
 export const RESETPASSWORD_API_PATH = 'resetpassword_api_path';
 export const APP_VERSION = '3.0.5';
-export const CONFIG_PATH = environment.imgPath + '/assets/config.json';
+export const CONFIG_PATH = '/assets/config.json';
 export const DROPPABLE_API_PATH = 'droppable_api_path';
 export const DRAGGABLE_API_PATH = 'draggable_api_path';
 // se FS => /files/
@@ -36,7 +100,7 @@ export const APPLICATION_JSON = 'application/json';
 export const AUTHORIZATION = 'Authorization';
 export const BEARER_ = 'Bearer ';
 
-export const ADMIN_ITEMS: any[] = [
+const ADMIN_ITEMS_LEGACY: any[] = [
     {
         id: 'list',
         icon: 'fa fa-book',
@@ -111,7 +175,12 @@ export const ADMIN_ITEMS: any[] = [
     // }
 ];
 
-export const FONT_AWESOME_ICONS: SelectItem[] = [
+export const ADMIN_ITEMS: any[] = ADMIN_ITEMS_LEGACY.map((item) => ({
+    ...item,
+    icon: toFa6IconClass(item.icon)
+}));
+
+const FONT_AWESOME_ICONS_LEGACY: SelectItem[] = [
     {label: 'fa glass', value: 'fa fa-glass'},
     {label: 'fa music', value: 'fa fa-music'},
     {label: 'fa search', value: 'fa fa-search'},
@@ -788,6 +857,11 @@ export const FONT_AWESOME_ICONS: SelectItem[] = [
     {label: 'fa wpexplorer', value: 'fa fa-wpexplorer'},
     {label: 'fa meetup', value: 'fa fa-meetup'}
 ];
+
+export const FONT_AWESOME_ICONS: SelectItem[] = FONT_AWESOME_ICONS_LEGACY.map((icon) => ({
+    ...icon,
+    value: typeof icon.value === 'string' ? toFa6IconClass(icon.value) : icon.value
+}));
 
 export const SEVERITY_VALUES: SelectItem[] = [
     {label: 'info', value: 'info'},

@@ -8,9 +8,16 @@ import {FileUpload} from 'primeng/fileupload';
 import {catchError, tap} from 'rxjs/operators';
 import {forkJoin, of} from 'rxjs';
 import {Location} from '@angular/common';
+import { SideBarComponent } from '../sidebar/sidebar.component';
+import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { InputText } from 'primeng/inputtext';
+import { ProgressBar } from 'primeng/progressbar';
+import { Panel } from 'primeng/panel';
 
 @Component({
     templateUrl: './document-edit.component.html',
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, FileUpload, ProgressBar, Panel]
 })
 export class DocumentEditComponent
     extends AbstractEditComponent<Document>
@@ -23,7 +30,7 @@ export class DocumentEditComponent
 
     public gallery: Document[] = [];
 
-    @ViewChild('fileUploader', {static: false}) fileUploader: FileUpload = null;
+    @ViewChild('fileUploader') fileUploader?: FileUpload;
 
     constructor(
         router: Router,

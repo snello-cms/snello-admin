@@ -3,9 +3,12 @@ import {Metadata} from '../../model/metadata';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ExtensionService} from '../../service/extension.service';
 import {DocumentService} from '../../service/document.service';
+import { SideBarComponent } from '../sidebar/sidebar.component';
+import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
 
 @Component({
-    templateUrl: './extensions-view.component.html'
+    templateUrl: './extensions-view.component.html',
+    imports: [SideBarComponent, AdminhomeTopBar]
 })
 export class ExtensionsViewComponent implements OnInit {
 
@@ -38,15 +41,18 @@ export class ExtensionsViewComponent implements OnInit {
             this.extensionService.find(uuid).subscribe(
                 result => {
                     if (result != null) {
-                        extension = result;
+                        const loadedExtension = result;
                         const script = document.createElement('script');
-                        script.src = this.downloadPath(extension.library_path);
+                        script.src = this.downloadPath(loadedExtension.library_path);
                         document.getElementsByTagName('head')[0].appendChild(script);
                         const content = document.getElementById('content');
-                        const element: HTMLElement = document.createElement(extension.tag_name);
-                        element.setAttribute('id', extension.tag_name);
+                        if (!content) {
+                            return;
+                        }
+                        const element: HTMLElement = document.createElement(loadedExtension.tag_name);
+                        element.setAttribute('id', loadedExtension.tag_name);
                         content.appendChild(element);
-                        this.extensionService.setLoaded(extension);
+                        this.extensionService.setLoaded(loadedExtension);
                     } else {
                         console.log(' no extension found with uuid: ' + uuid);
                     }
@@ -54,10 +60,14 @@ export class ExtensionsViewComponent implements OnInit {
             );
         } else {
             const content = document.getElementById('content');
+            if (!content) {
+                return;
+            }
             content.innerHTML = '';
-            if (document.getElementById(extension.tag_name)) {
-                document.getElementById(extension.tag_name).remove();
-                console.log('eliminato: ' + document.getElementById(extension.tag_name));
+            const existingElement = document.getElementById(extension.tag_name);
+            if (existingElement) {
+                existingElement.remove();
+                console.log('eliminato: ' + extension.tag_name);
             }
 
             const element: HTMLElement = document.createElement(extension.tag_name);

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import {FieldDefinition} from '../../model/field-definition';
 import {SelectItem} from 'primeng/api';
 
@@ -12,11 +12,12 @@ import {SelectItem} from 'primeng/api';
             </div>
         </div>
     `,
-    styles: []
+    styles: [],
+    imports: [ReactiveFormsModule]
 })
 export class HtmlViewComponent implements OnInit {
     field: FieldDefinition;
-    group: FormGroup;
+    group: UntypedFormGroup;
 
     options: SelectItem[] = [];
 

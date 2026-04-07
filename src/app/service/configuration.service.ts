@@ -1,42 +1,55 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {CONFIG_PATH} from '../constants/constants';
-import {Observable, of} from 'rxjs';
-import {map, tap} from 'rxjs/operators';
+import {firstValueFrom, Observable, of} from 'rxjs';
+import {tap, map} from 'rxjs/operators';
+
+type RuntimeKeycloakConfig = {
+    url: string;
+    realm: string;
+    clientId: string;
+};
+
+export type RuntimeConfig = {
+    keycloakConfig: RuntimeKeycloakConfig;
+    scope?: string;
+    img_path?: string;
+    asset_path?: string;
+    [key: string]: unknown;
+};
 
 @Injectable({
     providedIn: 'root'
 })
 export class ConfigurationService {
 
-    private configurazione: any;
+    private configurazione?: RuntimeConfig;
 
     constructor(private http: HttpClient) {
     }
 
-    getConfigs(): Promise<Object> {
+    getConfigs(): Promise<RuntimeConfig> {
         console.log('loading configurations');
-        return this.http.get(CONFIG_PATH) // this could be a http request
-            .pipe(
+        return firstValueFrom(
+            this.http.get<RuntimeConfig>(CONFIG_PATH).pipe(
                 tap(config => {
                     this.configurazione = config;
                 })
             )
-            .toPromise();
+        );
     }
 
-    getConfiguration(): Observable<any> {
+    getConfiguration(): Observable<RuntimeConfig> {
         if (this.configurazione) {
             return of(this.configurazione);
         } else {
-            return this.http.get(CONFIG_PATH);
+            return this.http.get<RuntimeConfig>(CONFIG_PATH);
         }
     }
 
     getValue(key: string): Observable<string> {
         return this.getConfiguration().pipe(
-            map(config => config),
-            map(config => config[key])
+            map(config => String(config[key] ?? ''))
         );
     }
 }

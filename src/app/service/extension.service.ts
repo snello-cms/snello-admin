@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {AbstractService} from '../common/abstract-service';
 import {MessageService} from 'primeng/api';
 import {ConfigurationService} from './configuration.service';

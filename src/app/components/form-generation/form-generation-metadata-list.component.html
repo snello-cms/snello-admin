@@ -36,13 +36,13 @@
             <td class="RowIndex">{{ rowIndex + 1 }}</td>
             <td class="ui-resizable-column">{{rowData}}</td>
             <td>
-              <button (click)="toList(rowData)" class="btn btn-success btn-sm" pButton>
+              <button type="button" (click)="toList(rowData)" class="btn btn-success btn-sm">
                 <i aria-hidden="true" class="fa fa-pencil"></i>
                 List
               </button>
             </td>
             <td>
-              <button (click)="toForm(rowData)" class="btn btn-info btn-sm" pButton>
+              <button type="button" (click)="toForm(rowData)" class="btn btn-info btn-sm">
                 <i aria-hidden="true" class="fa fa-table"></i>
                 New
               </button>

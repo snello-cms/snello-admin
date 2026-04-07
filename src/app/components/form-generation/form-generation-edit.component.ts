@@ -3,20 +3,20 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {FieldDefinition} from '../../model/field-definition';
 import {DynamicFormComponent} from '../../generic.components/dynamic-form/dynamic-form.component';
 import {ApiService} from '../../service/api.service';
-import * as moment from 'moment/moment';
 import {ConfirmationService} from 'primeng/api';
 import {Metadata} from '../../model/metadata';
 import {MetadataService} from '../../service/metadata.service';
+import { SideBarComponent } from '../sidebar/sidebar.component';
+import { HomepageTopBar } from '../homepage-topbar/homepage-topbar.component';
 
-@Component(
-    {
-        templateUrl: './form-generation-edit.component.html',
-        providers: [MetadataService]
-    },
-)
+@Component({
+    templateUrl: './form-generation-edit.component.html',
+    providers: [MetadataService],
+    imports: [SideBarComponent, HomepageTopBar, DynamicFormComponent]
+})
 export class FormGenerationEditComponent implements OnInit {
 
-    @ViewChild(DynamicFormComponent, {static: false}) form: DynamicFormComponent;
+    @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
     regConfig: FieldDefinition[] = [];
     errorMessage: string;
@@ -54,8 +54,9 @@ export class FormGenerationEditComponent implements OnInit {
         this.uuid = this.route.snapshot.params['uuid'];
         this.regConfig = [];
         this.route.data
-            .subscribe((data: { fieldDefinitionValorized: FieldDefinition[] }) => {
-                this.regConfig = data.fieldDefinitionValorized;
+            .subscribe((data: unknown) => {
+                const resolved = (data as { fieldDefinitionValorized?: FieldDefinition[] })?.fieldDefinitionValorized;
+                this.regConfig = resolved ?? [];
                 this.unarshallFields();
             });
 
@@ -116,13 +117,72 @@ export class FormGenerationEditComponent implements OnInit {
         this.router.navigate(['datalist/list', this.metadataName]);
     }
 
+    private toDate(value: unknown): Date | null {
+        if (value instanceof Date) {
+            return value;
+        }
+        if (typeof value === 'string' && value.length > 0) {
+            const parsed = new Date(value);
+            return Number.isNaN(parsed.getTime()) ? null : parsed;
+        }
+        return null;
+    }
+
+    private pad(value: number): string {
+        return value.toString().padStart(2, '0');
+    }
+
+    private formatTime(value: unknown): string {
+        const date = this.toDate(value);
+        if (!date) {
+            return '';
+        }
+        return `${this.pad(date.getHours())}:${this.pad(date.getMinutes())}:${this.pad(date.getSeconds())}`;
+    }
+
+    private formatDate(value: unknown): string {
+        const date = this.toDate(value);
+        if (!date) {
+            return '';
+        }
+        return `${date.getFullYear()}-${this.pad(date.getMonth() + 1)}-${this.pad(date.getDate())}`;
+    }
+
+    private formatDateTime(value: unknown): string {
+        const date = this.toDate(value);
+        if (!date) {
+            return '';
+        }
+        return `${this.formatDate(date)} ${this.formatTime(date)}`;
+    }
+
+    private parseTime(value: string): Date {
+        const [hours = '0', minutes = '0', seconds = '0'] = value.split(':');
+        const date = new Date();
+        date.setHours(+hours, +minutes, +seconds, 0);
+        return date;
+    }
+
+    private parseDate(value: string): Date {
+        const [year = '1970', month = '1', day = '1'] = value.split('-');
+        return new Date(+year, +month - 1, +day);
+    }
+
+    private parseDateTime(value: string): Date {
+        const [datePart = '', timePart = '00:00:00'] = value.split(' ');
+        const date = this.parseDate(datePart);
+        const [hours = '0', minutes = '0', seconds = '0'] = timePart.split(':');
+        date.setHours(+hours, +minutes, +seconds, 0);
+        return date;
+    }
+
     // TODO: lo riusciamo a portare in tags.component.ts?
     preSaveUpdate(): any {
         const objToSave = JSON.parse(JSON.stringify(this.form.value));
         // tslint:disable-next-line:forin
         for (const k in objToSave) {
             for (const field of this.regConfig) {
-                delete field.is_edit;
+                field.is_edit = false;
                 if (field.name === k) {
                     if (field.type === 'tags') {
                         objToSave[field.name] = objToSave[field.name].join(',');
@@ -138,13 +198,13 @@ export class FormGenerationEditComponent implements OnInit {
                         objToSave[field.name] = objToSave[field.name][field.join_table_key];
                     }
                     if (field.type === 'time') {
-                        objToSave[field.name] = moment(objToSave[field.name], 'YYYY-MM-DD[T]HH:mm:ss[Z]').format('HH:mm:ss');
+                        objToSave[field.name] = this.formatTime(objToSave[field.name]);
                     }
                     if (field.type === 'date') {
-                        objToSave[field.name] = moment(objToSave[field.name], 'YYYY-MM-DD[T]HH:mm:ss[Z]').format('YYYY-MM-DD');
+                        objToSave[field.name] = this.formatDate(objToSave[field.name]);
                     }
                     if (field.type === 'datetime') {
-                        objToSave[field.name] = moment(objToSave[field.name], 'YYYY-MM-DD[T]HH:mm:ss[Z]').format('YYYY-MM-DD HH:mm:ss');
+                        objToSave[field.name] = this.formatDateTime(objToSave[field.name]);
                     }
                     // null = 0
                     if (field.type === 'input' &&
@@ -170,17 +230,17 @@ export class FormGenerationEditComponent implements OnInit {
             }
             if (field.type === 'time') {
                 if (field.value != null) {
-                    field.value = moment((<string>field.value), 'HH:mm:ss').toDate();
+                    field.value = this.parseTime((<string>field.value));
                 }
             }
             if (field.type === 'date') {
                 if (field.value != null) {
-                    field.value = moment((<string>field.value), 'YYYY-MM-DD').toDate();
+                    field.value = this.parseDate((<string>field.value));
                 }
             }
             if (field.type === 'datetime') {
                 if (field.value != null) {
-                    field.value = moment((<string>field.value), 'YYYY-MM-DD HH:mm:ss').toDate();
+                    field.value = this.parseDateTime((<string>field.value));
                 }
             }
             if (field.type === 'multimedia') {

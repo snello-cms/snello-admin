@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import {FieldDefinition} from '../../model/field-definition';
+import { InputSwitch } from 'primeng/inputswitch';
 
 @Component({
-  selector: "app-checkbox",
-  template: `
+    selector: "app-checkbox",
+    template: `
     <div class="form-group clearfix row" [formGroup]="group">
       <label class="col-sm-3">{{ field.name }}</label>
       <div class="col-sm-9">
@@ -14,11 +15,12 @@ import {FieldDefinition} from '../../model/field-definition';
       </div>
     </div>
   `,
-  styles: []
+    styles: [],
+    imports: [ReactiveFormsModule, InputSwitch]
 })
 export class CheckboxComponent implements OnInit {
   field: FieldDefinition;
-  group: FormGroup;
+  group: UntypedFormGroup;
 
   constructor() {}
 

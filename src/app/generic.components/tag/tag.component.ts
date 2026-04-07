@@ -1,10 +1,11 @@
 import {Component, DoCheck, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import {FieldDefinition} from '../../model/field-definition';
+import { Chips } from 'primeng/chips';
 
 @Component({
-  selector: 'app-tag',
-  template: `
+    selector: 'app-tag',
+    template: `
     <div class="form-group clearfix row" [formGroup]="group">
       <label class="col-sm-3">{{field.name}}</label>
       <div class="col-sm-9">
@@ -15,11 +16,12 @@ import {FieldDefinition} from '../../model/field-definition';
     </div>
 
   `,
-  styles: []
+    styles: [],
+    imports: [ReactiveFormsModule, Chips]
 })
 export class TagComponent implements OnInit{
   field: FieldDefinition;
-  group: FormGroup;
+  group: UntypedFormGroup;
 
 
   constructor() {

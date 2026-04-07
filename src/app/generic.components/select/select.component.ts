@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import {FieldDefinition} from '../../model/field-definition';
 import {SelectItem} from "primeng/api";
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
-  selector: "app-select",
-  template: `
+    selector: "app-select",
+    template: `
     <div class="form-group clearfix row" [formGroup]="group">
       <label class="col-sm-3">{{ field.name }}</label>
       <div class="col-sm-9">
@@ -18,11 +19,12 @@ import {SelectItem} from "primeng/api";
       </div>
     </div>
   `,
-  styles: []
+    styles: [],
+    imports: [ReactiveFormsModule, DropdownModule]
 })
 export class SelectComponent implements OnInit {
   field: FieldDefinition;
-  group: FormGroup;
+  group: UntypedFormGroup;
 
   options: SelectItem[] = [];
 
@@ -30,9 +32,9 @@ export class SelectComponent implements OnInit {
   }
 
   ngOnInit() {
-    let valuesSplit = this.field.options.split(",");
-    let currValues = [];
-    for (let value of valuesSplit) {
+    const valuesSplit = this.field.options?.split(",") ?? [];
+    const currValues: SelectItem[] = [];
+    for (const value of valuesSplit) {
       currValues.push({label: value, value: value});
     }
     this.options = currValues;

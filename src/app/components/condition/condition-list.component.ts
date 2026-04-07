@@ -4,13 +4,18 @@ import {Router} from '@angular/router';
 import {Condition} from '../../model/condtion';
 import {ConditionService} from '../../service/condition.service';
 import {MetadataService} from '../../service/metadata.service';
-import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
+import { ConfirmationService, MessageService, SelectItem, PrimeTemplate } from 'primeng/api';
+import { SideBarComponent } from '../sidebar/sidebar.component';
+import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { InputText } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
+import { TableModule } from 'primeng/table';
 
-@Component(
-  {
+@Component({
     templateUrl: './condition-list.component.html',
-  }
-)
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, DropdownModule, TableModule, PrimeTemplate]
+})
 export class ConditionListComponent extends AbstractListComponent<Condition> implements OnInit {
 
 
@@ -35,7 +40,7 @@ export class ConditionListComponent extends AbstractListComponent<Condition> imp
     this.metadatasItems = [];
     this.metadataService.buildSearch();
     this.metadataService.getAllList().subscribe(metadatas => {
-      this.metadatasItems.push({label: null, value: '...'});
+      this.metadatasItems.push({label: '', value: '...'});
       for (let p = 0; p < metadatas.length; p++) {
         this.metadatasItems.push({
           label: metadatas[p].table_name,

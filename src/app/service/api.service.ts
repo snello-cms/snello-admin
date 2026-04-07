@@ -1,5 +1,5 @@
 import {Injectable, OnInit} from '@angular/core';
-import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {FieldDefinition} from '../model/field-definition';
@@ -11,10 +11,10 @@ import {API_SERVICE_PATH} from '../constants/constants';
 })
 export class ApiService implements OnInit {
 
-    url: string;
-    _start: number;
-    _limit: number;
-    listSize: number;
+    url = '';
+    _start = 0;
+    _limit = 10;
+    listSize = 0;
 
 
     constructor(protected http: HttpClient, configurationService: ConfigurationService) {
@@ -118,16 +118,21 @@ export class ApiService implements OnInit {
                         }
                     );
                     console.log(headers);
-                    this.listSize = res.headers.get('size') != null ? +res.headers.get('size') : 0;
+                    const sizeHeader = res.headers.get('size');
+                    this.listSize = sizeHeader != null ? +sizeHeader : 0;
                     console.log(this.listSize);
-                    const ts: any[] = res.body; // json();
+                    const ts: any[] = res.body ?? []; // json();
                     return ts;
                 }),
                 catchError(this.handleError)
             );
     }
 
-    private applyRestrictions(params: HttpParams, regConfigSearch?: FieldDefinition[]): any {
+    private applyRestrictions(params: HttpParams, regConfigSearch?: FieldDefinition[]): HttpParams {
+
+        if (!regConfigSearch) {
+            return params;
+        }
 
         for (const key of regConfigSearch) {
             if (key.value != null) {
@@ -166,7 +171,7 @@ export class ApiService implements OnInit {
                         }
                     );
                     // console.log(headers);
-                    const ts: any[] = res.body; // json();
+                    const ts: any[] = res.body ?? []; // json();
                     return ts;
                 }),
                 catchError(this.handleError)

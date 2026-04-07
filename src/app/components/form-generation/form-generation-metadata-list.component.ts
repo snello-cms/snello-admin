@@ -2,12 +2,16 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {DataListService} from '../../service/data-list.service';
 import {ApiService} from '../../service/api.service';
+import { SideBarComponent } from '../sidebar/sidebar.component';
+import { HomepageTopBar } from '../homepage-topbar/homepage-topbar.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { TableModule } from 'primeng/table';
+import { PrimeTemplate } from 'primeng/api';
 
-@Component(
-    {
-        templateUrl: './form-generation-metadata-list.component.html',
-    }
-)
+@Component({
+    templateUrl: './form-generation-metadata-list.component.html',
+    imports: [SideBarComponent, HomepageTopBar, ReactiveFormsModule, FormsModule, TableModule, PrimeTemplate]
+})
 export class FormGenerationMetadataListComponent implements OnInit {
 
     model: string [] = [];

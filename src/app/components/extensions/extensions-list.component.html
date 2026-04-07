@@ -10,7 +10,7 @@
     </h3>
     <p>
     </p>
-    <button pButton class="btn btn-add pull-right btn-block" (click)="new()">
+    <button type="button" class="btn btn-add pull-right btn-block" (click)="new()">
         <i class="fa fa-plus-circle"></i> Add
     </button>
 </div>
@@ -77,7 +77,7 @@
                                         <td class="ui-resizable-column">{{rowData.description}}</td>
                                         <td class="ui-resizable-column">{{rowData.tag_name}}</td>
                                         <td>
-                                            <button (click)="edit(rowData)" class="btn btn-success btn-sm" pButton>
+                                            <button type="button" (click)="edit(rowData)" class="btn btn-success btn-sm">
                                                 <i aria-hidden="true" class="fa fa-pencil"></i>
                                                 Modify
                                             </button>

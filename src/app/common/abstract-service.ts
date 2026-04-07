@@ -1,14 +1,14 @@
-import {HttpClient, HttpErrorResponse, HttpParams, HttpResponse} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams, HttpResponse } from '@angular/common/http';
 import {catchError, map} from 'rxjs/operators';
-import {Observable} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 import {MessageService} from 'primeng/api';
 
 export abstract class AbstractService<T> {
-    listSize: number;
+    listSize = 0;
     _limit = 1;
     _start = 0;
-    search: any;
-    url: string;
+    search: any = {};
+    url = '';
 
 
     constructor(protected urlValue: Observable<string>, protected httpClient: HttpClient, protected messageService: MessageService) {
@@ -42,8 +42,9 @@ export abstract class AbstractService<T> {
                 map(res => {
                     // this.listSize = res.headers.get('listSize') != null ? +res.headers.get('listSize') : 0;
                     // return res.body;
-                    this.listSize = res.headers.get('x-total-count') != null ? +res.headers.get('x-total-count') : 0;
-                    const ts: T[] = res.body; // json();
+                    const totalCountHeader = res.headers.get('x-total-count');
+                    this.listSize = totalCountHeader != null ? +totalCountHeader : 0;
+                    const ts: T[] = res.body ?? [];
                     if (ts) {
                         this.postList(ts);
                     }
@@ -63,14 +64,15 @@ export abstract class AbstractService<T> {
         params = this.applyRestrictions(params, this.search);
 
         return this.httpClient
-            .get(this.url + '/listSize', {
+            .get<unknown>(this.url + '/listSize', {
                 observe: 'response',
                 params: params
             })
             .pipe(
-                map((res: HttpResponse<number>) => {
-                    return res.headers.get('size') != null
-                        ? +res.headers.get('size')
+                map((res: HttpResponse<unknown>) => {
+                    const sizeHeader = res.headers.get('size');
+                    return sizeHeader != null
+                        ? +sizeHeader
                         : 0;
                 }),
                 catchError(this.handleError.bind(this))
@@ -179,23 +181,28 @@ export abstract class AbstractService<T> {
         return value;
     }
 
-    public abstract getId(element: T);
+    public abstract getId(element: T): string | number;
 
-    public abstract buildSearch();
+    public abstract buildSearch(): void;
 
     protected handleError(error: HttpErrorResponse): Observable<any> {
         // in a real world app, we may send the error to some remote logging infrastructure
         // instead of just logging it to the console
         console.error(error);
+        const errorMsg = this.extractErrorMessage(error);
         if (this.messageService) {
-            const errorMsg = error['msg'] ? error['msg'] : 'Errore generico';
             this.messageService.add({
                 severity: 'error',
                 summary: errorMsg,
                 // detail: 'Via MessageService'
             });
         }
-        return Observable.throw(error['msg'] || 'Server error');
+        return throwError(() => errorMsg || 'Server error');
+    }
+
+    private extractErrorMessage(error: HttpErrorResponse): string {
+        const payload = error.error as { msg?: string; message?: string } | null;
+        return payload?.msg || payload?.message || error.message || 'Errore generico';
     }
 
     protected unmarshall(element: T) {

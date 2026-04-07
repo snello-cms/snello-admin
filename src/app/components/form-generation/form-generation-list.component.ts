@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FieldDefinition} from '../../model/field-definition';
 import {ApiService} from '../../service/api.service';
@@ -9,12 +9,16 @@ import {DynamicSearchFormComponent} from '../../generic.components/dynamic-form/
 import {map} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {FieldDefinitionService} from '../../service/field-definition.service';
+import { SideBarComponent } from '../sidebar/sidebar.component';
+import { HomepageTopBar } from '../homepage-topbar/homepage-topbar.component';
+import { TableModule } from 'primeng/table';
+import { PrimeTemplate } from 'primeng/api';
+import { AsyncPipe } from '@angular/common';
 
-@Component(
-    {
-        templateUrl: './form-generation-list.component.html',
-    }
-)
+@Component({
+    templateUrl: './form-generation-list.component.html',
+    imports: [SideBarComponent, HomepageTopBar, DynamicSearchFormComponent, TableModule, PrimeTemplate, AsyncPipe]
+})
 export class FormGenerationListComponent implements OnInit {
     fieldDefinitionsList: FieldDefinition[] = [];
     fieldDefinitionsSearch: FieldDefinition[] = [];
@@ -24,7 +28,7 @@ export class FormGenerationListComponent implements OnInit {
     firstReload: boolean;
     metadata: Metadata;
 
-    @ViewChild(DynamicSearchFormComponent, {static: false}) searchForm: DynamicSearchFormComponent;
+    @ViewChild(DynamicSearchFormComponent) searchForm: DynamicSearchFormComponent;
 
     constructor(
         protected router: Router,
@@ -32,12 +36,18 @@ export class FormGenerationListComponent implements OnInit {
         public apiService: ApiService,
         private dataListService: DataListService,
         private metadataService: MetadataService,
-        private fieldDefintionService: FieldDefinitionService) {
+        private fieldDefintionService: FieldDefinitionService,
+        private cdr: ChangeDetectorRef) {
     }
 
 
     private datoAsObservableOfValue(rowData: any, fieldDefinition: FieldDefinition): Observable<any> {
-        const fullValue = rowData[fieldDefinition.name];
+        const fieldName = fieldDefinition.name;
+        if (!fieldName) {
+            return of('');
+        }
+
+        const fullValue = rowData[fieldName];
         if (!fullValue) {
             return of('');
         }
@@ -52,10 +62,11 @@ export class FormGenerationListComponent implements OnInit {
                     })
                 );
         } else if (fieldDefinition.type === 'multijoin') {
+            const labelField = this.fieldDefintionService.fetchFirstLabel(fieldDefinition);
             return this.apiService.fetchJoinList(this.metadataName, this.getTableKey(rowData),
                 fieldDefinition.join_table_name,
                 fieldDefinition.join_table_select_fields)
-                .pipe(map(join => join[this.fieldDefintionService.fetchFirstLabel(fieldDefinition)]));
+                .pipe(map(join => (join as unknown as Record<string, unknown>)[labelField as string]));
         } else {
             return of(fullValue);
         }
@@ -77,8 +88,9 @@ export class FormGenerationListComponent implements OnInit {
 
         this.route.data
             .subscribe(
-                (data: { fieldDefinitionValorized: FieldDefinition[] }) => {
-                    this.fieldDefinitionsList = data.fieldDefinitionValorized;
+                (data: unknown) => {
+                    const resolved = (data as { fieldDefinitionValorized?: FieldDefinition[] })?.fieldDefinitionValorized;
+                    this.fieldDefinitionsList = resolved ?? [];
                     for (const field of this.fieldDefinitionsList) {
                         if (field.searchable) {
                             this.fieldDefinitionsSearch.push(field);
@@ -128,6 +140,9 @@ export class FormGenerationListComponent implements OnInit {
                 for (let element of model) {
                     if (element != null) {
                         for (const definition_1 of this.fieldDefinitionsList) {
+                            if (!definition_1.name) {
+                                continue;
+                            }
                             definition_1.is_edit = true;
                             //cerco la field defintion
                             if (element.hasOwnProperty(definition_1.name) || element.hasOwnProperty(definition_1.name.toLowerCase())) {
@@ -139,6 +154,7 @@ export class FormGenerationListComponent implements OnInit {
                 }
                 console.log(model);
                 this.model = model;
+                this.cdr.detectChanges();
             }
         );
     }
@@ -162,8 +178,8 @@ export class FormGenerationListComponent implements OnInit {
         }
     }
 
-    public getTableKey(fieldDefinition: FieldDefinition): string {
-        return fieldDefinition[this.metadata.table_key];
+    public getTableKey(fieldDefinition: any): string {
+        return String(fieldDefinition[this.metadata.table_key]);
     }
 
     public reload(datatable: any) {
@@ -178,7 +194,7 @@ export class FormGenerationListComponent implements OnInit {
     }
 
     public reset(datatable: any) {
-        const obj = {};
+        const obj: Record<string, unknown> = {};
         if (this.searchForm && this.searchForm.value) {
             for (const k in this.searchForm.value) {
                 if (this.searchForm.value.hasOwnProperty(k)) {

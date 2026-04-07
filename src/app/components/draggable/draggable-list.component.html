@@ -8,8 +8,7 @@
         Draggable List
     </h3>
 
-    <button pButton class="btn btn-add pull-right btn-block" (click)="new()"><i
-            class="fa fa-plus-circle"></i> Add
+    <button type="button" class="btn btn-add pull-right btn-block" (click)="new()"><i class="fa fa-plus-circle"></i> Add
     </button>
 </div>
 
@@ -54,7 +53,7 @@
                                         <td class="ui-resizable-column">{{rowData.name}}</td>
                                         <td class="ui-resizable-column">{{rowData.description}}</td>
                                         <td>
-                                            <button (click)="edit(rowData)" class="btn btn-success btn-sm" pButton>
+                                            <button type="button" (click)="edit(rowData)" class="btn btn-success btn-sm">
                                                 <i aria-hidden="true" class="fa fa-pencil"></i>
                                                 Modify
                                             </button>

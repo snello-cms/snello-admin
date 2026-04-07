@@ -1,12 +1,13 @@
 import {AbstractService} from './abstract-service';
 import {Router, ActivatedRoute} from '@angular/router';
-import {OnInit} from '@angular/core';
+import { ChangeDetectorRef, OnInit, Directive } from '@angular/core';
 import {ConfirmationService, MessageService} from 'primeng/api';
 
+@Directive()
 export abstract class AbstractEditComponent<T> implements OnInit {
 
     public editMode = false;
-    public element: T = null;
+    public element!: T;
 
     constructor(
         public router: Router,
@@ -15,6 +16,7 @@ export abstract class AbstractEditComponent<T> implements OnInit {
         public service: AbstractService<T>,
         public messageService: MessageService,
         public path?: string,
+        protected cdr?: ChangeDetectorRef
     ) {
     }
 
@@ -26,6 +28,7 @@ export abstract class AbstractEditComponent<T> implements OnInit {
                 element => {
                     this.element = <T>element;
                     this.postFind();
+                    this.cdr?.detectChanges();
                 },
                 error => {
                     this.addError('Error while loading data' + (error || ''));
@@ -204,7 +207,7 @@ export abstract class AbstractEditComponent<T> implements OnInit {
         });
     }
 
-    getId() {
-        return this.element['uuid'];
+    getId(): string {
+        return String((this.element as unknown as { uuid: unknown }).uuid);
     }
 }

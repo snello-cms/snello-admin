@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import {FieldDefinition} from '../../model/field-definition';
+import { Calendar } from 'primeng/calendar';
 
 @Component({
     selector: "app-datetime",
@@ -16,11 +17,12 @@ import {FieldDefinition} from '../../model/field-definition';
             </div>
         </div>
     `,
-    styles: []
+    styles: [],
+    imports: [ReactiveFormsModule, Calendar]
 })
 export class DatetimeComponent implements OnInit {
     field: FieldDefinition;
-    group: FormGroup;
+    group: UntypedFormGroup;
 
     constructor() {
     }

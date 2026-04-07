@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
+import { ConfirmationService, MessageService, SelectItem, PrimeTemplate } from 'primeng/api';
 import {FONT_AWESOME_ICONS} from '../../constants/constants';
 import {Extension} from '../../model/extension';
 import {ExtensionService} from '../../service/extension.service';
@@ -9,9 +9,16 @@ import {DocumentService} from '../../service/document.service';
 import {flatMap} from 'rxjs/operators';
 import {from, Observable, of} from 'rxjs';
 import {FileUpload} from "primeng/fileupload";
+import { SideBarComponent } from '../sidebar/sidebar.component';
+import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
+import { ProgressBar } from 'primeng/progressbar';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { InputText } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
 
 @Component({
-    templateUrl: './extensions-edit.component.html'
+    templateUrl: './extensions-edit.component.html',
+    imports: [SideBarComponent, AdminhomeTopBar, FileUpload, ProgressBar, ReactiveFormsModule, FormsModule, InputText, DropdownModule, PrimeTemplate]
 })
 export class ExtensionsEditComponent extends AbstractEditComponent<Extension> implements OnInit {
 
@@ -26,7 +33,7 @@ export class ExtensionsEditComponent extends AbstractEditComponent<Extension> im
         super(router, route, confirmationService, extensionService, messageService, 'extensions_admin');
     }
 
-    @ViewChild('fup', {static: false})
+    @ViewChild('fup')
     fup: FileUpload;
 
     iconItems: SelectItem[] = FONT_AWESOME_ICONS;
@@ -50,7 +57,7 @@ export class ExtensionsEditComponent extends AbstractEditComponent<Extension> im
         super.ngOnInit();
     }
 
-    public uploader(event) {
+    public uploader(event: { files: File[] }) {
         this.processed = false;
         this.okFileList = [];
         this.errorFileList = [];
@@ -121,7 +128,7 @@ export class ExtensionsEditComponent extends AbstractEditComponent<Extension> im
     }
 
 
-    private uploadAFile(file, extension_uuid: string): Promise<any> {
+    private uploadAFile(file: File, extension_uuid: string): Promise<any> {
         this.uploadedFile = file.name;
         return this.documentService
             .upload(file, 'extension', extension_uuid)
@@ -145,8 +152,9 @@ export class ExtensionsEditComponent extends AbstractEditComponent<Extension> im
 
             // IE doesn't allow using a blob object directly as link href
             // instead it is necessary to use msSaveOrOpenBlob
-            if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-                window.navigator.msSaveOrOpenBlob(newBlob);
+            const nav = window.navigator as Navigator & { msSaveOrOpenBlob?: (blob: Blob) => void };
+            if (nav.msSaveOrOpenBlob) {
+                nav.msSaveOrOpenBlob(newBlob);
                 return;
             }
 

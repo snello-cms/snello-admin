@@ -1,15 +1,18 @@
 import {Component} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {ADMIN_ITEMS, APP_VERSION, SEVERITY_VALUES} from '../../constants/constants';
 import {MessageService} from 'primeng/api';
 import {KeycloakService} from 'keycloak-angular';
 import {KeycloakProfile} from 'keycloak-js';
+import { SideBarComponent } from '../sidebar/sidebar.component';
+import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
+import { PermitDirective } from '../../directives/permit.directive';
+import { MessagesModule } from 'primeng/messages';
 
-@Component(
-    {
-        templateUrl: './adminpage.component.html'
-    }
-)
+@Component({
+    templateUrl: './adminpage.component.html',
+    imports: [SideBarComponent, AdminhomeTopBar, PermitDirective, RouterLink, MessagesModule]
+})
 export class AdminpageComponent {
 
     items: any[] = [];

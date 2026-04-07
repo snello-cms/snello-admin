@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {Condition} from '../model/condtion';
 import {CONDITION_API_PATH} from '../constants/constants';
 import {AbstractService} from '../common/abstract-service';

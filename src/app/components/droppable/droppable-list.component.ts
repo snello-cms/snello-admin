@@ -2,17 +2,20 @@ import {Component, OnInit} from '@angular/core';
 import {AbstractListComponent} from '../../common/abstract-list-component';
 import {Router} from '@angular/router';
 import {MetadataService} from '../../service/metadata.service';
-import {ConfirmationService, MessageService} from 'primeng/api';
-import {Draggable} from 'src/app/model/draggable';
+import { ConfirmationService, MessageService, PrimeTemplate } from 'primeng/api';
+import {Draggable} from '../../model/draggable';
 import {DroppableService} from '../../service/droppable.service';
 import {Droppable} from '../../model/droppable';
 import {DocumentService} from '../../service/document.service';
+import { SideBarComponent } from '../sidebar/sidebar.component';
+import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { TableModule } from 'primeng/table';
 
-@Component(
-    {
-        templateUrl: './droppable-list.component.html',
-    }
-)
+@Component({
+    templateUrl: './droppable-list.component.html',
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, TableModule, PrimeTemplate]
+})
 export class DroppableListComponent extends AbstractListComponent<Droppable> implements OnInit {
 
 

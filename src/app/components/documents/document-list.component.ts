@@ -3,13 +3,18 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Document} from '../../model/document';
 import {DocumentService} from '../../service/document.service';
-import {ConfirmationService, MessageService} from 'primeng/api';
+import { ConfirmationService, MessageService, PrimeTemplate } from 'primeng/api';
+import { SideBarComponent } from '../sidebar/sidebar.component';
+import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { InputText } from 'primeng/inputtext';
+import { TableModule } from 'primeng/table';
+import { CopyClipboardDirective } from '../../directives/copy-clipboard.directive';
 
-@Component(
-    {
-        templateUrl: './document-list.component.html',
-    }
-)
+@Component({
+    templateUrl: './document-list.component.html',
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, TableModule, PrimeTemplate, CopyClipboardDirective]
+})
 export class DocumentListComponent extends AbstractListComponent<Document> implements OnInit {
 
 
@@ -48,8 +53,9 @@ export class DocumentListComponent extends AbstractListComponent<Document> imple
 
             // IE doesn't allow using a blob object directly as link href
             // instead it is necessary to use msSaveOrOpenBlob
-            if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-                window.navigator.msSaveOrOpenBlob(newBlob);
+            const nav = window.navigator as Navigator & { msSaveOrOpenBlob?: (blob: Blob) => void };
+            if (nav.msSaveOrOpenBlob) {
+                nav.msSaveOrOpenBlob(newBlob);
                 return;
             }
 

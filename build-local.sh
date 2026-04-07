@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-ng build --prod --base-href /snello-admin --deploy-url /snello-admin/
+ng build --configuration production --base-href / --deploy-url /
 
 docker build --no-cache -t snellocms/snello-admin -f Dockerfile-local .
 ID="$(docker images | grep 'snellocms/snello-admin' | head -n 1 | awk '{print $3}')"

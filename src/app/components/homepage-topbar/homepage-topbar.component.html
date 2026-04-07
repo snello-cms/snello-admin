@@ -1,15 +1,19 @@
 <ul class="list-group">
-    <li class="list-group-item">
-        <a [routerLink]="'/home'">
-            <i class="fa fa-home" aria-hidden="true"></i>
-        </a>
-    </li>
-    <ng-container *ngFor="let component of model">
-        <li *ngIf="component.icon" class="list-group-item">
-            <a *ngIf="component.already_exist || component.created"
-               [routerLink]="'/datalistgeneral/list/' + component.table_name">
-                <i class="{{component.icon}}"></i>
-            </a>
-        </li>
-    </ng-container>
+  <li class="list-group-item">
+    <a [routerLink]="'/home'">
+      <i class="fa fa-home" aria-hidden="true"></i>
+    </a>
+  </li>
+  @for (component of model; track component) {
+    @if (component.icon) {
+      <li class="list-group-item">
+        @if (component.already_exist || component.created) {
+          <a
+            [routerLink]="'/datalistgeneral/list/' + component.table_name">
+            <i class="{{component.icon}}"></i>
+          </a>
+        }
+      </li>
+    }
+  }
 </ul>

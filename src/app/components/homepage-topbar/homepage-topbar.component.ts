@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {DataListService} from '../../service/data-list.service';
 import {ApiService} from '../../service/api.service';
 import {MetadataService} from '../../service/metadata.service';
@@ -7,7 +7,8 @@ import {Metadata} from '../../model/metadata';
 
 @Component({
     selector: 'homepage-topbar',
-    templateUrl: './homepage-topbar.component.html'
+    templateUrl: './homepage-topbar.component.html',
+    imports: [RouterLink]
 })
 export class HomepageTopBar implements OnInit{
     model: any[] = [];

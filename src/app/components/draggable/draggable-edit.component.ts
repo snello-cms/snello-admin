@@ -3,14 +3,18 @@ import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MetadataService} from '../../service/metadata.service';
 import {ConfirmationService, MessageService} from 'primeng/api';
-import {Draggable} from 'src/app/model/draggable';
-import {DraggableService} from 'src/app/service/draggable.service';
+import {Draggable} from '../../model/draggable';
+import {DraggableService} from '../../service/draggable.service';
+import { SideBarComponent } from '../sidebar/sidebar.component';
+import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { InputText } from 'primeng/inputtext';
+import { InputTextarea } from 'primeng/inputtextarea';
 
-@Component(
-    {
-        templateUrl: './draggable-edit.component.html'
-    }
-)
+@Component({
+    templateUrl: './draggable-edit.component.html',
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, InputTextarea]
+})
 export class DraggableEditComponent extends AbstractEditComponent<Draggable> implements OnInit {
 
     constructor(

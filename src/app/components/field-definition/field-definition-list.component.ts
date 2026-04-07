@@ -4,13 +4,18 @@ import {Router} from '@angular/router';
 import {FieldDefinitionService} from '../../service/field-definition.service';
 import {FieldDefinition} from '../../model/field-definition';
 import {MetadataService} from '../../service/metadata.service';
-import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
+import { ConfirmationService, MessageService, SelectItem, PrimeTemplate } from 'primeng/api';
+import { SideBarComponent } from '../sidebar/sidebar.component';
+import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { InputText } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
+import { TableModule } from 'primeng/table';
 
-@Component(
-    {
-        templateUrl: './field-definition-list.component.html',
-    }
-)
+@Component({
+    templateUrl: './field-definition-list.component.html',
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, DropdownModule, TableModule, PrimeTemplate]
+})
 export class FieldDefinitionListComponent extends AbstractListComponent<FieldDefinition> implements OnInit {
 
     public metadatasItems: SelectItem[];
@@ -28,7 +33,7 @@ export class FieldDefinitionListComponent extends AbstractListComponent<FieldDef
         this.metadatasItems = [];
         this.metadataService.buildSearch();
         this.metadataService.getAllList().subscribe(metadatas => {
-            this.metadatasItems.push({label: null, value: '...'});
+            this.metadatasItems.push({label: '', value: '...'});
             for (let p = 0; p < metadatas.length; p++) {
                 this.metadatas.set(metadatas[p].uuid, metadatas[p].created);
                 this.metadatasItems.push({

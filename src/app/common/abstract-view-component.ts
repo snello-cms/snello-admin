@@ -1,20 +1,22 @@
 import {AbstractService} from './abstract-service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {OnInit} from '@angular/core';
+import { ChangeDetectorRef, OnInit, Directive } from '@angular/core';
 import {MessageService} from "primeng/api";
 
+@Directive()
 export abstract class AbstractViewComponent<T> implements OnInit {
 
     // public msgs:Message[] = [];
 
     public editMode = false;
-    public element: T = null;
+    public element!: T;
 
     constructor(protected router: Router,
                 protected route: ActivatedRoute,
                 protected service: AbstractService<T>,
                 protected messageService: MessageService,
-                public path?: string) {
+                public path?: string,
+                protected cdr?: ChangeDetectorRef) {
     }
 
     ngOnInit() {
@@ -25,6 +27,7 @@ export abstract class AbstractViewComponent<T> implements OnInit {
                 element => {
                     this.element = <T>element;
                     this.postFind();
+                    this.cdr?.detectChanges();
                 },
                 error => {
                     this.addError('Error while loading data' + (error || ''));
@@ -67,7 +70,7 @@ export abstract class AbstractViewComponent<T> implements OnInit {
         this.messageService.add({severity: 'error', summary: 'Error: ', detail: message});
     }
 
-    abstract getId();
+    abstract getId(): string;
 
     navigateToList() {
         this.router.navigate(['/' + this.path + '/list']);
@@ -79,10 +82,10 @@ export abstract class AbstractViewComponent<T> implements OnInit {
     }
 
     annulla() {
-        let backPath = this.path;
-        const lastIndexOfSlash = this.path.lastIndexOf('/');
+        let backPath = this.path || '';
+        const lastIndexOfSlash = backPath.lastIndexOf('/');
         if (lastIndexOfSlash >= 0) {
-            backPath = this.path.substring(0, lastIndexOfSlash + 1);
+            backPath = backPath.substring(0, lastIndexOfSlash + 1);
             if (backPath === '') {
                 backPath = 'home';
             }

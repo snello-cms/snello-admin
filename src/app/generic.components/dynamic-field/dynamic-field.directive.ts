@@ -1,5 +1,5 @@
-import {ComponentFactoryResolver, Directive, Input, OnInit, ViewContainerRef} from '@angular/core';
-import {FormGroup} from '@angular/forms';
+import {Directive, Input, OnInit, Type, ViewContainerRef} from '@angular/core';
+import {UntypedFormGroup} from '@angular/forms';
 import {FieldDefinition} from '../../model/field-definition';
 import {InputComponent} from '../input/input.component';
 import {SelectComponent} from '../select/select.component';
@@ -12,51 +12,46 @@ import {JoinComponent} from '../join/join.component';
 import {TimeComponent} from '../time/time.component';
 import {MultiJoinComponent} from '../multi-join/multi-join.component';
 import {MediaComponent} from '../media/media.component';
-import {TinymceComponent} from '../tinymce/tinymce.component';
-import {MonacoComponent} from '../monaco/monaco.component';
 import {InputViewComponent} from '../input/input-view.component';
 import {HtmlViewComponent} from '../input/html-view.component';
 import { JoinViewComponent } from '../join/join-view.component';
 import { MultiJoinViewComponent } from '../multi-join/multi-join-view.component';
 import { MediaViewComponent } from '../media/media-view.component';
 
-@Directive({
-    selector: '[dynamicField]'
-})
+@Directive({ selector: '[dynamicField]' })
 export class DynamicFieldDirective implements OnInit {
-    @Input() field: FieldDefinition;
-    @Input() group: FormGroup;
-    @Input() view: boolean;
+    @Input() field!: FieldDefinition;
+    @Input() group!: UntypedFormGroup;
+    @Input() view = false;
 
-    constructor(
-        private resolver: ComponentFactoryResolver,
-        private container: ViewContainerRef
-    ) {
-    }
+    constructor(private container: ViewContainerRef) {}
 
     componentRef: any;
 
-    ngOnInit() {
+    async ngOnInit() {
+        let componentType: Type<any> | undefined;
 
-        let factory;
-        if (!this.view) {
-            factory = this.resolver.resolveComponentFactory(
-                componentMapper[this.field.type]
-            );
+        if (!this.view && this.field.type === 'tinymce') {
+            componentType = (await import('../tinymce/tinymce.component')).TinymceComponent;
+        } else if (!this.view && this.field.type === 'monaco') {
+            componentType = (await import('../monaco/monaco.component')).MonacoComponent;
+        } else {
+            componentType = this.view
+                ? componentViewMapper[this.field.type]
+                : componentMapper[this.field.type];
         }
-        if (this.view) {
-            factory = this.resolver.resolveComponentFactory(
-                componentVewMapper[this.field.type]
-            );
+
+        if (!componentType) {
+            return;
         }
-        this.componentRef = this.container.createComponent(factory);
+
+        this.componentRef = this.container.createComponent(componentType);
         this.componentRef.instance.field = this.field;
         this.componentRef.instance.group = this.group;
     }
 }
 
-
-const componentMapper = {
+const componentMapper: Record<string, Type<any>> = {
     input: InputComponent,
     select: SelectComponent,
     date: DateComponent,
@@ -64,15 +59,13 @@ const componentMapper = {
     time: TimeComponent,
     checkbox: CheckboxComponent,
     textarea: TextAreaComponent,
-    tinymce: TinymceComponent,
-    monaco: MonacoComponent,
     tags: TagComponent,
     join: JoinComponent,
     multijoin: MultiJoinComponent,
     media: MediaComponent
 };
 
-const componentVewMapper = {
+const componentViewMapper: Record<string, Type<any>> = {
     input: InputViewComponent,
     select: InputViewComponent,
     date: InputViewComponent,

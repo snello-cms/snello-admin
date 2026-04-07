@@ -2,15 +2,16 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FieldDefinition} from '../../model/field-definition';
 import {DynamicFormComponent} from '../../generic.components/dynamic-form/dynamic-form.component';
+import { SideBarComponent } from '../sidebar/sidebar.component';
+import { HomepageTopBar } from '../homepage-topbar/homepage-topbar.component';
 
-@Component(
-    {
-        templateUrl: './form-generation-view.component.html',
-    }
-)
+@Component({
+    templateUrl: './form-generation-view.component.html',
+    imports: [SideBarComponent, HomepageTopBar, DynamicFormComponent]
+})
 export class FormGenerationViewComponent implements OnInit {
 
-    @ViewChild(DynamicFormComponent, {static: false}) form: DynamicFormComponent;
+    @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
     regConfig: FieldDefinition[] = [];
     errorMessage: string;
@@ -27,8 +28,9 @@ export class FormGenerationViewComponent implements OnInit {
         this.uuid = this.route.snapshot.params['uuid'];
         this.regConfig = [];
         this.route.data
-            .subscribe((data: { fieldDefinitionValorized: FieldDefinition[] }) => {
-                this.regConfig = data.fieldDefinitionValorized;
+            .subscribe((data: unknown) => {
+                const resolved = (data as { fieldDefinitionValorized?: FieldDefinition[] })?.fieldDefinitionValorized;
+                this.regConfig = resolved ?? [];
             });
     }
 

@@ -1,53 +1,77 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import {FieldDefinition} from '../../model/field-definition';
+import { DynamicFieldDirective } from '../dynamic-field/dynamic-field.directive';
+import { TabView, TabPanel } from 'primeng/tabview';
+import { Fieldset } from 'primeng/fieldset';
 
 @Component({
     selector: 'dynamic-form',
     template: `
         <form class="dynamic-form" [formGroup]="form" (submit)="onSubmit($event)">
-
-            <div *ngIf="!groupToFields">
-                <ng-container *ngFor="let field of fields;" dynamicField [field]="field" [group]="form" [view]="view">
+        
+          @if (!groupToFields) {
+            <div>
+              @for (field of fields; track field) {
+                <ng-container dynamicField [field]="field" [group]="form" [view]="view">
                 </ng-container>
+              }
             </div>
-
-            <p-tabView *ngIf="tabs">
-                <p-tabPanel [header]="tab" *ngFor="let tab of tabs; let i = index" [selected]="i == 0">
-                    <div *ngIf="groupToFields.get(tab)">
-                        <ng-container *ngFor="let field of groupToFields.get(tab);" dynamicField [field]="field"
-                                [group]="form" [view]="view">
+          }
+        
+          @if (tabs) {
+            <p-tabView>
+              @for (tab of tabs; track tab; let i = $index) {
+                <p-tabPanel [header]="tab" [selected]="i == 0">
+                  @if (groupToFields.get(tab)) {
+                    <div>
+                      @for (field of groupToFields.get(tab); track field) {
+                        <ng-container dynamicField [field]="field"
+                          [group]="form" [view]="view">
                         </ng-container>
+                      }
                     </div>
-                    <div *ngIf="!groupToFields.get(tab)">
-                        <ng-container *ngFor="let group of tabToGroups.get(tab);">
-                            <p-fieldset [legend]="group">
-                                <ng-container *ngFor="let field of groupToFields.get(group);" dynamicField [field]="field"
-                                        [group]="form" [view]="view">
-                                </ng-container>
-                            </p-fieldset>
-                        </ng-container>
+                  }
+                  @if (!groupToFields.get(tab)) {
+                    <div>
+                      @for (group of tabToGroups.get(tab); track group) {
+                        <p-fieldset [legend]="group">
+                          @for (field of groupToFields.get(group); track field) {
+                            <ng-container dynamicField [field]="field"
+                              [group]="form" [view]="view">
+                            </ng-container>
+                          }
+                        </p-fieldset>
+                      }
                     </div>
+                  }
                 </p-tabPanel>
+              }
             </p-tabView>
-
-            <div *ngIf="groups">
-                <ng-container *ngFor="let group of groups;">
-                    <p-fieldset [legend]="group">
-                        <ng-container *ngFor="let field of groupToFields.get(group);" dynamicField [field]="field"
-                                [group]="form" [view]="view">
-                        </ng-container>
-                    </p-fieldset>
-                </ng-container>
+          }
+        
+          @if (groups) {
+            <div>
+              @for (group of groups; track group) {
+                <p-fieldset [legend]="group">
+                  @for (field of groupToFields.get(group); track field) {
+                    <ng-container dynamicField [field]="field"
+                      [group]="form" [view]="view">
+                    </ng-container>
+                  }
+                </p-fieldset>
+              }
             </div>
-
+          }
+        
         </form>
-    `,
-    styles: []
+        `,
+    styles: [],
+    imports: [ReactiveFormsModule, DynamicFieldDirective, TabView, TabPanel, Fieldset]
 })
 export class DynamicFormComponent implements OnInit {
 
-    constructor(private fb: FormBuilder) {
+    constructor(private fb: UntypedFormBuilder) {
     }
 
     get value() {
@@ -57,12 +81,12 @@ export class DynamicFormComponent implements OnInit {
     @Input() fields: FieldDefinition[] = [];
     @Input() view = false;
     @Output() submit: EventEmitter<any> = new EventEmitter<any>();
-    form: FormGroup;
+    form: UntypedFormGroup;
 
-    tabs: Set<string> = null;
-    groups: Set<string> = null;
+    tabs: Set<string> | null = null;
+    groups: Set<string> | null = null;
     tabToGroups: Map<string, Set<string>> = new Map();
-    groupToFields: Map<string, FieldDefinition[]> = null;
+    groupToFields: Map<string, FieldDefinition[]> | null = null;
 
     ngOnInit() {
 
@@ -97,6 +121,9 @@ export class DynamicFormComponent implements OnInit {
     createControl() {
         const group = this.fb.group({});
         this.fields.forEach(field => {
+        if (!field.name) {
+          return;
+        }
             const control = this.fb.control(
                 field.value, this.bindValidations(field.validations || [])
             );
@@ -105,9 +132,9 @@ export class DynamicFormComponent implements OnInit {
         return group;
     }
 
-    bindValidations(validations: any) {
+    bindValidations(validations: Array<{ validator: ValidatorFn }>) {
         if (validations.length > 0) {
-            const validList = [];
+        const validList: ValidatorFn[] = [];
             validations.forEach(valid => {
                 validList.push(valid.validator);
             });
@@ -126,10 +153,10 @@ export class DynamicFormComponent implements OnInit {
         }
     }
 
-    validateAllFormFields(formGroup: FormGroup) {
+    validateAllFormFields(formGroup: UntypedFormGroup) {
         Object.keys(formGroup.controls).forEach(field => {
             const control = formGroup.get(field);
-            control.markAsTouched({onlySelf: true});
+        control?.markAsTouched({onlySelf: true});
         });
     }
 

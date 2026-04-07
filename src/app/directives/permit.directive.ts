@@ -2,12 +2,10 @@ import {Directive, Input, TemplateRef, ViewContainerRef} from '@angular/core';
 import {KeycloakService} from 'keycloak-angular';
 import {KeycloakProfile} from 'keycloak-js';
 
-@Directive({
-    selector: '[permit]'
-})
+@Directive({ selector: '[permit]' })
 export class PermitDirective {
 
-    private _prevCondition: boolean = null;
+    private _prevCondition = false;
     userDetails: KeycloakProfile;
     roles: string[];
 

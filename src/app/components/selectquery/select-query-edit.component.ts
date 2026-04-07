@@ -4,9 +4,15 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {SelectQueryService} from "../../service/select-query.service";
 import {SelectQuery} from "../../model/select-query";
+import { SideBarComponent } from '../sidebar/sidebar.component';
+import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { InputText } from 'primeng/inputtext';
+import { InputSwitch } from 'primeng/inputswitch';
 
 @Component({
-  templateUrl: './select-query-edit.component.html'
+    templateUrl: './select-query-edit.component.html',
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, InputSwitch]
 })
 export class SelectQueryEditComponent extends AbstractEditComponent<SelectQuery>
   implements OnInit {
