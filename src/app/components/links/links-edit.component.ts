@@ -13,11 +13,11 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators, ReactiveFormsModule }
 import { SideBarComponent } from '../sidebar/sidebar.component';
 import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
 import { InputText } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 
 @Component({
     templateUrl: './links-edit.component.html',
-    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, InputText, DropdownModule]
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, InputText, SelectModule]
 })
 export class LinksEditComponent extends AbstractEditComponent<Link> implements OnInit {
 

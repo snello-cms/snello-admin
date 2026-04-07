@@ -153,7 +153,13 @@ export class FormGenerationEditComponent implements OnInit {
         if (!date) {
             return '';
         }
-        return `${this.formatDate(date)} ${this.formatTime(date)}`;
+        const timezoneOffsetMinutes = -date.getTimezoneOffset();
+        const sign = timezoneOffsetMinutes >= 0 ? '+' : '-';
+        const absoluteOffsetMinutes = Math.abs(timezoneOffsetMinutes);
+        const offsetHours = this.pad(Math.floor(absoluteOffsetMinutes / 60));
+        const offsetMinutes = this.pad(absoluteOffsetMinutes % 60);
+
+        return `${this.formatDate(date)}T${this.formatTime(date)}${sign}${offsetHours}:${offsetMinutes}`;
     }
 
     private parseTime(value: string): Date {
@@ -169,6 +175,11 @@ export class FormGenerationEditComponent implements OnInit {
     }
 
     private parseDateTime(value: string): Date {
+        const parsed = new Date(value);
+        if (!Number.isNaN(parsed.getTime())) {
+            return parsed;
+        }
+
         const [datePart = '', timePart = '00:00:00'] = value.split(' ');
         const date = this.parseDate(datePart);
         const [hours = '0', minutes = '0', seconds = '0'] = timePart.split(':');

@@ -57,7 +57,7 @@
           <div class="table-wrapper clearfix">
 
             <p-table #table [paginator]="true" [resizableColumns]="true" lazy="true"
-              (onLazyLoad)="lazyLoad($event)" [responsive]="true" [rows]="10"
+              (onLazyLoad)="lazyLoad($event)" [rows]="10"
               [totalRecords]="apiService.listSize" [value]="model">
 
               <ng-template let-columns pTemplate="header">

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import {FieldDefinition} from '../../model/field-definition';
-import { InputTextarea } from 'primeng/inputtextarea';
+import { Textarea } from 'primeng/textarea';
 
 @Component({
     selector: 'app-textarea',
@@ -9,7 +9,7 @@ import { InputTextarea } from 'primeng/inputtextarea';
         <div class="form-group clearfix row" [formGroup]="group">
           <label class="col-sm-3">{{ field.name }}</label>
           <div class="col-sm-9">
-            <textarea pInputTextarea
+            <textarea pTextarea
               [formControlName]="field.name"
             [placeholder]="field.label"></textarea>
             @for (validation of field.validations; track validation) {
@@ -18,7 +18,7 @@ import { InputTextarea } from 'primeng/inputtextarea';
         </div>
         `,
     styles: [],
-    imports: [ReactiveFormsModule, InputTextarea]
+    imports: [ReactiveFormsModule, Textarea]
 })
 export class TextAreaComponent implements OnInit {
     field: FieldDefinition;

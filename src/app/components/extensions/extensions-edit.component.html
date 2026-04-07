@@ -76,7 +76,7 @@
                   <i class="{{element.icon}}"></i>
                 }&nbsp;&nbsp; Icon (*)</label>
                 <div class="col-sm-9">
-                  <p-dropdown [options]="iconItems" [(ngModel)]="element.icon" filter="true" name="icon">
+                  <p-select [options]="iconItems" [(ngModel)]="element.icon" filter="true" name="icon">
                     <ng-template let-item pTemplate="selectedItem">
                       <i class="{{item.value}}"></i>
                       <span style="vertical-align:middle; margin-left: .5em">{{item.label}}</span>
@@ -87,7 +87,7 @@
                         <div style="font-size:14px;float:right;margin-top:4px">{{icon.label}}</div>
                       </div>
                     </ng-template>
-                  </p-dropdown>
+                  </p-select>
                 </div>
               </div>
 

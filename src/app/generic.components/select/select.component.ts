@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import {FieldDefinition} from '../../model/field-definition';
 import {SelectItem} from "primeng/api";
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 
 @Component({
     selector: "app-select",
@@ -10,17 +10,17 @@ import { DropdownModule } from 'primeng/dropdown';
     <div class="form-group clearfix row" [formGroup]="group">
       <label class="col-sm-3">{{ field.name }}</label>
       <div class="col-sm-9">
-        <p-dropdown
+        <p-select
           [options]="options"
           [style]="{ width: '100%' }"
           [placeholder]="field.label"
           [formControlName]="field.name">
-        </p-dropdown>
+        </p-select>
       </div>
     </div>
   `,
     styles: [],
-    imports: [ReactiveFormsModule, DropdownModule]
+    imports: [ReactiveFormsModule, SelectModule]
 })
 export class SelectComponent implements OnInit {
   field: FieldDefinition;

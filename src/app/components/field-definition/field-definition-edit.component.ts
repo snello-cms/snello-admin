@@ -11,19 +11,20 @@ import {Metadata} from '../../model/metadata';
 import { SideBarComponent } from '../sidebar/sidebar.component';
 import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { InputText } from 'primeng/inputtext';
-import { InputTextarea } from 'primeng/inputtextarea';
+import { Textarea } from 'primeng/textarea';
 import { InputSwitch } from 'primeng/inputswitch';
 
 @Component({
     templateUrl: './field-definition-edit.component.html',
-    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, DropdownModule, InputText, InputTextarea, InputSwitch]
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, SelectModule, InputText, Textarea, InputSwitch]
 })
 export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDefinition> implements OnInit {
 
     metadatas: Metadata[] = [];
-    metadatasSelect: SelectItem[] = [];
+    metadatasSelect: Metadata[] = [];
+    selectedMetadata: Metadata | null = null;
     fieldType?: string;
     pageBack: string;
     uuidBack: string;
@@ -115,10 +116,13 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
                 element => {
                     if (element) {
                         this.element = <FieldDefinition>element;
+                        this.ensureMetadataOption(this.element.metadata_uuid);
+                        this.selectedMetadata = this.mapMetadata.get(this.element.metadata_uuid) ?? null;
                         this.postFind();
                     } else {
                         this.editMode = false;
                         this.element = this.createInstance();
+                        this.selectedMetadata = null;
                         this.postCreate();
                     }
 
@@ -131,15 +135,21 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
             ),
             map(
                 (params: Params) => {
-                    if (params && params.get('metadata_uuid')) {
-                        this.element.metadata_uuid = params.get('metadata_uuid');
+                    if (!id && params && params.get('metadata_uuid')) {
+                        const metadataUuid = params.get('metadata_uuid');
+                        if (metadataUuid && this.mapMetadata.has(metadataUuid)) {
+                            this.element.metadata_uuid = metadataUuid;
+                            this.selectedMetadata = this.mapMetadata.get(metadataUuid) ?? null;
+                            this.changedMetadata({value: this.selectedMetadata});
+                        } else {
+                            this.element.metadata_uuid = '';
+                            this.selectedMetadata = null;
+                        }
                     }
                 }
             )
         ).subscribe(
-            () => {
-                console.log(this.element);
-            },
+            () => undefined,
             error => {
                 this.addError('Error while loading data' + (error || ''));
             });
@@ -147,11 +157,24 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
 
     valorizeMetadatas(metadataList: Metadata[]) {
         this.metadatas = metadataList;
+        this.mapMetadata.clear();
+        this.metadatasSelect = [];
         for (let i = 0; i < this.metadatas.length; i++) {
             if (!this.metadatas[i].created) {
-                this.metadatasSelect.push({value: this.metadatas[i].uuid, label: this.metadatas[i].table_name});
+                this.metadatasSelect.push(this.metadatas[i]);
                 this.mapMetadata.set(this.metadatas[i].uuid, this.metadatas[i]);
             }
+        }
+    }
+
+    private ensureMetadataOption(metadataUuid?: string) {
+        if (!metadataUuid || this.mapMetadata.has(metadataUuid)) {
+            return;
+        }
+        const currentMetadata = this.metadatas.find(m => m.uuid === metadataUuid);
+        if (currentMetadata) {
+            this.metadatasSelect.push(currentMetadata);
+            this.mapMetadata.set(currentMetadata.uuid, currentMetadata);
         }
     }
 
@@ -187,7 +210,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
             this.element.input_type = fieldDefTypes[1];
         }
         delete this.element.value;
-        this.element.is_edit = false;
+        delete (this.element as any).is_edit;
     }
 
     createInstance(): FieldDefinition {
@@ -203,11 +226,13 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
     }
 
     changedMetadata(event: any) {
+        const selected = event && event.value ? event.value as Metadata : null;
+        this.element.metadata_uuid = selected ? selected.uuid : '';
         this.element.tab_name = undefined;
         this.element.group_name = undefined;
         this.tabs = [];
         this.groups = [];
-        const meta = this.mapMetadata.get(event.value);
+        const meta = selected;
 
         // Se la stringa contine un ';': ho sicuramente la divisione in tab. Splitto tutto, tiro fuori i tab e valuto le sottostringhe
         if (!meta || !meta.tab_groups) {
@@ -277,7 +302,6 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
     }
 
     update() {
-        console.log(JSON.stringify(this.element));
         this.clearMsgs();
         this.editMode = false;
         if (!this.preUpdate()) {

@@ -43,21 +43,21 @@
                 <div class="form-group clearfix row">
                   <label class="label-text col-sm-3">metadata_name</label>
                   <div class="col-sm-9">
-                    <p-dropdown [(ngModel)]="element.metadata_name" [filter]="false" [options]="metadatas"
+                    <p-select [(ngModel)]="element.metadata_name" [filter]="false" [options]="metadatas"
                       [style]="{'width':'100%'}" filterBy="label" (onChange)="changedMetadata($event)"
                       formControlName="metadata_name" placeholder="Select a metadata">
-                    </p-dropdown>
+                    </p-select>
                   </div>
                 </div>
 
                 <div class="form-group clearfix row">
                   <label class="label-text col-sm-3">metadata_lock_field</label>
                   <div class="col-sm-9">
-                    <p-dropdown [(ngModel)]="element.metadata_lock_field" [filter]="false"
+                    <p-select [(ngModel)]="element.metadata_lock_field" [filter]="false"
                       [readonly]="!element.metadata_name" [options]="fieldDefinitions"
                       [style]="{'width':'100%'}" formControlName="metadata_lock_field"
                       placeholder="Select a field">
-                    </p-dropdown>
+                    </p-select>
                   </div>
                 </div>
 
@@ -65,11 +65,11 @@
                 <div class="form-group clearfix row">
                   <label class="label-text col-sm-3">metadata_searchable_field</label>
                   <div class="col-sm-9">
-                    <p-dropdown [(ngModel)]="element.metadata_searchable_field" [filter]="false"
+                    <p-select [(ngModel)]="element.metadata_searchable_field" [filter]="false"
                       [readonly]="!element.metadata_name" [options]="fieldDefinitions"
                       [style]="{'width':'100%'}" formControlName="metadata_searchable_field"
                       placeholder="Select a field">
-                    </p-dropdown>
+                    </p-select>
                   </div>
                 </div>
 

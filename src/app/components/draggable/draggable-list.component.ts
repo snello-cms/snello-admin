@@ -12,6 +12,7 @@ import { TableModule } from 'primeng/table';
 
 @Component({
     templateUrl: './draggable-list.component.html',
+    host: { 'data-cmp-id': 'draggable-list' },
     imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, TableModule, PrimeTemplate]
 })
 export class DraggableListComponent extends AbstractListComponent<Draggable> implements OnInit {

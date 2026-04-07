@@ -14,11 +14,11 @@ import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component'
 import { ProgressBar } from 'primeng/progressbar';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 
 @Component({
     templateUrl: './extensions-edit.component.html',
-    imports: [SideBarComponent, AdminhomeTopBar, FileUpload, ProgressBar, ReactiveFormsModule, FormsModule, InputText, DropdownModule, PrimeTemplate]
+    imports: [SideBarComponent, AdminhomeTopBar, FileUpload, ProgressBar, ReactiveFormsModule, FormsModule, InputText, SelectModule, PrimeTemplate]
 })
 export class ExtensionsEditComponent extends AbstractEditComponent<Extension> implements OnInit {
 

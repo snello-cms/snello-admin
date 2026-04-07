@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import {FieldDefinition} from '../../model/field-definition';
-import { Calendar } from 'primeng/calendar';
+import { DatePicker } from 'primeng/datepicker';
 
 @Component({
     selector: "app-datetime",
@@ -9,16 +9,16 @@ import { Calendar } from 'primeng/calendar';
         <div class="form-group clearfix row" [formGroup]="group">
             <label class="col-sm-3">{{ field.name }}</label>
             <div class="col-sm-9">
-                <p-calendar
+                <p-datepicker
                         dateFormat="dd/mm/yy"
                         [formControlName]="field.name"
                         showTime="true" hourFormat="24">
-                </p-calendar>
+                </p-datepicker>
             </div>
         </div>
     `,
     styles: [],
-    imports: [ReactiveFormsModule, Calendar]
+    imports: [ReactiveFormsModule, DatePicker]
 })
 export class DatetimeComponent implements OnInit {
     field: FieldDefinition;

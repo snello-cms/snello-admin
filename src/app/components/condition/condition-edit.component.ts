@@ -9,12 +9,12 @@ import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
 import { SideBarComponent } from '../sidebar/sidebar.component';
 import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { InputText } from 'primeng/inputtext';
 
 @Component({
     templateUrl: './condition-edit.component.html',
-    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, DropdownModule, InputText]
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, SelectModule, InputText]
 })
 export class ConditionEditComponent extends AbstractEditComponent<Condition> implements OnInit {
 

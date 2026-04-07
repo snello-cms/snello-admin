@@ -43,11 +43,11 @@
                 <div class="form-group clearfix row">
                   <label class="label-text col-sm-3">Input Type (*)</label>
                   <div class="col-sm-9">
-                    <p-dropdown [(ngModel)]="draggable" [filter]="false" [options]="draggableSelect"
+                    <p-select [(ngModel)]="draggable" [filter]="false" [options]="draggableSelect"
                       [style]="{'width':'100%'}"
                       filterBy="label" name="typeSelect"
                       placeholder="Seleziona un draggable">
-                    </p-dropdown>
+                    </p-select>
                     @if (draggable) {
                       <button (click)="addDraggable()" class="btn btn-success"
                         type="button">
@@ -60,7 +60,7 @@
                 <div class="form-group clearfix row">
                   <label class="label-text col-sm-3"> Draggables</label>
                   <div class="col-sm-9">
-                    <textarea pInputTextarea [(ngModel)]="element.draggables"
+                    <textarea pTextarea [(ngModel)]="element.draggables"
                       name="template" placeholder="draggables" [required]="true"
                     required></textarea>
                   </div>
@@ -69,7 +69,7 @@
                 <div class="form-group clearfix row">
                   <label class="label-text col-sm-3">Html</label>
                   <div class="col-sm-9">
-                    <textarea pInputTextarea [(ngModel)]="element.html"
+                    <textarea pTextarea [(ngModel)]="element.html"
                     name="html" placeholder="Html"></textarea>
                   </div>
                 </div>

@@ -11,14 +11,14 @@ import { SideBarComponent } from '../sidebar/sidebar.component';
 import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/dropdown';
-import { InputTextarea } from 'primeng/inputtextarea';
+import { SelectModule } from 'primeng/select';
+import { Textarea } from 'primeng/textarea';
 
 type VariableEntry = { name: string; draggable: string; value: string };
 
 @Component({
     templateUrl: './droppable-edit.component.html',
-    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, DropdownModule, InputTextarea]
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, SelectModule, Textarea]
 })
 export class DroppableEditComponent extends AbstractEditComponent<Droppable> implements OnInit {
 

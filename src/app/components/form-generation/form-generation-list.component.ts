@@ -57,7 +57,6 @@ export class FormGenerationListComponent implements OnInit {
             return this.apiService.fetchObject(fieldDefinition.join_table_name, fullValue, fieldDefinition.join_table_select_fields)
                 .pipe(
                     map(join => {
-                        console.log(join);
                         return join[labelField];
                     })
                 );
@@ -152,7 +151,6 @@ export class FormGenerationListComponent implements OnInit {
                         }
                     }
                 }
-                console.log(model);
                 this.model = model;
                 this.cdr.detectChanges();
             }

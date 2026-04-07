@@ -66,7 +66,7 @@ bootstrapApplication(AppComponent, {
         },
         importProvidersFrom(
             KeycloakAngularModule,
-            MonacoEditorModule
+            MonacoEditorModule.forRoot()
         )
     ]
 }).catch(err => console.error(err));
