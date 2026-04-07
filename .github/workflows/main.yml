@@ -29,10 +29,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: Use Node.js 16
+      - name: Use Node.js v24.11.1
         uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: '24'
           cache: 'npm'
 
       - name: Build Project
