@@ -14,6 +14,7 @@ import { TableModule } from 'primeng/table';
 
 @Component({
     templateUrl: './droppable-list.component.html',
+    host: { 'data-cmp-id': 'droppable-list' },
     imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, TableModule, PrimeTemplate]
 })
 export class DroppableListComponent extends AbstractListComponent<Droppable> implements OnInit {

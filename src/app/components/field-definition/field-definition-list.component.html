@@ -41,8 +41,8 @@
                   <div class="col-sm-4">
                     <div class="clearfix"></div>
                     @if (service.search) {
-                      <p-dropdown id="calendarType" [style]="{'width':'100%'}" name="calendarType" [options]="metadatasItems" placeholder="metadata" [(ngModel)]="service.search.metadata_uuid">
-                      </p-dropdown>
+                      <p-select id="calendarType" [style]="{'width':'100%'}" name="calendarType" [options]="metadatasItems" placeholder="metadata" [(ngModel)]="service.search.metadata_uuid">
+                      </p-select>
                     }
                   </div>
 
@@ -60,7 +60,7 @@
 
             <div class="table-wrapper clearfix">
 
-              <p-table #datatable (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true" [resizableColumns]="true" [responsive]="true" [rows]="10" [totalRecords]="service.listSize" [value]="model">
+              <p-table #datatable (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true" [resizableColumns]="true" [rows]="10" [totalRecords]="service.listSize" [value]="model">
                 <ng-template let-columns pTemplate="header">
                   <tr class="sort-header">
                     <th pResizableColumn>Index</th>

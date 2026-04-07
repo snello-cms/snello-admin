@@ -45,7 +45,7 @@
                   <i class="{{element.icon}}"></i>
                 }&nbsp;&nbsp; Icon (*)</label>
                 <div class="col-sm-9">
-                  <p-dropdown [options]="iconItems" [(ngModel)]="element.icon" filter="true" name="icon"
+                  <p-select [options]="iconItems" [(ngModel)]="element.icon" filter="true" name="icon"
                     required>
                     <ng-template let-item pTemplate="selectedItem">
                       <i class="{{item.value}}"></i>
@@ -57,7 +57,7 @@
                         <div style="font-size:14px;float:right;margin-top:4px">{{ icon.label }}</div>
                       </div>
                     </ng-template>
-                  </p-dropdown>
+                  </p-select>
                 </div>
               </div>
 
@@ -139,10 +139,10 @@
               <div class="form-group clearfix row">
                 <label class="label-text col-sm-3">Table key Type(*)</label>
                 <div class="col-sm-9">
-                  <p-dropdown [(ngModel)]="element.table_key_type" [filter]="false"
+                  <p-select [(ngModel)]="element.table_key_type" [filter]="false"
                     [options]="tableTypeSelect" [style]="{'width':'100%'}" filterBy="label"
                     [required]="true" name="tableKeyType" placeholder="Select table key type">
-                  </p-dropdown>
+                  </p-select>
                 </div>
               </div>
 

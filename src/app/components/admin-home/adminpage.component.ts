@@ -7,11 +7,10 @@ import {KeycloakProfile} from 'keycloak-js';
 import { SideBarComponent } from '../sidebar/sidebar.component';
 import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
 import { PermitDirective } from '../../directives/permit.directive';
-import { MessagesModule } from 'primeng/messages';
 
 @Component({
     templateUrl: './adminpage.component.html',
-    imports: [SideBarComponent, AdminhomeTopBar, PermitDirective, RouterLink, MessagesModule]
+    imports: [SideBarComponent, AdminhomeTopBar, PermitDirective, RouterLink]
 })
 export class AdminpageComponent {
 

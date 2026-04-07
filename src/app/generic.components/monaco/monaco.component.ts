@@ -16,7 +16,7 @@ import { EditorComponent } from 'ngx-monaco-editor-v2';
               [options]="editorOptions"
               type="text"
               name="header"
-            formControlName="field.name"></ngx-monaco-editor>
+                            [formControlName]="field.name"></ngx-monaco-editor>
             @for (validation of field.validations; track validation) {
             }
           </div>
@@ -26,9 +26,9 @@ import { EditorComponent } from 'ngx-monaco-editor-v2';
     imports: [ReactiveFormsModule, EditorComponent]
 })
 export class MonacoComponent implements OnInit {
-    field: FieldDefinition;
-    group: UntypedFormGroup;
-    asset_path: string;
+    field!: FieldDefinition;
+    group!: UntypedFormGroup;
+    asset_path?: string;
     editorOptions = {
         language: 'html',
         minimap: {
@@ -40,7 +40,6 @@ export class MonacoComponent implements OnInit {
     constructor(configurationService: ConfigurationService) {
         configurationService.getValue(ASSET_PATH).subscribe(
             path => {
-                console.log(path);
                 this.asset_path = path;
             });
     }

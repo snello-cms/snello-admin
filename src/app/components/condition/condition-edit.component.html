@@ -25,10 +25,10 @@
                 <div class="form-group clearfix row">
                   <label class="label-text col-sm-3">Metadata(*)</label>
                   <div class="col-sm-9">
-                    <p-dropdown [(ngModel)]="element.metadata_uuid" [filter]="false" [options]="metadatasSelect"
+                    <p-select [(ngModel)]="element.metadata_uuid" [filter]="false" [options]="metadatasSelect"
                       [required]="true" [style]="{'width':'100%'}" filterBy="label" name="metadata_uuid"
                       placeholder="Seleziona un metadato">
-                    </p-dropdown>
+                    </p-select>
                   </div>
                 </div>
 

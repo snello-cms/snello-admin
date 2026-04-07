@@ -26,6 +26,7 @@
               "src/assets",
               "src/config.html",
               "src",
+              { "glob": "**/*", "input": "node_modules/monaco-editor/min", "output": "/assets/monaco/min/" },
               { "glob": "**/*", "input": "node_modules/tinymce/skins", "output": "/tinymce/skins/" },
               { "glob": "**/*", "input": "node_modules/tinymce/themes", "output": "/tinymce/themes/" },
               { "glob": "**/*", "input": "node_modules/tinymce/plugins", "output": "/tinymce/plugins/" },

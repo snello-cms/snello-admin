@@ -9,12 +9,12 @@ import { SideBarComponent } from '../sidebar/sidebar.component';
 import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 
 @Component({
     templateUrl: './field-definition-list.component.html',
-    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, DropdownModule, TableModule, PrimeTemplate]
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, SelectModule, TableModule, PrimeTemplate]
 })
 export class FieldDefinitionListComponent extends AbstractListComponent<FieldDefinition> implements OnInit {
 
