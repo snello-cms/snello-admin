@@ -62,7 +62,7 @@ jobs:
         with:
           context: ./
           platforms: linux/amd64,linux/arm64
-          file: ./Dockerfile-local
+          file: ./Dockerfile
           push: true
           tags: |
             snellocms/snello-admin:latest
