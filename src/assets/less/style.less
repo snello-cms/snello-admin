@@ -94,9 +94,12 @@ html {
 
 
 
+
 .nav-tabs {
     margin: 0 auto;
     border: 0px;
+    width: 100%;
+    text-align: center;
 }
 
 .nav-tabs > li {
@@ -416,10 +419,16 @@ button {
 
 a {
     color: @bluegrey;
+    text-decoration: none;
     -webkit-transition: color 300ms, background-color 300ms;
     -moz-transition: color 300ms, background-color 300ms;
     -o-transition: color 300ms, background-color 300ms;
     transition: color 300ms, background-color 300ms;
+}
+
+a:hover,
+a:focus {
+    text-decoration: none;
 }
 
 table {
@@ -607,9 +616,23 @@ table {
     border-style: solid;
     border-color: #e6ecf1;
     border-radius: 4px;
-    padding: 24px 10px;
+    padding: 24px 16px;
     margin-bottom: 20px;
     margin-top: 15px;
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
+    > .fw-search-fields {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+    > .fw-spacer {
+        flex: 1 1 auto;
+    }
+    > .fw-actions {
+        flex-shrink: 0;
+    }
     .ui-inputtext {
         height: 34px;
         line-height: 34px;

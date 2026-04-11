@@ -29,30 +29,26 @@
               <div class="clearfix"></div>
               <div class="col-sm-12">
 
-                <div class="filter-wrapper clearfix" (keydown.enter)="onSearchEnter($event, datatable)">
-                  <div class="col-sm-4">
-                    <div class="clearfix"></div>
+                <div class="filter-wrapper" (keydown.enter)="onSearchEnter($event, datatable)">
+                  <div class="fw-search-fields">
                     @if (service.search) {
                       <input id="nome" name="name" type="text" class="form-control"
                         [(ngModel)]="service.search.name_contains" placeholder="name"
                         pInputText #name="ngModel">
                     }
                   </div>
-                  <div class="col-sm-4">
-                    <div class="clearfix"></div>
+                  <div class="fw-search-fields">
                     @if (service.search) {
                       <p-select id="calendarType" [style]="{'width':'100%'}" name="calendarType" [options]="metadatasItems" placeholder="metadata" [(ngModel)]="service.search.metadata_uuid">
                       </p-select>
                     }
                   </div>
-
-                  <div class="col-sm-4">
-                    <div class="btn-group pull-right">
-                      <button type="button" class="btn btn-search" (click)="reload(datatable)" icon="ui-icon-search">Search</button>
-                      <button type="button" class="btn btn-reset" (click)="reset(datatable)" icon="ui-icon-undo">Undo</button>
+                  <div class="fw-actions">
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-search" (click)="reload(datatable)">Search</button>
+                      <button type="button" class="btn btn-reset" (click)="reset(datatable)">Undo</button>
                     </div>
                   </div>
-
                 </div>
               </div>
             </div>

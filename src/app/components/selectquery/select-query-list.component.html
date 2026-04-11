@@ -31,28 +31,19 @@
               <div class="clearfix"></div>
               <div class="col-sm-12">
 
-                <div class="filter-wrapper clearfix" (keydown.enter)="onSearchEnter($event, datatable)">
-                  <div class="col-sm-5">
-                    <div class="clearfix"></div>
+                <div class="filter-wrapper" (keydown.enter)="onSearchEnter($event, datatable)">
+                  <div class="fw-search-fields">
                     @if (service.search) {
                       <input id="nome" name="name" type="text" class="form-control"
                         placeholder="name" [(ngModel)]="service.search.query_name_contains"
                         pInputText #name="ngModel">
                     }
                   </div>
-                  <div class="col-sm-3">
-
-                  </div>
-
-                  <div class="col-sm-3">
+                  <div class="fw-spacer"></div>
+                  <div class="fw-actions">
                     <div class="btn-group">
-
-                      <button type="button" class="btn btn-search" (click)="reload(datatable)"
-                        icon="ui-icon-search">Search
-                      </button>
-                      <button type="button" class="btn btn-reset" (click)="reset(datatable)"
-                        icon="ui-icon-undo">Undo
-                      </button>
+                      <button type="button" class="btn btn-search" (click)="reload(datatable)">Search</button>
+                      <button type="button" class="btn btn-reset" (click)="reset(datatable)">Undo</button>
                     </div>
                   </div>
                 </div>

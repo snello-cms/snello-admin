@@ -21,23 +21,16 @@
         <div class="row">
           <div class="clearfix"></div>
           <div class="col-sm-12">
-            <div class="filter-wrapper clearfix" (keydown.enter)="onSearchEnter($event, table)">
-              <div class="col-sm-4">
-                <div class="clearfix"></div>
+            <div class="filter-wrapper" (keydown.enter)="onSearchEnter($event, table)">
+              <div class="fw-search-fields">
                 <dynamic-search-form [fields]="fieldDefinitionsSearch">
                 </dynamic-search-form>
               </div>
-              <div class="col-sm-4">
-              </div>
-              <div class="col-sm-4">
-                <div class="btn-group pull-right">
-                  <button type="button" class="btn btn-search" (click)="reload(table)"
-                    icon="ui-icon-search">
-                    Search
-                  </button>
-                  <button type="button" class="btn btn-reset" (click)="reset(table)" icon="ui-icon-undo">
-                    Undo
-                  </button>
+              <div class="fw-spacer"></div>
+              <div class="fw-actions">
+                <div class="btn-group">
+                  <button type="button" class="btn btn-search" (click)="reload(table)">Search</button>
+                  <button type="button" class="btn btn-reset" (click)="reset(table)">Undo</button>
                 </div>
               </div>
             </div>

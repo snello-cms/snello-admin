@@ -29,21 +29,14 @@
                             <div class="clearfix"></div>
                             <div class="col-sm-12">
 
-                                <div class="filter-wrapper clearfix" (keydown.enter)="onSearchEnter($event, datatable)">
-                                    <div class="col-sm-4">
-                                        <div class="clearfix"></div>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <div class="clearfix"></div>
-                                    </div>
-
-                                    <div class="col-sm-4">
-                                        <div class="btn-group pull-right">
-                                            <button type="button" class="btn btn-search" (click)="reload(datatable)" icon="ui-icon-search">Search</button>
-                                            <button type="button" class="btn btn-reset" (click)="reset(datatable)" icon="ui-icon-undo">Undo</button>
+                                <div class="filter-wrapper" (keydown.enter)="onSearchEnter($event, datatable)">
+                                    <div class="fw-spacer"></div>
+                                    <div class="fw-actions">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-search" (click)="reload(datatable)">Search</button>
+                                            <button type="button" class="btn btn-reset" (click)="reset(datatable)">Undo</button>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
