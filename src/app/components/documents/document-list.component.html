@@ -30,7 +30,7 @@
               <div class="clearfix"></div>
               <div class="col-sm-12">
 
-                <div class="filter-wrapper clearfix">
+                <div class="filter-wrapper clearfix" (keydown.enter)="onSearchEnter($event, datatable)">
                   <div class="col-sm-4">
                     <div class="clearfix"></div>
                     @if (service.search) {

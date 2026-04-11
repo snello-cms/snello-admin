@@ -121,6 +121,11 @@ export abstract class AbstractListComponent<T> implements OnInit {
         this.refresh(datatable);
     }
 
+    public onSearchEnter(event: KeyboardEvent, datatable: any) {
+        event.preventDefault();
+        this.reload(datatable);
+    }
+
     public refresh(datatable: any) {
         this.clearMsgs();
         datatable.reset();
@@ -191,6 +196,16 @@ export abstract class AbstractListComponent<T> implements OnInit {
         }
         this.confirmationService.confirm({
             message: 'Do you really want to delete this record?',
+            acceptLabel: 'Yes',
+            rejectLabel: 'No',
+            acceptButtonProps: {
+                severity: 'danger',
+                outlined: false
+            },
+            rejectButtonProps: {
+                severity: 'secondary',
+                outlined: true
+            },
             accept: () => {
                 this.delete(element);
             }

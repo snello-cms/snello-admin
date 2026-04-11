@@ -8,11 +8,11 @@ import { SideBarComponent } from '../sidebar/sidebar.component';
 import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
-import { InputSwitch } from 'primeng/inputswitch';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 
 @Component({
     templateUrl: './select-query-edit.component.html',
-    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, InputSwitch]
+  imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, ToggleSwitchModule]
 })
 export class SelectQueryEditComponent extends AbstractEditComponent<SelectQuery>
   implements OnInit {

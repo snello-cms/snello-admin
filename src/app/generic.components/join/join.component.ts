@@ -20,7 +20,7 @@ import { AsyncPipe } from '@angular/common';
               <div class="col-sm-9">
                 <p-autoComplete
                   [suggestions]="options" (completeMethod)="search($event)" [size]="30"
-                  [field]="labelField" [dataKey]="field.join_table_key" [dropdown]="true"
+                                    [optionLabel]="labelField" [optionValue]="field.join_table_key" [dataKey]="field.join_table_key" [dropdown]="true"
                   [formControlName]="field.name" [forceSelection]="true">
                 </p-autoComplete>
               </div>
@@ -62,9 +62,16 @@ export class JoinComponent implements OnInit {
 
         if (this.uuid && fieldName) {
             this.join$ =
-                this.apiService.fetchObject(this.field.join_table_name, this.field.value, this.field.join_table_select_fields)
+                this.apiService.fetchObject(
+                    this.field.join_table_name,
+                    this.field.value,
+                    this.field.join_table_select_fields + ',' + this.field.join_table_key
+                )
                     .pipe(
-                        tap(join => this.group.get(fieldName)?.setValue(join)),
+                        tap(join => {
+                            this.options = join ? [join] : [];
+                            this.group.get(fieldName)?.setValue(join?.[this.field.join_table_key]);
+                        }),
                     );
 
         } else {

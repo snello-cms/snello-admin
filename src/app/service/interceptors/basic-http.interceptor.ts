@@ -2,17 +2,23 @@ import {Injectable} from '@angular/core';
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpHeaders, HttpInterceptor, HttpParams, HttpRequest} from '@angular/common/http';
 import {from, Observable, throwError} from 'rxjs';
 import {catchError, map, switchMap} from 'rxjs/operators';
-import {KeycloakService} from 'keycloak-angular';
+import Keycloak from 'keycloak-js';
 
-// @Injectable()
+@Injectable()
 export class BasicHttpInterceptor implements HttpInterceptor {
   constructor(
-      private authService: KeycloakService
+      private keycloak: Keycloak
   ) {
   }
 
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
-    const tokenAuth = this.authService.getToken();
+    if (this.shouldSkipAuth(request.url)) {
+      return next.handle(request);
+    }
+
+    const tokenAuth = this.keycloak.authenticated
+      ? this.keycloak.updateToken(30).then(() => this.keycloak.token)
+      : Promise.resolve(undefined);
 
     return from(tokenAuth).pipe(
         switchMap(token => {
@@ -47,5 +53,9 @@ export class BasicHttpInterceptor implements HttpInterceptor {
       params
     });
     return clone;
+  }
+
+  private shouldSkipAuth(url: string): boolean {
+    return url.includes('/assets/') || url.startsWith('assets/');
   }
 }

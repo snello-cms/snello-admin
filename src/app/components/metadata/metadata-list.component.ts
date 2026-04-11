@@ -85,6 +85,16 @@ export class MetadataListComponent extends AbstractListComponent<Metadata> imple
         }
         this.confirmationService.confirm({
             message: 'do you really want to truncate this table?',
+            acceptLabel: 'Yes',
+            rejectLabel: 'No',
+            acceptButtonProps: {
+                severity: 'danger',
+                outlined: false
+            },
+            rejectButtonProps: {
+                severity: 'secondary',
+                outlined: true
+            },
             accept: () => {
                 return this.truncateTable(metadata);
             }
@@ -98,6 +108,16 @@ export class MetadataListComponent extends AbstractListComponent<Metadata> imple
         }
         this.confirmationService.confirm({
             message: 'do you really want to create this table',
+            acceptLabel: 'Yes',
+            rejectLabel: 'No',
+            acceptButtonProps: {
+                severity: 'danger',
+                outlined: false
+            },
+            rejectButtonProps: {
+                severity: 'secondary',
+                outlined: true
+            },
             accept: () => {
                 return this.createTable(metadata);
             }
@@ -111,6 +131,16 @@ export class MetadataListComponent extends AbstractListComponent<Metadata> imple
         }
         this.confirmationService.confirm({
             message: 'do you really want to delete this table',
+            acceptLabel: 'Yes',
+            rejectLabel: 'No',
+            acceptButtonProps: {
+                severity: 'danger',
+                outlined: false
+            },
+            rejectButtonProps: {
+                severity: 'secondary',
+                outlined: true
+            },
             accept: () => {
                 return this.deleteTable(metadata);
             }

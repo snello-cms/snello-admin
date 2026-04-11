@@ -78,6 +78,16 @@ export class FormGenerationEditComponent implements OnInit {
         }
         this.confirmationService.confirm({
             message: 'Do you really want to delete this record?',
+            acceptLabel: 'Yes',
+            rejectLabel: 'No',
+            acceptButtonProps: {
+                severity: 'danger',
+                outlined: false
+            },
+            rejectButtonProps: {
+                severity: 'secondary',
+                outlined: true
+            },
             accept: () => {
                 this.delete();
             }
@@ -199,14 +209,27 @@ export class FormGenerationEditComponent implements OnInit {
                         objToSave[field.name] = objToSave[field.name].join(',');
                     }
                     if (field.type === 'multijoin') {
-                        const values: any[] = [];
-                        for (const value of  objToSave[field.name]) {
-                            values.push(value[field.join_table_key]);
+                        const rawValues = objToSave[field.name];
+                        if (Array.isArray(rawValues)) {
+                            const values = rawValues
+                                .map(value => typeof value === 'object' && value != null
+                                    ? value[field.join_table_key]
+                                    : value)
+                                .filter(value => value != null && value !== '');
+                            objToSave[field.name] = values.join(',');
                         }
-                        objToSave[field.name] = values.join(',');
                     }
                     if (field.type === 'join') {
-                        objToSave[field.name] = objToSave[field.name][field.join_table_key];
+                        const rawValue = objToSave[field.name];
+                        objToSave[field.name] = typeof rawValue === 'object' && rawValue != null
+                            ? rawValue[field.join_table_key]
+                            : rawValue;
+                    }
+                    if (field.type === 'realtionships') {
+                        const rawValues = objToSave[field.name];
+                        if (Array.isArray(rawValues)) {
+                            objToSave[field.name] = rawValues.join(',');
+                        }
                     }
                     if (field.type === 'time') {
                         objToSave[field.name] = this.formatTime(objToSave[field.name]);
@@ -237,6 +260,41 @@ export class FormGenerationEditComponent implements OnInit {
                     field.value = [];
                 } else {
                     field.value = (<string>field.value).split(',');
+                }
+            }
+            if (field.type === 'join') {
+                if (typeof field.value === 'object' && field.value != null) {
+                    field.value = field.value[field.join_table_key];
+                }
+            }
+            if (field.type === 'multijoin') {
+                if (field.value == null || field.value === '') {
+                    field.value = [];
+                } else if (Array.isArray(field.value)) {
+                    field.value = field.value
+                        .map(value => typeof value === 'object' && value != null
+                            ? value[field.join_table_key]
+                            : value)
+                        .filter(value => value != null && value !== '');
+                } else {
+                    field.value = (<string>field.value)
+                        .split(',')
+                        .map(value => value.trim())
+                        .filter(Boolean);
+                }
+            }
+            if (field.type === 'realtionships') {
+                if (field.value == null || field.value === '') {
+                    field.value = [];
+                } else if (Array.isArray(field.value)) {
+                    // Already an array
+                    field.value = field.value.filter(value => value != null && value !== '');
+                } else {
+                    // String separated by comma
+                    field.value = (<string>field.value)
+                        .split(',')
+                        .map(value => value.trim())
+                        .filter(Boolean);
                 }
             }
             if (field.type === 'time') {

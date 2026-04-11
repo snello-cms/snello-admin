@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
+import { Injectable, InjectionToken, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {CONFIG_PATH} from '../constants/constants';
-import {firstValueFrom, Observable, of} from 'rxjs';
-import {tap, map} from 'rxjs/operators';
+import { CONFIG_PATH } from '../constants/constants';
+import { Observable, of } from 'rxjs';
+import { map, shareReplay } from 'rxjs/operators';
 
 type RuntimeKeycloakConfig = {
     url: string;
@@ -18,33 +18,29 @@ export type RuntimeConfig = {
     [key: string]: unknown;
 };
 
+export const RUNTIME_CONFIG = new InjectionToken<RuntimeConfig>('RUNTIME_CONFIG');
+
 @Injectable({
     providedIn: 'root'
 })
 export class ConfigurationService {
 
-    private configurazione?: RuntimeConfig;
+    private readonly http = inject(HttpClient);
+    private readonly preloaded = inject(RUNTIME_CONFIG, { optional: true });
+    private readonly config$: Observable<RuntimeConfig>;
 
-    constructor(private http: HttpClient) {
-    }
-
-    getConfigs(): Promise<RuntimeConfig> {
-        console.log('loading configurations');
-        return firstValueFrom(
-            this.http.get<RuntimeConfig>(CONFIG_PATH).pipe(
-                tap(config => {
-                    this.configurazione = config;
-                })
-            )
-        );
+    constructor() {
+        if (this.preloaded) {
+            this.config$ = of(this.preloaded);
+        } else {
+            this.config$ = this.http.get<RuntimeConfig>(CONFIG_PATH).pipe(
+                shareReplay(1)
+            );
+        }
     }
 
     getConfiguration(): Observable<RuntimeConfig> {
-        if (this.configurazione) {
-            return of(this.configurazione);
-        } else {
-            return this.http.get<RuntimeConfig>(CONFIG_PATH);
-        }
+        return this.config$;
     }
 
     getValue(key: string): Observable<string> {

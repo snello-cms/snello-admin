@@ -2,8 +2,8 @@
   "img_path": "",
   "scope": "openid",
   "keycloakConfig": {
-    "url": "https://sso.kayak.love/",
-    "realm": "kayak",
+    "url": "https://accounts.kayak.love/",
+    "realm": "snello",
     "clientId": "snello-admin"
   },
   "asset_path": "",

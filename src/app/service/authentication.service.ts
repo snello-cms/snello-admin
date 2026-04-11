@@ -13,8 +13,7 @@ import {catchError, map, switchMap} from 'rxjs/operators';
 import {UserInSession} from '../model/user-in-session';
 import {ConfigurationService} from './configuration.service';
 import {ChangePassword} from '../model/change-password';
-import {KeycloakProfile} from 'keycloak-js';
-import {KeycloakService} from 'keycloak-angular';
+import Keycloak, {KeycloakProfile, KeycloakTokenParsed} from 'keycloak-js';
 
 @Injectable({
     providedIn: 'root'
@@ -39,7 +38,7 @@ export class AuthenticationService {
     private resetpassword_api_path: string;
     private changepassword_api_path: string;
 
-    constructor(private keycloakService: KeycloakService, private http: HttpClient, configurationService: ConfigurationService) {
+    constructor(private keycloak: Keycloak, private http: HttpClient, configurationService: ConfigurationService) {
         configurationService.getValue(LOGIN_API_PATH).subscribe(
             path => this.logi_api_path = path
         );
@@ -53,15 +52,13 @@ export class AuthenticationService {
     }
 
     async refreshKeycloak() {
-        if (await this.keycloakService.isLoggedIn()) {
-            this.userDetails = await this.keycloakService.loadUserProfile();
-            this.roles = this.keycloakService.getUserRoles();
-            this.keycloakService.getToken().then(
-                token => {
-                    this.token = token;
-                    this.extraroles = this.decodedToken.extraroles;
-                });
-            this.refreshToken = this.keycloakService.getKeycloakInstance().refreshToken;
+        if (this.keycloak.authenticated) {
+            this.userDetails = await this.keycloak.loadUserProfile();
+            this.roles = this.getUserRoles();
+            this.token = this.keycloak.token ?? '';
+            this.decodedToken = this.keycloak.tokenParsed;
+            this.extraroles = ((this.decodedToken as { extraroles?: string[] } | undefined)?.extraroles) ?? [];
+            this.refreshToken = this.keycloak.refreshToken ?? '';
         }
     }
 
@@ -77,11 +74,22 @@ export class AuthenticationService {
 
 
     public async logout() {
-        await this.keycloakService.logout();
+        await this.keycloak.logout();
     }
 
     public handleError(error: HttpErrorResponse): Observable<any> {
         return throwError(error || 'Server error');
+    }
+
+    private getUserRoles(): string[] {
+        const parsed = this.keycloak.tokenParsed as KeycloakTokenParsed & {
+            realm_access?: { roles?: string[] };
+            resource_access?: Record<string, { roles?: string[] }>;
+        };
+        const realmRoles = parsed?.realm_access?.roles ?? [];
+        const resourceRoles = Object.values(parsed?.resource_access ?? {})
+            .flatMap(resource => resource.roles ?? []);
+        return [...new Set([...realmRoles, ...resourceRoles])];
     }
 
 }

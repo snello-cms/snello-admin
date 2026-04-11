@@ -19,6 +19,7 @@ export const MAP_INPUT_TO_FIELD: Map<string, any> = new Map(
     ['tags', ['tags', null]],
     ['join', ['join', null]],
     ['multijoin', ['multijoin', null]],
+    ['realtionships', ['realtionships', null]],
     ['media', ['media', null]]
 
 

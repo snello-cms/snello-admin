@@ -4,11 +4,7 @@
 </div>
 
 <div class="sidebar-subpage">
-  <h3>Welcome<br><b> {{userDetails.firstName}} {{userDetails.lastName}}</b></h3>
-  <p>
-    Snello version: {{version()}}
-  </p>
-
+  <h3>Welcome<br><b> {{authService.userDetails?.firstName}} {{authService.userDetails?.lastName}}</b></h3>
 </div>
 
 <div class="main">

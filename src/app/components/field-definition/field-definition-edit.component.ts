@@ -14,17 +14,21 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
 import { InputText } from 'primeng/inputtext';
 import { Textarea } from 'primeng/textarea';
-import { InputSwitch } from 'primeng/inputswitch';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 
 @Component({
     templateUrl: './field-definition-edit.component.html',
-    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, SelectModule, InputText, Textarea, InputSwitch]
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, SelectModule, InputText, Textarea, ToggleSwitchModule]
 })
 export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDefinition> implements OnInit {
 
     metadatas: Metadata[] = [];
     metadatasSelect: Metadata[] = [];
     selectedMetadata: Metadata | null = null;
+    joinMetadatasSelect: Metadata[] = [];
+    selectedJoinMetadata: Metadata | null = null;
+    joinFieldOptions: SelectItem[] = [];
+    selectedJoinField?: string;
     fieldType?: string;
     pageBack: string;
     uuidBack: string;
@@ -66,6 +70,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         tags: 'containss',
         join: '',
         multijoin: 'containss',
+        realtionships: 'containss',
         media: 'null'
     };
 
@@ -97,7 +102,11 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         }
 
         const id: string = this.route.snapshot.params['id'];
-        this.metadataService.getList().pipe(
+        this.metadataService.getAllList({
+            table_name_contains: '',
+            uuid: '',
+            _limit: 100000
+        }).pipe(
             map(
                 metadataList => {
                     this.valorizeMetadatas(metadataList);
@@ -118,11 +127,13 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
                         this.element = <FieldDefinition>element;
                         this.ensureMetadataOption(this.element.metadata_uuid);
                         this.selectedMetadata = this.mapMetadata.get(this.element.metadata_uuid) ?? null;
+                        this.initializeJoinMetadata();
                         this.postFind();
                     } else {
                         this.editMode = false;
                         this.element = this.createInstance();
                         this.selectedMetadata = null;
+                        this.initializeJoinMetadata();
                         this.postCreate();
                     }
 
@@ -160,11 +171,12 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         this.mapMetadata.clear();
         this.metadatasSelect = [];
         for (let i = 0; i < this.metadatas.length; i++) {
+            this.mapMetadata.set(this.metadatas[i].uuid, this.metadatas[i]);
             if (!this.metadatas[i].created) {
                 this.metadatasSelect.push(this.metadatas[i]);
-                this.mapMetadata.set(this.metadatas[i].uuid, this.metadatas[i]);
             }
         }
+        this.updateJoinMetadataOptions();
     }
 
     private ensureMetadataOption(metadataUuid?: string) {
@@ -222,12 +234,15 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
             this.element.input_type = undefined;
         }
         this.fieldType = this.mapFieldToType.get(this.element.type + this.element.input_type);
+        this.syncJoinFieldsFromElement();
         super.postFind();
     }
 
     changedMetadata(event: any) {
         const selected = event && event.value ? event.value as Metadata : null;
         this.element.metadata_uuid = selected ? selected.uuid : '';
+        this.selectedMetadata = selected;
+        this.updateJoinMetadataOptions();
         this.element.tab_name = undefined;
         this.element.group_name = undefined;
         this.tabs = [];
@@ -253,6 +268,29 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
                 this.groups.push({label: group, value: group});
             }
         }
+    }
+
+    changedJoinMetadata(event: any) {
+        const selected = event && event.value ? event.value as Metadata : null;
+        this.selectedJoinMetadata = selected;
+        this.joinFieldOptions = [];
+        this.selectedJoinField = undefined;
+        this.element.join_table_select_fields = '';
+
+        if (!selected) {
+            this.element.join_table_name = '';
+            this.element.join_table_key = '';
+            return;
+        }
+
+        this.element.join_table_name = selected.table_name;
+        this.element.join_table_key = selected.table_key;
+        this.loadJoinFields(selected.uuid);
+    }
+
+    changedJoinFields(event: any) {
+        this.selectedJoinField = event && event.value ? String(event.value) : undefined;
+        this.element.join_table_select_fields = this.selectedJoinField ?? '';
     }
 
     changedTab(event: any) {
@@ -382,6 +420,78 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
     changedFieldType (event: any) {
         const key = event.value as keyof typeof this.componentDefaultValuesMapper;
         this.element.search_condition = this.componentDefaultValuesMapper[key] ?? '';
-        console.log(this.element.search_condition);
+        if (key === 'join' || key === 'multijoin') {
+            this.initializeJoinMetadata();
+        }
+    }
+
+    private initializeJoinMetadata() {
+        this.syncJoinFieldsFromElement();
+        this.updateJoinMetadataOptions();
+        this.selectedJoinMetadata = this.joinMetadatasSelect.find(
+            metadata => metadata.table_name === this.element.join_table_name
+        ) ?? null;
+
+        if (this.selectedJoinMetadata) {
+            this.element.join_table_name = this.selectedJoinMetadata.table_name;
+            this.element.join_table_key = this.selectedJoinMetadata.table_key;
+            this.loadJoinFields(this.selectedJoinMetadata.uuid, true);
+        } else {
+            this.joinFieldOptions = [];
+        }
+    }
+
+    private syncJoinFieldsFromElement() {
+        this.selectedJoinField = this.element.join_table_select_fields
+            ? this.element.join_table_select_fields.split(',').map(field => field.trim()).filter(Boolean)[0]
+            : undefined;
+    }
+
+    private loadJoinFields(metadataUuid: string, preserveSelection = false) {
+        this.fieldDefinitionService.getAllList({
+            name_contains: '',
+            uuid: '',
+            metadata_uuid: metadataUuid,
+            _limit: 100000
+        }).subscribe({
+            next: (fieldDefinitions: FieldDefinition[]) => {
+                this.joinFieldOptions = fieldDefinitions
+                    .filter(fieldDefinition => !!fieldDefinition.name)
+                    .map(fieldDefinition => ({
+                        label: fieldDefinition.table_key
+                            ? `${fieldDefinition.name} / key`
+                            : `${fieldDefinition.name}`,
+                        value: fieldDefinition.name
+                    }))
+                    .sort((left, right) => String(left.label).localeCompare(String(right.label), 'it'));
+
+                if (preserveSelection) {
+                    const allowedValues = new Set(this.joinFieldOptions.map(option => String(option.value)));
+                    this.selectedJoinField = this.selectedJoinField && allowedValues.has(this.selectedJoinField)
+                        ? this.selectedJoinField
+                        : undefined;
+                }
+
+                if (!this.selectedJoinField && this.joinFieldOptions.length > 0) {
+                    const firstField = this.joinFieldOptions[0].value;
+                    this.selectedJoinField = firstField ? String(firstField) : undefined;
+                }
+
+                this.element.join_table_select_fields = this.selectedJoinField ?? '';
+            },
+            error: (error) => {
+                this.joinFieldOptions = [];
+                this.addError('Error while loading join fields ' + (error || ''));
+            }
+        });
+    }
+
+    private updateJoinMetadataOptions() {
+        const currentMetadataUuid = this.selectedMetadata?.uuid || this.element.metadata_uuid;
+        this.joinMetadatasSelect = this.metadatas
+            .filter(
+            metadata => metadata.uuid !== currentMetadataUuid
+            )
+            .sort((left, right) => left.table_name.localeCompare(right.table_name, 'it'));
     }
 }

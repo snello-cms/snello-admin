@@ -17,6 +17,8 @@ import {HtmlViewComponent} from '../input/html-view.component';
 import { JoinViewComponent } from '../join/join-view.component';
 import { MultiJoinViewComponent } from '../multi-join/multi-join-view.component';
 import { MediaViewComponent } from '../media/media-view.component';
+import { RealtionshipsComponent } from '../realtionships/realtionships.component';
+import { RealtionshipsViewComponent } from '../realtionships/realtionships-view.component';
 
 @Directive({ selector: '[dynamicField]' })
 export class DynamicFieldDirective implements OnInit {
@@ -62,6 +64,7 @@ const componentMapper: Record<string, Type<any>> = {
     tags: TagComponent,
     join: JoinComponent,
     multijoin: MultiJoinComponent,
+    realtionships: RealtionshipsComponent,
     media: MediaComponent
 };
 
@@ -78,5 +81,6 @@ const componentViewMapper: Record<string, Type<any>> = {
     tags: InputViewComponent,
     join: JoinViewComponent,
     multijoin: MultiJoinViewComponent,
+    realtionships: RealtionshipsViewComponent,
     media: MediaViewComponent
 };

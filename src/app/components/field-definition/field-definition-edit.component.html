@@ -62,8 +62,11 @@
                 <div class="form-group clearfix row">
                   <label class="label-text col-sm-3">Join Table Name</label>
                   <div class="col-sm-9">
-                    <input [(ngModel)]="element.join_table_name" name="joinTableName" pInputText
-                      placeholder="Join Table Name">
+                    <p-select [(ngModel)]="selectedJoinMetadata" [filter]="false" [options]="joinMetadatasSelect"
+                      optionLabel="table_name" [style]="{'width':'100%'}" filterBy="table_name"
+                      (onChange)="changedJoinMetadata($event)" name="joinTableName"
+                      placeholder="Select join metadata">
+                    </p-select>
                   </div>
                 </div>
               }
@@ -73,7 +76,7 @@
                   <label class="label-text col-sm-3">Join Table Key</label>
                   <div class="col-sm-9">
                     <input [(ngModel)]="element.join_table_key" name="joinTableKey" pInputText
-                      placeholder="Join Table Key">
+                      placeholder="Join Table Key" readonly>
                   </div>
                 </div>
               }
@@ -82,8 +85,11 @@
                 <div class="form-group clearfix row">
                   <label class="label-text col-sm-3">Join Table Fields</label>
                   <div class="col-sm-9">
-                    <input [(ngModel)]="element.join_table_select_fields" name="joinTableSelectFields" pInputText
-                      placeholder="Join Table Select Fields">
+                    <p-select [(ngModel)]="selectedJoinField" [options]="joinFieldOptions"
+                      [style]="{'width':'100%'}" placeholder="Select metadata field"
+                      name="joinTableSelectFields" optionLabel="label" optionValue="value"
+                      (onChange)="changedJoinFields($event)">
+                    </p-select>
                   </div>
                 </div>
               }
@@ -123,7 +129,7 @@
                 <div class="form-group clearfix row">
                   <label class="label-text col-sm-3">Show In List</label>
                   <div class="col-sm-9">
-                    <p-inputSwitch [(ngModel)]="element.show_in_list" name="show_in_list">Show In List</p-inputSwitch>
+                    <p-toggleswitch [(ngModel)]="element.show_in_list" name="show_in_list">Show In List</p-toggleswitch>
                   </div>
                 </div>
               }
@@ -133,7 +139,7 @@
                 <div class="form-group clearfix row">
                   <label class="label-text col-sm-3">Is Searchable</label>
                   <div class="col-sm-9">
-                    <p-inputSwitch [(ngModel)]="element.searchable" name="searchable">Searchable</p-inputSwitch>
+                    <p-toggleswitch [(ngModel)]="element.searchable" name="searchable">Searchable</p-toggleswitch>
                   </div>
                 </div>
               }
@@ -154,7 +160,7 @@
               <div class="form-group clearfix row">
                 <label class="label-text col-sm-3">Advanced Options?</label>
                 <div class="col-sm-9">
-                  <p-inputSwitch name="advanced" [(ngModel)]="advanced"></p-inputSwitch>
+                  <p-toggleswitch name="advanced" [(ngModel)]="advanced"></p-toggleswitch>
                 </div>
               </div>
 

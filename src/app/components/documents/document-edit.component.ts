@@ -14,6 +14,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
 import { ProgressBar } from 'primeng/progressbar';
 import { Panel } from 'primeng/panel';
+import { optionalQueryParam } from '../../common/route-params.util';
 
 @Component({
     templateUrl: './document-edit.component.html',
@@ -65,14 +66,8 @@ export class DocumentEditComponent
     postCreate() {
         const id: string = this.route.snapshot.params['id'];
         if (!id) {
-            const {table_key, table_name} =
-                this.route.snapshot.queryParamMap.keys.reduce(
-                    (acc, key) => {
-                        acc[key] = this.route.snapshot.queryParamMap.get(key);
-                        return acc;
-                    },
-                    {} as Record<string, string | null>,
-                );
+            const table_key = optionalQueryParam(this.route.snapshot, 'table_key');
+            const table_name = optionalQueryParam(this.route.snapshot, 'table_name');
             if (table_key) {
                 this.element.table_key = table_key;
             }
@@ -184,6 +179,16 @@ export class DocumentEditComponent
                 'Do you really want to delete this record with id: ' +
                 document.uuid +
                 '?',
+            acceptLabel: 'Yes',
+            rejectLabel: 'No',
+            acceptButtonProps: {
+                severity: 'danger',
+                outlined: false
+            },
+            rejectButtonProps: {
+                severity: 'secondary',
+                outlined: true
+            },
             accept: () => {
                 return this.documentService.softDelete(document).subscribe({
                     next: (response) => {

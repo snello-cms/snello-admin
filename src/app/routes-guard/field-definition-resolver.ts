@@ -6,6 +6,7 @@ import {ApiService} from '../service/api.service';
 import {DataListService} from '../service/data-list.service';
 import {Injectable} from '@angular/core';
 import {MetadataService} from '../service/metadata.service';
+import { requiredRouteParam } from '../common/route-params.util';
 
 @Injectable({
     providedIn: 'root'
@@ -19,18 +20,17 @@ export class FieldDefinitionResolver  {
     }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<FieldDefinition[]> | Observable<never> {
-        const key = route.paramMap.get('uuid');
-        const name = route.paramMap.get('name');
+        const key = route.paramMap.get('uuid') ?? undefined;
+        const name = requiredRouteParam(route, 'name');
         let fieldDefinitionList: any;
         return this.dataListService.getFieldDefinitionList(name).pipe(
             switchMap(
                 el => {
                     fieldDefinitionList = el;
-                    if (name && key) {
+                    if (key) {
                         return this.apiService.fetchObject(name, key);
-                    } else {
-                        return of(null);
                     }
+                    return of(null);
                 }
             ),
             map(

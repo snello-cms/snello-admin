@@ -17,14 +17,33 @@
                 CONTENTS
             </a>
         </li>
-    </ul>
+        <li class="account-menu-item" (click)="$event.stopPropagation()">
+            <a class="account-link" [class.active]="accountMenuOpen" (click)="toggleAccountMenu()">
+                <i class="fa fa-user-circle" aria-hidden="true"></i>
+            </a>
 
-    <ul class="user-menu">
-        <li [class]="''">
-            <i class="fa fa-user-circle" aria-hidden="true"></i> {{userDetails?.username}}
-            &nbsp;<a (click)="logout()"> logout <i class="fa fa-sign-out" aria-hidden="true"></i></a>
+            @if (accountMenuOpen) {
+                <div class="account-popup">
+                    <div class="account-row"><b>Utente:</b> {{authService.userDetails?.username || '-'}}</div>
+                    <div class="account-row"><b>Versione:</b> {{version()}}</div>
+
+                    <div class="account-section-title">Ruoli in sessione</div>
+                    @if (authService.roles?.length) {
+                        <ul class="account-roles-list">
+                            @for (role of authService.roles; track role) {
+                                <li>{{role}}</li>
+                            }
+                        </ul>
+                    } @else {
+                        <div class="account-row">Nessun ruolo disponibile</div>
+                    }
+
+                    <a class="account-logout" (click)="closeAccountMenu(); logout()">
+                        logout <i class="fa fa-sign-out" aria-hidden="true"></i>
+                    </a>
+                </div>
+            }
         </li>
-
     </ul>
 </div>
 <div class="sidenav">

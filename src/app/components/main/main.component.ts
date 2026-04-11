@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+3import {Component, ViewChild, inject} from '@angular/core';
 import {DynamicFormComponent} from '../../generic.components/dynamic-form/dynamic-form.component';
 import {APP_VERSION, ASSET_PATH} from '../../constants/constants';
 import {ConfigurationService} from '../../service/configuration.service';
@@ -10,17 +10,21 @@ import { RouterLink, RouterOutlet } from '@angular/router';
     imports: [RouterLink, RouterOutlet]
 })
 export class MainComponent {
+    private readonly configurationService = inject(ConfigurationService);
+    private readonly messageService = inject(MessageService);
 
     @ViewChild(DynamicFormComponent) form: DynamicFormComponent;
 
     public selected = 'home';
     public asset_path: string;
 
-    constructor(private configurationService: ConfigurationService,
-                private messageService: MessageService) {
-        configurationService.getValue(ASSET_PATH).subscribe(
-            ass => this.asset_path = ass
-        );
+    constructor() {
+        void this.messageService;
+        this.configurationService.getValue(ASSET_PATH).subscribe({
+            next: ass => {
+                this.asset_path = ass;
+            }
+        });
     }
 
     public select(page: string) {

@@ -201,6 +201,16 @@ export abstract class AbstractEditComponent<T> implements OnInit {
         }
         this.confirmationService.confirm({
             message: 'Do you really want to delete this record?',
+            acceptLabel: 'Yes',
+            rejectLabel: 'No',
+            acceptButtonProps: {
+                severity: 'danger',
+                outlined: false
+            },
+            rejectButtonProps: {
+                severity: 'secondary',
+                outlined: true
+            },
             accept: () => {
                 this.delete();
             }

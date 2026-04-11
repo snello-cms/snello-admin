@@ -21,7 +21,7 @@
         <div class="row">
           <div class="clearfix"></div>
           <div class="col-sm-12">
-            <div class="filter-wrapper clearfix">
+            <div class="filter-wrapper clearfix" (keydown.enter)="onSearchEnter($event, table)">
               <div class="col-sm-4">
                 <div class="clearfix"></div>
                 <dynamic-search-form [fields]="fieldDefinitionsSearch">

@@ -22,7 +22,7 @@ import { AsyncPipe } from '@angular/common';
               <div class="col-sm-9">
                 <p-autoComplete
                   [suggestions]="options" (completeMethod)="search($event)" [size]="30"
-                  [field]="labelField" [dataKey]="field.join_table_key" [dropdown]="true"
+                                    [optionLabel]="labelField" [optionValue]="field.join_table_key" [dataKey]="field.join_table_key" [dropdown]="true"
                   [formControlName]="field.name" [forceSelection]="true" [multiple]="true">
                 </p-autoComplete>
               </div>
@@ -70,9 +70,21 @@ export class MultiJoinComponent implements OnInit {
 
         if (this.uuid && fieldName) {
             this.joinList$ =
-                this.apiService.fetchJoinList(this.name, this.uuid, this.field.join_table_name, this.field.join_table_select_fields)
+                this.apiService.fetchJoinList(
+                    this.name,
+                    this.uuid,
+                    this.field.join_table_name,
+                    this.field.join_table_select_fields + ',' + this.field.join_table_key
+                )
                     .pipe(
-                        tap(join => this.group.get(fieldName)?.setValue(join)),
+                        tap(join => {
+                            this.options = join;
+                            this.group.get(fieldName)?.setValue(
+                                Array.isArray(join)
+                                    ? join.map(item => item?.[this.field.join_table_key]).filter(Boolean)
+                                    : []
+                            );
+                        }),
                     );
 
         } else {

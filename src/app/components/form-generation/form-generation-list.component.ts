@@ -186,6 +186,11 @@ export class FormGenerationListComponent implements OnInit {
         this.refresh(datatable);
     }
 
+    public onSearchEnter(event: KeyboardEvent, datatable: any) {
+        event.preventDefault();
+        this.reload(datatable);
+    }
+
     public refresh(datatable: any) {
         this.clearMsgs();
         datatable.reset();

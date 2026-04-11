@@ -10,11 +10,11 @@ import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component'
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
-import { InputSwitch } from 'primeng/inputswitch';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 
 @Component({
     templateUrl: './metadata-edit.component.html',
-    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, SelectModule, PrimeTemplate, InputSwitch]
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, SelectModule, PrimeTemplate, ToggleSwitchModule]
 })
 export class MetadataEditComponent extends AbstractEditComponent<Metadata>
     implements OnInit {

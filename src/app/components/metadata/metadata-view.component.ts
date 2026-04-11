@@ -90,6 +90,16 @@ export class MetadataViewComponent extends AbstractViewComponent<Metadata>
         }
         this.confirmationService.confirm({
             message: 'do you really want to truncate this table?',
+            acceptLabel: 'Yes',
+            rejectLabel: 'No',
+            acceptButtonProps: {
+                severity: 'danger',
+                outlined: false
+            },
+            rejectButtonProps: {
+                severity: 'secondary',
+                outlined: true
+            },
             accept: () => {
                 return this.truncateTable();
             }
@@ -103,6 +113,16 @@ export class MetadataViewComponent extends AbstractViewComponent<Metadata>
         }
         this.confirmationService.confirm({
             message: 'do you really want to create this table',
+            acceptLabel: 'Yes',
+            rejectLabel: 'No',
+            acceptButtonProps: {
+                severity: 'danger',
+                outlined: false
+            },
+            rejectButtonProps: {
+                severity: 'secondary',
+                outlined: true
+            },
             accept: () => {
                 return this.createTable();
             }
@@ -116,6 +136,16 @@ export class MetadataViewComponent extends AbstractViewComponent<Metadata>
         }
         this.confirmationService.confirm({
             message: 'do you really want to delete this table',
+            acceptLabel: 'Yes',
+            rejectLabel: 'No',
+            acceptButtonProps: {
+                severity: 'danger',
+                outlined: false
+            },
+            rejectButtonProps: {
+                severity: 'secondary',
+                outlined: true
+            },
             accept: () => {
                 return this.deleteTable();
             }

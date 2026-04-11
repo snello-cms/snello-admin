@@ -78,13 +78,15 @@
                 <div class="col-sm-9">
                   <p-select [options]="iconItems" [(ngModel)]="element.icon" filter="true" name="icon">
                     <ng-template let-item pTemplate="selectedItem">
-                      <i class="{{item.value}}"></i>
-                      <span style="vertical-align:middle; margin-left: .5em">{{item.label}}</span>
+                      <div style="display:flex; align-items:center; gap:.5rem; min-height:1.75rem; line-height:1;">
+                        <i class="{{item.value}}" style="width:1.1rem; text-align:center; font-size:1rem;"></i>
+                        <span style="font-size:14px; line-height:1.2;">{{item.label}}</span>
+                      </div>
                     </ng-template>
-                    <ng-template let-icon pTemplate="element.icon">
-                      <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
-                        <i class="{{icon.value}}"></i>
-                        <div style="font-size:14px;float:right;margin-top:4px">{{icon.label}}</div>
+                    <ng-template let-icon pTemplate="item">
+                      <div style="display:flex; align-items:center; gap:.5rem; min-height:1.75rem; line-height:1;">
+                        <i class="{{icon.value}}" style="width:1.1rem; text-align:center; font-size:1rem;"></i>
+                        <span style="font-size:14px; line-height:1.2;">{{icon.label}}</span>
                       </div>
                     </ng-template>
                   </p-select>

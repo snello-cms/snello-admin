@@ -1,22 +1,17 @@
 import {Directive, Input, TemplateRef, ViewContainerRef} from '@angular/core';
-import {KeycloakService} from 'keycloak-angular';
-import {KeycloakProfile} from 'keycloak-js';
+import Keycloak, {KeycloakTokenParsed} from 'keycloak-js';
 
 @Directive({ selector: '[permit]' })
 export class PermitDirective {
 
     private _prevCondition = false;
-    userDetails: KeycloakProfile;
     roles: string[];
 
-    constructor(private keycloakService: KeycloakService,
+    constructor(private keycloak: Keycloak,
                 private viewContainerRef: ViewContainerRef,
                 private templateRef: TemplateRef<any>,
     ) {
-        this.keycloakService.loadUserProfile().then(
-            user => this.userDetails = user
-        );
-        this.roles = this.keycloakService.getUserRoles();
+        this.roles = this.getUserRoles();
     }
 
     @Input() set permit(aclName: string) {
@@ -44,5 +39,16 @@ export class PermitDirective {
             }
         }
 
+    }
+
+    private getUserRoles(): string[] {
+        const parsed = this.keycloak.tokenParsed as KeycloakTokenParsed & {
+            realm_access?: { roles?: string[] };
+            resource_access?: Record<string, { roles?: string[] }>;
+        };
+        const realmRoles = parsed?.realm_access?.roles ?? [];
+        const resourceRoles = Object.values(parsed?.resource_access ?? {})
+            .flatMap(resource => resource.roles ?? []);
+        return [...new Set([...realmRoles, ...resourceRoles])];
     }
 }

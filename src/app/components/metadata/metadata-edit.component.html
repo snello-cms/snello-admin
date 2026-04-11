@@ -48,13 +48,15 @@
                   <p-select [options]="iconItems" [(ngModel)]="element.icon" filter="true" name="icon"
                     required>
                     <ng-template let-item pTemplate="selectedItem">
-                      <i class="{{item.value}}"></i>
-                      <span style="vertical-align:middle; margin-left: .5em">{{ item.label }}</span>
+                      <div style="display:flex; align-items:center; gap:.5rem; min-height:1.75rem; line-height:1;">
+                        <i class="{{item.value}}" style="width:1.1rem; text-align:center; font-size:1rem;"></i>
+                        <span style="font-size:14px; line-height:1.2;">{{ item.label }}</span>
+                      </div>
                     </ng-template>
-                    <ng-template let-icon pTemplate="element.icon">
-                      <div class="ui-helper-clearfix" style="position: relative;height: 25px;">
-                        <i class="{{icon.value}}"></i>
-                        <div style="font-size:14px;float:right;margin-top:4px">{{ icon.label }}</div>
+                    <ng-template let-icon pTemplate="item">
+                      <div style="display:flex; align-items:center; gap:.5rem; min-height:1.75rem; line-height:1;">
+                        <i class="{{icon.value}}" style="width:1.1rem; text-align:center; font-size:1rem;"></i>
+                        <span style="font-size:14px; line-height:1.2;">{{ icon.label }}</span>
                       </div>
                     </ng-template>
                   </p-select>
@@ -64,14 +66,14 @@
               <div class="form-group clearfix row">
                 <label class="label-text col-sm-3">It's a new Table?</label>
                 <div class="col-sm-9">
-                  <p-inputSwitch name="newtable" [(ngModel)]="newtable"></p-inputSwitch>
+                  <p-toggleswitch name="newtable" [(ngModel)]="newtable"></p-toggleswitch>
                 </div>
               </div>
 
               <div class="form-group clearfix row">
                 <label class="label-text col-sm-3">It's a api protected?</label>
                 <div class="col-sm-9">
-                  <p-inputSwitch name="api_protected" [(ngModel)]="api_protected"></p-inputSwitch>
+                  <p-toggleswitch name="api_protected" [(ngModel)]="api_protected"></p-toggleswitch>
                 </div>
               </div>
 
@@ -159,7 +161,7 @@
               <div class="form-group clearfix row">
                 <label class="label-text col-sm-3">Advanced Options?</label>
                 <div class="col-sm-9">
-                  <p-inputSwitch name="advanced" [(ngModel)]="advanced"></p-inputSwitch>
+                  <p-toggleswitch name="advanced" [(ngModel)]="advanced"></p-toggleswitch>
                 </div>
               </div>
 

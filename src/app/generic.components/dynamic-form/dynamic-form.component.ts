@@ -2,8 +2,8 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import {FieldDefinition} from '../../model/field-definition';
 import { DynamicFieldDirective } from '../dynamic-field/dynamic-field.directive';
-import { TabView, TabPanel } from 'primeng/tabview';
-import { Fieldset } from 'primeng/fieldset';
+import { TabsModule } from 'primeng/tabs';
+import { FieldsetModule } from 'primeng/fieldset';
 
 @Component({
     selector: 'dynamic-form',
@@ -19,35 +19,42 @@ import { Fieldset } from 'primeng/fieldset';
             </div>
           }
         
-          @if (tabs) {
-            <p-tabView>
-              @for (tab of tabs; track tab; let i = $index) {
-                <p-tabPanel [header]="tab" [selected]="i == 0">
-                  @if (groupToFields.get(tab)) {
-                    <div>
-                      @for (field of groupToFields.get(tab); track field) {
-                        <ng-container dynamicField [field]="field"
-                          [group]="form" [view]="view">
-                        </ng-container>
-                      }
-                    </div>
-                  }
-                  @if (!groupToFields.get(tab)) {
-                    <div>
-                      @for (group of tabToGroups.get(tab); track group) {
-                        <p-fieldset [legend]="group">
-                          @for (field of groupToFields.get(group); track field) {
-                            <ng-container dynamicField [field]="field"
-                              [group]="form" [view]="view">
-                            </ng-container>
-                          }
-                        </p-fieldset>
-                      }
-                    </div>
-                  }
-                </p-tabPanel>
-              }
-            </p-tabView>
+          @if (tabs && tabsArray.length > 0) {
+            <p-tabs [value]="tabsArray[0]">
+              <p-tablist>
+                @for (tab of tabsArray; track tab) {
+                  <p-tab [value]="tab">{{ tab }}</p-tab>
+                }
+              </p-tablist>
+              <p-tabpanels>
+                @for (tab of tabsArray; track tab) {
+                  <p-tabpanel [value]="tab">
+                    @if (groupToFields.get(tab)) {
+                      <div>
+                        @for (field of groupToFields.get(tab); track field) {
+                          <ng-container dynamicField [field]="field"
+                            [group]="form" [view]="view">
+                          </ng-container>
+                        }
+                      </div>
+                    }
+                    @if (!groupToFields.get(tab)) {
+                      <div>
+                        @for (group of tabToGroups.get(tab); track group) {
+                          <p-fieldset [legend]="group">
+                            @for (field of groupToFields.get(group); track field) {
+                              <ng-container dynamicField [field]="field"
+                                [group]="form" [view]="view">
+                              </ng-container>
+                            }
+                          </p-fieldset>
+                        }
+                      </div>
+                    }
+                  </p-tabpanel>
+                }
+              </p-tabpanels>
+            </p-tabs>
           }
         
           @if (groups) {
@@ -67,7 +74,7 @@ import { Fieldset } from 'primeng/fieldset';
         </form>
         `,
     styles: [],
-    imports: [ReactiveFormsModule, DynamicFieldDirective, TabView, TabPanel, Fieldset]
+    imports: [ReactiveFormsModule, DynamicFieldDirective, TabsModule, FieldsetModule]
 })
 export class DynamicFormComponent implements OnInit {
 
@@ -84,6 +91,7 @@ export class DynamicFormComponent implements OnInit {
     form: UntypedFormGroup;
 
     tabs: Set<string> | null = null;
+    tabsArray: string[] = [];
     groups: Set<string> | null = null;
     tabToGroups: Map<string, Set<string>> = new Map();
     groupToFields: Map<string, FieldDefinition[]> | null = null;
@@ -114,6 +122,7 @@ export class DynamicFormComponent implements OnInit {
             }
         }
 
+        this.tabsArray = this.tabs ? Array.from(this.tabs) : [];
         this.form = this.createControl();
     }
 

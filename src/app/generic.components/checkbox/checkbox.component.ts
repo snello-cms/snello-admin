@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import {FieldDefinition} from '../../model/field-definition';
-import { InputSwitch } from 'primeng/inputswitch';
+import { ToggleSwitchModule } from 'primeng/toggleswitch';
 
 @Component({
     selector: "app-checkbox",
@@ -9,14 +9,14 @@ import { InputSwitch } from 'primeng/inputswitch';
     <div class="form-group clearfix row" [formGroup]="group">
       <label class="col-sm-3">{{ field.name }}</label>
       <div class="col-sm-9">
-        <p-inputSwitch [formControlName]="field.name">{{
+        <p-toggleswitch [formControlName]="field.name">{{
           field.label
-        }}</p-inputSwitch>
+        }}</p-toggleswitch>
       </div>
     </div>
   `,
     styles: [],
-    imports: [ReactiveFormsModule, InputSwitch]
+    imports: [ReactiveFormsModule, ToggleSwitchModule]
 })
 export class CheckboxComponent implements OnInit {
   field: FieldDefinition;

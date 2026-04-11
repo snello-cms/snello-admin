@@ -1,4 +1,12 @@
-<p-confirmDialog header="Confirm" icon="fa fa-question-circle" acceptLabel="Sì" rejectLabel="No" #cd></p-confirmDialog>
+<p-confirmDialog
+	header="Confirm"
+	icon="fa fa-question-circle"
+	acceptLabel="Yes"
+	rejectLabel="No"
+	acceptButtonStyleClass="btn btn-danger"
+	rejectButtonStyleClass="btn btn-warning"
+	#cd>
+</p-confirmDialog>
 
 @for (msg of messages; track $index; let i = $index) {
 	<p-message

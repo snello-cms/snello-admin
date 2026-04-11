@@ -1,45 +1,33 @@
-import {Injectable} from '@angular/core';
-import {ActivatedRouteSnapshot, Router, RouterStateSnapshot} from '@angular/router';
-import {KeycloakAuthGuard, KeycloakService} from 'keycloak-angular';
+import { inject } from '@angular/core';
+import { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot } from '@angular/router';
+import { AuthGuardData, createAuthGuard } from 'keycloak-angular';
 import {ConfigurationService} from './configuration.service';
 import {firstValueFrom} from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class AppAuthGuard extends KeycloakAuthGuard {
-  constructor(
-      protected router: Router,
-      protected keycloakAngular: KeycloakService,
-      private configurationService: ConfigurationService
-  ) {
-    super(router, keycloakAngular);
-  }
+const isAccessAllowed = async (
+    route: ActivatedRouteSnapshot,
+    _state: RouterStateSnapshot,
+    authData: AuthGuardData
+): Promise<boolean> => {
+    const configurationService = inject(ConfigurationService);
+    const { authenticated, grantedRoles, keycloak } = authData;
 
-  isAccessAllowed(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
-    return new Promise(async (resolve, reject) => {
-      if (!this.authenticated) {
-        const scope = await firstValueFrom(this.configurationService.getValue('scope'));
-        this.keycloakAngular.login({scope});
-        return;
-      }
-      resolve(true);
-      const requiredRoles = route.data.roles;
-      if (!requiredRoles || requiredRoles.length === 0) {
-        return resolve(true);
-      } else {
-        if (!this.roles || this.roles.length === 0) {
-          resolve(false);
-        }
-        let granted = false;
-        for (const requiredRole of requiredRoles) {
-          if (this.roles.indexOf(requiredRole) > -1) {
-            granted = true;
-            break;
-          }
-        }
-        resolve(granted);
-      }
-    });
-  }
-}
+    if (!authenticated) {
+        const scope = await firstValueFrom(configurationService.getValue('scope'));
+        await keycloak.login({ scope });
+        return false;
+    }
+
+    const requiredRoles = route.data['roles'] as string[] | undefined;
+    if (!requiredRoles || requiredRoles.length === 0) {
+        return true;
+    }
+
+    const realmRoles = grantedRoles.realmRoles ?? [];
+    const resourceRoles = Object.values(grantedRoles.resourceRoles ?? {}).flat();
+    const roles = [...realmRoles, ...resourceRoles];
+
+    return requiredRoles.some(requiredRole => roles.includes(requiredRole));
+};
+
+export const AppAuthGuard = createAuthGuard<CanActivateFn>(isAccessAllowed);
