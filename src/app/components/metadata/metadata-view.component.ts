@@ -61,26 +61,50 @@ export class MetadataViewComponent extends AbstractViewComponent<Metadata>
 
     public createTable() {
         this.metadataService.createTable(this.element).subscribe(
-            element => {
-                console.log('table created: ' + element);
-                this.element = element;
-            });
+            res => {
+                this.addInfo('Table created successfully.');
+                if (res && typeof res === 'object' && res.body) {
+                    this.element = res.body;
+                } else {
+                    this.element = res;
+                }
+            },
+            err => {
+                this.addError('Error creating table.');
+            }
+        );
     }
 
     public truncateTable() {
         this.metadataService.truncateTable(this.element.uuid).subscribe(
-            element => {
-                console.log('table truncated: ' + element);
-                this.element = element;
-            });
+            res => {
+                this.addInfo('Table truncated successfully.');
+                if (res && typeof res === 'object' && res.body) {
+                    this.element = res.body;
+                } else {
+                    this.element = res;
+                }
+            },
+            err => {
+                this.addError('Error truncating table.');
+            }
+        );
     }
 
     public deleteTable() {
         this.metadataService.deleteTable(this.element.uuid).subscribe(
-            element => {
-                console.log('table deleted: ' + element);
-                this.element = element;
-            });
+            res => {
+                this.addInfo('Table deleted successfully.');
+                if (res && typeof res === 'object' && res.body) {
+                    this.element = res.body;
+                } else {
+                    this.element = res;
+                }
+            },
+            err => {
+                this.addError('Error deleting table.');
+            }
+        );
     }
 
     public confirmTruncateTable() {

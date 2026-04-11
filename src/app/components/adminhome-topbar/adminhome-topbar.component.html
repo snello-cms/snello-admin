@@ -1,15 +1,18 @@
-<ul class="list-group">
-  <li class="list-group-item">
-    <a [routerLink]="'/adminpage'"> <i class="fa fa-home"></i>
-    <div class="clearfix"></div><span>Home</span>
-  </a>
-</li>
-@for (component of items; track component) {
-  <li  *permit="component.roles" class="list-group-item">
-    <a [routerLink]="'/' + component.section + '/' + component.id">
-      <i class="{{component.icon}}"></i>
-      <div class="clearfix"></div><span>{{component.name}}</span>
-    </a>
-  </li>
-}
-</ul>
+<div class="sidebar-scroll">
+  <ul class="list-group">
+    <li class="list-group-item">
+      <a [routerLink]="'/adminpage'" title="Home">
+        <i class="fa fa-home"></i>
+        <div class="clearfix"></div><span>Home</span>
+      </a>
+    </li>
+    @for (component of items; track component.section) {
+      <li *permit="component.roles" class="list-group-item">
+        <a [routerLink]="'/' + component.section + '/' + component.id" [attr.title]="component.name">
+          <i class="{{component.icon}}"></i>
+          <div class="clearfix"></div><span>{{component.name}}</span>
+        </a>
+      </li>
+    }
+  </ul>
+</div>

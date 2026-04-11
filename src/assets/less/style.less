@@ -270,19 +270,28 @@ html {
     height: 100%;
     width: 70px;
     position: fixed;
-    z-index: 1;
+    z-index: 120;
     top: 0;
     left: 0px;
     background: @grey_snello;
     align-items: stretch;
     border-right: 1px solid #E6ECF1;
     overflow-x: hidden;
-    overflow: hidden;
     padding-top: 0px;
+
+    .sidebar-scroll {
+        height: calc(100vh - 60px);
+        margin-top: 60px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        scrollbar-width: thin;
+        scrollbar-color: fade(@white, 35%) transparent;
+    }
+
     .list-group {
         border: 0px;
         padding: 0px;
-        margin-top: 60px;
+        margin-top: 0px;
         margin-bottom: 0px;
         .list-group-item {
             background-color: transparent;

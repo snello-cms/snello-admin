@@ -1,0 +1,79 @@
+<div class="form-group clearfix row">
+  <label class="col-sm-3">{{ field?.name || 'Path' }}</label>
+
+  <div class="col-sm-9">
+    <button type="button" class="btn btn-default" (click)="openMap()">
+      {{ currentPath.length ? 'Change path on map' : 'Select path on map' }}
+    </button>
+
+    @if (currentPath.length) {
+      <div class="gmap-current-value">
+        <div class="gmap-current-title">
+          <strong>Selected path:</strong> {{ currentPath.length }} point(s)
+        </div>
+        <div class="gmap-chips gmap-chips-preview">
+          @for (point of currentPath; track $index) {
+            <span class="gmap-chip">{{ point }}</span>
+          }
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+@if (showMap) {
+  <div class="gmap-popup" (click)="closeMap()">
+    <div class="gmap-popup-content" (click)="$event.stopPropagation()">
+      <div class="gmap-search">
+        <div class="gmap-search-row">
+          <input
+            type="text"
+            class="form-control gmap-search-input"
+            [(ngModel)]="searchQuery"
+            [ngModelOptions]="{ standalone: true }"
+            (keydown.enter)="$event.preventDefault(); searchAddress()"
+            placeholder="Search address or place"
+          />
+          <button type="button" class="btn btn-default" (click)="searchAddress()" [disabled]="searchLoading">
+            {{ searchLoading ? 'Searching...' : 'Search' }}
+          </button>
+        </div>
+
+        @if (searchError) {
+          <div class="gmap-search-hint text-warning">{{ searchError }}</div>
+        }
+
+        @if (searchResults.length) {
+          <div class="gmap-search-results">
+            @for (result of searchResults; track $index) {
+              <button type="button" class="gmap-search-result" (click)="selectSearchResult(result)">
+                {{ result.label }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="gmap-map-container">
+        <div #mapContainer class="gmap-leaflet-map"></div>
+      </div>
+      <div class="gmap-selected">
+        @if (path.length) {
+          <span>Percorso selezionato:</span>
+          <div class="gmap-chips">
+            @for (p of path; track $index; let i = $index) {
+              <span class="gmap-chip">
+                {{ p }}
+                <button type="button" (click)="removePoint(i)">x</button>
+              </span>
+            }
+          </div>
+        }
+      </div>
+      <div class="gmap-actions">
+        <button type="button" class="btn btn-success" (click)="confirmPath()">Confirm</button>
+        <button type="button" class="btn btn-secondary" (click)="closeMap()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}

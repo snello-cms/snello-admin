@@ -8,6 +8,7 @@ import { Subscription } from 'rxjs';
 
 @Component({
     templateUrl: './outlet.component.html',
+    styleUrls: ['./outlet.component.scss'],
     imports: [ConfirmDialog, Message, RouterOutlet]
 })
 export class OutletComponent implements OnInit, OnDestroy {

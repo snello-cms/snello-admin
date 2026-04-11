@@ -17,7 +17,10 @@
                 CONTENTS
             </a>
         </li>
-        <li class="account-menu-item" (click)="$event.stopPropagation()">
+    </ul>
+
+    <ul class="user-menu" (click)="$event.stopPropagation()">
+        <li class="account-menu-item">
             <a class="account-link" [class.active]="accountMenuOpen" (click)="toggleAccountMenu()">
                 <i class="fa fa-user-circle" aria-hidden="true"></i>
             </a>
@@ -37,12 +40,15 @@
                     } @else {
                         <div class="account-row">Nessun ruolo disponibile</div>
                     }
-
-                    <a class="account-logout" (click)="closeAccountMenu(); logout()">
-                        logout <i class="fa fa-sign-out" aria-hidden="true"></i>
-                    </a>
                 </div>
             }
+        </li>
+
+        <li>
+            <a class="account-logout-inline" (click)="logout()">
+                <i class="fa fa-sign-out" aria-hidden="true"></i>
+                <span>Logout</span>
+            </a>
         </li>
     </ul>
 </div>

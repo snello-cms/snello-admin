@@ -1,0 +1,24 @@
+
+.p-message {
+  position: fixed !important;
+  top: 24px !important;
+  right: 24px !important;
+  left: auto !important;
+  width: auto !important;
+  min-width: 320px !important;
+  max-width: 420px !important;
+  z-index: 2147483647 !important;
+  pointer-events: all !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18) !important;
+  background: #fff !important;
+  opacity: 1 !important;
+}
+
+.p-message .p-message-text {
+  font-size: 1.1em;
+}
+
+.p-message .p-message-close {
+  top: 8px;
+  right: 8px;
+}

@@ -45,37 +45,56 @@ export class MetadataListComponent extends AbstractListComponent<Metadata> imple
 
     public createTable(metadata: Metadata) {
         this.service.createTable(metadata).subscribe(
-            element => {
-                console.log();
-                this.reloadListData(metadata, element);
+            res => {
+                this.reloadListData(metadata, res);
                 this.messageService.add({
                     severity: 'info',
-                    summary: 'table created: ' + element
+                    summary: 'Table created successfully.'
                 });
-            });
+            },
+            err => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error creating table.'
+                });
+            }
+        );
     }
 
     public truncateTable(metadata: Metadata) {
         this.service.truncateTable(metadata.uuid).subscribe(
-            element => {
-                this.reloadListData(metadata, element);
+            res => {
+                this.reloadListData(metadata, res);
                 this.messageService.add({
                     severity: 'info',
-                    summary: 'table truncated: ' + element
+                    summary: 'Table truncated successfully.'
                 });
-            });
+            },
+            err => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error truncating table.'
+                });
+            }
+        );
     }
 
     public deleteTable(metadata: Metadata) {
         this.service.deleteTable(metadata.uuid).subscribe(
-            element => {
-                console.log('table deleted: ' + element);
-                this.reloadListData(metadata, element);
+            res => {
+                this.reloadListData(metadata, res);
                 this.messageService.add({
                     severity: 'info',
-                    summary: 'table deleted: ' + element
+                    summary: `Table '${metadata.table_name}' deleted successfully.`
                 });
-            });
+            },
+            err => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error deleting table.'
+                });
+            }
+        );
     }
 
     public confirmTruncateTable(metadata: Metadata) {

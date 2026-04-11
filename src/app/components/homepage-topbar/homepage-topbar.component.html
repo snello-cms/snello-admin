@@ -1,19 +1,52 @@
-<ul class="list-group">
-  <li class="list-group-item">
-    <a [routerLink]="'/home'">
-      <i class="fa fa-home" aria-hidden="true"></i>
-    </a>
-  </li>
-  @for (component of model; track component) {
-    @if (component.icon) {
+<div class="sidebar-scroll">
+  <ul class="list-group">
+    <li class="list-group-item">
+      <a [routerLink]="'/home'" title="Home">
+        <i class="fa fa-home" aria-hidden="true"></i>
+      </a>
+    </li>
+    <li class="list-group-item">
+      <a href="" title="Cerca metadato" (click)="toggleSearch($event)">
+        <i class="fa fa-search" aria-hidden="true"></i>
+      </a>
+    </li>
+    @for (component of filteredModel; track component.table_name) {
       <li class="list-group-item">
-        @if (component.already_exist || component.created) {
-          <a
-            [routerLink]="'/datalistgeneral/list/' + component.table_name">
-            <i class="{{component.icon}}"></i>
-          </a>
-        }
+        <a
+          [routerLink]="'/datalistgeneral/list/' + component.table_name"
+          [attr.title]="metadataLabel(component)">
+          <i class="{{component.icon}}"></i>
+        </a>
       </li>
     }
-  }
-</ul>
+  </ul>
+</div>
+
+@if (searchOpen) {
+  <div class="sidebar-search-panel" (click)="$event.stopPropagation()">
+    <div class="sidebar-search-box">
+      <i class="fa fa-search" aria-hidden="true"></i>
+      <input
+        #searchInput
+        type="text"
+        placeholder="Cerca metadato..."
+        [value]="searchTerm"
+        (input)="updateSearch($event)">
+    </div>
+
+    <div class="sidebar-search-results">
+      @for (component of filteredModel; track component.table_name) {
+        <a
+          class="sidebar-search-result"
+          [routerLink]="'/datalistgeneral/list/' + component.table_name"
+          [attr.title]="metadataLabel(component)"
+          (click)="closeSearch()">
+          <i class="{{component.icon}}" aria-hidden="true"></i>
+          <span>{{metadataLabel(component)}}</span>
+        </a>
+      } @empty {
+        <div class="sidebar-search-empty">Nessun metadato trovato</div>
+      }
+    </div>
+  </div>
+}

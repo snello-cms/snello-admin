@@ -1,4 +1,40 @@
 
+@import "leaflet/dist/leaflet.css";
+
+.leaflet-control.geocoder-control,
+.geocoder-control,
+.geocoder-control-expanded {
+  width: min(280px, calc(100vw - 96px));
+}
+
+.geocoder-control-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+.geocoder-control-suggestions {
+  margin-top: 6px;
+  background: #fff;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+.geocoder-control-suggestion {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.geocoder-control-suggestion:hover,
+.geocoder-control-selected {
+  background: #eef6ff;
+}
 
 
 .demo-full-width {

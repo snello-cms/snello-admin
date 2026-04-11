@@ -143,7 +143,7 @@ export abstract class AbstractEditComponent<T> implements OnInit {
     public addInfo(message: string) {
         this.messageService.add({
             severity: 'info',
-            summary: 'Informazioni: ',
+            summary: 'Info: ',
             detail: message
         });
     }

@@ -20,7 +20,9 @@ export const MAP_INPUT_TO_FIELD: Map<string, any> = new Map(
     ['join', ['join', null]],
     ['multijoin', ['multijoin', null]],
     ['realtionships', ['realtionships', null]],
-    ['media', ['media', null]]
+    ['media', ['media', null]],
+    ['gmaplocation', ['gmaplocation', null]],
+    ['gmappath', ['gmappath', null]]
 
 
   ]);

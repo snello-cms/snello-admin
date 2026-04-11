@@ -2,6 +2,8 @@ import {Directive, Input, OnInit, Type, ViewContainerRef} from '@angular/core';
 import {UntypedFormGroup} from '@angular/forms';
 import {FieldDefinition} from '../../model/field-definition';
 import {InputComponent} from '../input/input.component';
+import { GMapLocationComponent } from '../gmaplocation/gmaplocation.component';
+import { GMapPathComponent } from '../gmappath/gmappath.component';
 import {SelectComponent} from '../select/select.component';
 import {DateComponent} from '../date/date.component';
 import {CheckboxComponent} from '../checkbox/checkbox.component';
@@ -14,6 +16,8 @@ import {MultiJoinComponent} from '../multi-join/multi-join.component';
 import {MediaComponent} from '../media/media.component';
 import {InputViewComponent} from '../input/input-view.component';
 import {HtmlViewComponent} from '../input/html-view.component';
+import { GMapLocationViewComponent } from '../gmaplocation/gmaplocation-view.component';
+import { GMapPathViewComponent } from '../gmappath/gmappath-view.component';
 import { JoinViewComponent } from '../join/join-view.component';
 import { MultiJoinViewComponent } from '../multi-join/multi-join-view.component';
 import { MediaViewComponent } from '../media/media-view.component';
@@ -65,7 +69,9 @@ const componentMapper: Record<string, Type<any>> = {
     join: JoinComponent,
     multijoin: MultiJoinComponent,
     realtionships: RealtionshipsComponent,
-    media: MediaComponent
+    media: MediaComponent,
+    gmaplocation: GMapLocationComponent,
+    gmappath: GMapPathComponent
 };
 
 const componentViewMapper: Record<string, Type<any>> = {
@@ -82,5 +88,7 @@ const componentViewMapper: Record<string, Type<any>> = {
     join: JoinViewComponent,
     multijoin: MultiJoinViewComponent,
     realtionships: RealtionshipsViewComponent,
-    media: MediaViewComponent
+    media: MediaViewComponent,
+    gmaplocation: GMapLocationViewComponent,
+    gmappath: GMapPathViewComponent
 };

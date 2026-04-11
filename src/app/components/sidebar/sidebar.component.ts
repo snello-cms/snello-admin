@@ -11,15 +11,44 @@ import { AuthenticationService } from '../../service/authentication.service';
     templateUrl: './sidebar.component.html',
     imports: [RouterLink, PermitDirective],
     styles: [
-        `.account-link {
+        `.user-menu {
+            position: absolute;
+            right: 20px;
+            top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 0;
+            padding: 0;
+        }
+
+        .user-menu li {
+            list-style-type: none;
+        }
+
+        .account-link {
             cursor: pointer;
-            display: inline-block;
-            min-width: 60px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
             text-align: center;
+            border-radius: 50%;
+            color: #666666;
+        }
+
+        .account-link:hover,
+        .account-link.active,
+        .account-logout-inline:hover {
+            color: #222222;
+            text-decoration: none;
         }
 
         .account-link .fa-user-circle {
             margin: 0;
+            font-size: 24px;
         }
 
         .account-popup {
@@ -33,7 +62,7 @@ import { AuthenticationService } from '../../service/authentication.service';
             border-radius: 8px;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
             padding: 12px;
-            z-index: 999;
+            z-index: 2000;
             text-align: left;
         }
 
@@ -68,10 +97,15 @@ import { AuthenticationService } from '../../service/authentication.service';
             margin-bottom: 2px;
         }
 
-        .account-logout {
-            display: inline-block;
-            margin-top: 10px;
+        .account-logout-inline {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
             cursor: pointer;
+            color: #666666;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
         }
     `]
 })

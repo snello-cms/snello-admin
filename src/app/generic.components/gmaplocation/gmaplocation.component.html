@@ -1,0 +1,68 @@
+<div class="form-group clearfix row">
+  <label class="col-sm-3">{{ field?.name || 'Location' }}</label>
+
+  <div class="col-sm-9">
+    <button type="button" class="btn btn-default" (click)="openMap()">
+      {{ currentValue ? 'Change location on map' : 'Select location on map' }}
+    </button>
+
+    @if (currentValue) {
+      <div class="gmap-current-value">
+        <strong>Selected point:</strong> {{ currentValue }}
+      </div>
+    }
+  </div>
+</div>
+
+@if (showMap) {
+  <div class="gmap-popup" (click)="closeMap()">
+    <div class="gmap-popup-content" (click)="$event.stopPropagation()">
+      <div class="gmap-search">
+        <div class="gmap-search-row">
+          <input
+            type="text"
+            class="form-control gmap-search-input"
+            [(ngModel)]="searchQuery"
+            [ngModelOptions]="{ standalone: true }"
+            (keydown.enter)="$event.preventDefault(); searchAddress()"
+            placeholder="Search address or place"
+          />
+          <button type="button" class="btn btn-default" (click)="searchAddress()" [disabled]="searchLoading">
+            {{ searchLoading ? 'Searching...' : 'Search' }}
+          </button>
+        </div>
+
+        @if (searchError) {
+          <div class="gmap-search-hint text-warning">{{ searchError }}</div>
+        }
+
+        @if (searchResults.length) {
+          <div class="gmap-search-results">
+            @for (result of searchResults; track $index) {
+              <button type="button" class="gmap-search-result" (click)="selectSearchResult(result)">
+                {{ result.label }}
+              </button>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="gmap-map-container">
+        <div #mapContainer class="gmap-leaflet-map"></div>
+      </div>
+
+      <div class="gmap-selected">
+        @if (selectedLocation) {
+          <span><strong>Selected point:</strong> {{ selectedLocation }}</span>
+        } @else {
+          <span>Click on the map to choose a point.</span>
+        }
+      </div>
+
+      <div class="gmap-actions">
+        <button type="button" class="btn btn-success" (click)="confirmLocation()">Confirm</button>
+        <button type="button" class="btn btn-secondary" (click)="closeMap()">Cancel</button>
+      </div>
+    </div>
+  </div>
+}
