@@ -322,7 +322,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         this.editMode = false;
         this.preSave();
         this.service.persist(this.element).subscribe(element => {
-                this.addInfo('Salvataggio completato con successo. ');
+                this.addInfo('Save completed successfully.');
                 this.element = element;
                 this.element = this.createInstance();
                 this.element.metadata_uuid = uuid;
@@ -332,7 +332,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
             },
             error => {
                 this.addError(
-                    'Impossibile completare il salvataggio. ' + (error || '')
+                    'Unable to complete the save. ' + (error || '')
                 );
                 this.saveError();
             }
@@ -347,12 +347,12 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         }
         this.service.update(this.element).subscribe(
             element => {
-                this.addInfo('Modify completata con successo. ');
+                this.addInfo('Update completed successfully.');
                 this.element = <FieldDefinition>element;
                 this.post();
             },
             error => {
-                this.addError('Impossibile completare la Modify. ' + (error || ''));
+                this.addError('Unable to complete the update. ' + (error || ''));
                 this.saveError();
             }
         );
@@ -366,13 +366,13 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         }
         this.service.persist(this.element).subscribe(
             element => {
-                this.addInfo('Salvataggio completato con successo. ');
+                this.addInfo('Save completed successfully.');
                 this.element = <FieldDefinition>element;
                 this.post();
             },
             error => {
                 this.addError(
-                    'Impossibile completare il salvataggio. ' + (error || '')
+                    'Unable to complete the save. ' + (error || '')
                 );
                 this.saveError();
             }
@@ -386,11 +386,11 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
             element => {
                 this.postDelete();
                 this.post();
-                this.addInfo('Eliminazione completata con successo. ');
+                this.addInfo('Deletion completed successfully.');
             },
             error => {
                 this.addError(
-                    'Impossibile completare la eliminazione. ' + (error || '')
+                    'Unable to complete the deletion. ' + (error || '')
                 );
             }
         );

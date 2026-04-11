@@ -52,7 +52,7 @@
                 <label class="label-text col-sm-3">Input Type (*)</label>
                 <div class="col-sm-9">
                   <p-select [(ngModel)]="fieldType" [filter]="false" [options]="fieldTypes" [style]="{'width':'100%'}"
-                    filterBy="label" name="typeSelect" placeholder="Seleziona un tipo"  (onChange)="changedFieldType($event)">
+                    filterBy="label" name="typeSelect" placeholder="Select a type"  (onChange)="changedFieldType($event)">
                   </p-select>
                 </div>
               </div>
@@ -168,7 +168,7 @@
                 <div class="form-group clearfix row">
                   <label class="label-text col-sm-3">SQL Type</label>
                   <div class="col-sm-9">
-                    <input [(ngModel)]="element.sql_type" name="sql_type" pInputText placeholder="Tipo SQL">
+                    <input [(ngModel)]="element.sql_type" name="sql_type" pInputText placeholder="SQL Type">
                   </div>
                 </div>
               }
@@ -179,7 +179,7 @@
                   <label class="label-text col-sm-3">SQL Definition</label>
                   <div class="col-sm-9">
                     <input [(ngModel)]="element.sql_definition" name="sql_definition" pInputText
-                      placeholder="Definizione Campo SQL">
+                      placeholder="SQL Field Definition">
                   </div>
                 </div>
               }
@@ -190,7 +190,7 @@
                   <label class="label-text col-sm-3">Default value </label>
                   <div class="col-sm-9">
                     <input [(ngModel)]="element.default_value" name="default_value" pInputText
-                      placeholder="Valore Default">
+                      placeholder="Default Value">
                   </div>
                 </div>
               }
@@ -210,7 +210,7 @@
                 <div class="form-group clearfix row">
                   <label class="label-text col-sm-3">Definition</label>
                   <div class="col-sm-9">
-                    <input [(ngModel)]="element.definition" name="definition" pInputText placeholder="Definizione">
+                    <input [(ngModel)]="element.definition" name="definition" pInputText placeholder="Definition">
                   </div>
                 </div>
               }

@@ -46,7 +46,7 @@
                     <p-select [(ngModel)]="draggable" [filter]="false" [options]="draggableSelect"
                       [style]="{'width':'100%'}"
                       filterBy="label" name="typeSelect"
-                      placeholder="Seleziona un draggable">
+                      placeholder="Select a draggable">
                     </p-select>
                     @if (draggable) {
                       <button (click)="addDraggable()" class="btn btn-success"

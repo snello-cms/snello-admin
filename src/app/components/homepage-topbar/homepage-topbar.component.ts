@@ -151,7 +151,7 @@ export class HomepageTopBar implements OnInit{
     }
 
     metadataLabel(component: Metadata): string {
-        return component.alias_table || component.table_name || 'Metadato';
+        return component.alias_table || component.table_name || 'Metadata';
     }
 
     @HostListener('document:click')

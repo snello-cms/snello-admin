@@ -19,6 +19,7 @@ export class MetadataViewComponent extends AbstractViewComponent<Metadata>
 
     public fieldDefinitions: FieldDefinition[];
     public colspan = 3;
+    public activeTab: 'metadata' | 'fieldDefinitions' = 'metadata';
 
     constructor(
         router: Router,
@@ -39,6 +40,11 @@ export class MetadataViewComponent extends AbstractViewComponent<Metadata>
     ngOnInit() {
         this.element = new Metadata();
         super.ngOnInit();
+    }
+
+    public selectTab(tab: 'metadata' | 'fieldDefinitions', event?: Event) {
+        event?.preventDefault();
+        this.activeTab = tab;
     }
 
     getId() {

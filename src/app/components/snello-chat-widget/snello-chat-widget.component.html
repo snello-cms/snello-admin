@@ -1,0 +1,60 @@
+<div class="snello-chat-root">
+    @if (isOpen) {
+        <section class="snello-chat-panel" aria-label="Chat Snello">
+            <div class="snello-chat-tail"></div>
+
+            <header class="snello-chat-header">
+                <div class="snello-chat-brand">
+                    <span class="snello-chat-brand-icon">
+                        <img src="assets/images/snello.png" alt="Snello">
+                    </span>
+
+                    <div>
+                        <h3>Snello Assistant</h3>
+                        <p>Always available</p>
+                    </div>
+                </div>
+
+                <button type="button" class="snello-chat-minimize" (click)="minimize()" title="Minimize chat">
+                    <i class="fa fa-minus" aria-hidden="true"></i>
+                </button>
+            </header>
+
+            <div class="snello-chat-body">
+                <div class="snello-chat-suggestions">
+                    @for (suggestion of suggestions; track suggestion) {
+                        <button type="button" class="snello-chat-chip" (click)="useSuggestion(suggestion)">
+                            {{suggestion}}
+                        </button>
+                    }
+                </div>
+
+                <div class="snello-chat-messages">
+                    @for (message of messages; track message.id) {
+                        <article class="snello-message" [class.user]="message.role === 'user'">
+                            <p>{{message.text}}</p>
+                            <span>{{message.time}}</span>
+                        </article>
+                    }
+                </div>
+            </div>
+
+            <footer class="snello-chat-footer">
+                <textarea
+                    rows="2"
+                    placeholder="Write a message..."
+                    [value]="draft"
+                    (input)="updateDraft($event)"
+                    (keydown.enter)="submitFromKeyboard($event)"></textarea>
+
+                <button type="button" class="snello-chat-send" (click)="sendMessage()" [disabled]="!draft.trim()">
+                    Send
+                </button>
+            </footer>
+        </section>
+    } @else {
+        <button type="button" class="snello-chat-bubble" (click)="toggleOpen()" title="Open Snello chat">
+            <img src="assets/images/snello.png" alt="Snello">
+        </button>
+    }
+</div>

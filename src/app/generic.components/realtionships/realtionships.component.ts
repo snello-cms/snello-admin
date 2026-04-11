@@ -31,49 +31,53 @@ import { CommonModule } from '@angular/common';
             </div>
         </div>
 
-        <p-dialog
-            header="Select Relationship"
-            [(visible)]="dialogVisible"
-            [modal]="true"
-            [dismissableMask]="true"
-            [maximizable]="true"
-            [style]="{ width: '98vw', height: '95vh' }"
-            [contentStyle]="{ padding: '1rem', overflow: 'hidden', display: 'flex', flexDirection: 'column' }">
+        @if (dialogVisible) {
+            <p-dialog
+                header="Select Relationship"
+                [(visible)]="dialogVisible"
+                [modal]="true"
+                [dismissableMask]="true"
+                [maximizable]="true"
+                [focusOnShow]="false"
+                [style]="{ width: '98vw', height: '95vh' }"
+                [contentStyle]="{ padding: '1rem', overflow: 'hidden', display: 'flex', flexDirection: 'column' }">
 
-            <div class="form-group" style="margin-bottom: 1rem;">
-                <label>Metadata</label>
-                <p-select
-                    [(ngModel)]="selectedMetadata"
-                    [options]="metadataOptions"
-                    optionLabel="table_name"
-                    [style]="{ width: '100%' }"
-                    (onChange)="onMetadataChange($event)">
-                </p-select>
-            </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label>Metadata</label>
+                    <p-select
+                        [(ngModel)]="selectedMetadata"
+                        [ngModelOptions]="{ standalone: true }"
+                        [options]="metadataOptions"
+                        optionLabel="table_name"
+                        [style]="{ width: '100%' }"
+                        (onChange)="onMetadataChange($event)">
+                    </p-select>
+                </div>
 
-            <div style="flex: 1; overflow: hidden; display: flex; flex-direction: column;">
-                @if (rows.length > 0) {
-                    <p-table [value]="rows" [paginator]="true" [rows]="20" [scrollable]="true" scrollHeight="flex" styleClass="p-datatable-sm">
-                        <ng-template pTemplate="header">
-                            <tr>
-                                @for (column of columns; track column) {
-                                    <th style="min-width: 120px;">{{ column }}</th>
-                                }
-                            </tr>
-                        </ng-template>
-                        <ng-template pTemplate="body" let-row>
-                            <tr (click)="selectRow(row)" style="cursor: pointer;" [ngClass]="{ 'highlight-row': true }">
-                                @for (column of columns; track column) {
-                                    <td style="min-width: 120px; word-break: break-word;">{{ row[column] }}</td>
-                                }
-                            </tr>
-                        </ng-template>
-                    </p-table>
-                } @else {
-                    <p>No data available for selected metadata.</p>
-                }
-            </div>
-        </p-dialog>
+                <div style="flex: 1; overflow: hidden; display: flex; flex-direction: column;">
+                    @if (rows.length > 0) {
+                        <p-table [value]="rows" [paginator]="true" [rows]="20" [scrollable]="true" scrollHeight="flex" styleClass="p-datatable-sm">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    @for (column of columns; track column) {
+                                        <th style="min-width: 120px;">{{ column }}</th>
+                                    }
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-row>
+                                <tr (click)="selectRow(row)" style="cursor: pointer;" [ngClass]="{ 'highlight-row': true }">
+                                    @for (column of columns; track column) {
+                                        <td style="min-width: 120px; word-break: break-word;">{{ row[column] }}</td>
+                                    }
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    } @else {
+                        <p>No data available for selected metadata.</p>
+                    }
+                </div>
+            </p-dialog>
+        }
     `,
     styles: [
         `.relationships-chip-wrap {

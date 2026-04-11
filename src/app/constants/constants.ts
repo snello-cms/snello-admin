@@ -145,7 +145,7 @@ const ADMIN_ITEMS_LEGACY: any[] = [
         id: 'list',
         icon: 'fa fa-book',
         section: 'metadata',
-        name: 'Metadati',
+        name: 'Metadata',
         summary: 'Metadata management on tables',
         roles: 'Admin, metadatas_edit, metadatas_view'
     },

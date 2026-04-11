@@ -6,7 +6,7 @@
       </a>
     </li>
     <li class="list-group-item">
-      <a href="" title="Cerca metadato" (click)="toggleSearch($event)">
+      <a href="" title="Search metadata" (click)="toggleSearch($event)">
         <i class="fa fa-search" aria-hidden="true"></i>
       </a>
     </li>
@@ -29,7 +29,7 @@
       <input
         #searchInput
         type="text"
-        placeholder="Cerca metadato..."
+        placeholder="Search metadata..."
         [value]="searchTerm"
         (input)="updateSearch($event)">
     </div>
@@ -45,7 +45,7 @@
           <span>{{metadataLabel(component)}}</span>
         </a>
       } @empty {
-        <div class="sidebar-search-empty">Nessun metadato trovato</div>
+        <div class="sidebar-search-empty">No metadata found</div>
       }
     </div>
   </div>

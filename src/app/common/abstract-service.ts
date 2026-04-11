@@ -202,7 +202,7 @@ export abstract class AbstractService<T> {
 
     private extractErrorMessage(error: HttpErrorResponse): string {
         const payload = error.error as { msg?: string; message?: string } | null;
-        return payload?.msg || payload?.message || error.message || 'Errore generico';
+        return payload?.msg || payload?.message || error.message || 'Unknown error';
     }
 
     protected unmarshall(element: T) {

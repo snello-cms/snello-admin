@@ -14,50 +14,50 @@ export abstract class AbstractListComponent<T> implements OnInit {
     public colspan = 3;
 
     public lang_it = {
-        closeText: 'Chiudi',
-        prevText: '&#x3C;Prec',
-        nextText: 'Succ&#x3E;',
-        currentText: 'Oggi',
+        closeText: 'Close',
+        prevText: '&#x3C;Prev',
+        nextText: 'Next&#x3E;',
+        currentText: 'Today',
         monthNames: [
-            'Gennaio',
-            'Febbraio',
-            'Marzo',
-            'Aprile',
-            'Maggio',
-            'Giugno',
-            'Luglio',
-            'Agosto',
-            'Settembre',
-            'Ottobre',
-            'Novembre',
-            'Dicembre'
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
         ],
         monthNamesShort: [
-            'Gen',
+            'Jan',
             'Feb',
             'Mar',
             'Apr',
-            'Mag',
-            'Giu',
-            'Lug',
-            'Ago',
-            'Set',
-            'Ott',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
             'Nov',
-            'Dic'
+            'Dec'
         ],
         dayNames: [
-            'Domenica',
-            'Lunedì',
-            'Martedì',
-            'Mercoledì',
-            'Giovedì',
-            'Venerdì',
-            'Sabato'
+            'Sunday',
+            'Monday',
+            'Tuesday',
+            'Wednesday',
+            'Thursday',
+            'Friday',
+            'Saturday'
         ],
-        dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'],
-        dayNamesMin: ['Do', 'Lu', 'Ma', 'Me', 'Gi', 'Ve', 'Sa'],
-        weekHeader: 'Sm',
+        dayNamesShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+        dayNamesMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
+        weekHeader: 'Wk',
         dateFormat: 'dd/mm/yy',
         firstDay: 1,
         isRTL: false,
@@ -168,14 +168,14 @@ export abstract class AbstractListComponent<T> implements OnInit {
         this.clearMsgs();
         this.service.persist(this.element).subscribe(
             element => {
-                this.addInfo('Salvataggio completato con successo. ');
+                this.addInfo('Save completed successfully.');
                 this.element = this.newElement();
                 this.loaddata(false, null);
                 this.postSave();
             },
             error => {
                 this.addError(
-                    'Impossibile completare il salvataggio. Si prega di riprovare. '
+                    'Unable to complete the save. Please try again.'
                 );
             }
         );
@@ -217,13 +217,13 @@ export abstract class AbstractListComponent<T> implements OnInit {
         this.clearMsgs();
         this.service.delete(this.getId()).subscribe(
             result => {
-                this.addInfo('Eliminazione completata con successo. ');
+                this.addInfo('Deletion completed successfully.');
                 this.element = this.newElement();
                 this.loaddata(false, null);
                 this.postDelete();
             },
             error => {
-                this.addError('Impossibile completare la eliminazione. ');
+                this.addError('Unable to complete the deletion.');
             }
         );
     }
@@ -232,13 +232,13 @@ export abstract class AbstractListComponent<T> implements OnInit {
         this.clearMsgs();
         this.service.update(this.element).subscribe(
             element => {
-                this.addInfo('Modify completata con successo. ');
+                this.addInfo('Update completed successfully.');
                 this.element = this.newElement();
                 this.loaddata(false, null);
                 this.postUpdate();
             },
             error => {
-                this.addError('Impossibile completare la Modify. ');
+                this.addError('Unable to complete the update.');
             }
         );
     }

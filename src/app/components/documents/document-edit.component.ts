@@ -115,7 +115,7 @@ export class DocumentEditComponent
             }
             forkJoin(queries).subscribe(
                 (queriesResponse) => {
-                    this.addInfo('File caricato con successo');
+                    this.addInfo('File uploaded successfully');
                     this.displayProgressBar = false;
 
                     if (this.element.uuid) {
@@ -128,7 +128,7 @@ export class DocumentEditComponent
                     }
                 },
                 (error) => {
-                    this.addError('Errore caricamento file,' + error);
+                    this.addError('File upload error: ' + error);
                     this.displayProgressBar = false;
                 },
             );

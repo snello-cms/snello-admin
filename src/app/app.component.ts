@@ -1,15 +1,11 @@
-import {Component, OnInit} from '@angular/core';
-import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import {Component} from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { SnelloChatWidgetComponent } from './components/snello-chat-widget/snello-chat-widget.component';
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    imports: [RouterOutlet]
+    imports: [RouterOutlet, SnelloChatWidgetComponent]
 })
-export class AppComponent  {
-    constructor(private router: Router) {
-    }
-
-    
-
+export class AppComponent {
 }

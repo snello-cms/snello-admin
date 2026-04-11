@@ -41,6 +41,21 @@
                       <input id="table_key" name="table_key" type="text" class="form-control" placeholder="table key" [(ngModel)]="service.search.table_key_contains" pInputText #nome="ngModel"/>
                     }
                   </div>
+                  <div class="fw-search-fields">
+                    <p-multiselect
+                      [options]="mimeTypeOptions"
+                      [(ngModel)]="selectedMimeTypes"
+                      [ngModelOptions]="{ standalone: true }"
+                      optionLabel="label"
+                      optionValue="value"
+                      defaultLabel="Select mime types"
+                      placeholder="Select mime types"
+                      [showClear]="true"
+                      [filter]="true"
+                      (onChange)="applyMimeTypeFilter($event)"
+                      styleClass="w-100">
+                    </p-multiselect>
+                  </div>
                   <div class="fw-actions">
                     <div class="btn-group">
                       <button type="button" class="btn btn-search" (click)="reload(datatable)">Search</button>

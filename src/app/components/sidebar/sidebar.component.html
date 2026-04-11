@@ -27,10 +27,10 @@
 
             @if (accountMenuOpen) {
                 <div class="account-popup">
-                    <div class="account-row"><b>Utente:</b> {{authService.userDetails?.username || '-'}}</div>
-                    <div class="account-row"><b>Versione:</b> {{version()}}</div>
+                    <div class="account-row"><b>User:</b> {{authService.userDetails?.username || '-'}}</div>
+                    <div class="account-row"><b>Version:</b> {{version()}}</div>
 
-                    <div class="account-section-title">Ruoli in sessione</div>
+                    <div class="account-section-title">Session roles</div>
                     @if (authService.roles?.length) {
                         <ul class="account-roles-list">
                             @for (role of authService.roles; track role) {
@@ -38,7 +38,7 @@
                             }
                         </ul>
                     } @else {
-                        <div class="account-row">Nessun ruolo disponibile</div>
+                        <div class="account-row">No roles available</div>
                     }
                 </div>
             }

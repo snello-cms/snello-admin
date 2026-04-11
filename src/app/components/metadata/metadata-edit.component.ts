@@ -83,14 +83,14 @@ export class MetadataEditComponent extends AbstractEditComponent<Metadata>
         }
         this.service.persist(this.element).subscribe(
             element => {
-                this.addInfo('Salvataggio completato con successo. ');
+                this.addInfo('Save completed successfully.');
                 this.element = <Metadata>element;
                 this.postSave();
                 this.navigateAfterSaveOrUpdate();
             },
             error => {
                 this.addError(
-                    'Impossibile completare il salvataggio. ' + (error || '')
+                    'Unable to complete the save. ' + (error || '')
                 );
                 this.saveError();
             }
@@ -115,13 +115,13 @@ export class MetadataEditComponent extends AbstractEditComponent<Metadata>
         }
         this.service.update(this.element).subscribe(
             element => {
-                this.addInfo('Modify completata con successo. ');
+                this.addInfo('Update completed successfully.');
                 this.element = <Metadata>element;
                 this.postUpdate();
                 this.navigateAfterSaveOrUpdate();
             },
             error => {
-                this.addError('Impossibile completare la Modify. ' + (error || ''));
+                this.addError('Unable to complete the update. ' + (error || ''));
                 this.saveError();
             }
         );
