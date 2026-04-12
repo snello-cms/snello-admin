@@ -80,7 +80,12 @@ export class FieldDefinition {
 // definisce se il campo deve essere visto nella lista
   show_in_list: boolean;
 
+  // indica se il campo è obbligatorio
+  mandatory = false;
+
+  // numero d'ordine per la visualizzazione
+  order_num?: number;
+
   // usato solo lato angular
   is_edit = false;
 }
-

@@ -133,8 +133,13 @@ export class DynamicFormComponent implements OnInit {
         if (!field.name) {
           return;
         }
+            const validList: ValidatorFn[] = [];
+            if (field.mandatory) {
+                validList.push(Validators.required);
+            }
+            (field.validations || []).forEach(valid => validList.push(valid.validator));
             const control = this.fb.control(
-                field.value, this.bindValidations(field.validations || [])
+                field.value, validList.length > 0 ? Validators.compose(validList) : null
             );
             group.addControl(field.name, control);
         });

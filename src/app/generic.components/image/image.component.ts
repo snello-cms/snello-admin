@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, input, DestroyRef } from '@angular/core';
+import { Component, OnInit, inject, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FieldDefinition } from '../../models/field-definition';
@@ -27,8 +27,8 @@ import { DialogModule } from 'primeng/dialog';
   ]
 })
 export class ImageComponent implements OnInit {
-  field = input.required<FieldDefinition>();
-  group = input.required<UntypedFormGroup>();
+  field: FieldDefinition;
+  group: UntypedFormGroup;
 
   showDialog = false;
   documents: Document[] = [];
@@ -68,7 +68,7 @@ export class ImageComponent implements OnInit {
   }
 
   get canUpload(): boolean {
-    return Boolean(this.field().table_name && this.field().table_key_value);
+    return Boolean(this.field.table_name && this.field.table_key_value);
   }
 
   loadDocuments(event: LazyLoadEvent) {
@@ -141,7 +141,7 @@ export class ImageComponent implements OnInit {
     this.uploadError = '';
 
     this.documentService
-      .upload(selectedFile, this.field().table_name as string, this.field().table_key_value as string)
+      .upload(selectedFile, this.field.table_name as string, this.field.table_key_value as string)
       .then((res) => {
         this.applySelectedDocument(res as Document);
         if (this.showDialog) {
@@ -157,7 +157,7 @@ export class ImageComponent implements OnInit {
   }
 
   loadSelectedDocument() {
-      const currentValue = this.field().value || (this.field().name ? this.group().get(this.field().name!)?.value : null);
+      const currentValue = this.field.value || (this.field.name ? this.group.get(this.field.name!)?.value : null);
     if (currentValue) {
       this.documentService.find(currentValue).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
         next: (doc) => {
@@ -200,12 +200,12 @@ export class ImageComponent implements OnInit {
     if (doc?.uuid) {
       this.failedPreviewIds.delete(doc.uuid);
     }
-    if (this.field().name) {
-      const control = this.group().get(this.field().name!);
+    if (this.field.name) {
+      const control = this.group.get(this.field.name!);
       if (control) {
         control.setValue(doc.uuid);
       }
-      this.field().value = doc.uuid;
+      this.field.value = doc.uuid;
     }
   }
 }

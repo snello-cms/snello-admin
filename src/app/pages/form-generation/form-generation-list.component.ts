@@ -76,6 +76,8 @@ export class FormGenerationListComponent implements OnInit {
     ngOnInit() {
         this.metadataName = this.route.snapshot.params['name'];
         this.metadataService.buildSearch();
+        this.metadataService._start = 0;
+        this.metadataService._limit = 10;
         this.metadataService.search.table_name = this.metadataName;
         this.metadataService.getList().subscribe(
             metadata => {

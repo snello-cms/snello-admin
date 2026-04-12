@@ -65,6 +65,8 @@
                     <th pResizableColumn>Label</th>
                     <th pResizableColumn>Table Key</th>
                     <th pResizableColumn>Input Type</th>
+                    <th pResizableColumn>Mandatory</th>
+                    <th pResizableColumn>Order Num</th>
                     <th pResizableColumn>Operations</th>
                   </tr>
                 </ng-template>
@@ -83,6 +85,8 @@
                     <td class="ui-resizable-column">{{rowData.label}}</td>
                     <td class="ui-resizable-column">{{rowData.table_key}}</td>
                     <td class="ui-resizable-column">{{rowData.type}}</td>
+                    <td class="ui-resizable-column">{{rowData.mandatory ? '✓' : ''}}</td>
+                    <td class="ui-resizable-column">{{rowData.order_num}}</td>
                     <td>
                       <button type="button" (click)="edit(rowData)" class="btn btn-success btn-sm"
                         [disabled]="!isEditable(rowData)">

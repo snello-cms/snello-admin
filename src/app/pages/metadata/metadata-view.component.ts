@@ -58,7 +58,7 @@ export class MetadataViewComponent extends AbstractViewComponent<Metadata>
         this.fieldDefinitionService.search.metadata_uuid = this.element.uuid;
         this.fieldDefinitionService.getAllList().subscribe(
             fieldDefinitions => {
-                this.fieldDefinitions = fieldDefinitions;
+                this.fieldDefinitions = fieldDefinitions.sort((a, b) => (a.order_num ?? 0) - (b.order_num ?? 0));
             });
     }
 

@@ -17,7 +17,7 @@ import { DynamicSearchFormComponent } from '../dynamic-form/dynamic-search-form.
     standalone: true,
     template: `
         <div class="form-group clearfix row" [formGroup]="group">
-            <label class="col-sm-3">{{ field.name }}</label>
+            <label class="col-sm-3">{{ field.name }}{{ field.mandatory ? ' (*)' : '' }}</label>
             <div class="col-sm-9">
                 <div class="relationships-chip-wrap">
                     @if (currentValues.length > 0) {
