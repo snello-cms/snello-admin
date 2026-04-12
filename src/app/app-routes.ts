@@ -71,7 +71,8 @@ export const MainRoutes: Routes = [
         canActivate: [AppAuthGuard],
         children: [
             {path: '', redirectTo: '/images/list', pathMatch: 'full'},
-            {path: 'list', loadComponent: () => import('./pages/images/images-list.component').then(m => m.ImagesListComponent)}
+            {path: 'list', loadComponent: () => import('./pages/images/images-list.component').then(m => m.ImagesListComponent)},
+            {path: 'edit/:uuid', loadComponent: () => import('./pages/images/image-editor.component').then(m => m.ImageEditorComponent)}
         ]
     },
     {

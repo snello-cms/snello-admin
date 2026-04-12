@@ -103,6 +103,10 @@ export class ImagesListComponent extends AbstractListComponent<Document> impleme
         }
     }
 
+    editImage(doc: Document) {
+        this.router.navigate(['/images/edit', doc.uuid]);
+    }
+
     viewDocument(doc: Document) {
         this.router.navigate(['/document/view', doc.uuid]);
     }

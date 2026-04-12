@@ -1,0 +1,209 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>Image Editor</h3>
+</div>
+
+<div class="main">
+  <div class="container-fluid">
+
+    @if (loading) {
+      <div class="ie-loading">Loading image...</div>
+    }
+
+    @if (errorMsg) {
+      <div class="ie-error">{{ errorMsg }}</div>
+    }
+
+    @if (!loading && doc) {
+      <div class="ie-toolbar">
+        <button type="button" class="btn btn-secondary btn-sm" (click)="goBack()">
+          <i class="fa fa-arrow-left"></i> Back to list
+        </button>
+        <span class="ie-filename">{{ doc.original_name }}</span>
+      </div>
+
+      <!-- Editor canvas area -->
+      <div class="ie-editor-area">
+        <div class="ie-canvas-container">
+          <div class="ie-wrapper" #wrapper>
+            <img
+              #imgEl
+              [src]="imageUrl"
+              crossorigin="anonymous"
+              [alt]="doc.original_name"
+              class="ie-image"
+              (load)="onImageLoad()" />
+
+            @if (imageLoaded) {
+              <!-- Crop overlay -->
+              <div
+                class="ie-crop-rect"
+                [style.left.px]="rect.x"
+                [style.top.px]="rect.y"
+                [style.width.px]="rect.w"
+                [style.height.px]="rect.h"
+                (mousedown)="onRectMousedown($event)">
+
+                <!-- 8 resize handles -->
+                @for (h of handles; track h.id) {
+                  <div
+                    class="ie-handle ie-handle-{{ h.id }}"
+                    (mousedown)="onHandleMousedown($event, h.id)">
+                  </div>
+                }
+
+                <!-- Dimension label inside rect -->
+                <div class="ie-rect-label">
+                  {{ actualW }} × {{ actualH }}
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Sidebar with controls -->
+        <div class="ie-controls">
+          <div class="ie-controls-section">
+            <h5>Original size</h5>
+            <p class="ie-dim-value">{{ naturalW }} × {{ naturalH }} px</p>
+          </div>
+
+          <div class="ie-controls-section">
+            <h5>Selection (px)</h5>
+            <div class="ie-input-row">
+              <label>W</label>
+              <input
+                type="number"
+                class="form-control form-control-sm"
+                [(ngModel)]="inputW"
+                (change)="onInputWChange()"
+                min="1"
+                [max]="naturalW" />
+            </div>
+            <div class="ie-input-row">
+              <label>H</label>
+              <input
+                type="number"
+                class="form-control form-control-sm"
+                [(ngModel)]="inputH"
+                (change)="onInputHChange()"
+                min="1"
+                [max]="naturalH" />
+            </div>
+          </div>
+
+          <div class="ie-controls-section">
+            <h5>Proportional resize (%)</h5>
+            <div class="ie-input-row">
+              <label>%</label>
+              <input
+                type="number"
+                class="form-control form-control-sm"
+                [(ngModel)]="resizePercent"
+                (change)="onResizePercentChange()"
+                min="0"
+                max="100" />
+            </div>
+            <small class="ie-help">0-100. 100 keeps size, 50 halves width and height.</small>
+            <p class="ie-dim-value mt-1">
+              Output: {{ outputW }} × {{ outputH }} px
+            </p>
+          </div>
+
+          <div class="ie-controls-section">
+            <h5>Origin (px)</h5>
+            <p class="ie-dim-value">
+              X: {{ (rect.x * scaleX) | number:'1.0-0' }} &nbsp;
+              Y: {{ (rect.y * scaleY) | number:'1.0-0' }}
+            </p>
+          </div>
+
+          <div class="ie-controls-divider"></div>
+
+          <button
+            type="button"
+            class="btn btn-outline-secondary btn-sm w-100 mb-2"
+            (click)="resetRect()">
+            <i class="fa fa-refresh"></i> Reset selection
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-primary btn-sm w-100"
+            [disabled]="saving || previewGenerating"
+            (click)="saveResized()">
+            @if (previewGenerating) {
+              <i class="fa fa-spinner fa-spin"></i> Generating preview...
+            } @else {
+              <i class="fa fa-eye"></i> Generate preview
+            }
+          </button>
+
+          @if (errorMsg) {
+            <p class="ie-error-inline mt-2">{{ errorMsg }}</p>
+          }
+
+          <div class="ie-help mt-3">
+            <small>
+              Drag the rectangle to move it.<br />
+              Use the 8 edge handles to resize it.<br />
+              Generate a preview, then confirm to replace this image.
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dimensions bar under image -->
+      <div class="ie-dimensions-bar">
+        <span class="ie-dim-chip">
+          <i class="fa fa-crop"></i>
+          Selection: <strong>{{ actualW }} × {{ actualH }} px</strong>
+        </span>
+        <span class="ie-dim-chip">
+          <i class="fa fa-image"></i>
+          Original: <strong>{{ naturalW }} × {{ naturalH }} px</strong>
+        </span>
+        <span class="ie-dim-chip">
+          <i class="fa fa-arrows"></i>
+          Origin: X <strong>{{ (rect.x * scaleX) | number:'1.0-0' }}</strong>
+          &nbsp; Y <strong>{{ (rect.y * scaleY) | number:'1.0-0' }}</strong>
+        </span>
+      </div>
+
+      @if (previewUrl) {
+        <div class="ie-preview-panel mt-3">
+          <h5>Temporary preview</h5>
+          <p class="ie-help mb-2">
+            This is the generated image. Confirm to replace the current image while keeping the same UUID.
+          </p>
+          <img class="ie-preview-image" [src]="previewUrl" alt="Generated preview" />
+          <div class="ie-preview-actions mt-2">
+            <button
+              type="button"
+              class="btn btn-success btn-sm"
+              [disabled]="saving"
+              (click)="confirmReplaceCurrentImage()">
+              @if (saving) {
+                <i class="fa fa-spinner fa-spin"></i> Saving...
+              } @else {
+                <i class="fa fa-check"></i> Confirm and replace current image
+              }
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-secondary btn-sm"
+              [disabled]="saving"
+              (click)="discardPreview()">
+              <i class="fa fa-times"></i> Discard preview
+            </button>
+          </div>
+        </div>
+      }
+    }
+
+  </div>
+</div>

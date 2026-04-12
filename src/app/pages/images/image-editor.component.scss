@@ -1,0 +1,267 @@
+// ────────────────────────────────────────────────────────────────
+// Layout scaffolding (reuse same pattern as images-list)
+// ────────────────────────────────────────────────────────────────
+
+.ie-loading {
+  padding: 40px;
+  text-align: center;
+  color: #666;
+  font-size: 16px;
+}
+
+.ie-error {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  color: #856404;
+}
+
+// ────────────────────────────────────────────────────────────────
+// Toolbar
+// ────────────────────────────────────────────────────────────────
+
+.ie-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e2e2e2;
+}
+
+.ie-filename {
+  font-size: 15px;
+  font-weight: 600;
+  color: #333;
+}
+
+// ────────────────────────────────────────────────────────────────
+// Editor layout: canvas + sidebar
+// ────────────────────────────────────────────────────────────────
+
+.ie-editor-area {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.ie-canvas-container {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+  background: #f0f0f0;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  justify-content: center;
+}
+
+// ────────────────────────────────────────────────────────────────
+// Image wrapper: establishes positioning context for the overlay
+// ────────────────────────────────────────────────────────────────
+
+.ie-wrapper {
+  position: relative;
+  display: inline-block;
+  line-height: 0; // prevent extra space below img
+  cursor: crosshair;
+  user-select: none;
+}
+
+.ie-image {
+  display: block;
+  max-width: 100%;
+  max-height: 72vh;
+  border-radius: 4px;
+  pointer-events: none; // canvas events come from the overlay
+}
+
+// ────────────────────────────────────────────────────────────────
+// Crop rectangle
+// ────────────────────────────────────────────────────────────────
+
+.ie-crop-rect {
+  position: absolute;
+  border: 2px solid #0099ff;
+  background: rgba(0, 153, 255, 0.06);
+  cursor: move;
+  box-sizing: border-box;
+  // Classic dark vignette outside the selection
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.38);
+}
+
+// ────────────────────────────────────────────────────────────────
+// Resize handles
+// ────────────────────────────────────────────────────────────────
+
+$handle-size: 10px;
+$handle-offset: -6px;
+$handle-mid: calc(50% - #{$handle-size * 0.5});
+
+.ie-handle {
+  position: absolute;
+  width: $handle-size;
+  height: $handle-size;
+  background: #fff;
+  border: 2px solid #0099ff;
+  border-radius: 2px;
+  box-sizing: border-box;
+  z-index: 10;
+
+  &.ie-handle-nw { top: $handle-offset;  left: $handle-offset;  cursor: nw-resize; }
+  &.ie-handle-n  { top: $handle-offset;  left: $handle-mid;     cursor: n-resize;  }
+  &.ie-handle-ne { top: $handle-offset;  right: $handle-offset; cursor: ne-resize; }
+  &.ie-handle-e  { top: $handle-mid;     right: $handle-offset; cursor: e-resize;  }
+  &.ie-handle-se { bottom: $handle-offset; right: $handle-offset; cursor: se-resize; }
+  &.ie-handle-s  { bottom: $handle-offset; left: $handle-mid;   cursor: s-resize;  }
+  &.ie-handle-sw { bottom: $handle-offset; left: $handle-offset; cursor: sw-resize; }
+  &.ie-handle-w  { top: $handle-mid;     left: $handle-offset;  cursor: w-resize;  }
+}
+
+// Dimension label inside the crop rect
+.ie-rect-label {
+  position: absolute;
+  bottom: 6px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+// ────────────────────────────────────────────────────────────────
+// Controls sidebar
+// ────────────────────────────────────────────────────────────────
+
+.ie-controls {
+  width: 200px;
+  flex-shrink: 0;
+  background: #fff;
+  border: 1px solid #e2e2e2;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ie-controls-section {
+  margin-bottom: 12px;
+
+  h5 {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #888;
+    margin: 0 0 6px;
+    letter-spacing: 0.5px;
+  }
+}
+
+.ie-dim-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.ie-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+
+  label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+    width: 14px;
+    flex-shrink: 0;
+  }
+
+  input {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.ie-controls-divider {
+  border-top: 1px solid #e2e2e2;
+  margin: 8px 0;
+}
+
+.ie-error-inline {
+  color: #c0392b;
+  font-size: 12px;
+  margin: 0;
+}
+
+.ie-help {
+  color: #999;
+  line-height: 1.5;
+}
+
+// ────────────────────────────────────────────────────────────────
+// Dimensions bar below the editor
+// ────────────────────────────────────────────────────────────────
+
+.ie-dimensions-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 14px;
+  padding: 10px 14px;
+  background: #f7f8fa;
+  border: 1px solid #e2e2e2;
+  border-radius: 6px;
+}
+
+.ie-dim-chip {
+  font-size: 13px;
+  color: #555;
+
+  i {
+    margin-right: 5px;
+    color: #0099ff;
+  }
+
+  strong {
+    color: #222;
+  }
+}
+
+.ie-preview-panel {
+  margin-top: 16px;
+  border: 1px solid #dbe6ff;
+  background: #f6f9ff;
+  border-radius: 8px;
+  padding: 12px;
+
+  h5 {
+    margin: 0 0 6px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #2f4f7f;
+  }
+}
+
+.ie-preview-image {
+  display: block;
+  max-width: 100%;
+  max-height: 360px;
+  border-radius: 6px;
+  border: 1px solid #cfdfff;
+  background: #fff;
+}
+
+.ie-preview-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
