@@ -138,9 +138,8 @@ export class HomepageTopBar implements OnInit{
         event.preventDefault();
         event.stopPropagation();
         this.searchOpen = !this.searchOpen;
-
         if (this.searchOpen) {
-            setTimeout(() => this.searchInput?.nativeElement.focus(), 0);
+            this.focusSearchInput();
         }
     }
 
@@ -151,6 +150,16 @@ export class HomepageTopBar implements OnInit{
 
     closeSearch(): void {
         this.searchOpen = false;
+    }
+
+    onSearchEnter(event: KeyboardEvent): void {
+        event.preventDefault();
+        event.stopPropagation();
+        const results = this.filteredModel;
+        if (results.length === 1) {
+            void this.router.navigate(['/datalistgeneral/list', results[0].table_name]);
+            this.closeSearch();
+        }
     }
 
     metadataLabel(component: Metadata): string {
@@ -165,5 +174,27 @@ export class HomepageTopBar implements OnInit{
     @HostListener('document:keydown.escape')
     handleEscape(): void {
         this.closeSearch();
+    }
+
+    @HostListener('document:keydown', ['$event'])
+    handleSearchShortcut(event: KeyboardEvent): void {
+        const isSearchShortcut = (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'f';
+        if (!isSearchShortcut) {
+            return;
+        }
+        event.preventDefault();
+        event.stopPropagation();
+        this.searchOpen = true;
+        this.focusSearchInput();
+    }
+
+    private focusSearchInput(): void {
+        setTimeout(() => {
+            const input = this.searchInput?.nativeElement;
+            if (input) {
+                input.focus();
+                input.select();
+            }
+        }, 0);
     }
 }

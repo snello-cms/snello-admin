@@ -31,6 +31,7 @@
         type="text"
         placeholder="Search metadata..."
         [value]="searchTerm"
+        (keydown.enter)="onSearchEnter($event)"
         (input)="updateSearch($event)">
     </div>
 
