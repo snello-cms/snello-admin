@@ -139,14 +139,27 @@ export class FormGenerationEditComponent implements OnInit {
         if (this.form?.form) {
             if (!this.form.form.valid) {
                 this.form.validateAllFormFields(this.form.form);
+                this.form.focusFirstInvalidField();
+                const missingRequiredFields = this.getMissingRequiredFields(this.form.value);
+                if (missingRequiredFields.length > 0) {
+                    this.errorMessage = `Compila i campi obbligatori: ${missingRequiredFields.join(', ')}.`;
+                } else {
+                    this.errorMessage = 'Controlla i campi evidenziati prima di salvare.';
+                }
                 return false;
             }
+            this.errorMessage = '';
             return true;
         }
         // fallback: verifica diretta sui regConfig
         const formValue = this.form?.value ?? {};
-        const invalid = this.regConfig.filter(f => f.mandatory && (formValue[f.name] == null || formValue[f.name] === ''));
-        return invalid.length === 0;
+        const missingRequiredFields = this.getMissingRequiredFields(formValue);
+        if (missingRequiredFields.length > 0) {
+            this.errorMessage = `Compila i campi obbligatori: ${missingRequiredFields.join(', ')}.`;
+            return false;
+        }
+        this.errorMessage = '';
+        return true;
     }
 
     cancel() {
@@ -256,6 +269,25 @@ export class FormGenerationEditComponent implements OnInit {
         const date = new Date();
         date.setHours(+hours, +minutes, +seconds, 0);
         return date;
+    }
+
+    private getMissingRequiredFields(formValue: Record<string, any>): string[] {
+        return this.regConfig
+            .filter(field => field.mandatory)
+            .filter(field => {
+                const value = formValue[field.name];
+                if (value == null) {
+                    return true;
+                }
+                if (typeof value === 'string') {
+                    return value.trim().length === 0;
+                }
+                if (Array.isArray(value)) {
+                    return value.length === 0;
+                }
+                return false;
+            })
+            .map(field => field.label || field.name);
     }
 
     private parseDate(value: string): Date {

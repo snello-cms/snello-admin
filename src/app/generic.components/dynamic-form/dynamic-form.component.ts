@@ -1,4 +1,4 @@
-import {Component, OnInit, inject, input, output} from '@angular/core';
+import {Component, ElementRef, OnInit, inject, input, output} from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import {FieldDefinition} from '../../models/field-definition';
 import { DynamicFieldDirective } from '../dynamic-field/dynamic-field.directive';
@@ -80,6 +80,7 @@ import { FieldsetModule } from 'primeng/fieldset';
 export class DynamicFormComponent implements OnInit {
 
     private fb = inject(UntypedFormBuilder);
+  private hostElement = inject(ElementRef<HTMLElement>);
 
     get value() {
         return this.form.value;
@@ -171,7 +172,40 @@ export class DynamicFormComponent implements OnInit {
         Object.keys(formGroup.controls).forEach(field => {
             const control = formGroup.get(field);
         control?.markAsTouched({onlySelf: true});
+        control?.markAsDirty({onlySelf: true});
         });
+    }
+
+    focusFirstInvalidField() {
+      const invalidControlName = this.getFirstInvalidControlName();
+      if (!invalidControlName) {
+        return;
+      }
+
+      const host = this.hostElement.nativeElement;
+      const controlElement = host.querySelector(`[formControlName="${invalidControlName}"]`) as HTMLElement | null;
+
+      const focusTarget = controlElement?.querySelector('input, textarea, select, [tabindex]') as HTMLElement | null
+        || controlElement;
+
+      const scrollTarget = controlElement?.closest('.form-group') as HTMLElement | null
+        || controlElement;
+
+      scrollTarget?.scrollIntoView({behavior: 'smooth', block: 'center'});
+      focusTarget?.focus({preventScroll: true});
+    }
+
+    private getFirstInvalidControlName(): string | null {
+      for (const field of this.fields()) {
+        if (!field.name) {
+          continue;
+        }
+        const control = this.form.get(field.name);
+        if (control?.invalid) {
+          return field.name;
+        }
+      }
+      return null;
     }
 
     private mapGroupOnTab(tab_name: string, group_name: string) {

@@ -22,6 +22,12 @@
       <div class="col-md-12 col-sm-12">
         <div class="content view">
 
+          @if (errorMessage) {
+            <div class="alert alert-danger" role="alert">
+              {{ errorMessage }}
+            </div>
+          }
+
 
           @if (regConfig != null && regConfig.length > 0) {
             <div>
