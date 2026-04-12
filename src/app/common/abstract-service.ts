@@ -105,7 +105,7 @@ export abstract class AbstractService<T> {
         search: any) {
 
         for (const key in search) {
-            if (search[key] !== null) {
+            if (search[key] !== null && search[key] !== undefined && search[key] !== '') {
                 if (!(search[key] instanceof Object)) {
                     params = params.set(
                         key,

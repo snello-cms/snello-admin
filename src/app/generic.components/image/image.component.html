@@ -1,5 +1,5 @@
-<div class="form-group clearfix row" [formGroup]="group()">
-  <label class="col-sm-3">{{ field().name }}</label>
+<div class="form-group clearfix row" [formGroup]="group">
+  <label class="col-sm-3">{{ field.name }}{{ field.mandatory ? ' (*)' : '' }}</label>
   <div class="col-sm-9">
     <div class="image-selector">
       <button 
@@ -33,7 +33,7 @@
           <button 
             type="button" 
             class="btn btn-sm btn-danger ms-2"
-            (click)="selectedDocument = null; field().value = null; field().name ? group().get(field().name)?.setValue(null) : null">
+            (click)="selectedDocument = null; field.value = null; field.name ? group.get(field.name)?.setValue(null) : null">
             Remove
           </button>
         </div>

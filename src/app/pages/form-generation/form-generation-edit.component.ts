@@ -104,6 +104,9 @@ export class FormGenerationEditComponent implements OnInit {
     }
 
     save() {
+        if (!this.checkMandatoryFields()) {
+            return;
+        }
         const objToSave = this.preSaveUpdate();
         this.apiService.persist(this.metadataName, objToSave)
             .subscribe(
@@ -118,6 +121,9 @@ export class FormGenerationEditComponent implements OnInit {
 
 
     update() {
+        if (!this.checkMandatoryFields()) {
+            return;
+        }
         const objToSave = this.preSaveUpdate();
         this.apiService.update(this.metadataName, this.uuid, objToSave)
             .subscribe(
@@ -127,6 +133,20 @@ export class FormGenerationEditComponent implements OnInit {
                     }
                 }
             );
+    }
+
+    private checkMandatoryFields(): boolean {
+        if (this.form?.form) {
+            if (!this.form.form.valid) {
+                this.form.validateAllFormFields(this.form.form);
+                return false;
+            }
+            return true;
+        }
+        // fallback: verifica diretta sui regConfig
+        const formValue = this.form?.value ?? {};
+        const invalid = this.regConfig.filter(f => f.mandatory && (formValue[f.name] == null || formValue[f.name] === ''));
+        return invalid.length === 0;
     }
 
     cancel() {

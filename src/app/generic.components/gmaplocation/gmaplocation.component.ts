@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild, input, model } from '@angular/core';
+import { Component, ElementRef, ViewChild, model } from '@angular/core';
 import { FormsModule, UntypedFormGroup } from '@angular/forms';
 import * as L from 'leaflet';
 import { FieldDefinition } from '../../models/field-definition';
@@ -22,8 +22,8 @@ import {
 })
 export class GMapLocationComponent {
   value = model('');
-  field = input.required<FieldDefinition>();
-  group = input.required<UntypedFormGroup>();
+  field: FieldDefinition;
+  group: UntypedFormGroup;
 
   showMap = false;
   selectedLocation = '';
@@ -39,7 +39,7 @@ export class GMapLocationComponent {
   marker?: L.Marker;
 
   get currentValue(): string {
-    const controlValue = this.field().name ? this.group().get(this.field().name)?.value : null;
+    const controlValue = this.field.name ? this.group.get(this.field.name)?.value : null;
     return controlValue || this.value() || '';
   }
 
@@ -74,8 +74,8 @@ export class GMapLocationComponent {
   private syncValue(nextValue: string) {
     this.value.set(nextValue);
 
-    if (this.field().name) {
-      const control = this.group().get(this.field().name);
+    if (this.field.name) {
+      const control = this.group.get(this.field.name);
       control?.setValue(nextValue);
       control?.markAsDirty();
       control?.markAsTouched();

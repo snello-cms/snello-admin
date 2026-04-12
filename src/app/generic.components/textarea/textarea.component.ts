@@ -8,7 +8,7 @@ import { Textarea } from 'primeng/textarea';
     standalone: true,
     template: `
         <div class="form-group clearfix row" [formGroup]="group">
-          <label class="col-sm-3">{{ field.name }}</label>
+          <label class="col-sm-3">{{ field.name }}{{ field.mandatory ? ' (*)' : '' }}</label>
           <div class="col-sm-9">
             <textarea pTextarea
               [formControlName]="field.name"

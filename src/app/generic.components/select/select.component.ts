@@ -9,7 +9,7 @@ import { SelectModule } from 'primeng/select';
     standalone: true,
     template: `
     <div class="form-group clearfix row" [formGroup]="group">
-      <label class="col-sm-3">{{ field.name }}</label>
+      <label class="col-sm-3">{{ field.name }}{{ field.mandatory ? ' (*)' : '' }}</label>
       <div class="col-sm-9">
         <p-select
           [options]="options"

@@ -48,6 +48,12 @@ export class FieldDefinitionResolver  {
                             definition_1.table_key_value = element.uuid;
                         }
                     }
+                    for (const definition_1 of fieldDefinitionList) {
+                        definition_1.mandatory = !!definition_1.mandatory;
+                    }
+                    fieldDefinitionList.sort((a: FieldDefinition, b: FieldDefinition) =>
+                        (a.order_num ?? 0) - (b.order_num ?? 0)
+                    );
                     return <FieldDefinition[]>fieldDefinitionList;
                 }
             )
