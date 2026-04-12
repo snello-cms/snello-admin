@@ -147,6 +147,8 @@ export class ApiService implements OnInit {
         let params = new HttpParams();
         // per ora senza ricerca e non paginate, in futuro chissà..
         params = params.set('select_fields', field.join_table_select_fields + ',' + field.join_table_key);
+        params = params.set('_limit', '0');
+        params = params.set('_start', '0');
 
         if (searchValue) {
             params = params.set(
