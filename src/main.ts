@@ -11,15 +11,15 @@ import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 
-import { RUNTIME_CONFIG, type RuntimeConfig } from './app/service/configuration.service';
-import { BasicHttpInterceptor } from './app/service/interceptors/basic-http.interceptor';
+import { RUNTIME_CONFIG, type RuntimeConfig } from './app/services/configuration.service';
+import { BasicHttpInterceptor } from './app/interceptors/basic-http.interceptor';
 import { MainRoutes } from './app/app-routes';
 import { AppComponent } from './app/app.component';
 
 registerLocaleData(localeIt);
 
 const bootstrap = async (): Promise<void> => {
-    const runtimeConfig = await fetch('assets/config.json').then(
+    const runtimeConfig = await fetch('/assets/config.json').then(
         response => response.json() as Promise<RuntimeConfig>
     );
 

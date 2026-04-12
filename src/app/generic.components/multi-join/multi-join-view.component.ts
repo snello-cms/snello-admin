@@ -1,15 +1,16 @@
 import {Component, OnInit} from '@angular/core';
 import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
-import {FieldDefinition} from '../../model/field-definition';
-import {ApiService} from '../../service/api.service';
+import {FieldDefinition} from '../../models/field-definition';
+import {ApiService} from '../../services/api.service';
 import { of, forkJoin, Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { tap } from 'rxjs/operators';
-import {FieldDefinitionService} from "../../service/field-definition.service";
+import {FieldDefinitionService} from "../../services/field-definition.service";
 import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-multijoin',
+    standalone: true,
     template: `
   @if (joinList$ | async; as values) {
     <div class="form-group clearfix row" [formGroup]="group">

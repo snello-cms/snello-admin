@@ -1,0 +1,18 @@
+.image-view {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+
+  .image-name {
+    font-weight: 500;
+    color: #333;
+  }
+}
+
+.text-muted {
+  color: #999;
+  font-style: italic;
+}

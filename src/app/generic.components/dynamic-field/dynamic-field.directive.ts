@@ -1,6 +1,6 @@
-import {Directive, Input, OnInit, Type, ViewContainerRef} from '@angular/core';
+import {Directive, OnInit, Type, ViewContainerRef, inject, input} from '@angular/core';
 import {UntypedFormGroup} from '@angular/forms';
-import {FieldDefinition} from '../../model/field-definition';
+import {FieldDefinition} from '../../models/field-definition';
 import {InputComponent} from '../input/input.component';
 import { GMapLocationComponent } from '../gmaplocation/gmaplocation.component';
 import { GMapPathComponent } from '../gmappath/gmappath.component';
@@ -21,30 +21,34 @@ import { GMapPathViewComponent } from '../gmappath/gmappath-view.component';
 import { JoinViewComponent } from '../join/join-view.component';
 import { MultiJoinViewComponent } from '../multi-join/multi-join-view.component';
 import { MediaViewComponent } from '../media/media-view.component';
-import { RealtionshipsComponent } from '../realtionships/realtionships.component';
-import { RealtionshipsViewComponent } from '../realtionships/realtionships-view.component';
+import { ImageComponent } from '../image/image.component';
+import { ImageViewComponent } from '../image/image-view.component';
 
 @Directive({ selector: '[dynamicField]' })
 export class DynamicFieldDirective implements OnInit {
-    @Input() field!: FieldDefinition;
-    @Input() group!: UntypedFormGroup;
-    @Input() view = false;
+    field = input.required<FieldDefinition>();
+    group = input.required<UntypedFormGroup>();
+    view = input(false);
 
-    constructor(private container: ViewContainerRef) {}
+    private container = inject(ViewContainerRef);
 
     componentRef: any;
 
     async ngOnInit() {
         let componentType: Type<any> | undefined;
 
-        if (!this.view && this.field.type === 'tinymce') {
+        if (!this.view() && this.field().type === 'tinymce') {
             componentType = (await import('../tinymce/tinymce.component')).TinymceComponent;
-        } else if (!this.view && this.field.type === 'monaco') {
+        } else if (!this.view() && this.field().type === 'monaco') {
             componentType = (await import('../monaco/monaco.component')).MonacoComponent;
+        } else if (!this.view() && this.field().type === 'realtionships') {
+            componentType = (await import('../realtionships/realtionships.component')).RealtionshipsComponent;
+        } else if (this.view() && this.field().type === 'realtionships') {
+            componentType = (await import('../realtionships/realtionships-view.component')).RealtionshipsViewComponent;
         } else {
-            componentType = this.view
-                ? componentViewMapper[this.field.type]
-                : componentMapper[this.field.type];
+            componentType = this.view()
+                ? componentViewMapper[this.field().type]
+                : componentMapper[this.field().type];
         }
 
         if (!componentType) {
@@ -52,8 +56,8 @@ export class DynamicFieldDirective implements OnInit {
         }
 
         this.componentRef = this.container.createComponent(componentType);
-        this.componentRef.instance.field = this.field;
-        this.componentRef.instance.group = this.group;
+        this.componentRef.instance.field = this.field();
+        this.componentRef.instance.group = this.group();
     }
 }
 
@@ -68,8 +72,8 @@ const componentMapper: Record<string, Type<any>> = {
     tags: TagComponent,
     join: JoinComponent,
     multijoin: MultiJoinComponent,
-    realtionships: RealtionshipsComponent,
     media: MediaComponent,
+    image: ImageComponent,
     gmaplocation: GMapLocationComponent,
     gmappath: GMapPathComponent
 };
@@ -87,8 +91,8 @@ const componentViewMapper: Record<string, Type<any>> = {
     tags: InputViewComponent,
     join: JoinViewComponent,
     multijoin: MultiJoinViewComponent,
-    realtionships: RealtionshipsViewComponent,
     media: MediaViewComponent,
+    image: ImageViewComponent,
     gmaplocation: GMapLocationViewComponent,
     gmappath: GMapPathViewComponent
 };

@@ -1,16 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { FieldDefinition } from '../../model/field-definition';
-import { Metadata } from '../../model/metadata';
-import { MetadataService } from '../../service/metadata.service';
-import { ApiService } from '../../service/api.service';
+import { FieldDefinition } from '../../models/field-definition';
+import { Metadata } from '../../models/metadata';
+import { MetadataService } from '../../services/metadata.service';
+import { ApiService } from '../../services/api.service';
+import { DataListService } from '../../services/data-list.service';
 import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
+import { DynamicSearchFormComponent } from '../dynamic-form/dynamic-search-form.component';
 
 @Component({
     selector: 'app-realtionships',
+    standalone: true,
     template: `
         <div class="form-group clearfix row" [formGroup]="group">
             <label class="col-sm-3">{{ field.name }}</label>
@@ -50,11 +54,30 @@ import { CommonModule } from '@angular/common';
                         [options]="metadataOptions"
                         optionLabel="table_name"
                         [style]="{ width: '100%' }"
-                        (onChange)="onMetadataChange($event)">
+                        (onChange)="onMetadataChange()">
                     </p-select>
                 </div>
 
                 <div style="flex: 1; overflow: hidden; display: flex; flex-direction: column;">
+                    @if (selectedMetadata) {
+                        <div class="filter-wrapper" style="margin-bottom: .75rem;" (keydown.enter)="onRowsSearchEnter($event)">
+                            <div class="fw-search-fields">
+                                @if (rowSearchFields.length > 0) {
+                                    <dynamic-search-form [fields]="rowSearchFields"></dynamic-search-form>
+                                } @else {
+                                    <div style="font-size: .9rem; color: #666;">No searchable fields configured for this metadata.</div>
+                                }
+                            </div>
+                            <div class="fw-spacer"></div>
+                            <div class="fw-actions">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-search" (click)="searchRows()">Search</button>
+                                    <button type="button" class="btn btn-reset" (click)="resetRowsSearch()">Undo</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+
                     @if (rows.length > 0) {
                         <p-table [value]="rows" [paginator]="true" [rows]="20" [scrollable]="true" scrollHeight="flex" styleClass="p-datatable-sm">
                             <ng-template pTemplate="header">
@@ -117,11 +140,13 @@ import { CommonModule } from '@angular/common';
             padding: 0.5rem;
         }`
     ],
-    imports: [ReactiveFormsModule, FormsModule, SelectModule, TableModule, DialogModule, CommonModule]
+    imports: [ReactiveFormsModule, FormsModule, SelectModule, TableModule, DialogModule, CommonModule, DynamicSearchFormComponent]
 })
 export class RealtionshipsComponent implements OnInit {
     field: FieldDefinition;
     group: UntypedFormGroup;
+
+    @ViewChild(DynamicSearchFormComponent) rowSearchForm: DynamicSearchFormComponent;
 
     dialogVisible = false;
     metadataOptions: Metadata[] = [];
@@ -129,29 +154,34 @@ export class RealtionshipsComponent implements OnInit {
     rows: any[] = [];
     columns: string[] = [];
     currentValues: string[] = [];
+    rowSearchFields: FieldDefinition[] = [];
+    private destroyRef = inject(DestroyRef);
 
-    constructor(private metadataService: MetadataService, private apiService: ApiService) {}
+    constructor(
+        private metadataService: MetadataService,
+        private apiService: ApiService,
+        private dataListService: DataListService
+    ) {}
 
     ngOnInit() {
         this.syncCurrentValues();
-        this.loadMetadataOptions();
+        this.loadMetadataOptions('');
     }
 
     openDialog() {
         this.dialogVisible = true;
         if (this.selectedMetadata) {
-            this.loadRows(this.selectedMetadata);
+            this.loadRowsSearchAndData(this.selectedMetadata);
         }
     }
 
-    onMetadataChange(event: { value?: Metadata }) {
-        const selected = event?.value ?? null;
-        this.selectedMetadata = selected;
-        if (selected) {
-            this.loadRows(selected);
+    onMetadataChange() {
+        if (this.selectedMetadata) {
+            this.loadRowsSearchAndData(this.selectedMetadata);
         } else {
             this.rows = [];
             this.columns = [];
+            this.rowSearchFields = [];
         }
     }
 
@@ -187,12 +217,42 @@ export class RealtionshipsComponent implements OnInit {
         this.field.value = this.currentValues;
     }
 
-    private loadMetadataOptions() {
+    onRowsSearchEnter(event: KeyboardEvent) {
+        event.preventDefault();
+        this.searchRows();
+    }
+
+    searchRows() {
+        if (!this.selectedMetadata) {
+            return;
+        }
+        this.loadRows(this.selectedMetadata);
+    }
+
+    resetRowsSearch() {
+        for (const field of this.rowSearchFields) {
+            field.value = null;
+        }
+        if (this.rowSearchForm?.searchForm) {
+            const resetValue: Record<string, unknown> = {};
+            for (const field of this.rowSearchFields) {
+                if (field.name) {
+                    resetValue[field.name] = null;
+                }
+            }
+            this.rowSearchForm.searchForm.setValue(resetValue);
+        }
+        if (this.selectedMetadata) {
+            this.loadRows(this.selectedMetadata);
+        }
+    }
+
+    private loadMetadataOptions(tableNameContains: string) {
         this.metadataService.getAllList({
-            table_name_contains: '',
+            table_name_contains: tableNameContains,
             uuid: '',
             _limit: 100000
-        }).subscribe({
+        }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: (metadatas: Metadata[]) => {
                 this.metadataOptions = (metadatas ?? []).sort((left, right) =>
                     left.table_name.localeCompare(right.table_name, 'it')
@@ -211,7 +271,9 @@ export class RealtionshipsComponent implements OnInit {
         this.apiService._start = 0;
         this.apiService._limit = 50;
 
-        this.apiService.getList(metadata.table_name, []).subscribe({
+        this.preRowsSearch();
+
+        this.apiService.getList(metadata.table_name, this.rowSearchFields).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: rows => {
                 this.rows = rows ?? [];
                 this.columns = this.getColumns(this.rows, metadata.table_key || 'uuid');
@@ -225,6 +287,75 @@ export class RealtionshipsComponent implements OnInit {
                 this.apiService._limit = previousLimit;
             }
         });
+    }
+
+    private loadRowsSearchAndData(metadata: Metadata) {
+        this.dataListService.getFieldDefinitionList(metadata.table_name).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+            next: definitions => {
+                this.rowSearchFields = this.buildRowSearchFields(definitions ?? []);
+                this.loadRows(metadata);
+            },
+            error: () => {
+                this.rowSearchFields = [];
+                this.loadRows(metadata);
+            }
+        });
+    }
+
+    private buildRowSearchFields(definitions: FieldDefinition[]): FieldDefinition[] {
+        const candidates = definitions
+            .filter(definition => Boolean(definition?.name))
+            .map(definition => {
+                const normalized = { ...definition };
+                if (!normalized.search_field_name || normalized.search_field_name.trim() === '') {
+                    const exactTypes = new Set(['number', 'decimal', 'date', 'datetime', 'time', 'boolean', 'select', 'join', 'multijoin']);
+                    normalized.search_field_name = exactTypes.has(normalized.type)
+                        ? String(normalized.name)
+                        : `${normalized.name}_contains`;
+                }
+                return normalized;
+            });
+
+        const searchable = candidates.filter(definition => definition.searchable === true);
+        return searchable.length > 0 ? searchable : candidates;
+    }
+
+    private preRowsSearch() {
+        if (!this.rowSearchForm?.value) {
+            return;
+        }
+        const objToSearch = JSON.parse(JSON.stringify(this.rowSearchForm.value));
+        for (const key in objToSearch) {
+            if (objToSearch.hasOwnProperty(key)) {
+                for (const field of this.rowSearchFields) {
+                    if (field.name === key) {
+                        const rawValue = objToSearch[field.name];
+                        if (field.type === 'join' && field.join_table_key != null && rawValue != null && rawValue !== '') {
+                            field.value = typeof rawValue === 'object'
+                                ? rawValue[field.join_table_key]
+                                : rawValue;
+                            continue;
+                        }
+
+                        if (field.type === 'multijoin') {
+                            if (Array.isArray(rawValue)) {
+                                const values = rawValue
+                                    .map(value => typeof value === 'object' && value != null && field.join_table_key
+                                        ? value[field.join_table_key]
+                                        : value)
+                                    .filter(value => value != null && value !== '');
+                                field.value = values.join(',');
+                            } else {
+                                field.value = rawValue;
+                            }
+                            continue;
+                        }
+
+                        field.value = rawValue;
+                    }
+                }
+            }
+        }
     }
 
     private getColumns(rows: any[], keyColumn: string): string[] {

@@ -1,27 +1,24 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {MessageService} from 'primeng/api';
-import { ToastMessageOptions } from 'primeng/api';
+import {Component, DestroyRef, OnInit, inject} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {MessageService, ToastMessageOptions} from 'primeng/api';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { Message } from 'primeng/message';
 import { RouterOutlet } from '@angular/router';
-import { Subscription } from 'rxjs';
 
 @Component({
+    standalone: true,
     templateUrl: './outlet.component.html',
     styleUrls: ['./outlet.component.scss'],
     imports: [ConfirmDialog, Message, RouterOutlet]
 })
-export class OutletComponent implements OnInit, OnDestroy {
+export class OutletComponent implements OnInit {
 
     messages: ToastMessageOptions[] = [];
-    private messageSubscription?: Subscription;
-    private clearSubscription?: Subscription;
-
-    constructor(private messageService: MessageService) {
-    }
+    private messageService = inject(MessageService);
+    private destroyRef = inject(DestroyRef);
 
     ngOnInit() {
-        this.messageSubscription = this.messageService.messageObserver.subscribe((message) => {
+        this.messageService.messageObserver.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((message) => {
             if (Array.isArray(message)) {
                 this.messages = [...this.messages, ...message];
             } else {
@@ -29,18 +26,13 @@ export class OutletComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.clearSubscription = this.messageService.clearObserver.subscribe(() => {
+        this.messageService.clearObserver.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.messages = [];
         });
     }
 
     removeMessage(index: number) {
         this.messages = this.messages.filter((_, i) => i !== index);
-    }
-
-    ngOnDestroy() {
-        this.messageSubscription?.unsubscribe();
-        this.clearSubscription?.unsubscribe();
     }
 
 }

@@ -1,18 +1,14 @@
-import {Directive, Input, TemplateRef, ViewContainerRef} from '@angular/core';
+import {Directive, Input, inject, TemplateRef, ViewContainerRef} from '@angular/core';
 import Keycloak, {KeycloakTokenParsed} from 'keycloak-js';
 
-@Directive({ selector: '[permit]' })
+@Directive({ selector: '[permit]', standalone: true })
 export class PermitDirective {
 
+    private keycloak = inject(Keycloak);
+    private viewContainerRef = inject(ViewContainerRef);
+    private templateRef = inject(TemplateRef<any>);
+    private roles = this.getUserRoles();
     private _prevCondition = false;
-    roles: string[];
-
-    constructor(private keycloak: Keycloak,
-                private viewContainerRef: ViewContainerRef,
-                private templateRef: TemplateRef<any>,
-    ) {
-        this.roles = this.getUserRoles();
-    }
 
     @Input() set permit(aclName: string) {
         this.checkRoles(this.roles, aclName);
@@ -21,7 +17,6 @@ export class PermitDirective {
     checkRoles(userRoles: string[], aclRole: string) {
         // console.log('permit: ' + aclRole);
         if (!userRoles) {
-            console.log('no user roles fro user in session!');
             return;
         }
 

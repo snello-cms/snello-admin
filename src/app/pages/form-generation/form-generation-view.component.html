@@ -1,0 +1,36 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <homepage-topbar></homepage-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>View {{metadataName}}</h3>
+  <p>
+  </p>
+</div>
+
+
+<div class="main">
+
+  <div class="container-fluid">
+    <div class="row">
+
+      <div class="col-md-12 col-sm-12">
+        <div class="content view">
+          @if (regConfig != null && regConfig.length > 0) {
+            <div>
+              <dynamic-form [fields]="regConfig" [view]="true">
+              </dynamic-form>
+              <div class="btn-group">
+                <button type="button" class="btn btn-warning" (click)="edit()">Edit</button>
+                <button type="button" class="btn btn-primary" (click)="clone()">Clone</button>
+                <button type="button" class="btn btn-warning" (click)="cancel()">Back</button>
+                <button type="button" class="btn btn-success" (click)="galleria()">Galleria</button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

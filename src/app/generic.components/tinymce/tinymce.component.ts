@@ -1,12 +1,14 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, DestroyRef, OnInit, inject} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
-import {FieldDefinition} from '../../model/field-definition';
+import {FieldDefinition} from '../../models/field-definition';
 import {ASSET_PATH} from '../../constants/constants';
-import {ConfigurationService} from '../../service/configuration.service';
+import {ConfigurationService} from '../../services/configuration.service';
 import { EditorComponent } from '@tinymce/tinymce-angular';
 
 @Component({
     selector: 'app-tinymce',
+    standalone: true,
     template: `
         <div class="form-group clearfix row" [formGroup]="group">
           <label class="col-sm-3">{{ field.name }}</label>
@@ -25,9 +27,11 @@ export class TinymceComponent implements OnInit {
     field: FieldDefinition | undefined;
     group: UntypedFormGroup | undefined;
     asset_path: string | undefined;
+    private readonly configurationService = inject(ConfigurationService);
+    private readonly destroyRef = inject(DestroyRef);
 
-    constructor(configurationService: ConfigurationService) {
-        configurationService.getValue(ASSET_PATH).subscribe(
+    constructor() {
+        this.configurationService.getValue(ASSET_PATH).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
             path => {
                 this.asset_path = path;
             });

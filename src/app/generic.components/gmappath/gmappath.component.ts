@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, input, model } from '@angular/core';
 import { FormsModule, UntypedFormGroup } from '@angular/forms';
 import * as L from 'leaflet';
-import { FieldDefinition } from '../../model/field-definition';
+import { FieldDefinition } from '../../models/field-definition';
 import {
   addBaseTileLayer,
   AddressSearchResult,
@@ -22,10 +22,9 @@ import {
   imports: [CommonModule, FormsModule]
 })
 export class GMapPathComponent {
-  @Input() value = '';
-  @Input() field!: FieldDefinition;
-  @Input() group!: UntypedFormGroup;
-  @Output() valueChange = new EventEmitter<string>();
+  value = model('');
+  field = input.required<FieldDefinition>();
+  group = input.required<UntypedFormGroup>();
 
   showMap = false;
   path: string[] = [];
@@ -42,8 +41,8 @@ export class GMapPathComponent {
   polyline?: L.Polyline;
 
   get currentValue(): string {
-    const controlValue = this.field?.name ? this.group?.get(this.field.name)?.value : null;
-    return controlValue || this.value || '';
+    const controlValue = this.field().name ? this.group().get(this.field().name)?.value : null;
+    return controlValue || this.value() || '';
   }
 
   get currentPath(): string[] {
@@ -74,17 +73,15 @@ export class GMapPathComponent {
   }
 
   private syncValue(nextValue: string) {
-    this.value = nextValue;
+    this.value.set(nextValue);
 
-    if (this.field?.name) {
-      const control = this.group?.get(this.field.name);
+    if (this.field().name) {
+      const control = this.group().get(this.field().name);
       control?.setValue(nextValue);
       control?.markAsDirty();
       control?.markAsTouched();
       control?.updateValueAndValidity({ emitEvent: true });
     }
-
-    this.valueChange.emit(nextValue);
   }
 
   addPoint(lat: number, lng: number) {
@@ -128,7 +125,6 @@ export class GMapPathComponent {
         this.searchError = 'No address found.';
       }
     } catch (error) {
-      console.error('Address search error', error);
       this.searchError = 'Address search is currently unavailable.';
     } finally {
       this.searchLoading = false;

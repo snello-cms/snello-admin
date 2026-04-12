@@ -1,19 +1,20 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, OnInit, inject, input, output} from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
-import {FieldDefinition} from '../../model/field-definition';
+import {FieldDefinition} from '../../models/field-definition';
 import { DynamicFieldDirective } from '../dynamic-field/dynamic-field.directive';
 import { TabsModule } from 'primeng/tabs';
 import { FieldsetModule } from 'primeng/fieldset';
 
 @Component({
     selector: 'dynamic-form',
+    standalone: true,
     template: `
         <form class="dynamic-form" [formGroup]="form" (submit)="onSubmit($event)">
         
           @if (!groupToFields) {
             <div>
-              @for (field of fields; track field) {
-                <ng-container dynamicField [field]="field" [group]="form" [view]="view">
+              @for (field of fields(); track field) {
+                <ng-container dynamicField [field]="field" [group]="form" [view]="view()">
                 </ng-container>
               }
             </div>
@@ -33,7 +34,7 @@ import { FieldsetModule } from 'primeng/fieldset';
                       <div>
                         @for (field of groupToFields.get(tab); track field) {
                           <ng-container dynamicField [field]="field"
-                            [group]="form" [view]="view">
+                            [group]="form" [view]="view()">
                           </ng-container>
                         }
                       </div>
@@ -44,7 +45,7 @@ import { FieldsetModule } from 'primeng/fieldset';
                           <p-fieldset [legend]="group">
                             @for (field of groupToFields.get(group); track field) {
                               <ng-container dynamicField [field]="field"
-                                [group]="form" [view]="view">
+                                [group]="form" [view]="view()">
                               </ng-container>
                             }
                           </p-fieldset>
@@ -63,7 +64,7 @@ import { FieldsetModule } from 'primeng/fieldset';
                 <p-fieldset [legend]="group">
                   @for (field of groupToFields.get(group); track field) {
                     <ng-container dynamicField [field]="field"
-                      [group]="form" [view]="view">
+                      [group]="form" [view]="view()">
                     </ng-container>
                   }
                 </p-fieldset>
@@ -78,16 +79,15 @@ import { FieldsetModule } from 'primeng/fieldset';
 })
 export class DynamicFormComponent implements OnInit {
 
-    constructor(private fb: UntypedFormBuilder) {
-    }
+    private fb = inject(UntypedFormBuilder);
 
     get value() {
         return this.form.value;
     }
 
-    @Input() fields: FieldDefinition[] = [];
-    @Input() view = false;
-    @Output() submit: EventEmitter<any> = new EventEmitter<any>();
+    fields = input<FieldDefinition[]>([]);
+    view = input(false);
+    submit = output<any>();
     form: UntypedFormGroup;
 
     tabs: Set<string> | null = null;
@@ -101,7 +101,7 @@ export class DynamicFormComponent implements OnInit {
         this.tabs = null;
         this.groups = null;
 
-        for (const field of this.fields) {
+        for (const field of this.fields()) {
 
             // ho un tab e dei gruppi
             if (field.tab_name && field.group_name) {
@@ -129,7 +129,7 @@ export class DynamicFormComponent implements OnInit {
 
     createControl() {
         const group = this.fb.group({});
-        this.fields.forEach(field => {
+        this.fields().forEach(field => {
         if (!field.name) {
           return;
         }

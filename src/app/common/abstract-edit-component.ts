@@ -1,6 +1,7 @@
 import {AbstractService} from './abstract-service';
 import {Router, ActivatedRoute} from '@angular/router';
-import { ChangeDetectorRef, OnInit, Directive } from '@angular/core';
+import { ChangeDetectorRef, DestroyRef, OnInit, Directive, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {ConfirmationService, MessageService} from 'primeng/api';
 
 @Directive()
@@ -8,6 +9,7 @@ export abstract class AbstractEditComponent<T> implements OnInit {
 
     public editMode = false;
     public element!: T;
+    protected readonly destroyRef = inject(DestroyRef);
 
     constructor(
         public router: Router,
@@ -24,7 +26,7 @@ export abstract class AbstractEditComponent<T> implements OnInit {
         const id: string = this.route.snapshot.params['id'];
         if (id) {
             this.editMode = true;
-            this.service.find(id).subscribe(
+            this.service.find(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
                 element => {
                     this.element = <T>element;
                     this.postFind();
@@ -70,7 +72,7 @@ export abstract class AbstractEditComponent<T> implements OnInit {
         if (!this.preSave()) {
             return;
         }
-        this.service.persist(this.element).subscribe(
+        this.service.persist(this.element).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
             element => {
                 this.addInfo('Save completed successfully.');
                 this.element = <T>element;
@@ -90,13 +92,12 @@ export abstract class AbstractEditComponent<T> implements OnInit {
     }
 
     update() {
-        console.log(JSON.stringify(this.element));
         this.clearMsgs();
         this.editMode = false;
         if (!this.preUpdate()) {
             return;
         }
-        this.service.update(this.element).subscribe(
+        this.service.update(this.element).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
             element => {
                 this.addInfo('Update completed successfully.');
                 this.element = <T>element;
@@ -113,7 +114,7 @@ export abstract class AbstractEditComponent<T> implements OnInit {
     delete() {
         this.clearMsgs();
         this.editMode = false;
-        this.service.delete(this.getId()).subscribe(
+        this.service.delete(this.getId()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
             element => {
                 this.postDelete();
                 this.navigateAfterDelete();

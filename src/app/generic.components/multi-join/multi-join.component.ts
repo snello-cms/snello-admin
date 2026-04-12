@@ -1,17 +1,19 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, DestroyRef, inject} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
-import {FieldDefinition} from '../../model/field-definition';
+import {FieldDefinition} from '../../models/field-definition';
 import {SelectItem} from 'primeng/api';
-import {ApiService} from '../../service/api.service';
+import {ApiService} from '../../services/api.service';
 import {Observable, of} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {tap} from 'rxjs/operators';
-import {FieldDefinitionService} from "../../service/field-definition.service";
+import {FieldDefinitionService} from "../../services/field-definition.service";
 import { AutoComplete } from 'primeng/autocomplete';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-multijoin',
+    standalone: true,
     template: `
         @if (joinList$ | async) {
           <div class="form-group clearfix row" [formGroup]="group">
@@ -49,6 +51,8 @@ export class MultiJoinComponent implements OnInit {
     name: string;
 
 
+    private destroyRef = inject(DestroyRef);
+
     constructor(private apiService: ApiService, private activatedRoute: ActivatedRoute, private fieldDefinitionService: FieldDefinitionService) {
     }
 
@@ -61,6 +65,7 @@ export class MultiJoinComponent implements OnInit {
 
 
         this.apiService.getJoinList(this.field)
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(options => {
                     this.options = options;
                 }
@@ -96,6 +101,7 @@ export class MultiJoinComponent implements OnInit {
 
     search(event: { query?: string }) {
         this.apiService.getJoinList(this.field, event.query, this.labelField)
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(options => {
                     this.options = options;
                 }

@@ -1,8 +1,9 @@
 import {ConfirmationService, MessageService} from 'primeng/api';
 import {AbstractService} from './abstract-service';
 import {Router} from '@angular/router';
-import { ChangeDetectorRef, OnInit, Directive } from '@angular/core';
-import {DocumentService} from '../service/document.service';
+import { ChangeDetectorRef, DestroyRef, OnInit, Directive, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import {DocumentService} from '../services/document.service';
 
 @Directive()
 export abstract class AbstractListComponent<T> implements OnInit {
@@ -67,6 +68,7 @@ export abstract class AbstractListComponent<T> implements OnInit {
 
     protected firstReload: boolean;
     public filters: any;
+    protected readonly destroyRef = inject(DestroyRef);
 
     constructor(
         public messageService: MessageService,
@@ -87,7 +89,7 @@ export abstract class AbstractListComponent<T> implements OnInit {
         this.preLoaddata();
         // console.log('loading data...', this.service.search);
         this.firstReload = firstReload;
-        this.service.getList().subscribe(
+        this.service.getList().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
             model => {
                 this.model = <T[]>model;
                 this.listSize = this.service.listSize;
@@ -166,7 +168,7 @@ export abstract class AbstractListComponent<T> implements OnInit {
 
     public save() {
         this.clearMsgs();
-        this.service.persist(this.element).subscribe(
+        this.service.persist(this.element).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
             element => {
                 this.addInfo('Save completed successfully.');
                 this.element = this.newElement();
@@ -215,7 +217,7 @@ export abstract class AbstractListComponent<T> implements OnInit {
 
     public delete(element: T) {
         this.clearMsgs();
-        this.service.delete(this.getId()).subscribe(
+        this.service.delete(this.getId()).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
             result => {
                 this.addInfo('Deletion completed successfully.');
                 this.element = this.newElement();
@@ -230,7 +232,7 @@ export abstract class AbstractListComponent<T> implements OnInit {
 
     public update() {
         this.clearMsgs();
-        this.service.update(this.element).subscribe(
+        this.service.update(this.element).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
             element => {
                 this.addInfo('Update completed successfully.');
                 this.element = this.newElement();

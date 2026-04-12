@@ -1,0 +1,116 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>Images</h3>
+</div>
+
+<div class="main">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <div class="content list">
+          <form>
+            <div class="row">
+              <div class="clearfix"></div>
+              <div class="col-sm-12">
+                <div class="filter-wrapper" (keydown.enter)="onSearchEnter($event, datatable)">
+                  <div class="fw-search-fields">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="name"
+                      [(ngModel)]="searchOriginalName"
+                      [ngModelOptions]="{ standalone: true }"
+                      pInputText />
+                  </div>
+                  <div class="fw-search-fields">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="table name"
+                      [(ngModel)]="searchTableName"
+                      [ngModelOptions]="{ standalone: true }"
+                      pInputText />
+                  </div>
+                  <div class="fw-search-fields">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="table key"
+                      [(ngModel)]="searchTableKey"
+                      [ngModelOptions]="{ standalone: true }"
+                      pInputText />
+                  </div>
+                  <div class="fw-actions">
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-search" (click)="reload(datatable)">Search</button>
+                      <button type="button" class="btn btn-reset" (click)="reset(datatable)">Undo</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="table-wrapper clearfix">
+              <p-table #datatable (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true" [resizableColumns]="true" [rows]="10" [totalRecords]="service.listSize" [value]="model">
+                <ng-template pTemplate="header">
+                  <tr class="sort-header">
+                    <th pResizableColumn>Index</th>
+                    <th pResizableColumn>Preview</th>
+                    <th pResizableColumn>Name</th>
+                    <th pResizableColumn>Mimetype</th>
+                    <th pResizableColumn>Formats</th>
+                    <th class="Operations">Operations</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="6">No results.</td>
+                  </tr>
+                </ng-template>
+                <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
+                  <tr>
+                    <td class="RowIndex">{{ rowIndex + 1 }}</td>
+                    <td>
+                      <img 
+                        [src]="previewPath(rowData.uuid)" 
+                        [alt]="rowData.original_name" 
+                        style="width:56px;height:56px;object-fit:cover;border-radius:6px;border:1px solid #ddd;cursor:pointer;" 
+                        (click)="openImagePreview(rowData)" />
+                    </td>
+                    <td>{{ rowData.original_name }}</td>
+                    <td>{{ getFormat(rowData.mimetype) }}</td>
+                    <td>{{ rowData.formats }}</td>
+                    <td>
+                      <button type="button" class="btn btn-success btn-sm" (click)="viewDocument(rowData)">
+                        <i aria-hidden="true" class="fa fa-eye"></i> View
+                      </button>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-dialog 
+  [(visible)]="showImageDialog" 
+  [header]="selectedImagePreview?.original_name" 
+  [modal]="true" 
+  [maximizable]="true"
+  [style]="{width: '90vw', height: '90vh'}"
+  (onHide)="closeImagePreview()">
+  @if (selectedImagePreview) {
+    <img 
+      [src]="previewPath(selectedImagePreview.uuid)" 
+      [alt]="selectedImagePreview.original_name" 
+      style="width:100%;height:100%;object-fit:contain;" />
+  }
+</p-dialog>

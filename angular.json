@@ -22,8 +22,8 @@
             ],
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
-              "src/favicon.ico",
               "src/assets",
+              { "glob": "**/*", "input": "public", "output": "/" },
               "src/config.html",
               "src",
               { "glob": "**/*", "input": "node_modules/monaco-editor/min", "output": "/assets/monaco/min/" },
@@ -34,7 +34,6 @@
               { "glob": "**/*", "input": "node_modules/tinymce/icons", "output": "/tinymce/icons/" }
             ],
             "styles": [
-              "src/custom-theme.scss",
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
               "node_modules/@fortawesome/fontawesome-free/css/v4-shims.min.css",
@@ -90,25 +89,6 @@
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
             "buildTarget": "snello-admin:build"
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.spec.json",
-            "karmaConfig": "src/karma.conf.js",
-            "styles": [
-              "src/styles.css"
-            ],
-            "scripts": [],
-            "assets": [
-              "src/favicon.ico",
-              "src/assets",
-              "src/config.html",
-              "src"
-            ]
           }
         }
       }

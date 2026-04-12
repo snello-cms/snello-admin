@@ -1,0 +1,138 @@
+<div class="form-group clearfix row" [formGroup]="group()">
+  <label class="col-sm-3">{{ field().name }}</label>
+  <div class="col-sm-9">
+    <div class="image-selector">
+      <button 
+        type="button" 
+        class="btn btn-primary" 
+        (click)="openDialog()">
+        Select Image
+      </button>
+      <button
+        type="button"
+        class="btn btn-secondary"
+        [disabled]="!canUpload || uploadInProgress"
+        (click)="triggerUpload(fileInput)">
+        {{ uploadInProgress ? 'Uploading...' : 'Upload New Image' }}
+      </button>
+      <input
+        #fileInput
+        type="file"
+        accept="image/png,image/jpeg"
+        class="hidden-file-input"
+        (change)="onFileSelected($event)" />
+      
+      @if (selectedDocument) {
+        <div class="selected-image mt-3">
+          @if (isPreviewAvailable(selectedDocument)) {
+            <img class="selected-thumb" [src]="getPreviewUrl(selectedDocument)" [alt]="selectedDocument.original_name" (error)="onPreviewError(selectedDocument, $event)" />
+          } @else {
+            <span class="no-preview">No preview</span>
+          }
+          <span class="image-name">{{ selectedDocument.original_name }}</span>
+          <button 
+            type="button" 
+            class="btn btn-sm btn-danger ms-2"
+            (click)="selectedDocument = null; field().value = null; field().name ? group().get(field().name)?.setValue(null) : null">
+            Remove
+          </button>
+        </div>
+      }
+    </div>
+    @if (!canUpload) {
+      <div class="upload-help mt-2">
+        Salva prima il record per poter caricare una nuova immagine.
+      </div>
+    }
+    @if (uploadError) {
+      <div class="upload-error mt-2">{{ uploadError }}</div>
+    }
+  </div>
+</div>
+
+<p-dialog 
+  [visible]="showDialog" 
+  [header]="'Select Image'" 
+  [modal]="true" 
+  (onHide)="closeDialog()"
+  [maximizable]="true"
+  [appendTo]="'body'"
+  [style]="{width: '90vw', height: '90vh'}">
+  
+  <div class="image-dialog-content">
+    <div class="search-bar mb-3">
+      <input 
+        type="text" 
+        pInputText 
+        placeholder="Search images by name..."
+        [(ngModel)]="searchText"
+        [ngModelOptions]="{ standalone: true }"
+        (keyup)="onSearchChange()"
+        class="w-100" />
+    </div>
+    <div class="search-grid mb-3">
+      <input
+        type="text"
+        pInputText
+        placeholder="Filter by table_name..."
+        [(ngModel)]="searchTableName"
+        [ngModelOptions]="{ standalone: true }"
+        (keyup)="onSearchChange()"
+        class="w-100" />
+      <input
+        type="text"
+        pInputText
+        placeholder="Filter by table_key..."
+        [(ngModel)]="searchTableKey"
+        [ngModelOptions]="{ standalone: true }"
+        (keyup)="onSearchChange()"
+        class="w-100" />
+    </div>
+
+    <p-table
+      [value]="documents"
+      [rows]="10"
+      [paginator]="true"
+      [lazy]="true"
+      (onLazyLoad)="loadDocuments($event)"
+      [loading]="loading"
+      [totalRecords]="totalRecords"
+      [globalFilterFields]="['original_name']">
+      
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Name</th>
+          <th>Preview</th>
+          <th>Action</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-doc>
+        <tr>
+          <td>{{ doc.original_name }}</td>
+          <td>
+            @if (isPreviewAvailable(doc)) {
+              <img class="popup-thumb" [src]="getPreviewUrl(doc)" [alt]="doc.original_name" (error)="onPreviewError(doc, $event)" />
+            } @else {
+              <span class="no-preview">No preview</span>
+            }
+          </td>
+          <td>
+            <button 
+              type="button" 
+              class="btn btn-sm btn-success"
+              (click)="selectDocument(doc)">
+              Select
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="3" class="text-center">No images found</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</p-dialog>

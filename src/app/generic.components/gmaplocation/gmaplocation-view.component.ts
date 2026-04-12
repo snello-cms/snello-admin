@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
-import { FieldDefinition } from '../../model/field-definition';
+import { FieldDefinition } from '../../models/field-definition';
 import { parsePoint } from '../map-utils';
 
 @Component({

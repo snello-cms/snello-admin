@@ -1,6 +1,7 @@
 import {AbstractService} from './abstract-service';
 import {ActivatedRoute, Router} from '@angular/router';
-import { ChangeDetectorRef, OnInit, Directive } from '@angular/core';
+import { ChangeDetectorRef, DestroyRef, OnInit, Directive, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {MessageService} from "primeng/api";
 
 @Directive()
@@ -10,6 +11,7 @@ export abstract class AbstractViewComponent<T> implements OnInit {
 
     public editMode = false;
     public element!: T;
+    protected readonly destroyRef = inject(DestroyRef);
 
     constructor(protected router: Router,
                 protected route: ActivatedRoute,
@@ -23,7 +25,7 @@ export abstract class AbstractViewComponent<T> implements OnInit {
         const id: string = this.route.snapshot.params['id'];
         if (id) {
             this.editMode = true;
-            this.service.find(id).subscribe(
+            this.service.find(id).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
                 element => {
                     this.element = <T>element;
                     this.postFind();

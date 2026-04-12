@@ -1,17 +1,19 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild, DestroyRef, inject} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
-import {FieldDefinition} from '../../model/field-definition';
-import {ApiService} from '../../service/api.service';
-import {DocumentService} from '../../service/document.service';
+import {FieldDefinition} from '../../models/field-definition';
+import {ApiService} from '../../services/api.service';
+import {DocumentService} from '../../services/document.service';
 import {from, Observable, of} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {MessageService} from 'primeng/api';
 import {DomSanitizer} from '@angular/platform-browser';
 import {FileUpload} from 'primeng/fileupload';
-import {Document} from '../../model/document';
+import {Document} from '../../models/document';
 
 @Component({
     selector: 'app-media',
+    standalone: true,
     template: `
         <div class="form-group clearfix row" [formGroup]="group">
           <label class="col-sm-3">{{ field.name }}</label>
@@ -53,6 +55,7 @@ export class MediaComponent implements OnInit {
     public uploadedFile: Document | null = null;
 
     @ViewChild('fileInput', {static: true}) fileInput?: FileUpload;
+    private destroyRef = inject(DestroyRef);
 
     constructor(private apiService: ApiService,
                 private documentService: DocumentService,
@@ -63,7 +66,7 @@ export class MediaComponent implements OnInit {
 
     ngOnInit() {
         if (this.field.value != null) {
-            this.showMedia(this.field.value).subscribe(
+            this.showMedia(this.field.value).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
                 result => {
                     this.fileInput?.clear();
                 }

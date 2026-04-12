@@ -13,9 +13,9 @@ export function addBaseTileLayer(map: L.Map): L.TileLayer {
 }
 
 export const LEAFLET_DEFAULT_ICON = L.icon({
-  iconRetinaUrl: '/assets/marker-icon-2x.png',
-  iconUrl: '/assets/marker-icon.png',
-  shadowUrl: '/assets/marker-shadow.png',
+  iconRetinaUrl: '/maps/marker-icon-2x.png',
+  iconUrl: '/maps/marker-icon.png',
+  shadowUrl: '/maps/marker-shadow.png',
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],

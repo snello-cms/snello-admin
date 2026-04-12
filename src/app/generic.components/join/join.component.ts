@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, DestroyRef, inject} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
-import {FieldDefinition} from '../../model/field-definition';
-import {ApiService} from '../../service/api.service';
+import {FieldDefinition} from '../../models/field-definition';
+import {ApiService} from '../../services/api.service';
 import {ActivatedRoute} from '@angular/router';
 import {Observable, of} from 'rxjs';
 import {tap} from 'rxjs/operators';
@@ -10,6 +11,7 @@ import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-join',
+    standalone: true,
     template: `
         @if (join$ | async; as value) {
           <div class="form-group clearfix" [formGroup]="group">
@@ -44,6 +46,8 @@ export class JoinComponent implements OnInit {
     name: string;
 
     filteredValue: any = null;
+
+    private destroyRef = inject(DestroyRef);
 
     constructor(private apiService: ApiService, private activatedRoute: ActivatedRoute) {
     }
@@ -89,6 +93,7 @@ export class JoinComponent implements OnInit {
 
     search(event: { query?: string }) {
         this.apiService.getJoinList(this.field, event.query, this.labelField)
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(options => {
                     if (options != null && options.length > 0) {
                         this.options = options;

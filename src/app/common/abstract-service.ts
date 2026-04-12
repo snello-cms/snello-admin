@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpParams, HttpResponse } from '@angular/common/http';
 import {catchError, map} from 'rxjs/operators';
 import {Observable, throwError} from 'rxjs';
+import { take } from 'rxjs/operators';
 import {MessageService} from 'primeng/api';
 
 export abstract class AbstractService<T> {
@@ -12,7 +13,7 @@ export abstract class AbstractService<T> {
 
 
     constructor(protected urlValue: Observable<string>, protected httpClient: HttpClient, protected messageService: MessageService) {
-        this.urlValue.subscribe(
+        this.urlValue.pipe(take(1)).subscribe(
             value => this.url = value
         );
         this.initialize();
@@ -186,9 +187,6 @@ export abstract class AbstractService<T> {
     public abstract buildSearch(): void;
 
     protected handleError(error: HttpErrorResponse): Observable<any> {
-        // in a real world app, we may send the error to some remote logging infrastructure
-        // instead of just logging it to the console
-        console.error(error);
         const errorMsg = this.extractErrorMessage(error);
         if (this.messageService) {
             this.messageService.add({

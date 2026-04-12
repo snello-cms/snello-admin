@@ -1,11 +1,11 @@
 import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import {Observable, of} from 'rxjs';
 import {map, switchMap} from 'rxjs/operators';
-import {FieldDefinition} from '../model/field-definition';
-import {ApiService} from '../service/api.service';
-import {DataListService} from '../service/data-list.service';
+import {FieldDefinition} from '../models/field-definition';
+import {ApiService} from '../services/api.service';
+import {DataListService} from '../services/data-list.service';
 import {Injectable} from '@angular/core';
-import {MetadataService} from '../service/metadata.service';
+import {MetadataService} from '../services/metadata.service';
 import { requiredRouteParam } from '../common/route-params.util';
 
 @Injectable({

@@ -1,13 +1,14 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, OnInit, inject, input, output} from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
-import {FieldDefinition} from '../../model/field-definition';
+import {FieldDefinition} from '../../models/field-definition';
 import { DynamicFieldDirective } from '../dynamic-field/dynamic-field.directive';
 
 @Component({
     selector: 'dynamic-search-form',
+    standalone: true,
     template: `
     <form class="dynamic-form" [formGroup]="searchForm" (submit)="onSubmit($event)">
-      @for (field of fields; track field) {
+      @for (field of fields(); track field) {
         <ng-container dynamicField [field]="field" [group]="searchForm">
         </ng-container>
       }
@@ -18,12 +19,11 @@ import { DynamicFieldDirective } from '../dynamic-field/dynamic-field.directive'
 })
 export class DynamicSearchFormComponent implements OnInit {
 
-  @Input() fields: FieldDefinition[] = [];
-  @Output() submit: EventEmitter<any> = new EventEmitter<any>();
+  fields = input<FieldDefinition[]>([]);
+  submit = output<any>();
   searchForm: UntypedFormGroup;
 
-  constructor(private fb: UntypedFormBuilder) {
-  }
+  private fb = inject(UntypedFormBuilder);
 
   get value() {
     return this.searchForm.value;
@@ -35,7 +35,7 @@ export class DynamicSearchFormComponent implements OnInit {
 
   createControl() {
     const group = this.fb.group({});
-    this.fields.forEach(field => {
+    this.fields().forEach(field => {
       if (!field.name) {
         return;
       }

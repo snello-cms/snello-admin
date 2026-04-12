@@ -123,7 +123,7 @@ export const API_SERVICE_PATH = 'api_service_path';
 export const LOGIN_API_PATH = 'login_api_path';
 export const CHANGEPASSWORD_API_PATH = 'changepassword_api_path';
 export const RESETPASSWORD_API_PATH = 'resetpassword_api_path';
-export const APP_VERSION = '4.0.1';
+export const APP_VERSION = '4.1.0';
 export const CONFIG_PATH = '/assets/config.json';
 export const DROPPABLE_API_PATH = 'droppable_api_path';
 export const DRAGGABLE_API_PATH = 'draggable_api_path';
@@ -171,6 +171,14 @@ const ADMIN_ITEMS_LEGACY: any[] = [
         section: 'document',
         name: 'Document',
         summary: 'Documents management',
+        roles: 'Admin, documents_edit, documents_view'
+    },
+    {
+        id: 'list',
+        icon: 'fa fa-image',
+        section: 'images',
+        name: 'Images',
+        summary: 'Images management',
         roles: 'Admin, documents_edit, documents_view'
     },
     {

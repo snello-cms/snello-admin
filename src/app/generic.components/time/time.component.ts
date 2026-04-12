@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
-import {FieldDefinition} from '../../model/field-definition';
+import {FieldDefinition} from '../../models/field-definition';
 import { DatePicker } from 'primeng/datepicker';
 
 @Component({
     selector: "app-time",
+    standalone: true,
     template: `
         <div class="form-group clearfix row" [formGroup]="group">
             <label class="col-sm-3">{{ field.name }}</label>
