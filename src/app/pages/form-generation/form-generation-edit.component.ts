@@ -64,6 +64,8 @@ export class FormGenerationEditComponent implements OnInit {
                 const resolved = (data as { fieldDefinitionValorized?: FieldDefinition[] })?.fieldDefinitionValorized;
                 this.regConfig = resolved ?? [];
                 this.unarshallFields();
+                this.applyDefaultValues();
+                this.syncFormValues();
                 if (this.cloneUuid) {
                     this.tryLoadCloneSource();
                 }
@@ -362,6 +364,32 @@ export class FormGenerationEditComponent implements OnInit {
         return objToSave;
     }
 
+
+    private applyDefaultValues() {
+        if (this.uuid) {
+            return;
+        }
+        for (const field of this.regConfig) {
+            const defaultVal = (field.default_value ?? '').trim();
+            if (defaultVal === '') {
+                continue;
+            }
+            if (field.value != null && field.value !== '') {
+                continue;
+            }
+            if (defaultVal.toLowerCase() === 'now()') {
+                if (field.type === 'date' || field.type === 'datetime') {
+                    field.value = new Date();
+                }
+            } else if (field.type === 'date') {
+                field.value = this.parseDate(defaultVal);
+            } else if (field.type === 'datetime') {
+                field.value = this.parseDateTime(defaultVal);
+            } else {
+                field.value = defaultVal;
+            }
+        }
+    }
 
     // TODO: lo riusciamo a portare in tags.component.ts?
     unarshallFields() {
