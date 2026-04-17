@@ -1,5 +1,7 @@
 import {SelectItem} from 'primeng/api';
 
+export const APP_VERSION = '4.1.1';
+
 const FA6_BRAND_ICONS = new Set<string>([
     '500px', 'adn', 'amazon', 'android', 'angellist', 'apple', 'bandcamp', 'behance', 'behance-square',
     'bitbucket', 'bitbucket-square', 'black-tie', 'bluetooth', 'bluetooth-b', 'buysellads', 'cc-amex',
@@ -123,7 +125,7 @@ export const API_SERVICE_PATH = 'api_service_path';
 export const LOGIN_API_PATH = 'login_api_path';
 export const CHANGEPASSWORD_API_PATH = 'changepassword_api_path';
 export const RESETPASSWORD_API_PATH = 'resetpassword_api_path';
-export const APP_VERSION = '4.1.0';
+
 export const CONFIG_PATH = '/assets/config.json';
 export const DROPPABLE_API_PATH = 'droppable_api_path';
 export const DRAGGABLE_API_PATH = 'draggable_api_path';
