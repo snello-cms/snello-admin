@@ -1,6 +1,6 @@
 # Snello Admin
 
-![Snello Logo](public/images/snello.png)
+![Snello Logo](docs/snello-logo.svg)
 
 [![Angular](https://img.shields.io/badge/Angular-21.2.7-DD0031?logo=angular&logoColor=white)](https://angular.io/)
 [![Node](https://img.shields.io/badge/Node-v24.11.1-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
