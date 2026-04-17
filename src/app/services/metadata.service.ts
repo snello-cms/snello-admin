@@ -111,4 +111,18 @@ export class MetadataService extends AbstractService<Metadata> {
                 catchError(this.handleError)
             );
     }
+
+    public exportMetadatas(metadataUuids: string[]): Observable<any> {
+        return this.httpClient
+            .post('/api/metadatas/export', {
+                metadatas: metadataUuids
+            })
+            .pipe(catchError(this.handleError.bind(this)));
+    }
+
+    public importMetadatas(payload: any): Observable<any> {
+        return this.httpClient
+            .post('/api/metadatas/import', payload)
+            .pipe(catchError(this.handleError.bind(this)));
+    }
 }

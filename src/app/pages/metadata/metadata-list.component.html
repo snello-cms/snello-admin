@@ -12,7 +12,15 @@
   <p>
 
   </p>
-  <button type="button" class="btn btn-add pull-right btn-block" (click)="new()"><i class="fa fa-plus-circle"></i> Add
+  <button type="button" class="btn btn-add btn-block" style="display: block; width: 100%; margin-bottom: 8px;" (click)="new()"><i class="fa fa-plus-circle"></i> Add
+  </button>
+
+  <button type="button" class="btn btn-search btn-block" style="display: block; width: 100%; margin-bottom: 8px;" (click)="toggleExportMode()">
+    <i class="fa fa-download"></i> Export
+  </button>
+
+  <button type="button" class="btn btn-reset btn-block" style="display: block; width: 100%;" (click)="toggleImportMode()">
+    <i class="fa fa-upload"></i> Import
   </button>
 </div>
 
@@ -24,6 +32,69 @@
 
       <div class="col-md-12 col-sm-12">
         <div class="content list">
+
+          @if (importMode) {
+            <div class="panel panel-default" style="margin-bottom: 16px;">
+              <div class="panel-heading">
+                <strong>Import Metadata JSON</strong>
+              </div>
+              <div class="panel-body">
+                <div class="row" style="margin-bottom: 10px;">
+                  <div class="col-sm-8">
+                    <input type="file" accept="application/json,.json" class="form-control" (change)="onImportFileSelected($event)" />
+                  </div>
+                  <div class="col-sm-4">
+                    <button
+                      type="button"
+                      class="btn btn-search btn-block"
+                      [disabled]="isImporting || importRows.filter(row => !row.exists).length === 0"
+                      (click)="importMetadatasFromFile()">
+                      Import New Metadatas
+                    </button>
+                  </div>
+                </div>
+
+                @if (importFileName) {
+                  <p><strong>Selected file:</strong> {{ importFileName }}</p>
+                }
+
+                @if (isLoadingExistingMetadatas) {
+                  <p>Checking existing metadatas...</p>
+                }
+
+                @if (importRows.length > 0) {
+                  <div class="table-responsive">
+                    <table class="table table-striped table-bordered">
+                      <thead>
+                      <tr>
+                        <th>Table Name</th>
+                        <th>UUID</th>
+                        <th>Fields</th>
+                        <th>Status</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      @for (row of importRows; track $index) {
+                        <tr>
+                          <td>{{ row.tableName }}</td>
+                          <td>{{ row.uuid || '-' }}</td>
+                          <td>{{ row.fieldsCount }}</td>
+                          <td>
+                            @if (row.exists) {
+                              <span class="text-danger"><strong>Already exists - will be skipped</strong></span>
+                            } @else {
+                              <span class="text-success"><strong>New - ready to import</strong></span>
+                            }
+                          </td>
+                        </tr>
+                      }
+                      </tbody>
+                    </table>
+                  </div>
+                }
+              </div>
+            </div>
+          }
 
           <form>
 
@@ -55,6 +126,14 @@
 
                 <ng-template let-columns pTemplate="header">
                   <tr class="sort-header">
+                    @if (exportMode) {
+                      <th pResizableColumn>
+                        <input
+                          type="checkbox"
+                          [checked]="areAllVisibleRowsSelected()"
+                          (change)="toggleSelectAllVisibleRows($any($event.target).checked)" />
+                      </th>
+                    }
                     <th pResizableColumn>Index</th>
                     <th pResizableColumn>Table Name</th>
                     <th pResizableColumn>Table Type</th>
@@ -67,13 +146,21 @@
                 </ng-template>
                 <ng-template pTemplate="emptymessage">
                   <tr>
-                    <td colspan="8">
+                    <td [attr.colspan]="exportMode ? 9 : 8">
                       No results.
                     </td>
                   </tr>
                 </ng-template>
                 <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
                   <tr>
+                    @if (exportMode) {
+                      <td>
+                        <input
+                          type="checkbox"
+                          [checked]="isMetadataSelectedForExport(rowData)"
+                          (change)="onExportSelectionChange(rowData, $any($event.target).checked)" />
+                      </td>
+                    }
                     <td class="RowIndex">{{ rowIndex + 1 }}</td>
                     <td class="ui-resizable-column">
                       <button type="button" class="btn btn-value" (click)="view(rowData)" title="View">
@@ -121,6 +208,19 @@
                 </ng-template>
               </p-table>
             </div>
+
+            @if (exportMode) {
+              <div style="margin-top: 16px; text-align: right;">
+                <p><strong>Selected metadatas:</strong> {{ selectedExportUuids.size }}</p>
+                <button
+                  type="button"
+                  class="btn btn-search"
+                  [disabled]="selectedExportUuids.size === 0 || isExporting"
+                  (click)="exportSelectedMetadatas()">
+                  Export All
+                </button>
+              </div>
+            }
           </form>
         </div>
       </div>
