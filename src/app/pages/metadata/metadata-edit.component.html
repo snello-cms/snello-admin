@@ -199,12 +199,12 @@
               <div class="btn-group btn-actions pull-right">
                 @if (!element.uuid) {
                   <button (click)="save()" [disabled]="!theform.form.valid"
-                    class="btn btn-success" type="button">Save
+                    class="btn btn-search" type="button">Save
                   </button>
                 }
                 @if (element.uuid) {
                   <button (click)="update()" [disabled]="!theform.form.valid"
-                    class="btn btn-success" type="button">Modify
+                    class="btn btn-search" type="button">Modify
                   </button>
                 }
                 @if (element.uuid) {
@@ -212,7 +212,7 @@
                     Delete
                   </button>
                 }
-                <button (click)="navigateToList()" class="btn btn-default" type="button">Undo</button>
+                <button (click)="navigateToList()" class="btn btn-reset" type="button">Undo</button>
               </div>
             </form>
 
