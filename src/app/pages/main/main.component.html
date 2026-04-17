@@ -20,7 +20,7 @@
             <div class="col-md-6 text-right">
                 snello admin - {{version()}}
                 <a href="http://snello.io/" target="_blank">
-                    <img class="logo" src="{{asset_path}}/images/snello.png">
+                    <img class="logo" [src]="resolveAssetUrl('images/snello.png')">
                 </a>
             </div>
         </div>

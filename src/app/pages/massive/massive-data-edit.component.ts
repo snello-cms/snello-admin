@@ -272,11 +272,11 @@ export class MassiveDataEditComponent implements OnInit {
         }
 
         this.savingRows.set(rowKey, true);
-        const dataToSave = {
+        const dataToSave = this.normalizePayloadForSave({
             ...rowData,
             ...rowForm.value,
             ...(this.modifiedRows.get(rowKey) || {})
-        };
+        });
 
         this.apiService.update(this.metadataName, rowKey, dataToSave).subscribe(
             response => {
@@ -333,11 +333,11 @@ export class MassiveDataEditComponent implements OnInit {
         rowsToSave.forEach(row => {
             const rowKey = this.getTableKeyValue(row);
             const rowForm = this.getRowFormGroup(row);
-            const dataToSave = {
+            const dataToSave = this.normalizePayloadForSave({
                 ...row,
                 ...rowForm.value,
                 ...(this.modifiedRows.get(rowKey) || {})
-            };
+            });
 
             this.apiService.update(this.metadataName, rowKey, dataToSave).subscribe(
                 response => {
@@ -420,6 +420,42 @@ export class MassiveDataEditComponent implements OnInit {
 
     getDisplayLabel(field: FieldDefinition): string {
         return field.label || field.name || '';
+    }
+
+    private normalizePayloadForSave(payload: any): any {
+        const normalized = { ...payload };
+
+        for (const field of this.selectedFields) {
+            if (!field?.name || field.type !== 'realtionships') {
+                continue;
+            }
+            normalized[field.name] = this.normalizeRelationshipsValue(normalized[field.name]);
+        }
+
+        return normalized;
+    }
+
+    private normalizeRelationshipsValue(value: unknown): string | null {
+        if (value == null) {
+            return null;
+        }
+
+        if (Array.isArray(value)) {
+            return value
+                .map(entry => String(entry ?? '').trim())
+                .filter(Boolean)
+                .join(',');
+        }
+
+        if (typeof value === 'string') {
+            return value
+                .split(',')
+                .map(entry => entry.trim())
+                .filter(Boolean)
+                .join(',');
+        }
+
+        return String(value);
     }
 
 }

@@ -38,4 +38,16 @@ export class MainComponent {
         return APP_VERSION;
     }
 
+    resolveAssetUrl(relativePath: string): string {
+        const path = relativePath.replace(/^\/+/, '');
+        const basePath = (this.asset_path ?? '').trim();
+
+        if (!basePath) {
+            return path;
+        }
+
+        const normalizedBase = basePath.endsWith('/') ? basePath.slice(0, -1) : basePath;
+        return `${normalizedBase}/${path}`;
+    }
+
 }

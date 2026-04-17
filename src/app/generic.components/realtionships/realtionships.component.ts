@@ -201,9 +201,9 @@ export class RealtionshipsComponent implements OnInit {
             this.currentValues.push(value);
             const fieldName = this.field.name;
             if (fieldName) {
-                this.group.get(fieldName)?.setValue([...this.currentValues]);
+                this.group.get(fieldName)?.setValue(this.currentValues.join(','));
             }
-            this.field.value = this.currentValues;
+            this.field.value = this.currentValues.join(',');
         }
         this.dialogVisible = false;
     }
@@ -212,9 +212,9 @@ export class RealtionshipsComponent implements OnInit {
         this.currentValues = this.currentValues.filter(rel => rel !== value);
         const fieldName = this.field.name;
         if (fieldName) {
-            this.group.get(fieldName)?.setValue([...this.currentValues]);
+            this.group.get(fieldName)?.setValue(this.currentValues.join(','));
         }
-        this.field.value = this.currentValues;
+        this.field.value = this.currentValues.join(',');
     }
 
     onRowsSearchEnter(event: KeyboardEvent) {
@@ -374,10 +374,15 @@ export class RealtionshipsComponent implements OnInit {
         const value = fieldName ? this.group.get(fieldName)?.value : this.field.value;
         
         if (Array.isArray(value)) {
-            this.currentValues = value;
+            this.currentValues = value
+                .filter((entry: unknown): entry is string => typeof entry === 'string')
+                .map(entry => entry.trim())
+                .filter(Boolean);
         } else if (typeof value === 'string' && value) {
-            // Support legacy single-string format
-            this.currentValues = [value];
+            this.currentValues = value
+                .split(',')
+                .map(entry => entry.trim())
+                .filter(Boolean);
         } else {
             this.currentValues = [];
         }
