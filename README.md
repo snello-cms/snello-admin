@@ -14,6 +14,7 @@ It provides a full UI to configure and manage every aspect of the headless CMS w
 - **Metadata management** — create and edit tables, configure columns, set display options and icons
 - **Field Definitions** — define custom field types with validation rules and UI components
 - **Dynamic Forms** — auto-generated create/edit forms driven by field definitions
+- **Massive Modifications** — multi-step bulk editing flow to update many records inline with per-row or global save actions
 - **Select Queries** — build and test named SQL-like query templates exposed as API endpoints
 - **Conditions** — define filter rules applied at runtime to REST queries
 - **Document & Image management** — upload, organise and preview files and images stored by the API
@@ -23,6 +24,29 @@ It provides a full UI to configure and manage every aspect of the headless CMS w
 - **TinyMCE rich-text editor** — full WYSIWYG editing for long-text fields
 - **Google Maps components** — point and path pickers for geo-enabled metadata
 - **Chat widget** — built-in Snello chat widget panel
+
+## Massive Modifications
+
+The **Massive Modifications** area is designed for fast bulk updates on existing data records.
+
+### Workflow
+
+1. Open `/massive/metadata` and choose the metadata table to work on.
+2. Continue to `/massive/attributes/:name` and select the fields you want to edit.
+3. Open `/massive/edit/:name` to edit values directly in a paginated table.
+
+### What You Can Do
+
+- **Inline editing by field type** — selected fields are rendered with the same dynamic field system used across the app.
+- **Save per row** — each row has a dedicated save action.
+- **Save all modified rows** — persist all pending edits in one action with progress feedback.
+- **Save and exit** — save pending changes and return to the admin home.
+- **Unsaved change awareness** — the UI tracks modified rows and warns before leaving with pending edits.
+
+### Notes
+
+- The feature uses the same field-definition resolver logic as form generation routes.
+- Selected attributes are preserved between steps via router state and session storage fallback.
 
 ## Field Definition Types
 
