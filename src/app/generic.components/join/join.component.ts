@@ -23,7 +23,10 @@ import { AsyncPipe } from '@angular/common';
                 <p-autoComplete
                   [suggestions]="options" (completeMethod)="search($event)" [size]="30"
                                     [optionLabel]="labelField" [optionValue]="field.join_table_key" [dataKey]="field.join_table_key" [dropdown]="true"
-                  [formControlName]="field.name" [forceSelection]="true">
+                                    appendTo="body"
+                                    [autoZIndex]="true"
+                                    [baseZIndex]="3000"
+                                    [formControlName]="field.name" [forceSelection]="true">
                 </p-autoComplete>
               </div>
             </div>

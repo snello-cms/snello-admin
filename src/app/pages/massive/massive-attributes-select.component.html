@@ -1,0 +1,67 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>Massive Modifications - Select Attributes</h3>
+  <p>Metadata: <strong>{{ metadataName }}</strong></p>
+  <p>Select the attributes you want to modify</p>
+</div>
+
+<div class="main">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <div class="content">
+
+          @if (fieldDefinitions && fieldDefinitions.length > 0) {
+            <div class="attributes-container">
+              <div class="attributes-list">
+                @for (field of fieldDefinitions; track field.uuid) {
+                  <div class="attribute-item" [class.selected]="isFieldSelected(field)" (click)="onFieldToggle(field)">
+                    <input 
+                      type="checkbox"
+                      [checked]="isFieldSelected(field)"
+                      (click)="$event.stopPropagation()"
+                      (change)="onFieldToggle(field)"
+                      class="field-checkbox"
+                    />
+                    <label class="attribute-label">
+                      <strong>{{ field.label || field.name }}</strong>
+                      @if (field.type) {
+                        <span class="type-badge">{{ field.type }}</span>
+                      }
+                      @if (field.mandatory) {
+                        <span class="mandatory-badge">Required</span>
+                      }
+                    </label>
+                  </div>
+                }
+              </div>
+            </div>
+          } @else {
+            <p>No attributes available for this metadata.</p>
+          }
+
+          <div class="form-actions">
+              <button type="button"
+                class="btn btn-reset"
+                (click)="goBack()">
+                <i aria-hidden="true" class="fa fa-arrow-left"></i>
+                Back
+            </button>
+              <button type="button"
+                class="btn btn-search"
+                    (click)="proceedToEdit()"
+                    [disabled]="selectedFields.length === 0">
+                Next
+                <i aria-hidden="true" class="fa fa-arrow-right"></i>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

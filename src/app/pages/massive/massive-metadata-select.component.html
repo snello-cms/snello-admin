@@ -1,0 +1,74 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>Massive Modifications - Select Metadata</h3>
+  <p>Select a metadata to start massive modifications</p>
+</div>
+
+<div class="main">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <div class="content list">
+
+          <form>
+            <div class="row">
+              <div class="clearfix"></div>
+              <div class="col-sm-12">
+                <div class="filter-wrapper" (keydown.enter)="onSearchEnter($event, datatable)">
+                  <div class="fw-search-fields">
+                    @if (service.search) {
+                      <input id="table_name" name="table_name" placeholder="table name" type="text" class="form-control" [(ngModel)]="service.search.table_name_contains" pInputText #nome="ngModel"/>
+                    }
+                  </div>
+                  <div class="fw-actions">
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-search" (click)="reload(datatable)">Search</button>
+                      <button type="button" class="btn btn-reset" (click)="reset(datatable)">Undo</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="table-wrapper clearfix">
+              <p-table #datatable (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true" [resizableColumns]="true" [rows]="10" [totalRecords]="service.listSize" [value]="model">
+                <ng-template let-columns pTemplate="header">
+                  <tr class="sort-header">
+                    <th pResizableColumn>Index</th>
+                    <th pResizableColumn>Table Name</th>
+                    <th pResizableColumn>Description</th>
+                    <th pResizableColumn>Fields</th>
+                    <th class="Operations">Actions</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="5">No metadata found.</td>
+                  </tr>
+                </ng-template>
+                <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
+                  <tr>
+                    <td class="RowIndex">{{ rowIndex + 1 }}</td>
+                    <td class="ui-resizable-column">{{ rowData.table_name }}</td>
+                    <td class="ui-resizable-column">{{ rowData.description }}</td>
+                    <td class="ui-resizable-column">{{ getMetadataFieldCount(rowData) }} fields</td>
+                    <td class="Operations">
+                      <button type="button" class="btn btn-default btn-square" (click)="selectMetadata(rowData)" title="Select metadata">
+                        <i aria-hidden="true" class="fa fa-check"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

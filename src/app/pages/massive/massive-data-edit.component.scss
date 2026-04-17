@@ -1,0 +1,196 @@
+.filter-wrapper {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filter-wrapper-spaced {
+  margin-bottom: 20px;
+}
+
+.fw-search-fields {
+  flex: 1;
+  min-width: 200px;
+}
+
+.table-wrapper {
+  margin-top: 20px;
+  overflow-x: auto;
+}
+
+.data-cell {
+  padding: 8px;
+  min-width: 260px;
+  vertical-align: top;
+  
+  ::ng-deep {
+    .form-group {
+      margin-bottom: 0;
+      display: block;
+    }
+
+    .form-group > label,
+    .form-group .col-sm-3 {
+      display: none;
+    }
+
+    .form-group .col-sm-9 {
+      width: 100%;
+      max-width: 100%;
+      flex: 0 0 100%;
+      padding: 0;
+    }
+
+    .p-inputtext,
+    .p-inputtextarea,
+    .p-select,
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    input[type="password"],
+    input[type="date"],
+    input[type="time"],
+    input[type="datetime-local"],
+    textarea,
+    select {
+      width: 100%;
+      max-width: 100%;
+      padding: 6px;
+      border: 1px solid #d0d0d0;
+      border-radius: 4px;
+      font-size: 14px;
+      
+      &:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+      }
+    }
+  }
+}
+
+.display-value {
+  display: block;
+  padding: 6px 8px;
+  color: #666;
+  word-break: break-word;
+}
+
+.modified-row {
+  background-color: #f3f5f7 !important;
+  
+  td {
+    border-left: 3px solid #9daab6;
+  }
+}
+
+.mandatory-indicator {
+  color: #d32f2f;
+  font-weight: bold;
+  margin-left: 4px;
+}
+
+.bulk-actions {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  border-left: 4px solid #007bff;
+
+  .unsaved-wrapper {
+    margin-bottom: 10px;
+  }
+
+  .unsaved-warning {
+    color: #31394d;
+    font-weight: 600;
+    margin: 0;
+
+    i {
+      color: #f5445f;
+      margin-right: 6px;
+    }
+  }
+  
+  .btn-group {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 10px;
+    
+    button {
+      min-width: 140px;
+    }
+  }
+}
+
+.Operations {
+  text-align: center;
+  white-space: nowrap;
+  
+  button {
+    margin: 0 2px;
+  }
+
+  .btn.btn-square {
+    background-color: #31394d;
+    border-color: #31394d;
+    color: #fff;
+  }
+
+  .btn.btn-square:disabled {
+    background-color: #9daab6;
+    border-color: #9daab6;
+    color: #fff;
+    opacity: 1;
+  }
+}
+
+.sort-header {
+  background-color: #f5f5f5;
+  
+  th {
+    font-weight: 600;
+    color: #333;
+    padding: 12px 8px;
+    border-bottom: 2px solid #e0e0e0;
+  }
+}
+
+.col-index {
+  width: 50px;
+}
+
+.col-action {
+  width: 100px;
+}
+
+/* Keep date/time picker overlays above table rows while editing massive grid */
+:host ::ng-deep .p-datepicker,
+:host ::ng-deep .p-datepicker-overlay {
+  z-index: 3000 !important;
+}
+
+:host ::ng-deep .p-autocomplete-overlay,
+:host ::ng-deep .p-autocomplete-panel {
+  z-index: 3000 !important;
+}
+
+@media (max-width: 768px) {
+  .bulk-actions {
+    .btn-group {
+      flex-direction: column;
+      
+      button {
+        width: 100%;
+      }
+    }
+  }
+
+  .table-wrapper {
+    font-size: 12px;
+    
+    td, th {
+      padding: 4px;
+    }
+  }
+}

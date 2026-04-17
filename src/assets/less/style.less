@@ -973,6 +973,64 @@ table {
     border: 1px solid @lightblue;
 }
 
+/* Global alignment layer: keep Bootstrap variants consistent with CMS palette */
+.btn-secondary {
+    color: @white;
+    background-color: @grey_snello;
+    border-color: @grey_snello;
+    border: 1px solid @grey_snello;
+    i {
+        color: @white;
+    }
+    &:hover {
+        color: @white;
+        background-color: @red_snello;
+        border-color: @red_snello;
+        i {
+            color: @white;
+        }
+    }
+}
+
+.btn-info {
+    color: @white;
+    background-color: @grey_snello;
+    border-color: @grey_snello;
+    border: 1px solid @grey_snello;
+    i {
+        color: @white;
+    }
+    &:hover {
+        color: @white;
+        background-color: @red_snello;
+        border-color: @red_snello;
+        i {
+            color: @white;
+        }
+    }
+}
+
+.btn-outline-secondary,
+.btn-outline-primary,
+.btn-outline-success,
+.btn-outline-info {
+    color: @grey_snello;
+    background-color: transparent;
+    border-color: fade(@grey_snello, 65%);
+    border: 1px solid fade(@grey_snello, 65%);
+    i {
+        color: @grey_snello;
+    }
+    &:hover {
+        color: @white;
+        background-color: @red_snello;
+        border-color: @red_snello;
+        i {
+            color: @white;
+        }
+    }
+}
+
 
 .btn-edit {
     color: @red_snello;
@@ -990,6 +1048,92 @@ table {
             color: @white;
         }
     }
+}
+
+/* PrimeNG ToggleSwitch alignment with CMS palette */
+.p-toggleswitch {
+    .p-toggleswitch-input {
+        accent-color: @red_snello;
+    }
+
+    .p-toggleswitch-slider {
+        background: fade(@grey_snello, 45%) !important;
+        border-color: fade(@grey_snello, 45%) !important;
+    }
+
+    .p-toggleswitch-handle {
+        background: @white !important;
+    }
+
+    &.p-toggleswitch-checked {
+        .p-toggleswitch-slider {
+            background: @red_snello !important;
+            border-color: @red_snello !important;
+        }
+    }
+
+    .p-toggleswitch-input:checked + .p-toggleswitch-slider {
+        background: @red_snello !important;
+        border-color: @red_snello !important;
+    }
+
+    &:not(.p-disabled):hover {
+        .p-toggleswitch-slider {
+            background: fade(@grey_snello, 60%) !important;
+            border-color: fade(@grey_snello, 60%) !important;
+        }
+    }
+
+    &:not(.p-disabled).p-toggleswitch-checked:hover {
+        .p-toggleswitch-slider {
+            background: darken(@red_snello, 8%) !important;
+            border-color: darken(@red_snello, 8%) !important;
+        }
+    }
+
+    &:not(.p-disabled) .p-toggleswitch-input:checked + .p-toggleswitch-slider:hover,
+    &:not(.p-disabled):hover .p-toggleswitch-input:checked + .p-toggleswitch-slider {
+        background: darken(@red_snello, 8%) !important;
+        border-color: darken(@red_snello, 8%) !important;
+    }
+}
+
+/* PrimeNG global anti-green alignment: map success/checked states to CMS pink/grey */
+.p-button.p-button-success,
+.p-button.p-button-primary,
+.p-fileupload .p-fileupload-choose-button,
+.p-fileupload-choose-button.p-button {
+    background: @grey_snello !important;
+    border-color: @grey_snello !important;
+    color: @white !important;
+}
+
+.p-button.p-button-success:hover,
+.p-button.p-button-primary:hover,
+.p-fileupload .p-fileupload-choose-button:hover,
+.p-fileupload-choose-button.p-button:hover {
+    background: @red_snello !important;
+    border-color: @red_snello !important;
+    color: @white !important;
+}
+
+.p-fileupload .p-fileupload-choose-button .p-button-icon,
+.p-fileupload .p-fileupload-choose-button .p-button-label,
+.p-fileupload-choose-button.p-button .p-button-icon,
+.p-fileupload-choose-button.p-button .p-button-label,
+.p-button.p-button-success .p-button-icon,
+.p-button.p-button-success .p-button-label,
+.p-button.p-button-primary .p-button-icon,
+.p-button.p-button-primary .p-button-label {
+    color: @white !important;
+}
+
+.p-checkbox.p-checkbox-checked .p-checkbox-box,
+.p-radiobutton.p-radiobutton-checked .p-radiobutton-box,
+.p-radiobutton.p-radiobutton-checked .p-radiobutton-box .p-radiobutton-icon,
+.p-progressbar .p-progressbar-value {
+    background: @red_snello !important;
+    border-color: @red_snello !important;
 }
 
 [_nghost-c3] .ui-fileupload {
@@ -1097,7 +1241,8 @@ table {
     padding: 15px 20px;
     border: 1px solid #ddd;
     text-decoration: none !important;
-    height: 100px;
+    min-height: 100px;
+    height: auto;
     background-color: @white;
     margin-bottom: 30px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -1114,6 +1259,8 @@ table {
         font-size: 18px;
         margin-top: 0px;
         padding-top: 0px;
+        padding-right: 56px;
+        overflow-wrap: anywhere;
     }
     a {
         text-decoration: none !important;
@@ -1132,8 +1279,9 @@ table {
     }
 
     p {
-
-        width: 90%;
+        width: auto;
+        padding-right: 56px;
+        overflow-wrap: anywhere;
     }
 }
 
@@ -1178,6 +1326,23 @@ table {
     p {
 
         width: 90%;
+    }
+}
+
+@media (max-width: 768px) {
+    .card-home {
+        padding: 14px 14px;
+
+        h3,
+        p {
+            padding-right: 40px;
+        }
+
+        i {
+            right: 12px;
+            top: 14px;
+            font-size: 20px;
+        }
     }
 }
 
@@ -1249,12 +1414,12 @@ button {
 
 @media screen and (max-width: 1024px) {
     .main {
-        margin-left: 0px;
+        margin-left: 70px;
         padding: 36px 0px;
     }
     .sidebar {
-        display: none;
-        visibility: hidden;
+        display: block;
+        visibility: visible;
     }
 
     .header .nav-tabs {
@@ -1270,7 +1435,8 @@ button {
     position: relative;
     z-index: 1;
     top: 0px;
-    left: 0px;
+    left: 70px;
+    width: calc(100% - 70px);
     background: #E5E9F2;
     align-items: stretch;
     border-right: 1px solid #E6ECF1;

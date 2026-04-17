@@ -109,6 +109,55 @@ import { AuthenticationService } from '../../services/authentication.service';
             font-weight: 700;
             text-transform: uppercase;
         }
+
+        .account-logout-inline .fa-sign-out {
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .header .nav-tabs > li > a {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .header .nav-tabs > li > a i {
+            margin-right: 8px;
+        }
+
+        @media (max-width: 1024px) {
+            .header .nav-tabs > li > a {
+                font-size: 0;
+                margin: 0 6px;
+                min-width: 36px;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .header .nav-tabs > li > a i {
+                font-size: 18px;
+                margin: 0;
+            }
+
+            .header .nav-tabs > li > a .nav-text {
+                display: none;
+            }
+
+            .account-logout-inline .logout-text {
+                display: none;
+            }
+
+            .user-menu {
+                right: 10px;
+                gap: 8px;
+            }
+
+            .account-logout-inline {
+                width: 36px;
+                height: 36px;
+                justify-content: center;
+            }
+        }
     `]
 })
 export class SideBarComponent {

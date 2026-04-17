@@ -197,6 +197,14 @@ const ADMIN_ITEMS_LEGACY: any[] = [
         summary: 'Links Management',
         roles: 'Admin, links_edit, links_view'
     },
+    {
+        id: 'metadata',
+        icon: 'fa fa-pencil-square',
+        section: 'massive',
+        name: 'Massive',
+        summary: 'Massive Modifications - Edit multiple records at once',
+        roles: 'Admin, metadatas_edit, metadatas_view'
+    },
     // {
     //     id: 'list',
     //     icon: 'fa fa-puzzle-piece',

@@ -6,7 +6,13 @@
       </a>
     </li>
     <li class="list-group-item">
-      <a href="" title="Search metadata" (click)="toggleSearch($event)">
+      <a
+        title="Search metadata"
+        role="button"
+        tabindex="0"
+        (click)="toggleSearch($event)"
+        (keydown.enter)="toggleSearch($event)"
+        (keydown.space)="toggleSearch($event)">
         <i class="fa fa-search" aria-hidden="true"></i>
       </a>
     </li>

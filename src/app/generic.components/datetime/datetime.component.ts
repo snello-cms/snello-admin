@@ -12,6 +12,8 @@ import { DatePicker } from 'primeng/datepicker';
             <div class="col-sm-9">
                 <p-datepicker
                         dateFormat="dd/mm/yy"
+                    appendTo="body"
+                    [baseZIndex]="2000"
                         [formControlName]="field.name"
                         showTime="true" hourFormat="24">
                 </p-datepicker>

@@ -138,5 +138,16 @@ export const MainRoutes: Routes = [
             }
         ]
     },
+    {
+        path: 'massive',
+        component: OutletComponent,
+        canActivate: [AppAuthGuard],
+        children: [
+            {path: '', redirectTo: '/massive/metadata', pathMatch: 'full'},
+            {path: 'metadata', loadComponent: () => import('./pages/massive/massive-metadata-select.component').then(m => m.MassiveMetadataSelectComponent)},
+            {path: 'attributes/:name', loadComponent: () => import('./pages/massive/massive-attributes-select.component').then(m => m.MassiveAttributesSelectComponent), resolve: {fieldDefinitionValorized: FieldDefinitionResolver}},
+            {path: 'edit/:name', loadComponent: () => import('./pages/massive/massive-data-edit.component').then(m => m.MassiveDataEditComponent), resolve: {fieldDefinitionValorized: FieldDefinitionResolver}}
+        ]
+    },
     {path: '**', loadComponent: () => import('./pages/homepage/homepage.component').then(m => m.HomepageComponent), canActivate: [AppAuthGuard]}
 ];
