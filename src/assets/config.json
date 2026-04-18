@@ -13,6 +13,8 @@
   "resetpassword_api_path": "https://kayak.love/api/password/reset",
   "condition_api_path": "https://kayak.love/api/conditions",
   "document_api_path": "https://kayak.love/api/documents",
+  "export_api_path": "https://kayak.love/api/metadatas/export",
+  "import_api_path": "https://kayak.love/api/metadatas/import",
   "extension_api_path": "https://kayak.love/api/extensions",
   "field_definition_api_path": "https://kayak.love/api/fielddefinitions",
   "links_api_path": "https://kayak.love/api/links",

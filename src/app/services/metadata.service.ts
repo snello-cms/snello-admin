@@ -4,10 +4,10 @@ import {Metadata} from '../models/metadata';
 import {Observable, of} from 'rxjs';
 import {AbstractService} from '../common/abstract-service';
 import {FieldDefinition} from '../models/field-definition';
-import {catchError, map} from 'rxjs/operators';
+import {catchError, map, take} from 'rxjs/operators';
 import {MessageService} from 'primeng/api';
 import {ConfigurationService} from './configuration.service';
-import {METADATA_API_PATH} from '../constants/constants';
+import {EXPORT_API_PATH, IMPORT_API_PATH, METADATA_API_PATH} from '../constants/constants';
 
 @Injectable({
     providedIn: 'root'
@@ -15,8 +15,23 @@ import {METADATA_API_PATH} from '../constants/constants';
 export class MetadataService extends AbstractService<Metadata> {
 
     private nameToMetadata: Map<string, Metadata> = new Map();
+    private exportUrl = '/api/metadatas/export';
+    private importUrl = '/api/metadatas/import';
+
     constructor(protected http: HttpClient, messageService: MessageService, configurationService: ConfigurationService) {
         super(configurationService.getValue(METADATA_API_PATH), http, messageService);
+
+        configurationService.getValue(EXPORT_API_PATH).pipe(take(1)).subscribe(url => {
+            if (url) {
+                this.exportUrl = url;
+            }
+        });
+
+        configurationService.getValue(IMPORT_API_PATH).pipe(take(1)).subscribe(url => {
+            if (url) {
+                this.importUrl = url;
+            }
+        });
     }
 
     getId(element: Metadata): string {
@@ -114,15 +129,18 @@ export class MetadataService extends AbstractService<Metadata> {
 
     public exportMetadatas(metadataUuids: string[]): Observable<any> {
         return this.httpClient
-            .post('/api/metadatas/export', {
+            .post(this.exportUrl, {
                 metadatas: metadataUuids
             })
             .pipe(catchError(this.handleError.bind(this)));
     }
 
-    public importMetadatas(payload: any): Observable<any> {
+    public importMetadatasFile(file: File): Observable<any> {
+        const formData = new FormData();
+        formData.append('file', file);
+
         return this.httpClient
-            .post('/api/metadatas/import', payload)
+            .post(this.importUrl, formData)
             .pipe(catchError(this.handleError.bind(this)));
     }
 }

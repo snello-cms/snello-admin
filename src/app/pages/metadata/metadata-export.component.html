@@ -1,0 +1,82 @@
+<sidebar></sidebar>
+
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>Metadata Export</h3>
+  <button type="button" class="btn btn-reset btn-block" style="display: block; width: 100%;" (click)="goToMetadataList()">
+    <i class="fa fa-arrow-left"></i> Back to List
+  </button>
+</div>
+
+<div class="main">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <div class="content list">
+          @if (isLoading) {
+            <p>Loading metadatas...</p>
+          }
+
+          <div class="table-wrapper clearfix">
+            <p-table [value]="model" [paginator]="true" [rows]="10" [resizableColumns]="true">
+              <ng-template pTemplate="header">
+                <tr class="sort-header">
+                  <th>
+                    <input
+                      type="checkbox"
+                      [checked]="areAllVisibleRowsSelected()"
+                      (change)="toggleSelectAllVisibleRows($any($event.target).checked)" />
+                  </th>
+                  <th>Index</th>
+                  <th>Table Name</th>
+                  <th>Description</th>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="emptymessage">
+                <tr>
+                  <td [attr.colspan]="4">No results.</td>
+                </tr>
+              </ng-template>
+              <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
+                <tr>
+                  <td>
+                    <input
+                      type="checkbox"
+                      [checked]="isMetadataSelectedForExport(rowData)"
+                      (change)="onExportSelectionChange(rowData, $any($event.target).checked)" />
+                  </td>
+                  <td>{{ rowIndex + 1 }}</td>
+                  <td>{{ rowData.table_name }}</td>
+                  <td>{{ rowData.description }}</td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </div>
+
+          <div style="margin-top: 16px;">
+            <p><strong>Selected metadatas:</strong> {{ selectedExportUuids.size }}</p>
+
+            @if (selectedMetadatas.length > 0) {
+              <ul>
+                @for (metadata of selectedMetadatas; track metadata.uuid) {
+                  <li>{{ metadata.table_name }}</li>
+                }
+              </ul>
+            }
+
+            <button
+              type="button"
+              class="btn btn-search"
+              [disabled]="selectedExportUuids.size === 0 || isExporting"
+              (click)="exportSelectedMetadatas()">
+              Export All
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
