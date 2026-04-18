@@ -41,6 +41,21 @@ export class FormGenerationListComponent implements OnInit {
         private cdr: ChangeDetectorRef) {
     }
 
+    private isPassivationSearchField(field: FieldDefinition): boolean {
+        return field.type === 'checkbox' && field.input_type === 'passivation';
+    }
+
+    private applySearchDefaults() {
+        for (const field of this.fieldDefinitionsSearch) {
+            if (this.isPassivationSearchField(field)) {
+                field.value = true;
+                if (field.name && this.searchForm?.searchForm?.get(field.name)) {
+                    this.searchForm.searchForm.get(field.name)?.setValue(true, {emitEvent: false});
+                }
+            }
+        }
+    }
+
 
     private datoAsObservableOfValue(rowData: any, fieldDefinition: FieldDefinition): Observable<any> {
         const fieldName = fieldDefinition.name;
@@ -49,7 +64,7 @@ export class FormGenerationListComponent implements OnInit {
         }
 
         const fullValue = rowData[fieldName];
-        if (!fullValue) {
+        if (fullValue == null || fullValue === '') {
             return of('');
         }
 
@@ -98,6 +113,7 @@ export class FormGenerationListComponent implements OnInit {
                             this.fieldDefinitionsSearch.push(field);
                         }
                     }
+                    this.applySearchDefaults();
                 }
             );
     }
@@ -215,6 +231,12 @@ export class FormGenerationListComponent implements OnInit {
                     obj[k] = null;
                 }
             }
+            for (const field of this.fieldDefinitionsSearch) {
+                if (field.name && this.isPassivationSearchField(field)) {
+                    obj[field.name] = true;
+                    field.value = true;
+                }
+            }
             this.searchForm.searchForm.setValue(obj);
         }
         // this.apiService.buildSearch();
@@ -233,6 +255,11 @@ export class FormGenerationListComponent implements OnInit {
                 if (objToSearch.hasOwnProperty(k)) {
                     for (const field of this.fieldDefinitionsSearch) {
                         if (field.name === k) {
+                            if (this.isPassivationSearchField(field)) {
+                                field.value = true;
+                                continue;
+                            }
+
                             const rawValue = objToSearch[field.name];
                             if (field.type === 'join' && field.join_table_key != null && rawValue != null && rawValue !== '') {
                                 field.value = typeof rawValue === 'object'
