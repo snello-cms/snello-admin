@@ -310,6 +310,31 @@ export class FormGenerationEditComponent implements OnInit {
         return date;
     }
 
+    private parseBoolean(value: unknown): boolean | null {
+        if (typeof value === 'boolean') {
+            return value;
+        }
+        if (typeof value === 'number') {
+            if (value === 1) {
+                return true;
+            }
+            if (value === 0) {
+                return false;
+            }
+            return null;
+        }
+        if (typeof value === 'string') {
+            const normalized = value.trim().toLowerCase();
+            if (normalized === 'true' || normalized === '1' || normalized === 'yes') {
+                return true;
+            }
+            if (normalized === 'false' || normalized === '0' || normalized === 'no') {
+                return false;
+            }
+        }
+        return null;
+    }
+
     // TODO: lo riusciamo a portare in tags.component.ts?
     preSaveUpdate(): any {
         const objToSave = JSON.parse(JSON.stringify(this.form.value));
@@ -385,6 +410,11 @@ export class FormGenerationEditComponent implements OnInit {
                 field.value = this.parseDate(defaultVal);
             } else if (field.type === 'datetime') {
                 field.value = this.parseDateTime(defaultVal);
+            } else if (field.type === 'checkbox') {
+                const parsedDefault = this.parseBoolean(defaultVal);
+                if (parsedDefault != null) {
+                    field.value = parsedDefault;
+                }
             } else {
                 field.value = defaultVal;
             }
@@ -456,6 +486,12 @@ export class FormGenerationEditComponent implements OnInit {
                     field.value = [];
                 } else {
                     field.value = (<string>field.value).split(',');
+                }
+            }
+            if (field.type === 'checkbox' && field.value != null) {
+                const parsedValue = this.parseBoolean(field.value);
+                if (parsedValue != null) {
+                    field.value = parsedValue;
                 }
             }
             if (field.input_type === 'decimal') {

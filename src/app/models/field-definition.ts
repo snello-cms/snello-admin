@@ -11,6 +11,7 @@ export const MAP_INPUT_TO_FIELD: Map<string, any> = new Map(
     ['tinymce', ['tinymce', null]],
     ['monaco', ['monaco', null]],
     ['boolean', ['checkbox', null]],
+    ['passivation', ['checkbox', 'passivation']],
     ['date', ['date', null]],
     ['datetime', ['datetime', null]],
     ['time', ['time', null]],

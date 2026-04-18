@@ -66,6 +66,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         datetime: '',
         time: '',
         boolean: '',
+        passivation: '',
         tinymce: 'containss',
         monaco: 'containss',
         tags: 'containss',
