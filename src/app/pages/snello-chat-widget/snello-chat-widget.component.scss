@@ -12,6 +12,7 @@
 }
 
 .snello-chat-bubble {
+    position: relative;
     width: 72px;
     height: 72px;
     border: none;
@@ -23,6 +24,31 @@
     justify-content: center;
     cursor: pointer;
     transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.snello-chat-bubble-tail {
+    position: fixed;
+    right: 24px;
+    bottom: 18px;
+    border: none;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
+    z-index: 10060;
+}
+
+.snello-chat-bubble-tail span {
+    display: block;
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    background: linear-gradient(135deg, #31394d 0%, #f5445f 100%);
+    transform: rotate(45deg);
+    box-shadow: 0 8px 14px rgba(49, 57, 77, 0.22);
+}
+
+.snello-chat-bubble-tail:hover span {
+    transform: rotate(45deg) scale(1.07);
 }
 
 .snello-chat-bubble:hover {
@@ -153,6 +179,7 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    max-height: 100%;
 }
 
 .snello-message {
@@ -181,6 +208,33 @@
     display: block;
     font-size: 11px;
     opacity: 0.72;
+}
+
+.snello-message-pending {
+    border: 1px dashed #d8e1eb;
+    background: rgba(255, 255, 255, 0.72);
+}
+
+.snello-chat-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0 6px;
+}
+
+.snello-chat-action {
+    border: 1px solid #d8e1eb;
+    background: #f8fafc;
+    color: #31394d;
+    border-radius: 999px;
+    padding: 6px 10px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.snello-chat-action:hover {
+    border-color: #f5445f;
+    color: #f5445f;
 }
 
 .snello-chat-footer {
@@ -250,6 +304,11 @@
     :host {
         right: 12px;
         bottom: 12px;
+    }
+
+    .snello-chat-bubble-tail {
+        right: 12px;
+        bottom: 10px;
     }
 
     .snello-chat-panel {

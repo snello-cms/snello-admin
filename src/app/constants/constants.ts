@@ -108,6 +108,7 @@ function dedupeIconsByValue(icons: SelectItem[]): SelectItem[] {
 }
 
 export const ASSET_PATH = 'asset_path';
+export const CHAT_API_PATH = 'chat_api_path';
 export const CONDITION_API_PATH = 'condition_api_path';
 export const DOCUMENT_API_PATH = 'document_api_path';
 export const EXTENSION_API_PATH = 'extension_api_path';

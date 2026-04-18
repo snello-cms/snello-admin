@@ -11,6 +11,7 @@
   "login_api_path": "https://kayak.love/api/login",
   "changepassword_api_path": "https://kayak.love/api/password/change",
   "resetpassword_api_path": "https://kayak.love/api/password/reset",
+  "chat_api_path": "https://kayak.love/api/chat",
   "condition_api_path": "https://kayak.love/api/conditions",
   "document_api_path": "https://kayak.love/api/documents",
   "export_api_path": "https://kayak.love/api/metadatas/export",
@@ -27,7 +28,5 @@
   "user_roles_api_path": "https://kayak.love/api/userroles",
   "url_map_rules_api_path": "https://kayak.love/api/urlmaprules",
   "api_service_path": "https://kayak.love/api",
-  "identity_api_path": "https://kayak.love/api/users",
-  "draggable_api_path": "https://kayak.love/api/draggables",
-  "droppable_api_path": "https://kayak.love/api/droppables"
+  "identity_api_path": "https://kayak.love/api/users"
 }

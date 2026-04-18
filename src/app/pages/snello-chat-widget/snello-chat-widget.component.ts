@@ -1,4 +1,9 @@
-import { Component } from '@angular/core';
+import {Component, DestroyRef, ElementRef, ViewChild, inject} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {NavigationEnd, Router} from '@angular/router';
+import {filter} from 'rxjs/operators';
+import {SnelloChatAction} from '../../models/snello-chat-action';
+import {SnelloChatService} from '../../services/snello-chat.service';
 
 type ChatRole = 'assistant' | 'user';
 
@@ -7,6 +12,7 @@ interface ChatMessage {
     role: ChatRole;
     text: string;
     time: string;
+    actions?: SnelloChatAction[];
 }
 
 @Component({
@@ -16,33 +22,57 @@ interface ChatMessage {
     styleUrls: ['./snello-chat-widget.component.scss']
 })
 export class SnelloChatWidgetComponent {
+    @ViewChild('messagesContainer') private messagesContainer?: ElementRef<HTMLDivElement>;
+
+    private readonly router = inject(Router);
+    private readonly chatService = inject(SnelloChatService);
+    private readonly destroyRef = inject(DestroyRef);
+
     isOpen = false;
     draft = '';
+    isSending = false;
+    currentContext = this.describeContext(this.router.url);
     private nextId = 3;
 
-    readonly suggestions = [
-        'How do I find metadata?',
-        'Where are the contents?',
-        'Can you help me navigate?'
-    ];
+    suggestions = this.getSuggestionsForUrl(this.router.url);
 
     messages: ChatMessage[] = [
         {
             id: 1,
             role: 'assistant',
-            text: 'Hello! I am the Snello assistant. I can help you navigate metadata, content, and management tools.',
+            text: 'Hello, I am the Snello assistant. I can help you navigate the CMS and prepare data operations based on the page you are viewing.',
             time: this.currentTime()
         },
         {
             id: 2,
             role: 'assistant',
-            text: 'Write below whenever you like: you can minimize me back to an icon at any time.',
+            text: 'Send me a request below. I will also use the current page context to help you better.',
             time: this.currentTime()
         }
     ];
 
+    constructor() {
+        this.router.events.pipe(
+            filter(event => event instanceof NavigationEnd),
+            takeUntilDestroyed(this.destroyRef)
+        ).subscribe(() => {
+            this.currentContext = this.describeContext(this.router.url);
+            this.suggestions = this.getSuggestionsForUrl(this.router.url);
+        });
+    }
+
     toggleOpen(): void {
         this.isOpen = !this.isOpen;
+        if (this.isOpen) {
+            this.scrollToBottom();
+        }
+    }
+
+    openFromTail(event: Event): void {
+        event.preventDefault();
+        event.stopPropagation();
+        this.isOpen = true;
+        this.scrollToBottom();
     }
 
     minimize(): void {
@@ -70,49 +100,127 @@ export class SnelloChatWidgetComponent {
     sendMessage(): void {
         const value = this.draft.trim();
 
-        if (!value) {
+        if (!value || this.isSending) {
             return;
         }
 
         this.pushMessage('user', value);
         this.draft = '';
+        this.isSending = true;
 
-        const reply = this.buildReply(value);
-        window.setTimeout(() => this.pushMessage('assistant', reply), 280);
+        this.chatService.sendMessage({
+            message: value,
+            currentContext: this.currentContext
+        }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+            next: reply => {
+                this.pushMessage('assistant', reply.text, reply.actions);
+                this.isSending = false;
+            },
+            error: () => {
+                this.pushMessage('assistant', 'Non sono riuscito a contattare il servizio AI in questo momento. Riprova tra poco.');
+                this.isSending = false;
+            }
+        });
     }
 
-    private pushMessage(role: ChatRole, text: string): void {
+    openAction(action: SnelloChatAction): void {
+        if (action.type !== 'open') {
+            return;
+        }
+
+        void this.router.navigate(['/datalist/view', action.entity, action.id]);
+    }
+
+    private pushMessage(role: ChatRole, text: string, actions?: SnelloChatAction[]): void {
         this.messages = [
             ...this.messages,
             {
                 id: this.nextId++,
                 role,
                 text,
-                time: this.currentTime()
+                time: this.currentTime(),
+                actions
             }
+        ];
+        this.scrollToBottom();
+    }
+
+    private describeContext(url: string): string {
+        if (url.includes('/metadata/')) {
+            return 'Sezione metadati';
+        }
+
+        if (url.includes('/fielddefinition/')) {
+            return 'Sezione field definitions';
+        }
+
+        if (url.includes('/datalist/list/')) {
+            const entity = decodeURIComponent(url.split('/datalist/list/')[1] || '').replace(/\?.*$/, '');
+            return entity ? `Lista dati di ${entity}` : 'Lista dati';
+        }
+
+        if (url.includes('/datalist/edit/')) {
+            const parts = url.split('/datalist/edit/')[1]?.split('/') || [];
+            return parts[0] ? `Modifica dati di ${decodeURIComponent(parts[0])}` : 'Modifica dati';
+        }
+
+        if (url.includes('/datalist/view/')) {
+            const parts = url.split('/datalist/view/')[1]?.split('/') || [];
+            return parts[0] ? `Dettaglio dati di ${decodeURIComponent(parts[0])}` : 'Dettaglio dati';
+        }
+
+        if (url.includes('/home')) {
+            return 'Home contents';
+        }
+
+        if (url.includes('/adminpage')) {
+            return 'Dashboard amministrazione';
+        }
+
+        return 'Applicazione Snello';
+    }
+
+    private getSuggestionsForUrl(url: string): string[] {
+        if (url.includes('/metadata/')) {
+            return [
+                'Spiegami a cosa serve questa sezione',
+                'Come esporto un metadata?',
+                'Come importo un file di metadata?'
+            ];
+        }
+
+        if (url.includes('/datalist/list/')) {
+            return [
+                'Riassumi cosa posso fare in questa lista',
+                'Come filtro i record?',
+                'Come creo un nuovo elemento?'
+            ];
+        }
+
+        if (url.includes('/adminpage')) {
+            return [
+                'Quali aree amministrative sono disponibili?',
+                'Dove gestisco i metadata?',
+                'Come arrivo alle field definitions?'
+            ];
+        }
+
+        return [
+            'Dove trovo i metadata?',
+            'Come navigo nei contents?',
+            'Aiutami a capire questa pagina'
         ];
     }
 
-    private buildReply(question: string): string {
-        const normalized = question.toLowerCase();
+    private scrollToBottom(): void {
+        window.setTimeout(() => {
+            const container = this.messagesContainer?.nativeElement;
+            if (!container) {
+                return;
+            }
 
-        if (normalized.includes('metadat')) {
-            return 'You can use the magnifier in the sidebar to quickly filter metadata and open exactly what you need.';
-        }
-
-        if (normalized.includes('conten')) {
-            return 'The CONTENTS section collects published metadata: from the side navigation you can open them quickly, also using search.';
-        }
-
-        if (normalized.includes('admin')) {
-            return 'In the ADMIN tab you can find configuration, field definitions, documents, links, and all management features.';
-        }
-
-        if (normalized.includes('ciao') || normalized.includes('hello')) {
-            return 'Hello 👋 Tell me what you want to reach in Snello and I will try to guide you.';
-        }
-
-        return 'For now this is an integrated chat UI ready to be connected to an AI service or a dedicated backend. In the meantime, I can offer quick navigation suggestions.';
+            container.scrollTop = container.scrollHeight;
+        });
     }
 
     private currentTime(): string {
