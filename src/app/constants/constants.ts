@@ -1,6 +1,6 @@
 import {SelectItem} from 'primeng/api';
 
-export const APP_VERSION = '4.1.1';
+export const APP_VERSION = '4.1.2';
 
 const FA6_BRAND_ICONS = new Set<string>([
     '500px', 'adn', 'amazon', 'android', 'angellist', 'apple', 'bandcamp', 'behance', 'behance-square',
