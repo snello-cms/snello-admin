@@ -207,7 +207,7 @@ const ADMIN_ITEMS_LEGACY: any[] = [
         icon: 'fa fa-pencil-square',
         section: 'massive',
         name: 'Massive',
-        summary: 'Massive Modifications - Edit multiple records at once',
+        summary: 'Massive Modifications',
         roles: 'Admin, metadatas_edit, metadatas_view'
     },
     // {
