@@ -37,6 +37,7 @@ export class SnelloChatWidgetComponent {
     isSending = false;
     currentContext = this.describeContext(this.router.url);
     private nextId = 3;
+    private conversationId = crypto.randomUUID();
 
     suggestions = this.getSuggestionsForUrl(this.router.url);
 
@@ -120,7 +121,8 @@ export class SnelloChatWidgetComponent {
 
         this.chatService.sendMessage({
             message: value,
-            currentContext: this.currentContext
+            currentContext: this.currentContext,
+            conversationId: this.conversationId
         }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: reply => {
                 this.pushMessage('assistant', reply.text, reply.actions, reply.html);
@@ -394,6 +396,7 @@ export class SnelloChatWidgetComponent {
 
     private resetChat(): void {
         this.nextId = 3;
+        this.conversationId = crypto.randomUUID();
         this.messages = [
             {
                 id: 1,
