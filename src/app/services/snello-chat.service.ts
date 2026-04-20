@@ -56,6 +56,7 @@ export class SnelloChatService {
             || response.message
             || response.content
             || response.text
+            || response.response
             || 'Nessuna risposta disponibile.';
     }
 

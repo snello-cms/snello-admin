@@ -3,4 +3,5 @@ export type RawChatResponse = string | {
     message?: string;
     content?: string;
     text?: string;
+    response?: string;
 };
