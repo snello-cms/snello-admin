@@ -1,4 +1,4 @@
-import {Component, DestroyRef, ElementRef, SecurityContext, ViewChild, inject} from '@angular/core';
+import {ChangeDetectorRef, Component, DestroyRef, ElementRef, SecurityContext, ViewChild, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {NavigationEnd, Router} from '@angular/router';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
@@ -30,6 +30,7 @@ export class SnelloChatWidgetComponent {
     private readonly chatService = inject(SnelloChatService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly sanitizer = inject(DomSanitizer);
+    private readonly cdr = inject(ChangeDetectorRef);
 
     isOpen = false;
     draft = '';
@@ -58,9 +59,15 @@ export class SnelloChatWidgetComponent {
         this.router.events.pipe(
             filter(event => event instanceof NavigationEnd),
             takeUntilDestroyed(this.destroyRef)
-        ).subscribe(() => {
-            this.currentContext = this.describeContext(this.router.url);
-            this.suggestions = this.getSuggestionsForUrl(this.router.url);
+        ).subscribe((event) => {
+            const nav = event as NavigationEnd;
+            this.currentContext = this.describeContext(nav.urlAfterRedirects);
+            this.suggestions = this.getSuggestionsForUrl(nav.urlAfterRedirects);
+
+            // Reset chat on new session (user navigates to home after logout/login)
+            if (nav.urlAfterRedirects === '/home' || nav.urlAfterRedirects === '/') {
+                this.resetChat();
+            }
         });
     }
 
@@ -128,14 +135,16 @@ export class SnelloChatWidgetComponent {
 
     openAction(action: SnelloChatAction): void {
         if (action.type === 'open') {
-            void this.router.navigate(['/datalist/view', action.entity, action.id]);
-            this.isOpen = false;
+            this.router.navigate(['/datalist/view', action.entity, action.id])
+                .then(() => { this.isOpen = false; })
+                .catch(() => { this.isOpen = false; });
             return;
         }
 
         if (action.type === 'navigate') {
-            void this.router.navigate([action.entity]);
-            this.isOpen = false;
+            this.router.navigate([action.entity])
+                .then(() => { this.isOpen = false; })
+                .catch(() => { this.isOpen = false; });
         }
     }
 
@@ -383,15 +392,35 @@ export class SnelloChatWidgetComponent {
         ];
     }
 
+    private resetChat(): void {
+        this.nextId = 3;
+        this.messages = [
+            {
+                id: 1,
+                role: 'assistant',
+                text: 'Hello, I am the Snello assistant. I can help you navigate the CMS and prepare data operations based on the page you are viewing.',
+                time: this.currentTime()
+            },
+            {
+                id: 2,
+                role: 'assistant',
+                text: 'Send me a request below. I will also use the current page context to help you better.',
+                time: this.currentTime()
+            }
+        ];
+        this.draft = '';
+        this.isSending = false;
+    }
+
     private scrollToBottom(): void {
+        this.cdr.detectChanges();
         window.setTimeout(() => {
             const container = this.messagesContainer?.nativeElement;
             if (!container) {
                 return;
             }
-
             container.scrollTop = container.scrollHeight;
-        });
+        }, 50);
     }
 
     private currentTime(): string {
