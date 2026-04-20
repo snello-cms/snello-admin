@@ -1,5 +1,6 @@
 export interface SnelloChatAction {
-    type: 'open';
+    type: 'open' | 'navigate';
     entity: string;
     id: string;
+    label?: string;
 }

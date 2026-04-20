@@ -204,6 +204,20 @@
     line-height: 1.45;
 }
 
+.snello-message-html {
+    font-size: 13px;
+    line-height: 1.45;
+    margin: 0 0 6px;
+
+    p { margin: 0 0 6px; }
+    ul, ol { margin: 4px 0 6px; padding-left: 18px; }
+    li { margin-bottom: 2px; }
+    strong { font-weight: 600; }
+    code { font-size: 12px; background: rgba(0,0,0,0.07); border-radius: 3px; padding: 1px 4px; }
+    pre { background: rgba(0,0,0,0.07); border-radius: 4px; padding: 8px; overflow-x: auto; }
+    h1, h2, h3 { font-size: 13px; font-weight: 600; margin: 4px 0; }
+}
+
 .snello-message span {
     display: block;
     font-size: 11px;
@@ -217,23 +231,75 @@
 
 .snello-chat-actions {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 8px;
-    margin: 8px 0 6px;
+    margin: 10px 0 6px;
 }
 
-.snello-chat-action {
+.snello-action-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
     border: 1px solid #d8e1eb;
     background: #f8fafc;
-    color: #31394d;
-    border-radius: 999px;
-    padding: 6px 10px;
-    font-size: 12px;
+    border-radius: 10px;
+    padding: 10px 12px;
     cursor: pointer;
+    text-align: left;
+    transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
 }
 
-.snello-chat-action:hover {
+.snello-action-card:hover {
     border-color: #f5445f;
+    background: #fff5f7;
+    box-shadow: 0 2px 8px rgba(245, 68, 95, 0.1);
+}
+
+.snello-action-card-icon {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #31394d 0%, #f5445f 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 11px;
+}
+
+.snello-action-card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+}
+
+.snello-action-card-entity {
+    font-size: 13px;
+    font-weight: 600;
+    color: #31394d;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-transform: capitalize;
+}
+
+.snello-action-card-id {
+    font-size: 11px;
+    color: #8a9bb5;
+}
+
+.snello-action-card-arrow {
+    flex-shrink: 0;
+    color: #b0bfcc;
+    font-size: 11px;
+    transition: color 0.15s;
+}
+
+.snello-action-card:hover .snello-action-card-arrow {
     color: #f5445f;
 }
 

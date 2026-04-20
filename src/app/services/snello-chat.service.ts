@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {map, Observable} from 'rxjs';
 import {take} from 'rxjs/operators';
+import {marked} from 'marked';
 import {CHAT_API_PATH} from '../constants/constants';
 import {ConfigurationService} from './configuration.service';
 import {SnelloChatRequest} from '../models/snello-chat-request';
@@ -24,7 +25,8 @@ export class SnelloChatService {
     }
 
     sendMessage(payload: SnelloChatRequest): Observable<SnelloChatReply> {
-        return this.http.post(this.endpoint, payload, {responseType: 'text'}).pipe(
+        const enriched: SnelloChatRequest = {...payload, language: 'en'};
+        return this.http.post(this.endpoint, enriched, {responseType: 'text'}).pipe(
             map(response => this.normalizeResponse(response))
         );
     }
@@ -33,8 +35,10 @@ export class SnelloChatService {
         const parsed = this.tryParseJson(response);
         const raw = parsed ?? response;
         const text = this.extractText(raw);
+        const cleanText = this.stripActionTokens(text);
         return {
-            text: this.stripActionTokens(text),
+            text: cleanText,
+            html: marked(cleanText) as string,
             actions: this.extractActions(text)
         };
     }

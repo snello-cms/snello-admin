@@ -32,13 +32,26 @@
                 <div class="snello-chat-messages" #messagesContainer>
                     @for (message of messages; track message.id) {
                         <article class="snello-message" [class.user]="message.role === 'user'">
-                            <p>{{message.text}}</p>
+                            @if (message.html) {
+                                <div class="snello-message-html" [innerHTML]="message.html"></div>
+                            } @else {
+                                <p>{{message.text}}</p>
+                            }
 
                             @if (message.actions?.length) {
                                 <div class="snello-chat-actions">
                                     @for (action of message.actions; track action.entity + '-' + action.id) {
-                                        <button type="button" class="snello-chat-action" (click)="openAction(action)">
-                                            Apri {{action.entity}}
+                                        <button type="button" class="snello-action-card" (click)="openAction(action)">
+                                            <span class="snello-action-card-icon">
+                                                <i class="fa fa-external-link" aria-hidden="true"></i>
+                                            </span>
+                                            <span class="snello-action-card-body">
+                                                <span class="snello-action-card-entity">{{action.entity}}</span>
+                                                <span class="snello-action-card-id">#{{action.id}}</span>
+                                            </span>
+                                            <span class="snello-action-card-arrow">
+                                                <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                                            </span>
                                         </button>
                                     }
                                 </div>

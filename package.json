@@ -34,6 +34,7 @@
     "keycloak-js": "^26.2.3",
     "leaflet": "^1.9.4",
     "less": "^3.9.0",
+    "marked": "^18.0.2",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.27",
     "monaco-editor": "^0.55.1",
