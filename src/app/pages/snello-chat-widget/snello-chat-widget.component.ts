@@ -202,7 +202,7 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
         }
 
         const action = this.pendingCreateAction;
-        this.pushMessage('user', `Confermo la creazione del record in ${action.entity}.`);
+        this.pushMessage('user', `I confirm the creation of the record in ${action.entity}.`);
         this.isCreatingRecord = true;
 
         this.apiService.persist(action.entity, action.payload)
@@ -221,7 +221,7 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
                 }),
                 take(1),
                 catchError(() => {
-                    this.pushMessage('assistant', 'Il record non e stato salvato. Controlla il riepilogo e riprova.');
+                    this.pushMessage('assistant', 'The record was not saved. Review the summary and try again.');
                     this.isCreatingRecord = false;
                     return of({ createdRecord: undefined, recordId: undefined });
                 })
@@ -238,15 +238,15 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
                     const recordId = String(result.recordId);
                     this.pushMessage(
                         'assistant',
-                        `Record creato con successo. Ho aperto la view del singolo dato (${recordId}).`,
-                        [{ type: 'open', entity: action.entity, id: recordId, label: 'Apri record creato' }]
+                        `Record created successfully. I opened the single-record view (${recordId}).`,
+                        [{ type: 'open', entity: action.entity, id: recordId, label: 'Open created record' }]
                     );
 
                     this.router.navigate(['/datalist/view', action.entity, recordId]).catch(() => undefined);
                     return;
                 }
 
-                this.pushMessage('assistant', 'Record creato con successo, ma non sono riuscito a ricavare la chiave per aprire la view automaticamente.');
+                this.pushMessage('assistant', 'Record created successfully, but I could not determine the key to open the view automatically.');
             });
     }
 
@@ -255,17 +255,17 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
             return action.label;
         }
         if (action.type === 'create_preview' && action.entity) {
-            return `Riepilogo creazione ${action.entity}`;
+            return `Create summary ${action.entity}`;
         }
         if (action.type === 'navigate') {
-            return action.path || action.entity || 'Naviga';
+            return action.path || action.entity || 'Navigate';
         }
         if (action.type === 'open') {
             const entity = action.entity || 'record';
             const id = action.id || '';
             return id ? `${entity} #${id}` : entity;
         }
-        return 'Azione';
+        return 'Action';
     }
 
     previewEntries(action?: SnelloChatAction): Array<{ key: string; value: string }> {

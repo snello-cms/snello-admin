@@ -65,7 +65,7 @@
 
                     @if (isSending) {
                         <article class="snello-message snello-message-pending">
-                            <p>Sto contattando l'assistente...</p>
+                            <p>Contacting the assistant...</p>
                         </article>
                     }
                 </div>
@@ -73,9 +73,9 @@
 
             @if (pendingCreateAction) {
                 <section class="snello-chat-summary">
-                    <h4>Riepilogo prima del salvataggio</h4>
+                    <h4>Summary before saving</h4>
                     <p>
-                        Tabella: <strong>{{pendingCreateAction.entity}}</strong>
+                        Table: <strong>{{pendingCreateAction.entity}}</strong>
                     </p>
 
                     <div class="snello-chat-summary-grid">
@@ -88,12 +88,12 @@
                     </div>
 
                     <div class="snello-chat-summary-actions">
-                        <button type="button" class="btn btn-default" (click)="cancelCreatePreview()" [disabled]="isCreatingRecord">Annulla</button>
+                        <button type="button" class="btn btn-default" (click)="cancelCreatePreview()" [disabled]="isCreatingRecord">Cancel</button>
                         <button type="button" class="btn btn-success" (click)="confirmCreatePreview()" [disabled]="isCreatingRecord">
                             @if (!isCreatingRecord) {
-                                Conferma e salva
+                                Confirm and save
                             } @else {
-                                Salvataggio...
+                                Saving...
                             }
                         </button>
                     </div>
@@ -103,18 +103,18 @@
             <footer class="snello-chat-footer">
                 <textarea
                     rows="2"
-                    placeholder="Scrivi un messaggio..."
+                    placeholder="Write a message..."
                     [value]="draft"
                     (input)="updateDraft($event)"
                     (keydown.enter)="submitFromKeyboard($event)"></textarea>
 
                 <button type="button" class="snello-chat-send" (click)="sendMessage()" [disabled]="!draft.trim() || isSending">
-                    Invia
+                    Send
                 </button>
             </footer>
         </section>
     } @else {
-        <button type="button" class="snello-chat-bubble-tail" (click)="openFromTail($event)" title="Apri chat Snello">
+        <button type="button" class="snello-chat-bubble-tail" (click)="openFromTail($event)" title="Open Snello chat">
             <span aria-hidden="true"></span>
         </button>
     }
