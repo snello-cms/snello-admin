@@ -3,6 +3,7 @@ import {catchError, map} from 'rxjs/operators';
 import {Observable, throwError} from 'rxjs';
 import { take } from 'rxjs/operators';
 import {MessageService} from 'primeng/api';
+import {switchMap} from 'rxjs/operators';
 
 export abstract class AbstractService<T> {
     listSize = 0;
@@ -17,6 +18,19 @@ export abstract class AbstractService<T> {
             value => this.url = value
         );
         this.initialize();
+    }
+
+    private withUrl<R>(requestFactory: () => Observable<R>): Observable<R> {
+        if (this.url) {
+            return requestFactory();
+        }
+        return this.urlValue.pipe(
+            take(1),
+            switchMap(value => {
+                this.url = value;
+                return requestFactory();
+            })
+        );
     }
 
     private initialize() {
@@ -34,7 +48,7 @@ export abstract class AbstractService<T> {
         params = params.set('_limit', this.toQueryParam('_limit', limit));
         params = this.applyRestrictions(params, search);
 
-        return this.httpClient
+        return this.withUrl(() => this.httpClient
             .get<T[]>(this.url, {
                 observe: 'response',
                 params: params,
@@ -52,7 +66,7 @@ export abstract class AbstractService<T> {
                     return ts;
                 }),
                 catchError(this.handleError.bind(this))
-            );
+            ));
     }
 
 
@@ -64,7 +78,7 @@ export abstract class AbstractService<T> {
         this.toQueryParam('_limit', this._limit);
         params = this.applyRestrictions(params, this.search);
 
-        return this.httpClient
+        return this.withUrl(() => this.httpClient
             .get<unknown>(this.url + '/listSize', {
                 observe: 'response',
                 params: params
@@ -77,7 +91,7 @@ export abstract class AbstractService<T> {
                         : 0;
                 }),
                 catchError(this.handleError.bind(this))
-            );
+            ));
     }
 
     public getListSize() {
@@ -88,7 +102,7 @@ export abstract class AbstractService<T> {
     }
 
     public find(id: string) {
-        return this.httpClient.get<T>(this.url + '/' + id, {
+        return this.withUrl(() => this.httpClient.get<T>(this.url + '/' + id, {
             observe: 'response',
         }).pipe(
             map(res => {
@@ -97,7 +111,7 @@ export abstract class AbstractService<T> {
                 return t;
             }),
             catchError(this.handleError.bind(this))
-        );
+        ));
     }
 
     protected applyRestrictions(
@@ -126,23 +140,23 @@ export abstract class AbstractService<T> {
     }
 
     public delete(id: string): Observable<any> {
-        return this.httpClient
+        return this.withUrl(() => this.httpClient
             .delete(this.url + '/' + id, {responseType: 'text'})
-            .pipe(catchError(this.handleError.bind(this)));
+            .pipe(catchError(this.handleError.bind(this))));
     }
 
     public persist(element: T): Observable<T> {
         const body = this.marshall(element);
-        return this.httpClient
+        return this.withUrl(() => this.httpClient
             .post<T>(this.url, body)
-            .pipe(catchError(this.handleError.bind(this)));
+            .pipe(catchError(this.handleError.bind(this))));
     }
 
     public update(element: T): Observable<T> {
         const body = this.marshall(element);
-        return this.httpClient
+        return this.withUrl(() => this.httpClient
             .put<T>(this.url + '/' + this.getId(element), body)
-            .pipe(catchError(this.handleError.bind(this)));
+            .pipe(catchError(this.handleError.bind(this))));
     }
 
     public getInstance(TCreator: { new(): T }): T {
@@ -158,7 +172,7 @@ export abstract class AbstractService<T> {
         search._limit = 100000;
         params = this.applyRestrictions(params, search);
 
-        return this.httpClient.get<HttpResponse<T []>>(this.url, {
+        return this.withUrl(() => this.httpClient.get<HttpResponse<T []>>(this.url, {
             observe: 'response',
             params: params
         }).pipe(
@@ -169,7 +183,7 @@ export abstract class AbstractService<T> {
                 }
             ),
             catchError(this.handleError.bind(this))
-        );
+        ));
     }
 
     protected init() {
