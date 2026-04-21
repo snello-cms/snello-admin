@@ -36,10 +36,11 @@ export class SnelloChatService {
         const raw = parsed ?? response;
         const text = this.extractText(raw);
         const cleanText = this.stripActionTokens(text);
+        const html = this.extractHtml(raw, cleanText);
         return {
             text: cleanText,
-            html: marked(cleanText) as string,
-            actions: this.extractActions(text)
+            html,
+            actions: this.extractActions(raw, text)
         };
     }
 
@@ -64,25 +65,77 @@ export class SnelloChatService {
             || 'Nessuna risposta disponibile.';
     }
 
-    private extractActions(text: string): SnelloChatAction[] {
-        const actions: SnelloChatAction[] = [];
-        const regex = /\[ACTION:OPEN:([^:\]]+):([^\]]+)\]/g;
-        let match: RegExpExecArray | null;
+    private extractHtml(response: RawChatResponse, fallbackText: string): string {
+        if (typeof response !== 'string' && response.html) {
+            return response.html;
+        }
+        return marked(fallbackText) as string;
+    }
 
-        match = regex.exec(text);
+    private extractActions(response: RawChatResponse, text: string): SnelloChatAction[] {
+        const inlineActions = this.extractInlineActions(text);
+        if (typeof response === 'string' || !Array.isArray(response.actions)) {
+            return inlineActions;
+        }
+        return [...response.actions, ...inlineActions];
+    }
+
+    private extractInlineActions(text: string): SnelloChatAction[] {
+        const actions: SnelloChatAction[] = [];
+
+        const openRegex = /\[ACTION:OPEN:([^:\]]+):([^\]]+)\]/g;
+        let match = openRegex.exec(text);
         while (match) {
             actions.push({
                 type: 'open',
                 entity: match[1],
                 id: match[2]
             });
-            match = regex.exec(text);
+            match = openRegex.exec(text);
+        }
+
+        const navigateRegex = /\[ACTION:NAVIGATE:([^\]]+)\]/g;
+        match = navigateRegex.exec(text);
+        while (match) {
+            actions.push({
+                type: 'navigate',
+                path: match[1],
+                entity: match[1],
+                label: 'Apri percorso'
+            });
+            match = navigateRegex.exec(text);
+        }
+
+        const previewRegex = /\[ACTION:CREATE_PREVIEW:([^:\]]+):([^\]]+)\]/g;
+        match = previewRegex.exec(text);
+        while (match) {
+            actions.push({
+                type: 'create_preview',
+                entity: match[1],
+                payload: this.decodePayload(match[2]),
+                label: `Riepilogo creazione ${match[1]}`
+            });
+            match = previewRegex.exec(text);
         }
 
         return actions;
     }
 
+    private decodePayload(encoded: string): Record<string, unknown> {
+        try {
+            const decoded = atob(encoded);
+            const parsed = JSON.parse(decoded);
+            return parsed && typeof parsed === 'object' ? parsed as Record<string, unknown> : {};
+        } catch {
+            return {};
+        }
+    }
+
     private stripActionTokens(text: string): string {
-        return text.replace(/\s*\[ACTION:OPEN:[^\]]+\]/g, '').trim();
+        return text
+            .replace(/\s*\[ACTION:OPEN:[^\]]+\]/g, '')
+            .replace(/\s*\[ACTION:NAVIGATE:[^\]]+\]/g, '')
+            .replace(/\s*\[ACTION:CREATE_PREVIEW:[^\]]+\]/g, '')
+            .trim();
     }
 }

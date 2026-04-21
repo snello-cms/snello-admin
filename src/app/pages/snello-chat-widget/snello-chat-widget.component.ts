@@ -1,10 +1,13 @@
-import {ChangeDetectorRef, Component, DestroyRef, ElementRef, SecurityContext, ViewChild, inject} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, DestroyRef, ElementRef, OnDestroy, SecurityContext, ViewChild, inject} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {NavigationEnd, Router} from '@angular/router';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
-import {filter} from 'rxjs/operators';
+import {of} from 'rxjs';
+import {catchError, filter, map, switchMap, take} from 'rxjs/operators';
 import {SnelloChatAction} from '../../models/snello-chat-action';
 import {SnelloChatService} from '../../services/snello-chat.service';
+import {ApiService} from '../../services/api.service';
+import {MetadataService} from '../../services/metadata.service';
 
 type ChatRole = 'assistant' | 'user';
 
@@ -23,18 +26,23 @@ interface ChatMessage {
     templateUrl: './snello-chat-widget.component.html',
     styleUrls: ['./snello-chat-widget.component.scss']
 })
-export class SnelloChatWidgetComponent {
+export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
     @ViewChild('messagesContainer') private messagesContainer?: ElementRef<HTMLDivElement>;
 
     private readonly router = inject(Router);
     private readonly chatService = inject(SnelloChatService);
+    private readonly apiService = inject(ApiService);
+    private readonly metadataService = inject(MetadataService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly sanitizer = inject(DomSanitizer);
     private readonly cdr = inject(ChangeDetectorRef);
+    private messagesObserver?: MutationObserver;
 
     isOpen = false;
     draft = '';
     isSending = false;
+    isCreatingRecord = false;
+    pendingCreateAction?: SnelloChatAction;
     currentContext = this.describeContext(this.router.url);
     private nextId = 3;
     private conversationId = crypto.randomUUID();
@@ -70,6 +78,14 @@ export class SnelloChatWidgetComponent {
                 this.resetChat();
             }
         });
+    }
+
+    ngAfterViewInit(): void {
+        this.observeMessageContainer();
+    }
+
+    ngOnDestroy(): void {
+        this.messagesObserver?.disconnect();
     }
 
     toggleOpen(): void {
@@ -118,6 +134,7 @@ export class SnelloChatWidgetComponent {
         this.pushMessage('user', value);
         this.draft = '';
         this.isSending = true;
+        this.scrollToBottom();
 
         this.chatService.sendMessage({
             message: value,
@@ -126,17 +143,29 @@ export class SnelloChatWidgetComponent {
         }).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: reply => {
                 this.pushMessage('assistant', reply.text, reply.actions, reply.html);
+                this.pendingCreateAction = reply.actions?.find(action => action.type === 'create_preview');
                 this.isSending = false;
+                this.scrollToBottom();
             },
             error: () => {
                 this.pushMessage('assistant', 'Could not reach the AI service at this time. Please try again later.');
                 this.isSending = false;
+                this.scrollToBottom();
             }
         });
     }
 
     openAction(action: SnelloChatAction): void {
+        if (action.type === 'create_preview') {
+            this.pendingCreateAction = action;
+            this.scrollToBottom();
+            return;
+        }
+
         if (action.type === 'open') {
+            if (!action.entity || !action.id) {
+                return;
+            }
             this.router.navigate(['/datalist/view', action.entity, action.id])
                 .then(() => { this.isOpen = false; })
                 .catch(() => { this.isOpen = false; });
@@ -144,10 +173,103 @@ export class SnelloChatWidgetComponent {
         }
 
         if (action.type === 'navigate') {
-            this.router.navigate([action.entity])
+            const path = action.path || action.entity;
+            if (!path) {
+                return;
+            }
+            const route = path.startsWith('/') ? [path] : [path];
+            this.router.navigate(route)
                 .then(() => { this.isOpen = false; })
                 .catch(() => { this.isOpen = false; });
         }
+    }
+
+    cancelCreatePreview(): void {
+        this.pendingCreateAction = undefined;
+        this.scrollToBottom();
+    }
+
+    confirmCreatePreview(): void {
+        if (!this.pendingCreateAction || !this.pendingCreateAction.entity || !this.pendingCreateAction.payload || this.isCreatingRecord) {
+            return;
+        }
+
+        const action = this.pendingCreateAction;
+        this.pushMessage('user', `Confermo la creazione del record in ${action.entity}.`);
+        this.isCreatingRecord = true;
+
+        this.apiService.persist(action.entity, action.payload)
+            .pipe(
+                switchMap(createdRecord => {
+                    const idFromPayload = this.resolveCreatedRecordId(createdRecord, action.keyField);
+                    if (idFromPayload) {
+                        return of({ createdRecord, recordId: idFromPayload });
+                    }
+                    return this.resolveMetadataKeyField(action.entity).pipe(
+                        map(keyField => ({
+                            createdRecord,
+                            recordId: this.resolveCreatedRecordId(createdRecord, keyField)
+                        }))
+                    );
+                }),
+                take(1),
+                catchError(() => {
+                    this.pushMessage('assistant', 'Il record non e stato salvato. Controlla il riepilogo e riprova.');
+                    this.isCreatingRecord = false;
+                    return of({ createdRecord: undefined, recordId: undefined });
+                })
+            )
+            .subscribe(result => {
+                if (!result.createdRecord) {
+                    return;
+                }
+
+                this.pendingCreateAction = undefined;
+                this.isCreatingRecord = false;
+
+                if (result.recordId) {
+                    const recordId = String(result.recordId);
+                    this.pushMessage(
+                        'assistant',
+                        `Record creato con successo. Ho aperto la view del singolo dato (${recordId}).`,
+                        [{ type: 'open', entity: action.entity, id: recordId, label: 'Apri record creato' }]
+                    );
+
+                    this.router.navigate(['/datalist/view', action.entity, recordId]).catch(() => undefined);
+                    return;
+                }
+
+                this.pushMessage('assistant', 'Record creato con successo, ma non sono riuscito a ricavare la chiave per aprire la view automaticamente.');
+            });
+    }
+
+    formatActionLabel(action: SnelloChatAction): string {
+        if (action.label) {
+            return action.label;
+        }
+        if (action.type === 'create_preview' && action.entity) {
+            return `Riepilogo creazione ${action.entity}`;
+        }
+        if (action.type === 'navigate') {
+            return action.path || action.entity || 'Naviga';
+        }
+        if (action.type === 'open') {
+            const entity = action.entity || 'record';
+            const id = action.id || '';
+            return id ? `${entity} #${id}` : entity;
+        }
+        return 'Azione';
+    }
+
+    previewEntries(action?: SnelloChatAction): Array<{ key: string; value: string }> {
+        if (!action?.payload) {
+            return [];
+        }
+
+        return Object.keys(action.payload).map(key => ({
+            key,
+            value: this.stringifyPreviewValue(action.payload?.[key])
+        }));
     }
 
     private pushMessage(role: ChatRole, text: string, actions?: SnelloChatAction[], rawHtml?: string): void {
@@ -168,6 +290,70 @@ export class SnelloChatWidgetComponent {
             }
         ];
         this.scrollToBottom();
+    }
+
+    private stringifyPreviewValue(value: unknown): string {
+        if (value == null) {
+            return '';
+        }
+        if (Array.isArray(value)) {
+            return value.map(item => this.stringifyPreviewValue(item)).join(', ');
+        }
+        if (typeof value === 'object') {
+            return JSON.stringify(value);
+        }
+        return String(value);
+    }
+
+    private resolveCreatedRecordId(record: unknown, keyField?: string): string | number | undefined {
+        if (!record || typeof record !== 'object') {
+            return undefined;
+        }
+
+        const row = record as Record<string, unknown>;
+        if (keyField && row[keyField] != null) {
+            return row[keyField] as string | number;
+        }
+
+        const fallbackKeys = ['uuid', 'id', 'ID'];
+        for (const key of fallbackKeys) {
+            if (row[key] != null) {
+                return row[key] as string | number;
+            }
+        }
+
+        return undefined;
+    }
+
+    private resolveMetadataKeyField(entity: string) {
+        const cached = this.metadataService.getMetadataFromName(entity)?.table_key;
+        if (cached) {
+            return of(cached);
+        }
+
+        this.metadataService.buildSearch();
+        this.metadataService.search.table_name = entity;
+        delete this.metadataService.search.uuid;
+        return this.metadataService.getList().pipe(
+            map(metadata => metadata?.[0]?.table_key),
+            catchError(() => of(undefined))
+        );
+    }
+
+    private observeMessageContainer(): void {
+        if (!this.messagesContainer?.nativeElement) {
+            return;
+        }
+
+        this.messagesObserver?.disconnect();
+        this.messagesObserver = new MutationObserver(() => {
+            this.scrollToBottom();
+        });
+        this.messagesObserver.observe(this.messagesContainer.nativeElement, {
+            childList: true,
+            subtree: true,
+            characterData: true
+        });
     }
 
     private describeContext(url: string): string {
@@ -413,17 +599,23 @@ export class SnelloChatWidgetComponent {
         ];
         this.draft = '';
         this.isSending = false;
+        this.isCreatingRecord = false;
+        this.pendingCreateAction = undefined;
     }
 
     private scrollToBottom(): void {
         this.cdr.detectChanges();
-        window.setTimeout(() => {
+        const run = () => {
             const container = this.messagesContainer?.nativeElement;
             if (!container) {
                 return;
             }
             container.scrollTop = container.scrollHeight;
-        }, 50);
+        };
+        requestAnimationFrame(() => {
+            run();
+            window.setTimeout(run, 20);
+        });
     }
 
     private currentTime(): string {

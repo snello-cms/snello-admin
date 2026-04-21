@@ -153,6 +153,59 @@
     background: linear-gradient(180deg, #f8fafc 0%, #eef3f8 100%);
 }
 
+.snello-chat-summary {
+    border-top: 1px solid #e5e9f2;
+    border-bottom: 1px solid #e5e9f2;
+    background: #fff8ef;
+    padding: 10px 12px;
+}
+
+.snello-chat-summary h4 {
+    margin: 0 0 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #31394d;
+}
+
+.snello-chat-summary p {
+    margin: 0 0 8px;
+    font-size: 12px;
+    color: #4a5568;
+}
+
+.snello-chat-summary-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 120px;
+    overflow: auto;
+    margin-bottom: 10px;
+}
+
+.snello-chat-summary-row {
+    display: grid;
+    grid-template-columns: minmax(90px, 1fr) 2fr;
+    gap: 8px;
+    font-size: 12px;
+    align-items: start;
+}
+
+.snello-chat-summary-row span {
+    color: #667085;
+    word-break: break-word;
+}
+
+.snello-chat-summary-row strong {
+    color: #31394d;
+    word-break: break-word;
+}
+
+.snello-chat-summary-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
 .snello-chat-suggestions {
     display: flex;
     flex-wrap: wrap;

@@ -40,14 +40,16 @@
 
                             @if (message.actions?.length) {
                                 <div class="snello-chat-actions">
-                                    @for (action of message.actions; track action.entity + '-' + action.id) {
+                                    @for (action of message.actions; track (action.label || action.path || action.entity || '') + '-' + (action.id || '')) {
                                         <button type="button" class="snello-action-card" (click)="openAction(action)">
                                             <span class="snello-action-card-icon">
                                                 <i class="fa fa-external-link" aria-hidden="true"></i>
                                             </span>
                                             <span class="snello-action-card-body">
-                                                <span class="snello-action-card-entity">{{action.entity}}</span>
-                                                <span class="snello-action-card-id">#{{action.id}}</span>
+                                                <span class="snello-action-card-entity">{{formatActionLabel(action)}}</span>
+                                                @if (action.id) {
+                                                    <span class="snello-action-card-id">#{{action.id}}</span>
+                                                }
                                             </span>
                                             <span class="snello-action-card-arrow">
                                                 <i class="fa fa-chevron-right" aria-hidden="true"></i>
@@ -68,6 +70,35 @@
                     }
                 </div>
             </div>
+
+            @if (pendingCreateAction) {
+                <section class="snello-chat-summary">
+                    <h4>Riepilogo prima del salvataggio</h4>
+                    <p>
+                        Tabella: <strong>{{pendingCreateAction.entity}}</strong>
+                    </p>
+
+                    <div class="snello-chat-summary-grid">
+                        @for (entry of previewEntries(pendingCreateAction); track entry.key) {
+                            <div class="snello-chat-summary-row">
+                                <span>{{entry.key}}</span>
+                                <strong>{{entry.value}}</strong>
+                            </div>
+                        }
+                    </div>
+
+                    <div class="snello-chat-summary-actions">
+                        <button type="button" class="btn btn-default" (click)="cancelCreatePreview()" [disabled]="isCreatingRecord">Annulla</button>
+                        <button type="button" class="btn btn-success" (click)="confirmCreatePreview()" [disabled]="isCreatingRecord">
+                            @if (!isCreatingRecord) {
+                                Conferma e salva
+                            } @else {
+                                Salvataggio...
+                            }
+                        </button>
+                    </div>
+                </section>
+            }
 
             <footer class="snello-chat-footer">
                 <textarea
