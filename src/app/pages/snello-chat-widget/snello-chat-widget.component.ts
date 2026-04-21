@@ -91,7 +91,10 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
     toggleOpen(): void {
         this.isOpen = !this.isOpen;
         if (this.isOpen) {
+            window.setTimeout(() => this.observeMessageContainer());
             this.scrollToBottom();
+        } else {
+            this.messagesObserver?.disconnect();
         }
     }
 
@@ -99,11 +102,13 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
         event.preventDefault();
         event.stopPropagation();
         this.isOpen = true;
+        window.setTimeout(() => this.observeMessageContainer());
         this.scrollToBottom();
     }
 
     minimize(): void {
         this.isOpen = false;
+        this.messagesObserver?.disconnect();
     }
 
     updateDraft(event: Event): void {
@@ -177,8 +182,10 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
             if (!path) {
                 return;
             }
-            const route = path.startsWith('/') ? [path] : [path];
-            this.router.navigate(route)
+            const navigation = path.startsWith('/')
+                ? this.router.navigateByUrl(path)
+                : this.router.navigate([path]);
+            navigation
                 .then(() => { this.isOpen = false; })
                 .catch(() => { this.isOpen = false; });
         }
