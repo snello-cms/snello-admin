@@ -12,6 +12,7 @@
   "changepassword_api_path": "https://kayak.love/api/password/change",
   "resetpassword_api_path": "https://kayak.love/api/password/reset",
   "chat_api_path": "https://kayak.love/api/chat",
+  "chatinteractions_api_path": "https://kayak.love/api/chat_interactions",
   "condition_api_path": "https://kayak.love/api/conditions",
   "document_api_path": "https://kayak.love/api/documents",
   "export_api_path": "https://kayak.love/api/metadatas/export",
