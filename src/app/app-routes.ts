@@ -151,5 +151,14 @@ export const MainRoutes: Routes = [
             {path: 'edit/:name', loadComponent: () => import('./pages/massive/massive-data-edit.component').then(m => m.MassiveDataEditComponent), resolve: {fieldDefinitionValorized: FieldDefinitionResolver}}
         ]
     },
+    {
+        path: 'chatinteractions',
+        component: OutletComponent,
+        canActivate: [AppAuthGuard],
+        children: [
+            {path: '', redirectTo: '/chatinteractions/list', pathMatch: 'full'},
+            {path: 'list', loadComponent: () => import('./pages/chat-interactions/chat-interaction-list.component').then(m => m.ChatInteractionListComponent)},
+        ]
+    },
     {path: '**', loadComponent: () => import('./pages/homepage/homepage.component').then(m => m.HomepageComponent), canActivate: [AppAuthGuard]}
 ];

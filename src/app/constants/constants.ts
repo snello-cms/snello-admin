@@ -109,6 +109,7 @@ function dedupeIconsByValue(icons: SelectItem[]): SelectItem[] {
 
 export const ASSET_PATH = 'asset_path';
 export const CHAT_API_PATH = 'chat_api_path';
+export const CHATINTERACTIONS_API_PATH = 'chatinteractions_api_path';
 export const CONDITION_API_PATH = 'condition_api_path';
 export const DOCUMENT_API_PATH = 'document_api_path';
 export const EXTENSION_API_PATH = 'extension_api_path';
@@ -209,6 +210,14 @@ const ADMIN_ITEMS_LEGACY: any[] = [
         name: 'Massive',
         summary: 'Massive Modifications',
         roles: 'Admin, metadatas_edit, metadatas_view'
+    },
+    {
+        id: 'list',
+        icon: 'fa fa-comments',
+        section: 'chatinteractions',
+        name: 'Chat Interactions',
+        summary: 'Historical chat interactions',
+        roles: 'Admin'
     },
     // {
     //     id: 'list',

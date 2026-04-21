@@ -1,0 +1,80 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>Chat Interactions</h3>
+</div>
+
+<div class="main">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <div class="content list">
+
+          <form>
+            <div class="row">
+              <div class="clearfix"></div>
+              <div class="col-sm-12">
+
+                <div class="filter-wrapper" (keydown.enter)="onSearchEnter($event, datatable)">
+                  <div class="fw-search-fields">
+                    @if (service.search) {
+                      <input id="conversation_uuid" name="conversation_uuid" type="text" class="form-control"
+                        placeholder="Conversation UUID" [(ngModel)]="service.search.conversation_uuid" pInputText>
+                    }
+                  </div>
+                  <div class="fw-search-fields">
+                    @if (service.search) {
+                      <input id="user_id" name="user_id" type="text" class="form-control"
+                        placeholder="User ID" [(ngModel)]="service.search.user_id" pInputText>
+                    }
+                  </div>
+                  <div class="fw-actions">
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-search" (click)="reload(datatable)">Search</button>
+                      <button type="button" class="btn btn-reset" (click)="reset(datatable)">Undo</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="table-wrapper clearfix">
+              <p-table #datatable (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true"
+                [resizableColumns]="true" [rows]="10" [totalRecords]="service.listSize" [value]="model">
+                <ng-template let-columns pTemplate="header">
+                  <tr class="sort-header">
+                    <th pResizableColumn>#</th>
+                    <th pResizableColumn>UUID</th>
+                    <th pResizableColumn>Conversation UUID</th>
+                    <th pResizableColumn>User ID</th>
+                    <th pResizableColumn>User Message</th>
+                    <th pResizableColumn>AI Response</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="6">No results.</td>
+                  </tr>
+                </ng-template>
+                <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
+                  <tr>
+                    <td class="RowIndex">{{ rowIndex + 1 }}</td>
+                    <td class="ui-resizable-column">{{ rowData.uuid }}</td>
+                    <td class="ui-resizable-column">{{ rowData.conversation_uuid }}</td>
+                    <td class="ui-resizable-column">{{ rowData.user_id }}</td>
+                    <td class="ui-resizable-column">{{ rowData.user_message }}</td>
+                    <td class="ui-resizable-column">{{ rowData.ai_response }}</td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
