@@ -6,20 +6,12 @@ import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {of} from 'rxjs';
 import {catchError, filter, map, switchMap, take} from 'rxjs/operators';
 import {SnelloChatAction} from '../../models/snello-chat-action';
+import {ChatRole} from '../../models/chat-role';
+import {ChatMessage} from '../../models/chat-message';
 import {SnelloChatService} from '../../services/snello-chat.service';
 import {ApiService} from '../../services/api.service';
 import {MetadataService} from '../../services/metadata.service';
-
-type ChatRole = 'assistant' | 'user';
-
-interface ChatMessage {
-    id: number;
-    role: ChatRole;
-    text: string;
-    html?: SafeHtml;
-    time: string;
-    actions?: SnelloChatAction[];
-}
+import {AuthenticationService} from '../../services/authentication.service';
 
 @Component({
     standalone: true,
@@ -29,12 +21,14 @@ interface ChatMessage {
 })
 export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
     @ViewChild('messagesContainer') private messagesContainer?: ElementRef<HTMLDivElement>;
+    @ViewChild('chatBodyContainer') private chatBodyContainer?: ElementRef<HTMLDivElement>;
 
     private readonly router = inject(Router);
     private readonly document = inject(DOCUMENT);
     private readonly chatService = inject(SnelloChatService);
     private readonly apiService = inject(ApiService);
     private readonly metadataService = inject(MetadataService);
+    private readonly authService = inject(AuthenticationService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly sanitizer = inject(DomSanitizer);
     private readonly cdr = inject(ChangeDetectorRef);
@@ -62,13 +56,7 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
         {
             id: 1,
             role: 'assistant',
-            text: 'Hello, I am the Snello assistant. I can help you navigate the CMS and prepare data operations based on the page you are viewing.',
-            time: this.currentTime()
-        },
-        {
-            id: 2,
-            role: 'assistant',
-            text: 'Send me a request below. I will also use the current page context to help you better.',
+            text: this.buildGreeting(),
             time: this.currentTime()
         }
     ];
@@ -102,7 +90,7 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
         this.isOpen = !this.isOpen;
         if (this.isOpen) {
             window.setTimeout(() => this.observeMessageContainer());
-            this.scrollToBottom();
+            this.scrollToBottom(true);
         } else {
             this.messagesObserver?.disconnect();
             this.isMaximized = false;
@@ -115,7 +103,7 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
         event.stopPropagation();
         this.isOpen = true;
         window.setTimeout(() => this.observeMessageContainer());
-        this.scrollToBottom();
+        this.scrollToBottom(true);
     }
 
     minimize(): void {
@@ -130,7 +118,7 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
         this.isOpen = true;
         this.syncDockedBodyClass();
         window.setTimeout(() => this.observeMessageContainer());
-        this.scrollToBottom();
+        this.scrollToBottom(true);
     }
 
     updateDraft(event: Event): void {
@@ -200,7 +188,7 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
         }
 
         this.pushMessage('user', value);
-    this.pushInputHistory(value);
+        this.pushInputHistory(value);
         this.draft = '';
         this.isSending = true;
         this.scrollToBottom();
@@ -269,14 +257,14 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
         this.pushMessage('user', `I confirm the creation of the record in ${action.entity}.`);
         this.isCreatingRecord = true;
 
-        this.apiService.persist(action.entity, action.payload)
+        this.apiService.persist(action.entity!, action.payload)
             .pipe(
                 switchMap(createdRecord => {
                     const idFromPayload = this.resolveCreatedRecordId(createdRecord, action.keyField);
                     if (idFromPayload) {
                         return of({ createdRecord, recordId: idFromPayload });
                     }
-                    return this.resolveMetadataKeyField(action.entity).pipe(
+                    return this.resolveMetadataKeyField(action.entity!).pipe(
                         map(keyField => ({
                             createdRecord,
                             recordId: this.resolveCreatedRecordId(createdRecord, keyField)
@@ -652,19 +640,13 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
     }
 
     private resetChat(): void {
-        this.nextId = 3;
+        this.nextId = 2;
         this.conversationId = crypto.randomUUID();
         this.messages = [
             {
                 id: 1,
                 role: 'assistant',
-                text: 'Hello, I am the Snello assistant. I can help you navigate the CMS and prepare data operations based on the page you are viewing.',
-                time: this.currentTime()
-            },
-            {
-                id: 2,
-                role: 'assistant',
-                text: 'Send me a request below. I will also use the current page context to help you better.',
+                text: this.buildGreeting(),
                 time: this.currentTime()
             }
         ];
@@ -726,18 +708,45 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
         this.historyDraftSnapshot = '';
     }
 
+    private buildGreeting(): string {
+        const profile = this.authService.userDetails;
+        const name = profile?.firstName
+            || this.authService.utente?.name
+            || this.authService.utente?.username
+            || '';
+        return name
+            ? `Hello ${name}, what can I do for you?`
+            : `Hello, what can I do for you?`;
+    }
+
     private syncDockedBodyClass(): void {
         this.document?.body?.classList.toggle('snello-chat-docked', this.isOpen && this.isMaximized);
     }
 
-    private scrollToBottom(): void {
+    private isNearBottom(): boolean {
+        const scrollable = this.chatBodyContainer?.nativeElement;
+        if (!scrollable) {
+            return true;
+        }
+        const distanceFromBottom = scrollable.scrollHeight - scrollable.scrollTop - scrollable.clientHeight;
+        return distanceFromBottom < 80;
+    }
+
+    private scrollToBottom(force = false): void {
+        if (!force && !this.isNearBottom()) {
+            return;
+        }
         this.cdr.detectChanges();
         const run = () => {
-            const container = this.messagesContainer?.nativeElement;
-            if (!container) {
-                return;
+            const scrollable = this.chatBodyContainer?.nativeElement;
+            if (scrollable) {
+                scrollable.scrollTop = scrollable.scrollHeight;
             }
-            container.scrollTop = container.scrollHeight;
+            // Fallback in case the messages container becomes the scroll source.
+            const messages = this.messagesContainer?.nativeElement;
+            if (messages) {
+                messages.scrollTop = messages.scrollHeight;
+            }
         };
         run();
         requestAnimationFrame(run);

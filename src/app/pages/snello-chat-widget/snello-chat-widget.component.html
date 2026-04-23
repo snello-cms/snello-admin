@@ -31,7 +31,7 @@
                 </div>
             </header>
 
-            <div class="snello-chat-body">
+            <div class="snello-chat-body" #chatBodyContainer>
                 <div class="snello-chat-suggestions">
                     @for (suggestion of suggestions; track suggestion) {
                         <button type="button" class="snello-chat-chip" (click)="useSuggestion(suggestion)">
