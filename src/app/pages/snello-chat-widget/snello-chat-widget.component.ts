@@ -1,4 +1,5 @@
-import {AfterViewInit, ChangeDetectorRef, Component, DestroyRef, ElementRef, OnDestroy, SecurityContext, ViewChild, inject} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, DestroyRef, ElementRef, HostBinding, OnDestroy, SecurityContext, ViewChild, inject} from '@angular/core';
+import {DOCUMENT} from '@angular/common';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {NavigationEnd, Router} from '@angular/router';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
@@ -30,6 +31,7 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
     @ViewChild('messagesContainer') private messagesContainer?: ElementRef<HTMLDivElement>;
 
     private readonly router = inject(Router);
+    private readonly document = inject(DOCUMENT);
     private readonly chatService = inject(SnelloChatService);
     private readonly apiService = inject(ApiService);
     private readonly metadataService = inject(MetadataService);
@@ -39,6 +41,10 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
     private messagesObserver?: MutationObserver;
 
     isOpen = false;
+    isMaximized = false;
+    @HostBinding('class.maximized') get hostMaximizedClass(): boolean {
+        return this.isOpen && this.isMaximized;
+    }
     draft = '';
     isSending = false;
     isCreatingRecord = false;
@@ -86,6 +92,7 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.messagesObserver?.disconnect();
+        this.syncDockedBodyClass();
     }
 
     toggleOpen(): void {
@@ -95,6 +102,8 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
             this.scrollToBottom();
         } else {
             this.messagesObserver?.disconnect();
+            this.isMaximized = false;
+            this.syncDockedBodyClass();
         }
     }
 
@@ -108,7 +117,17 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
 
     minimize(): void {
         this.isOpen = false;
+        this.isMaximized = false;
+        this.syncDockedBodyClass();
         this.messagesObserver?.disconnect();
+    }
+
+    toggleMaximize(): void {
+        this.isMaximized = !this.isMaximized;
+        this.isOpen = true;
+        this.syncDockedBodyClass();
+        window.setTimeout(() => this.observeMessageContainer());
+        this.scrollToBottom();
     }
 
     updateDraft(event: Event): void {
@@ -606,8 +625,14 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
         ];
         this.draft = '';
         this.isSending = false;
+        this.isMaximized = false;
+        this.syncDockedBodyClass();
         this.isCreatingRecord = false;
         this.pendingCreateAction = undefined;
+    }
+
+    private syncDockedBodyClass(): void {
+        this.document?.body?.classList.toggle('snello-chat-docked', this.isOpen && this.isMaximized);
     }
 
     private scrollToBottom(): void {
@@ -619,10 +644,11 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
             }
             container.scrollTop = container.scrollHeight;
         };
-        requestAnimationFrame(() => {
-            run();
-            window.setTimeout(run, 20);
-        });
+        run();
+        requestAnimationFrame(run);
+        requestAnimationFrame(() => requestAnimationFrame(run));
+        window.setTimeout(run, 30);
+        window.setTimeout(run, 120);
     }
 
     private currentTime(): string {

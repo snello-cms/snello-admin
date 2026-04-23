@@ -1,6 +1,6 @@
-<div class="snello-chat-root">
+<div class="snello-chat-root" [class.maximized]="isMaximized">
     @if (isOpen) {
-        <section class="snello-chat-panel" aria-label="Chat Snello">
+        <section class="snello-chat-panel" [class.maximized]="isMaximized" aria-label="Chat Snello">
             <div class="snello-chat-tail"></div>
 
             <header class="snello-chat-header">
@@ -15,9 +15,20 @@
                     </div>
                 </div>
 
-                <button type="button" class="snello-chat-minimize" (click)="minimize()" title="Minimize chat">
-                    <i class="fa fa-minus" aria-hidden="true"></i>
-                </button>
+                <div class="snello-chat-header-actions">
+                    <button
+                        type="button"
+                        class="snello-chat-maximize"
+                        (click)="toggleMaximize()"
+                        [title]="isMaximized ? 'Undock chat' : 'Dock chat'"
+                        [attr.aria-label]="isMaximized ? 'Undock chat' : 'Dock chat'">
+                        <i class="fa" [class.fa-expand]="!isMaximized" [class.fa-compress]="isMaximized" aria-hidden="true"></i>
+                    </button>
+
+                    <button type="button" class="snello-chat-minimize" (click)="minimize()" title="Minimize chat">
+                        <i class="fa fa-minus" aria-hidden="true"></i>
+                    </button>
+                </div>
             </header>
 
             <div class="snello-chat-body">

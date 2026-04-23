@@ -37,10 +37,11 @@ export class SnelloChatService {
         const text = this.extractText(raw);
         const cleanText = this.stripActionTokens(text);
         const html = this.extractHtml(raw, cleanText);
+        const extractedActions = this.extractActions(raw, text);
         return {
             text: cleanText,
             html,
-            actions: this.extractActions(raw, text)
+            actions: this.withMetadataFallbackActions(cleanText, extractedActions)
         };
     }
 
@@ -118,7 +119,112 @@ export class SnelloChatService {
             match = previewRegex.exec(text);
         }
 
+        const metadataRegex = /\[ACTION:METADATA:([^\]]+)\]/g;
+        match = metadataRegex.exec(text);
+        while (match) {
+            const entity = match[1]?.trim();
+            if (entity) {
+                actions.push({
+                    type: 'navigate',
+                    path: `/datalist/list/${encodeURIComponent(entity)}`,
+                    entity,
+                    label: `Apri metadato ${entity}`
+                });
+            }
+            match = metadataRegex.exec(text);
+        }
+
         return actions;
+    }
+
+    private withMetadataFallbackActions(text: string, actions: SnelloChatAction[]): SnelloChatAction[] {
+        const normalized = this.dedupeActions(actions);
+        if (this.hasMetadataNavigation(normalized)) {
+            return normalized;
+        }
+
+        const inferredEntity = this.extractMetadataEntity(text);
+        if (inferredEntity) {
+            return this.dedupeActions([
+                ...normalized,
+                {
+                    type: 'navigate',
+                    path: `/datalist/list/${encodeURIComponent(inferredEntity)}`,
+                    entity: inferredEntity,
+                    label: `Apri metadato ${inferredEntity}`
+                }
+            ]);
+        }
+
+        if (this.looksLikeMetadataAnswer(text)) {
+            return this.dedupeActions([
+                ...normalized,
+                {
+                    type: 'navigate',
+                    path: '/metadata/list',
+                    entity: 'metadata',
+                    label: 'Apri elenco metadati'
+                }
+            ]);
+        }
+
+        return normalized;
+    }
+
+    private looksLikeMetadataAnswer(text: string): boolean {
+        const lower = text.toLowerCase();
+        return lower.includes('metadata')
+            || lower.includes('metadato')
+            || lower.includes('metadati')
+            || lower.includes('table_name')
+            || lower.includes('tabella');
+    }
+
+    private extractMetadataEntity(text: string): string | undefined {
+        const patterns = [
+            /(?:metadat[oa]\\s+)([a-z][a-z0-9_]{1,})/i,
+            /(?:table|tabella)\\s+([a-z][a-z0-9_]{1,})/i,
+            /`([a-z][a-z0-9_]{1,})`/i
+        ];
+
+        for (const pattern of patterns) {
+            const match = pattern.exec(text);
+            const candidate = match?.[1]?.trim();
+            if (!candidate) {
+                continue;
+            }
+
+            const lower = candidate.toLowerCase();
+            if (['metadata', 'metadato', 'metadati', 'table', 'tabella', 'list'].includes(lower)) {
+                continue;
+            }
+            return candidate;
+        }
+
+        return undefined;
+    }
+
+    private hasMetadataNavigation(actions: SnelloChatAction[]): boolean {
+        return actions.some(action => {
+            if (action.type !== 'navigate') {
+                return false;
+            }
+
+            const path = (action.path || action.entity || '').toLowerCase();
+            return path.includes('/metadata/') || path.includes('/datalist/list/');
+        });
+    }
+
+    private dedupeActions(actions: SnelloChatAction[]): SnelloChatAction[] {
+        const seen = new Set<string>();
+        return actions.filter(action => {
+            const key = [action.type, action.path || '', action.entity || '', action.id || '', action.label || ''].join('|');
+            if (seen.has(key)) {
+                return false;
+            }
+            seen.add(key);
+            return true;
+        });
     }
 
     private decodePayload(encoded: string): Record<string, unknown> {
@@ -136,6 +242,7 @@ export class SnelloChatService {
             .replace(/\s*\[ACTION:OPEN:[^\]]+\]/g, '')
             .replace(/\s*\[ACTION:NAVIGATE:[^\]]+\]/g, '')
             .replace(/\s*\[ACTION:CREATE_PREVIEW:[^\]]+\]/g, '')
+            .replace(/\s*\[ACTION:METADATA:[^\]]+\]/g, '')
             .trim();
     }
 }
