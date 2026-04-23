@@ -224,8 +224,8 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
                 return;
             }
             this.router.navigate(['/datalist/view', action.entity, action.id])
-                .then(() => { this.isOpen = false; })
-                .catch(() => { this.isOpen = false; });
+                .then(() => { this.isOpen = false; this.isMaximized = false; this.syncDockedBodyClass(); })
+                .catch(() => { this.isOpen = false; this.isMaximized = false; this.syncDockedBodyClass(); });
             return;
         }
 
@@ -238,8 +238,8 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
                 ? this.router.navigateByUrl(path)
                 : this.router.navigate([path]);
             navigation
-                .then(() => { this.isOpen = false; })
-                .catch(() => { this.isOpen = false; });
+                .then(() => { this.isOpen = false; this.isMaximized = false; this.syncDockedBodyClass(); })
+                .catch(() => { this.isOpen = false; this.isMaximized = false; this.syncDockedBodyClass(); });
         }
     }
 
