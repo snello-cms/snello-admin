@@ -50,6 +50,9 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
     isCreatingRecord = false;
     pendingCreateAction?: SnelloChatAction;
     currentContext = this.describeContext(this.router.url);
+    private inputHistory: string[] = [];
+    private historyIndex = -1;
+    private historyDraftSnapshot = '';
     private nextId = 3;
     private conversationId = crypto.randomUUID();
 
@@ -132,6 +135,10 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
 
     updateDraft(event: Event): void {
         this.draft = (event.target as HTMLTextAreaElement).value ?? '';
+        if (this.historyIndex !== -1) {
+            this.historyIndex = -1;
+            this.historyDraftSnapshot = '';
+        }
     }
 
     submitFromKeyboard(event: KeyboardEvent): void {
@@ -141,6 +148,43 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
 
         event.preventDefault();
         this.sendMessage();
+    }
+
+    handleDraftHistoryNavigation(event: KeyboardEvent): void {
+        if (event.shiftKey || event.ctrlKey || event.metaKey || event.altKey) {
+            return;
+        }
+
+        const target = event.target as HTMLTextAreaElement | null;
+        if (!target) {
+            return;
+        }
+
+        if (event.key === 'ArrowUp') {
+            const isCursorAtStart = target.selectionStart === 0 && target.selectionEnd === 0;
+            if (!isCursorAtStart) {
+                return;
+            }
+
+            const changed = this.navigateHistory(-1);
+            if (changed) {
+                event.preventDefault();
+            }
+            return;
+        }
+
+        if (event.key === 'ArrowDown') {
+            const valueLength = target.value.length;
+            const isCursorAtEnd = target.selectionStart === valueLength && target.selectionEnd === valueLength;
+            if (!isCursorAtEnd) {
+                return;
+            }
+
+            const changed = this.navigateHistory(1);
+            if (changed) {
+                event.preventDefault();
+            }
+        }
     }
 
     useSuggestion(text: string): void {
@@ -156,6 +200,7 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
         }
 
         this.pushMessage('user', value);
+    this.pushInputHistory(value);
         this.draft = '';
         this.isSending = true;
         this.scrollToBottom();
@@ -624,11 +669,61 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
             }
         ];
         this.draft = '';
+        this.inputHistory = [];
+        this.historyIndex = -1;
+        this.historyDraftSnapshot = '';
         this.isSending = false;
         this.isMaximized = false;
         this.syncDockedBodyClass();
         this.isCreatingRecord = false;
         this.pendingCreateAction = undefined;
+    }
+
+    private navigateHistory(direction: -1 | 1): boolean {
+        if (!this.inputHistory.length) {
+            return false;
+        }
+
+        if (direction === -1) {
+            if (this.historyIndex === -1) {
+                this.historyDraftSnapshot = this.draft;
+                this.historyIndex = this.inputHistory.length - 1;
+                this.draft = this.inputHistory[this.historyIndex];
+                return true;
+            }
+
+            if (this.historyIndex > 0) {
+                this.historyIndex--;
+                this.draft = this.inputHistory[this.historyIndex];
+                return true;
+            }
+
+            return false;
+        }
+
+        if (this.historyIndex === -1) {
+            return false;
+        }
+
+        if (this.historyIndex < this.inputHistory.length - 1) {
+            this.historyIndex++;
+            this.draft = this.inputHistory[this.historyIndex];
+            return true;
+        }
+
+        this.historyIndex = -1;
+        this.draft = this.historyDraftSnapshot;
+        this.historyDraftSnapshot = '';
+        return true;
+    }
+
+    private pushInputHistory(value: string): void {
+        const latest = this.inputHistory[this.inputHistory.length - 1];
+        if (latest !== value) {
+            this.inputHistory.push(value);
+        }
+        this.historyIndex = -1;
+        this.historyDraftSnapshot = '';
     }
 
     private syncDockedBodyClass(): void {

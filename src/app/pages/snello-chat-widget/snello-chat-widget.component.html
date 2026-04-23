@@ -117,6 +117,7 @@
                     placeholder="Write a message..."
                     [value]="draft"
                     (input)="updateDraft($event)"
+                    (keydown)="handleDraftHistoryNavigation($event)"
                     (keydown.enter)="submitFromKeyboard($event)"></textarea>
 
                 <button type="button" class="snello-chat-send" (click)="sendMessage()" [disabled]="!draft.trim() || isSending">
