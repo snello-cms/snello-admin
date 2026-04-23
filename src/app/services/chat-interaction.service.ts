@@ -25,9 +25,10 @@ export class ChatInteractionService extends AbstractService<ChatInteraction> {
 
   buildSearch() {
     this.search = {
-      uuid: '',
       conversation_uuid: '',
       user_id: '',
+      creation_date_gt: '',
+      creation_date_lt: '',
       _limit: 10
     };
   }

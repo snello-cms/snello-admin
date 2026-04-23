@@ -31,6 +31,18 @@
                         placeholder="User ID" [(ngModel)]="service.search.user_id" pInputText>
                     }
                   </div>
+                  <div class="fw-search-fields">
+                    @if (service.search) {
+                        <input id="creation_date_gt" name="creation_date_gt" type="datetime-local" class="form-control"
+                          placeholder="Created after" [(ngModel)]="service.search.creation_date_gt">
+                    }
+                  </div>
+                  <div class="fw-search-fields">
+                    @if (service.search) {
+                        <input id="creation_date_lt" name="creation_date_lt" type="datetime-local" class="form-control"
+                          placeholder="Created before" [(ngModel)]="service.search.creation_date_lt">
+                    }
+                  </div>
                   <div class="fw-actions">
                     <div class="btn-group">
                       <button type="button" class="btn btn-search" (click)="reload(datatable)">Search</button>
@@ -47,9 +59,9 @@
                 <ng-template let-columns pTemplate="header">
                   <tr class="sort-header">
                     <th pResizableColumn>#</th>
-                    <th pResizableColumn>UUID</th>
                     <th pResizableColumn>Conversation UUID</th>
                     <th pResizableColumn>User ID</th>
+                    <th pResizableColumn>Creation Date</th>
                     <th pResizableColumn>User Message</th>
                     <th pResizableColumn>AI Response</th>
                   </tr>
@@ -62,11 +74,47 @@
                 <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
                   <tr>
                     <td class="RowIndex">{{ rowIndex + 1 }}</td>
-                    <td class="ui-resizable-column">{{ rowData.uuid }}</td>
-                    <td class="ui-resizable-column">{{ rowData.conversation_uuid }}</td>
-                    <td class="ui-resizable-column">{{ rowData.user_id }}</td>
-                    <td class="ui-resizable-column">{{ rowData.user_message }}</td>
-                    <td class="ui-resizable-column">{{ rowData.ai_response }}</td>
+                    <td class="ui-resizable-column">
+                      <button type="button" class="btn btn-link btn-xs" (click)="applyQuickFilter('conversation_uuid', rowData.conversation_uuid, datatable)">
+                        {{ rowData.conversation_uuid }}
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-link btn-xs"
+                        [copy-clipboard]="rowData.conversation_uuid"
+                        (copied)="onValueCopied('Conversation UUID')">
+                        Copy
+                      </button>
+                    </td>
+                    <td class="ui-resizable-column">
+                      <button type="button" class="btn btn-link btn-xs" (click)="applyQuickFilter('user_id', rowData.user_id, datatable)">
+                        {{ rowData.user_id }}
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-link btn-xs"
+                        [copy-clipboard]="rowData.user_id"
+                        (copied)="onValueCopied('User ID')">
+                        Copy
+                      </button>
+                    </td>
+                    <td class="ui-resizable-column">{{ formatCreationDate(rowData.creation_date) }}</td>
+                    <td class="ui-resizable-column">
+                      <span>{{ previewText(rowData.user_message) }}</span>
+                      @if (hasMoreText(rowData.user_message)) {
+                        <button type="button" class="btn btn-link btn-xs" (click)="openPreview('User Message', rowData.user_message)">
+                          Show more
+                        </button>
+                      }
+                    </td>
+                    <td class="ui-resizable-column">
+                      <span>{{ previewText(rowData.ai_response) }}</span>
+                      @if (hasMoreText(rowData.ai_response)) {
+                        <button type="button" class="btn btn-link btn-xs" (click)="openPreview('AI Response', rowData.ai_response)">
+                          Show more
+                        </button>
+                      }
+                    </td>
                   </tr>
                 </ng-template>
               </p-table>
@@ -78,3 +126,15 @@
     </div>
   </div>
 </div>
+
+<p-dialog
+  [(visible)]="previewDialogVisible"
+  [header]="previewDialogTitle"
+  [modal]="true"
+  [style]="{width: '60vw', maxWidth: '900px'}"
+  [maximizable]="true"
+  (onHide)="closePreview()">
+  <div style="white-space: pre-wrap; word-break: break-word; line-height: 1.5;">
+    {{ previewDialogContent }}
+  </div>
+</p-dialog>
