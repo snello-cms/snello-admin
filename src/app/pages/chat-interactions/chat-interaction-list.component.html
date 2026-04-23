@@ -81,9 +81,11 @@
                       <button
                         type="button"
                         class="btn btn-link btn-xs"
+                        title="Copy conversation UUID"
+                        aria-label="Copy conversation UUID"
                         [copy-clipboard]="rowData.conversation_uuid"
                         (copied)="onValueCopied('Conversation UUID')">
-                        Copy
+                        <i class="fa fa-clipboard" aria-hidden="true"></i>
                       </button>
                     </td>
                     <td class="ui-resizable-column">
@@ -93,9 +95,11 @@
                       <button
                         type="button"
                         class="btn btn-link btn-xs"
+                        title="Copy user ID"
+                        aria-label="Copy user ID"
                         [copy-clipboard]="rowData.user_id"
                         (copied)="onValueCopied('User ID')">
-                        Copy
+                        <i class="fa fa-clipboard" aria-hidden="true"></i>
                       </button>
                     </td>
                     <td class="ui-resizable-column">{{ formatCreationDate(rowData.creation_date) }}</td>
