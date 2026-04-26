@@ -28,6 +28,7 @@ export const MainRoutes: Routes = [
             {path: 'list', loadComponent: () => import('./pages/metadata/metadata-list.component').then(m => m.MetadataListComponent)},
             {path: 'export', loadComponent: () => import('./pages/metadata/metadata-export.component').then(m => m.MetadataExportComponent)},
             {path: 'import', loadComponent: () => import('./pages/metadata/metadata-import.component').then(m => m.MetadataImportComponent)},
+            {path: 'change-order/:id', loadComponent: () => import('./pages/metadata/metadata-field-definition-order.component').then(m => m.MetadataFieldDefinitionOrderComponent)},
             {path: 'edit/:id', loadComponent: () => import('./pages/metadata/metadata-edit.component').then(m => m.MetadataEditComponent)},
             {path: 'new', loadComponent: () => import('./pages/metadata/metadata-edit.component').then(m => m.MetadataEditComponent)},
             {path: 'view/:id', loadComponent: () => import('./pages/metadata/metadata-view.component').then(m => m.MetadataViewComponent)}

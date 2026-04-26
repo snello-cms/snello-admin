@@ -215,6 +215,10 @@
             </div>
             <div role="tabpanel" class="tab-pane" [class.active]="activeTab === 'fieldDefinitions'" id="fieldDefinitions">
               <div class="content view">
+                <button type="button" class="btn btn-primary pull-right" (click)="changeFieldDefinitionsOrder()"
+                  >
+                  <i class="fa fa-sort"></i> Change Order
+                </button>
                 <button type="button" class="btn btn-add pull-right" (click)="newFieldDefinition()"
                   [disabled]="this.element.created">
                   <i class="fa fa-plus-circle"></i> Add New

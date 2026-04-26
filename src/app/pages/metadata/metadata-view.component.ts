@@ -205,4 +205,8 @@ export class MetadataViewComponent extends AbstractViewComponent<Metadata>
         this.router.navigate(['/fielddefinition/new'], navigationExtras);
     }
 
+    changeFieldDefinitionsOrder() {
+        this.router.navigate(['/metadata/change-order', this.element.uuid]);
+    }
+
 }

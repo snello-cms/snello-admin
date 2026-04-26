@@ -1,0 +1,76 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>
+    Change Field Definitions Order
+  </h3>
+  <p>
+    {{ metadata.table_name }}
+  </p>
+</div>
+
+<div class="main">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <div class="content view">
+          <div class="btn-group pull-right order-actions">
+            <button pButton type="button" class="btn btn-reset" (click)="back()" [disabled]="saving">
+              Back
+            </button>
+            <button pButton type="button" class="btn btn-search" (click)="save()" [disabled]="saving || loading || !fieldDefinitions.length">
+              Save Order
+            </button>
+          </div>
+
+          <h3>
+            Field Definitions Order
+          </h3>
+          <p>
+            Drag and drop the items to change the order. On save, each field definition is updated with the new order_num.
+          </p>
+          <p>
+            Each row shows the saved position and the current position, so the before/after change is immediately visible before saving.
+          </p>
+
+          @if (loading) {
+            <p>Loading field definitions...</p>
+          } @else {
+            <p-orderlist
+              [value]="fieldDefinitions"
+              [(selection)]="selectedFieldDefinitions"
+              dataKey="uuid"
+              [dragdrop]="true"
+              [metaKeySelection]="false"
+              [responsive]="true"
+              [stripedRows]="true"
+              [listStyle]="{ 'max-height': '32rem' }"
+              controlsPosition="right"
+              (onReorder)="onReorder()"
+            >
+              <ng-template pTemplate="header">
+                <div class="orderlist-header">
+                  <span>Name</span>
+                  <span>Saved</span>
+                  <span>Current</span>
+                </div>
+              </ng-template>
+              <ng-template pTemplate="item" let-fieldDefinition>
+                <div class="field-order-row">
+                  <span class="field-name">{{ fieldDefinition.name }}</span>
+                  <span class="field-order field-order-saved">{{ getSavedOrder(fieldDefinition) }}</span>
+                  <span class="field-order" [class.field-order-changed]="hasOrderChanged(fieldDefinition)">
+                    {{ fieldDefinition.order_num }}
+                  </span>
+                </div>
+              </ng-template>
+            </p-orderlist>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
