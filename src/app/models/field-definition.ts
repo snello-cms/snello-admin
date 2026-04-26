@@ -1,33 +1,5 @@
 import {Validator} from './validator';
 
-export const MAP_INPUT_TO_FIELD: Map<string, any> = new Map(
-  [
-    ['string', ['input', 'text']],
-    ['number', ['input', 'number']],
-    ['decimal', ['input', 'decimal']],
-    ['password', ['input', 'password']],
-    ['email', ['input', 'email']],
-    ['text', ['textarea', null]],
-    ['tinymce', ['tinymce', null]],
-    ['monaco', ['monaco', null]],
-    ['boolean', ['checkbox', null]],
-    ['passivation', ['checkbox', 'passivation']],
-    ['date', ['date', null]],
-    ['datetime', ['datetime', null]],
-    ['time', ['time', null]],
-    ['select', ['select', null]],
-    ['media', ['media', null]],
-    ['image', ['image', null]],
-    ['tags', ['tags', null]],
-    ['join', ['join', null]],
-    ['multijoin', ['multijoin', null]],
-    ['realtionships', ['realtionships', null]],
-    ['gmaplocation', ['gmaplocation', null]],
-    ['gmappath', ['gmappath', null]]
-
-
-  ]);
-
 export class FieldDefinition {
   uuid: string;
   metadata_uuid: string;
