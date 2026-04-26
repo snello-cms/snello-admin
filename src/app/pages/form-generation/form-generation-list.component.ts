@@ -56,6 +56,33 @@ export class FormGenerationListComponent implements OnInit {
         }
     }
 
+    private readonly rawTableKeyField = '__rawTableKeyValue';
+
+    private resolveTableKeyValue(rawValue: unknown): string {
+        if (rawValue == null) {
+            return '';
+        }
+
+        if (typeof rawValue !== 'object') {
+            return String(rawValue);
+        }
+
+        const keyDefinition = this.fieldDefinitionsList.find(fd => fd.name === this.metadata?.table_key);
+        const candidate = rawValue as Record<string, unknown>;
+
+        if (keyDefinition?.join_table_key && candidate[keyDefinition.join_table_key] != null) {
+            return String(candidate[keyDefinition.join_table_key]);
+        }
+        if (candidate.uuid != null) {
+            return String(candidate.uuid);
+        }
+        if (candidate.id != null) {
+            return String(candidate.id);
+        }
+
+        return String(rawValue);
+    }
+
 
     private datoAsObservableOfValue(rowData: any, fieldDefinition: FieldDefinition): Observable<any> {
         const fieldName = fieldDefinition.name;
@@ -172,6 +199,9 @@ export class FormGenerationListComponent implements OnInit {
                             definition_1.is_edit = true;
                             //cerco la field defintion
                             if (element.hasOwnProperty(definition_1.name) || element.hasOwnProperty(definition_1.name.toLowerCase())) {
+                                if (definition_1.name === this.metadata?.table_key) {
+                                    element[this.rawTableKeyField] = element[definition_1.name];
+                                }
                                 // Se è la mia devo scrivere il dato come observable
                                 element[definition_1.name] = this.datoAsObservableOfValue(element, definition_1);
                             }
@@ -204,7 +234,8 @@ export class FormGenerationListComponent implements OnInit {
     }
 
     public getTableKey(fieldDefinition: any): string {
-        return String(fieldDefinition[this.metadata.table_key]);
+        const rawValue = fieldDefinition?.[this.rawTableKeyField] ?? fieldDefinition?.[this.metadata.table_key];
+        return this.resolveTableKeyValue(rawValue);
     }
 
     public reload(datatable: any) {

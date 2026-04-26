@@ -27,6 +27,37 @@ export class FormGenerationEditComponent implements OnInit {
     cloneUuid?: string;
     cloneLoaded = false;
 
+    private resolvePersistedTableKey(element: Record<string, unknown>): string {
+        const primaryKey = this.metadata?.table_key;
+        if (!primaryKey) {
+            return String(element.uuid ?? '');
+        }
+
+        const rawValue = element[primaryKey];
+        if (rawValue == null) {
+            return String(element.uuid ?? '');
+        }
+
+        if (typeof rawValue !== 'object') {
+            return String(rawValue);
+        }
+
+        const keyDefinition = this.regConfig.find(field => field.name === primaryKey);
+        const candidate = rawValue as Record<string, unknown>;
+
+        if (keyDefinition?.join_table_key && candidate[keyDefinition.join_table_key] != null) {
+            return String(candidate[keyDefinition.join_table_key]);
+        }
+        if (candidate.uuid != null) {
+            return String(candidate.uuid);
+        }
+        if (candidate.id != null) {
+            return String(candidate.id);
+        }
+
+        return String(rawValue);
+    }
+
     constructor(
         protected router: Router,
         private route: ActivatedRoute,
@@ -114,8 +145,11 @@ export class FormGenerationEditComponent implements OnInit {
             .subscribe(
                 element => {
                     if (element) {
-                        const key = this.metadata.table_key;
-                        this.router.navigate(['datalist/view', this.metadataName, element[key]]);
+                        this.router.navigate([
+                            'datalist/view',
+                            this.metadataName,
+                            this.resolvePersistedTableKey(element as Record<string, unknown>)
+                        ]);
                     }
                 }
             );

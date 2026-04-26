@@ -7,7 +7,6 @@
     "clientId": "snello-admin"
   },
   "asset_path": "",
-  "base_path": "https://kayak.love/api",
   "login_api_path": "https://kayak.love/api/login",
   "changepassword_api_path": "https://kayak.love/api/password/change",
   "resetpassword_api_path": "https://kayak.love/api/password/reset",
@@ -17,17 +16,10 @@
   "document_api_path": "https://kayak.love/api/documents",
   "export_api_path": "https://kayak.love/api/metadatas/export",
   "import_api_path": "https://kayak.love/api/metadatas/import",
-  "extension_api_path": "https://kayak.love/api/extensions",
   "field_definition_api_path": "https://kayak.love/api/fielddefinitions",
   "links_api_path": "https://kayak.love/api/links",
   "metadata_api_path": "https://kayak.love/api/metadatas",
   "data_list_api_path": "https://kayak.love/api/datalist",
-  "public_data_api_path": "https://kayak.love/api/publicdata",
   "select_query_api_path": "https://kayak.love/api/selectqueries",
-  "user_api_path": "https://kayak.love/api/users",
-  "role_api_path": "https://kayak.love/api/roles",
-  "user_roles_api_path": "https://kayak.love/api/userroles",
-  "url_map_rules_api_path": "https://kayak.love/api/urlmaprules",
-  "api_service_path": "https://kayak.love/api",
-  "identity_api_path": "https://kayak.love/api/users"
+  "api_service_path": "https://kayak.love/api"
 }
