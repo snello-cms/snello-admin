@@ -36,7 +36,7 @@
               <div class="form-group clearfix row">
                 <label class="label-text col-sm-3">Name (*)</label>
                 <div class="col-sm-9">
-                  <input [(ngModel)]="element.name" name="name" pInputText type="text">
+                  <input [(ngModel)]="element.name" name="name" pInputText type="text" (ngModelChange)="onNameChanged($event)">
                 </div>
               </div>
 
@@ -48,26 +48,31 @@
               </div>
 
               <div class="form-group clearfix row">
-                <label class="label-text col-sm-3">Default value</label>
+                <label class="label-text col-sm-3">Input Type (*)</label>
                 <div class="col-sm-9">
-                  <input [(ngModel)]="element.default_value" name="default_value" pInputText
-                    [placeholder]="fieldType === 'date' ? 'Es. now() → yyyy-MM-dd' : fieldType === 'datetime' ? 'Es. now() → yyyy-MM-dd hh:mm' : 'Default value'">
-                  @if (fieldType === 'date') {
-                    <small class="text-muted">Usa <code>now()</code> per impostare la data corrente (formato <code>yyyy-MM-dd</code>).</small>
-                  }
-                  @if (fieldType === 'datetime') {
-                    <small class="text-muted">Usa <code>now()</code> per impostare data e ora correnti (formato <code>yyyy-MM-dd hh:mm</code>).</small>
-                  }
+                  <p-select [(ngModel)]="fieldType" [filter]="true" [options]="fieldTypes" [style]="{'width':'100%'}"
+                    filterBy="label" name="typeSelect" placeholder="Select a type"  (onChange)="changedFieldType($event)">
+                  </p-select>
                 </div>
               </div>
 
-
               <div class="form-group clearfix row">
-                <label class="label-text col-sm-3">Input Type (*)</label>
+                <label class="label-text col-sm-3">Default value</label>
                 <div class="col-sm-9">
-                  <p-select [(ngModel)]="fieldType" [filter]="false" [options]="fieldTypes" [style]="{'width':'100%'}"
-                    filterBy="label" name="typeSelect" placeholder="Select a type"  (onChange)="changedFieldType($event)">
-                  </p-select>
+                  <input [(ngModel)]="element.default_value" name="default_value" pInputText
+                    [placeholder]="fieldType === 'date' ? 'Es. now() o always_now()' : fieldType === 'datetime' ? 'Es. now() o always_now()' : 'Default value'">
+                  @if (fieldType === 'date') {
+                    <small class="text-muted">
+                      <code>now()</code> - data corrente solo in creazione (formato <code>yyyy-MM-dd</code>)<br>
+                      <code>always_now()</code> - data corrente sempre, anche in update
+                    </small>
+                  }
+                  @if (fieldType === 'datetime') {
+                    <small class="text-muted">
+                      <code>now()</code> - data e ora correnti solo in creazione (formato <code>yyyy-MM-dd hh:mm</code>)<br>
+                      <code>always_now()</code> - data e ora correnti sempre, anche in update
+                    </small>
+                  }
                 </div>
               </div>
 

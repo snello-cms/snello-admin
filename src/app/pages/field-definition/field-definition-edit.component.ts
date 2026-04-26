@@ -253,6 +253,11 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         this.groups = [];
         const meta = selected;
 
+        // Carica il massimo order_num se siamo in create mode
+        if (selected && this.element.metadata_uuid && !this.editMode) {
+            this.loadMaxOrderNumber(this.element.metadata_uuid);
+        }
+
         // Se la stringa contine un ';': ho sicuramente la divisione in tab. Splitto tutto, tiro fuori i tab e valuto le sottostringhe
         if (!meta || !meta.tab_groups) {
             return;
@@ -272,6 +277,45 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
                 this.groups.push({label: group, value: group});
             }
         }
+    }
+
+    private loadMaxOrderNumber(metadataUuid: string) {
+        // Se siamo in edit mode, non fare nulla
+        if (this.editMode) {
+            return;
+        }
+
+        // Crea la search per trovare tutti i field definitions di questo metadata
+        const search = {
+            metadata_uuid: metadataUuid,
+            name_contains: '',
+            uuid: '',
+            _limit: 100000
+        };
+
+        // Carica i field definitions
+        this.fieldDefinitionService.getListSearch(search, 0, 100000).subscribe(
+            (fieldDefinitions: FieldDefinition[]) => {
+                if (!fieldDefinitions || fieldDefinitions.length === 0) {
+                    // Se non ci sono field definitions, inizia da 1
+                    this.element.order_num = 1;
+                } else {
+                    // Calcola il massimo order_num
+                    const maxOrderNum = Math.max(
+                        ...fieldDefinitions
+                            .map(fd => fd.order_num ?? 0)
+                            .filter(num => num > 0)
+                    );
+                    // Preimposta il nuovo order_num come max + 1
+                    this.element.order_num = maxOrderNum + 1;
+                }
+            },
+            error => {
+                // In caso di errore, inizia da 1
+                console.error('Error loading field definitions for order_num calculation:', error);
+                this.element.order_num = 1;
+            }
+        );
     }
 
     changedJoinMetadata(event: any) {
@@ -419,6 +463,21 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         } else {
             this.router.navigate(['/' + this.path + '/list']);
         }
+    }
+
+    onNameChanged(newName: string) {
+        if (!newName || newName.trim() === '') {
+            return;
+        }
+        // Trasforma snake_case in Title Case
+        // Sostituisce underscore e dash con spazi, poi capitalizza la prima lettera di ogni parola
+        const label = newName
+            .replace(/[_-]+/g, ' ')  // Sostituisce underscore e dash con spazi
+            .split(' ')               // Divide in parole
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())  // Capitalizza ogni parola
+            .join(' ');               // Riunisce le parole
+        
+        this.element.label = label;
     }
 
     changedFieldType (event: any) {

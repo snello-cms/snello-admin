@@ -372,6 +372,17 @@ export class FormGenerationEditComponent implements OnInit {
     // TODO: lo riusciamo a portare in tags.component.ts?
     preSaveUpdate(): any {
         const objToSave = JSON.parse(JSON.stringify(this.form.value));
+        
+        // Applica always_now() per i campi date/datetime
+        for (const field of this.regConfig) {
+            if (field.name && (field.type === 'date' || field.type === 'datetime')) {
+                const defaultVal = (field.default_value ?? '').trim().toLowerCase();
+                if (defaultVal === 'always_now()') {
+                    objToSave[field.name] = new Date();
+                }
+            }
+        }
+        
         // tslint:disable-next-line:forin
         for (const k in objToSave) {
             for (const field of this.regConfig) {
@@ -436,7 +447,8 @@ export class FormGenerationEditComponent implements OnInit {
             if (field.value != null && field.value !== '') {
                 continue;
             }
-            if (defaultVal.toLowerCase() === 'now()') {
+            const defaultValLowerCase = defaultVal.toLowerCase();
+            if (defaultValLowerCase === 'now()' || defaultValLowerCase === 'always_now()') {
                 if (field.type === 'date' || field.type === 'datetime') {
                     field.value = new Date();
                 }

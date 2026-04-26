@@ -1,25 +1,25 @@
 {
-  "img_path": "",
-  "scope": "openid",
-  "keycloakConfig": {
-    "url": "https://accounts.kayak.love/",
-    "realm": "snello",
-    "clientId": "snello-admin"
-  },
+  "ai_tools_api_path": "https://kayak.love/api/ai_tools",
+  "api_service_path": "https://kayak.love/api",
   "asset_path": "",
-  "login_api_path": "https://kayak.love/api/login",
   "changepassword_api_path": "https://kayak.love/api/password/change",
-  "resetpassword_api_path": "https://kayak.love/api/password/reset",
   "chat_api_path": "https://kayak.love/api/chat",
   "chatinteractions_api_path": "https://kayak.love/api/chat_interactions",
   "condition_api_path": "https://kayak.love/api/conditions",
+  "data_list_api_path": "https://kayak.love/api/datalist",
   "document_api_path": "https://kayak.love/api/documents",
   "export_api_path": "https://kayak.love/api/metadatas/export",
-  "import_api_path": "https://kayak.love/api/metadatas/import",
   "field_definition_api_path": "https://kayak.love/api/fielddefinitions",
+  "import_api_path": "https://kayak.love/api/metadatas/import",
+  "keycloakConfig": {
+    "clientId": "snello-admin",
+    "realm": "snello",
+    "url": "https://accounts.kayak.love/"
+  },
   "links_api_path": "https://kayak.love/api/links",
+  "login_api_path": "https://kayak.love/api/login",
   "metadata_api_path": "https://kayak.love/api/metadatas",
-  "data_list_api_path": "https://kayak.love/api/datalist",
-  "select_query_api_path": "https://kayak.love/api/selectqueries",
-  "api_service_path": "https://kayak.love/api"
+  "resetpassword_api_path": "https://kayak.love/api/password/reset",
+  "scope": "openid",
+  "select_query_api_path": "https://kayak.love/api/selectqueries"
 }

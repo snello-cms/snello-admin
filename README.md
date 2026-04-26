@@ -63,8 +63,8 @@ Each **Field Definition** defines how a column is rendered in forms and list vie
 | `tinymce` | TinyMCE | Rich-text / HTML WYSIWYG editor |
 | `monaco` | Monaco Editor | Code editor (JSON, SQL, etc.) with syntax highlighting |
 | `boolean` | Checkbox | True/false toggle |
-| `date` | Date Picker | Date selector (format `yyyy-MM-dd`); supports `now()` as default |
-| `datetime` | Datetime Picker | Date + time selector; supports `now()` as default |
+| `date` | Date Picker | Date selector (format `yyyy-MM-dd`); supports `now()` (create-only) or `always_now()` (create + update) as default |
+| `datetime` | Datetime Picker | Date + time selector; supports `now()` (create-only) or `always_now()` (create + update) as default |
 | `time` | Time Picker | Time-only selector |
 | `select` | Dropdown | Fixed list of options defined in the `options` field |
 | `tags` | Tag input | Free-text comma-separated tag list |
@@ -80,7 +80,9 @@ Each **Field Definition** defines how a column is rendered in forms and list vie
 
 - **`label`** — display label shown in forms
 - **`mandatory`** — marks the field as required (form validation)
-- **`default_value`** — pre-filled value; for `date`/`datetime` use `now()`
+- **`default_value`** — pre-filled value; for `date`/`datetime`:
+  - use `now()` to set current date/time only during creation
+  - use `always_now()` to set current date/time both during creation and every update
 - **`show_in_list`** — whether the column appears in list views
 - **`searchable`** — enables the field as a search filter
 - **`group_name`** / **`tab_name`** — organise fields into collapsible fieldsets or tabs within the form

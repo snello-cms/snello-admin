@@ -242,6 +242,7 @@ export class SideBarComponent {
             || this.router.url.indexOf('document')
             || this.router.url.indexOf('publicdata')
             || this.router.url.indexOf('selectqueries')
+            || this.router.url.indexOf('aitools')
             || this.router.url.indexOf('user')
             || this.router.url.indexOf('role')
             || this.router.url.indexOf('urlmaprules')

@@ -90,6 +90,17 @@ export const MainRoutes: Routes = [
         ]
     },
     {
+        path: 'aitools',
+        component: OutletComponent,
+        canActivate: [AppAuthGuard],
+        children: [
+            {path: '', redirectTo: '/aitools/list', pathMatch: 'full'},
+            {path: 'list', loadComponent: () => import('./pages/aitools/ai-tool-list.component').then(m => m.AiToolListComponent)},
+            {path: 'new', loadComponent: () => import('./pages/aitools/ai-tool-edit.component').then(m => m.AiToolEditComponent)},
+            {path: 'edit/:id', loadComponent: () => import('./pages/aitools/ai-tool-edit.component').then(m => m.AiToolEditComponent)}
+        ]
+    },
+    {
         path: 'links',
         component: OutletComponent,
         canActivate: [AppAuthGuard],

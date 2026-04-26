@@ -1,0 +1,145 @@
+<sidebar></sidebar>
+
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>
+    Edit AI Tool
+  </h3>
+  <p>
+  </p>
+
+</div>
+
+<div class="main">
+
+  <div class="container-fluid">
+    <div class="row">
+
+      <div class="col-md-12 col-sm-12">
+        <div class="content view clearfix">
+          <form #theform="ngForm">
+
+            <div class="form-group clearfix row">
+              <label class="label-text col-sm-3">Name (*)</label>
+              <div class="col-sm-9">
+                <input [(ngModel)]="element.name" required label="Name (*)" name="name"
+                  pInputText placeholder="Name (*)">
+              </div>
+            </div>
+
+            <div class="form-group clearfix row">
+              <label class="label-text col-sm-3">Method Name (*)</label>
+              <div class="col-sm-9">
+                <input [(ngModel)]="element.method_name" required label="Method Name (*)" name="method_name"
+                  pInputText placeholder="Method Name (*)">
+              </div>
+            </div>
+
+            <div class="form-group clearfix row">
+              <label class="label-text col-sm-3">Description</label>
+              <div class="col-sm-9">
+                <textarea [(ngModel)]="element.description" name="description" pInputText></textarea>
+              </div>
+            </div>
+
+            <div class="form-group clearfix row">
+              <label class="label-text col-sm-3">SQL Query</label>
+              <div class="col-sm-9">
+                <textarea [(ngModel)]="element.sql_query" (ngModelChange)="onSqlQueryChange()" name="sql_query" pInputText></textarea>
+                <small class="text-muted">Parametri SQL trovati (`?`): {{ parameterCount }}</small>
+              </div>
+            </div>
+
+            <div class="form-group clearfix row">
+              <label class="label-text col-sm-3">Schema Description</label>
+              <div class="col-sm-9">
+                <input [(ngModel)]="schemaDescription" name="schema_description"
+                  pInputText placeholder="Descrizione opzionale dello schema">
+              </div>
+            </div>
+
+            @if (parameterCount > 0) {
+              <div class="form-group clearfix row">
+                <label class="label-text col-sm-3">Schema Parameters</label>
+                <div class="col-sm-9">
+                  @for (parameter of parameterDrafts; track $index; let i = $index) {
+                    <div class="row" style="margin-bottom: 8px;">
+                      <div class="col-sm-3">
+                        <input [(ngModel)]="parameter.name" [name]="'param_name_' + i"
+                          pInputText placeholder="Nome parametro">
+                      </div>
+                      <div class="col-sm-2">
+                        <select [(ngModel)]="parameter.type" [name]="'param_type_' + i" class="form-control">
+                          @for (type of parameterTypeOptions; track type) {
+                            <option [value]="type">{{ type }}</option>
+                          }
+                        </select>
+                      </div>
+                      <div class="col-sm-5">
+                        <input [(ngModel)]="parameter.description" [name]="'param_desc_' + i"
+                          pInputText placeholder="Descrizione parametro">
+                      </div>
+                      <div class="col-sm-2" style="padding-top: 6px;">
+                        <label>
+                          <input type="checkbox" [(ngModel)]="parameter.required" [name]="'param_required_' + i">
+                          Required
+                        </label>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+
+            <div class="form-group clearfix row">
+              <label class="label-text col-sm-3"></label>
+              <div class="col-sm-9">
+                <button type="button" class="btn btn-default" (click)="generateParameterSchema()">
+                  Generate Parameters Schema
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group clearfix row">
+              <label class="label-text col-sm-3">Parameters Schema</label>
+              <div class="col-sm-9">
+                <textarea [(ngModel)]="element.parameters_schema" name="parameters_schema" pInputText></textarea>
+              </div>
+            </div>
+
+            <div class="btn-group btn-actions pull-right">
+
+              @if (!element.uuid) {
+                <button (click)="save()" [disabled]="!theform.form.valid"
+                  class="btn btn-success" type="button">
+                  Save
+                </button>
+              }
+
+              @if (element.uuid) {
+                <button (click)="update()" [disabled]="!theform.form.valid"
+                  class="btn btn-success" type="button">
+                  Modify
+                </button>
+              }
+
+              @if (element.uuid) {
+                <button (click)="confirmDelete()" class="btn btn-danger" type="button">
+                  Delete
+                </button>
+              }
+
+              <button (click)="navigateToList()" class="btn btn-danger" type="button">
+                Undo
+              </button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

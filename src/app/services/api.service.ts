@@ -152,7 +152,7 @@ export class ApiService implements OnInit {
 
         if (searchValue) {
             params = params.set(
-                search_field + '_contains',
+                search_field + '_containss',
                 searchValue
             );
         }

@@ -13,7 +13,6 @@ type RuntimeKeycloakConfig = {
 export type RuntimeConfig = {
     keycloakConfig: RuntimeKeycloakConfig;
     scope?: string;
-    img_path?: string;
     asset_path?: string;
     [key: string]: unknown;
 };

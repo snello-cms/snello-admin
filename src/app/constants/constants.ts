@@ -1,6 +1,6 @@
 import {SelectItem} from 'primeng/api';
 
-export const APP_VERSION = '4.1.4';
+export const APP_VERSION = '4.1.5';
 
 export const MAP_INPUT_TO_FIELD: Map<string, any> = new Map(
     [
@@ -148,6 +148,7 @@ export const METADATA_API_PATH = 'metadata_api_path';
 export const DATA_LIST_API_PATH = 'data_list_api_path';
 export const PUBLIC_DATA_API_PATH = 'public_data_api_path';
 export const SELECT_QUERY_API_PATH = 'select_query_api_path';
+export const AI_TOOLS_API_PATH = 'ai_tools_api_path';
 export const USER_API_PATH = 'user_api_path';
 export const ROLE_API_PATH = 'role_api_path';
 export const USER_ROLES_API_PATH = 'user_roles_api_path';
@@ -221,6 +222,14 @@ const ADMIN_ITEMS_LEGACY: any[] = [
         name: 'SelectQuery',
         summary: 'Select Queries Management',
         roles: 'Admin, selectqueries_edit, selectqueries_view'
+    },
+    {
+        id: 'list',
+        icon: 'fa fa-wrench',
+        section: 'aitools',
+        name: 'AiTools',
+        summary: 'AI Tools Management',
+        roles: 'Admin, aitools_edit, aitools_view, ai_tools_edit, ai_tools_view'
     },
     {
         id: 'list',
