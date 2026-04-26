@@ -53,11 +53,11 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         {label: 'less or equal', value: 'lte'},
         {label: 'greater or equal', value: 'gte'},
         {label: 'contains', value: 'contains'},
-        {label: 'contanins case insensitve', value: 'containss'}];
+        {label: 'contains case insensitive', value: 'contains'}];
 
     componentDefaultValuesMapper = {
-        string: 'containss',
-        text: 'containss',
+        string: 'contains',
+        text: 'contains',
         number: '',
         decimal: '',
         password: '',
@@ -68,12 +68,12 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         time: '',
         boolean: '',
         passivation: '',
-        tinymce: 'containss',
-        monaco: 'containss',
-        tags: 'containss',
+        tinymce: 'contains',
+        monaco: 'contains',
+        tags: 'contains',
         join: '',
-        multijoin: 'containss',
-        realtionships: 'containss',
+        multijoin: 'contains',
+        realtionships: 'contains',
         media: 'null',
         image: 'null'
     };
