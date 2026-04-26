@@ -60,17 +60,17 @@
                 <label class="label-text col-sm-3">Default value</label>
                 <div class="col-sm-9">
                   <input [(ngModel)]="element.default_value" name="default_value" pInputText
-                    [placeholder]="fieldType === 'date' ? 'Es. now() o always_now()' : fieldType === 'datetime' ? 'Es. now() o always_now()' : 'Default value'">
+                    [placeholder]="fieldType === 'date' ? 'Ex. now() or always_now()' : fieldType === 'datetime' ? 'Ex. now() or always_now()' : 'Default value'">
                   @if (fieldType === 'date') {
                     <small class="text-muted">
-                      <code>now()</code> - data corrente solo in creazione (formato <code>yyyy-MM-dd</code>)<br>
-                      <code>always_now()</code> - data corrente sempre, anche in update
+                      <code>now()</code> - current date only on create (format <code>yyyy-MM-dd</code>)<br>
+                      <code>always_now()</code> - current date on both create and update
                     </small>
                   }
                   @if (fieldType === 'datetime') {
                     <small class="text-muted">
-                      <code>now()</code> - data e ora correnti solo in creazione (formato <code>yyyy-MM-dd hh:mm</code>)<br>
-                      <code>always_now()</code> - data e ora correnti sempre, anche in update
+                      <code>now()</code> - current date and time only on create (format <code>yyyy-MM-dd hh:mm</code>)<br>
+                      <code>always_now()</code> - current date and time on both create and update
                     </small>
                   }
                 </div>

@@ -102,7 +102,7 @@ export class SnelloChatService {
                 type: 'navigate',
                 path: match[1],
                 entity: match[1],
-                label: 'Apri percorso'
+                label: 'Open path'
             });
             match = navigateRegex.exec(text);
         }
@@ -114,7 +114,7 @@ export class SnelloChatService {
                 type: 'create_preview',
                 entity: match[1],
                 payload: this.decodePayload(match[2]),
-                label: `Riepilogo creazione ${match[1]}`
+                label: `Create summary ${match[1]}`
             });
             match = previewRegex.exec(text);
         }
@@ -128,7 +128,7 @@ export class SnelloChatService {
                     type: 'navigate',
                     path: `/datalist/list/${encodeURIComponent(entity)}`,
                     entity,
-                    label: `Apri metadato ${entity}`
+                    label: `Open metadata ${entity}`
                 });
             }
             match = metadataRegex.exec(text);
@@ -151,7 +151,7 @@ export class SnelloChatService {
                     type: 'navigate',
                     path: `/datalist/list/${encodeURIComponent(inferredEntity)}`,
                     entity: inferredEntity,
-                    label: `Apri metadato ${inferredEntity}`
+                    label: `Open metadata ${inferredEntity}`
                 }
             ]);
         }
@@ -163,7 +163,7 @@ export class SnelloChatService {
                     type: 'navigate',
                     path: '/metadata/list',
                     entity: 'metadata',
-                    label: 'Apri elenco metadati'
+                    label: 'Open metadata list'
                 }
             ]);
         }

@@ -126,12 +126,6 @@ export class HomepageTopBar implements OnInit{
     ngOnInit(): void {
         void this.route;
         void this.apiService;
-        this.metadatasService.getListSearch({}, 0, 300).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
-            next: model => {
-                this.model = <Metadata[]>model;
-            },
-            error: error => (this.errorMessage = <any>error)
-        });
     }
 
     toggleSearch(event: Event): void {
@@ -139,6 +133,7 @@ export class HomepageTopBar implements OnInit{
         event.stopPropagation();
         this.searchOpen = !this.searchOpen;
         if (this.searchOpen) {
+            this.ensureMetadataLoaded();
             this.focusSearchInput();
         }
     }
@@ -146,6 +141,7 @@ export class HomepageTopBar implements OnInit{
     updateSearch(event: Event): void {
         this.searchTerm = (event.target as HTMLInputElement).value ?? '';
         this.searchOpen = true;
+        this.ensureMetadataLoaded();
     }
 
     closeSearch(): void {
@@ -196,5 +192,20 @@ export class HomepageTopBar implements OnInit{
                 input.select();
             }
         }, 0);
+    }
+
+    private ensureMetadataLoaded(): void {
+        if (this.model.length > 0) {
+            return;
+        }
+
+        this.metadatasService.getSidebarMetadata().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+            next: model => {
+                this.model = <Metadata[]>model;
+            },
+            error: error => {
+                this.errorMessage = <any>error;
+            }
+        });
     }
 }

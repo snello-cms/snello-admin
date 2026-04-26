@@ -105,10 +105,29 @@ export class FormGenerationListComponent implements OnInit {
                 );
         } else if (fieldDefinition.type === 'multijoin') {
             const labelField = this.fieldDefintionService.fetchFirstLabel(fieldDefinition);
-            return this.apiService.fetchJoinList(this.metadataName, this.getTableKey(rowData),
+            const ids = Array.isArray(fullValue)
+                ? fullValue.map(value => String(value).trim()).filter(Boolean)
+                : String(fullValue)
+                    .split(',')
+                    .map(value => value.trim())
+                    .filter(Boolean);
+
+            if (ids.length === 0) {
+                return of('');
+            }
+
+            const selectFields = `${fieldDefinition.join_table_select_fields},${fieldDefinition.join_table_key}`;
+            return this.apiService.fetchObjectsByKeys(
                 fieldDefinition.join_table_name,
-                fieldDefinition.join_table_select_fields)
-                .pipe(map(join => (join as unknown as Record<string, unknown>)[labelField as string]));
+                fieldDefinition.join_table_key,
+                ids,
+                selectFields
+            ).pipe(
+                map(items => items
+                    .map(item => item?.[labelField])
+                    .filter(value => value != null && value !== '')
+                    .join(', '))
+            );
         } else {
             return of(fullValue);
         }

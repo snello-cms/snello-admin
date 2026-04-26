@@ -2,9 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import {FieldDefinition} from '../../models/field-definition';
 import {ApiService} from '../../services/api.service';
-import { of, forkJoin, Observable } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
-import { tap } from 'rxjs/operators';
+import { of, Observable } from 'rxjs';
 import {FieldDefinitionService} from "../../services/field-definition.service";
 import { AsyncPipe } from '@angular/common';
 
@@ -14,27 +12,40 @@ import { AsyncPipe } from '@angular/common';
     template: `
   @if (joinList$ | async; as values) {
     <div class="form-group clearfix row" [formGroup]="group">
-      <div class="col-sm-12">
-        <label class="col-sm-3">
-          {{ field.name }}
-        </label>
-        <div class="col-sm-9">
-          <ul>
-            @for (c of values; track c) {
-              <li>
-                {{ c[labelField] }}
-                <i class="pi pi-times"></i>
-              </li>
+      <label class="col-sm-3">{{ field.name }}</label>
+      <div class="col-sm-9">
+        @if (values.length === 0) {
+          <span>-</span>
+        } @else {
+          <div class="multijoin-chip-list">
+            @for (c of values; track c?.[field.join_table_key] ?? c?.[labelField] ?? $index) {
+              <span class="multijoin-chip">{{ c[labelField] }}</span>
             }
-          </ul>
-        </div>
-      </div>
-      <div class="col-sm-12">
+          </div>
+        }
       </div>
     </div>
   }
   `,
-    styles: [],
+    styles: [`
+      .multijoin-chip-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+      }
+
+      .multijoin-chip {
+        display: inline-flex;
+        align-items: center;
+        border: 1px solid #d8dbe2;
+        background: #f5f7fb;
+        border-radius: 999px;
+        color: #2b2f38;
+        font-size: 0.85rem;
+        line-height: 1;
+        padding: 0.35rem 0.6rem;
+      }
+    `],
     imports: [ReactiveFormsModule, AsyncPipe]
 })
 export class MultiJoinViewComponent implements OnInit {
@@ -44,26 +55,32 @@ export class MultiJoinViewComponent implements OnInit {
   labelField: string = null;
   joinList$: Observable<any[]>;
 
-
-  uuid: string;
-  name: string;
-
-  constructor(private apiService: ApiService, private activatedRoute: ActivatedRoute, private fieldDefinationService: FieldDefinitionService) {
+  constructor(private apiService: ApiService, private fieldDefinationService: FieldDefinitionService) {
   }
 
 
   ngOnInit() {
     this.labelField = this.fieldDefinationService.fetchFirstLabel(this.field);
-    this.uuid = this.activatedRoute.snapshot.params['uuid'];
-    this.name = this.activatedRoute.snapshot.params['name'];
+    const rawValue = this.field.value;
+    const ids = Array.isArray(rawValue)
+        ? rawValue
+        : String(rawValue ?? '')
+            .split(',')
+            .map(value => value.trim())
+            .filter(Boolean);
 
+    if (ids.length === 0) {
+      this.joinList$ = of([]);
+      return;
+    }
 
-    const observables = [];
-      this.joinList$ =
-          this.apiService.fetchJoinList(this.name, this.uuid, this.field.join_table_name, this.field.join_table_select_fields)
-          .pipe(
-              tap(join => this.group.get(this.field.name).setValue(join)),
-          );
+    const selectFields = `${this.field.join_table_select_fields},${this.field.join_table_key}`;
+    this.joinList$ = this.apiService.fetchObjectsByKeys(
+      this.field.join_table_name,
+      this.field.join_table_key,
+      ids,
+      selectFields
+    );
 
   }
 

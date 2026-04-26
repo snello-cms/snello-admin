@@ -149,7 +149,7 @@ export class ImageComponent implements OnInit {
         }
       })
       .catch(() => {
-        this.uploadError = 'Errore durante il caricamento immagine.';
+        this.uploadError = 'Error while uploading image.';
       })
       .finally(() => {
         this.uploadInProgress = false;

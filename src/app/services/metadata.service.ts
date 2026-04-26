@@ -4,7 +4,7 @@ import {Metadata} from '../models/metadata';
 import {Observable, of} from 'rxjs';
 import {AbstractService} from '../common/abstract-service';
 import {FieldDefinition} from '../models/field-definition';
-import {catchError, map, take} from 'rxjs/operators';
+import {catchError, map, shareReplay, take, tap} from 'rxjs/operators';
 import {MessageService} from 'primeng/api';
 import {ConfigurationService} from './configuration.service';
 import {EXPORT_API_PATH, IMPORT_API_PATH, METADATA_API_PATH} from '../constants/constants';
@@ -15,6 +15,8 @@ import {EXPORT_API_PATH, IMPORT_API_PATH, METADATA_API_PATH} from '../constants/
 export class MetadataService extends AbstractService<Metadata> {
 
     private nameToMetadata: Map<string, Metadata> = new Map();
+    private sidebarMetadataCache: Metadata[] | null = null;
+    private sidebarMetadataRequest$: Observable<Metadata[]> | null = null;
     private exportUrl = '/api/metadatas/export';
     private importUrl = '/api/metadatas/import';
 
@@ -76,6 +78,30 @@ export class MetadataService extends AbstractService<Metadata> {
 
     public getMetadataFromName(name: string): Metadata | undefined {
         return this.nameToMetadata.get(name);
+    }
+
+    public getSidebarMetadata(): Observable<Metadata[]> {
+        if (this.sidebarMetadataCache) {
+            return of(this.sidebarMetadataCache);
+        }
+
+        if (this.sidebarMetadataRequest$) {
+            return this.sidebarMetadataRequest$;
+        }
+
+        this.sidebarMetadataRequest$ = this.getListSearch({}, 0, 0).pipe(
+            tap((metadatas: Metadata[]) => {
+                this.sidebarMetadataCache = metadatas;
+            }),
+            shareReplay(1)
+        );
+
+        return this.sidebarMetadataRequest$;
+    }
+
+    public clearSidebarMetadataCache(): void {
+        this.sidebarMetadataCache = null;
+        this.sidebarMetadataRequest$ = null;
     }
 
     protected postList(ts: Metadata[]) {

@@ -141,6 +141,7 @@ export class FormGenerationEditComponent implements OnInit {
             return;
         }
         const objToSave = this.preSaveUpdate();
+        console.log('[form-generation] save payload', objToSave);
         this.apiService.persist(this.metadataName, objToSave)
             .subscribe(
                 element => {
@@ -161,6 +162,7 @@ export class FormGenerationEditComponent implements OnInit {
             return;
         }
         const objToSave = this.preSaveUpdate();
+        console.log('[form-generation] update payload', objToSave);
         this.apiService.update(this.metadataName, this.uuid, objToSave)
             .subscribe(
                 element => {
@@ -369,6 +371,31 @@ export class FormGenerationEditComponent implements OnInit {
         return null;
     }
 
+    private extractJoinKeyValue(value: unknown, joinTableKey?: string): unknown {
+        if (value == null) {
+            return value;
+        }
+        if (typeof value !== 'object') {
+            return value;
+        }
+
+        const candidate = value as Record<string, unknown>;
+        if (joinTableKey && candidate[joinTableKey] != null && candidate[joinTableKey] !== '') {
+            return candidate[joinTableKey];
+        }
+        if (candidate.uuid != null && candidate.uuid !== '') {
+            return candidate.uuid;
+        }
+        if (candidate.id != null && candidate.id !== '') {
+            return candidate.id;
+        }
+        if (candidate.value != null && candidate.value !== '') {
+            return candidate.value;
+        }
+
+        return null;
+    }
+
     // TODO: lo riusciamo a portare in tags.component.ts?
     preSaveUpdate(): any {
         const objToSave = JSON.parse(JSON.stringify(this.form.value));
@@ -383,52 +410,75 @@ export class FormGenerationEditComponent implements OnInit {
             }
         }
         
-        // tslint:disable-next-line:forin
-        for (const k in objToSave) {
-            for (const field of this.regConfig) {
-                field.is_edit = false;
-                if (field.name === k) {
-                    if (field.type === 'tags') {
-                        objToSave[field.name] = objToSave[field.name].join(',');
-                    }
-                    if (field.type === 'multijoin') {
-                        const rawValues = objToSave[field.name];
-                        if (Array.isArray(rawValues)) {
-                            const values = rawValues
-                                .map(value => typeof value === 'object' && value != null
-                                    ? value[field.join_table_key]
-                                    : value)
-                                .filter(value => value != null && value !== '');
-                            objToSave[field.name] = values.join(',');
-                        }
-                    }
-                    if (field.type === 'join') {
-                        const rawValue = objToSave[field.name];
-                        objToSave[field.name] = typeof rawValue === 'object' && rawValue != null
-                            ? rawValue[field.join_table_key]
-                            : rawValue;
-                    }
-                    if (field.type === 'realtionships') {
-                        const rawValues = objToSave[field.name];
-                        if (Array.isArray(rawValues)) {
-                            objToSave[field.name] = rawValues.join(',');
-                        }
-                    }
-                    if (field.type === 'time') {
-                        objToSave[field.name] = this.formatTime(objToSave[field.name]);
-                    }
-                    if (field.type === 'date') {
-                        objToSave[field.name] = this.formatDate(objToSave[field.name]);
-                    }
-                    if (field.type === 'datetime') {
-                        objToSave[field.name] = this.formatDateTime(objToSave[field.name]);
-                    }
-                    // null = 0
-                    if (field.type === 'input' &&
-                        field.input_type === 'number' && objToSave[field.name]) {
-                        objToSave[field.name] = +objToSave[field.name];
-                    }
+        for (const field of this.regConfig) {
+            field.is_edit = false;
+            if (!field.name) {
+                continue;
+            }
+
+            const fieldName = field.name;
+            if (!(fieldName in objToSave)) {
+                objToSave[fieldName] = this.form.value?.[fieldName];
+            }
+
+            if (field.type === 'tags') {
+                const tagValues = objToSave[fieldName];
+                objToSave[fieldName] = Array.isArray(tagValues) ? tagValues.join(',') : (tagValues ?? '');
+            }
+
+            if (field.type === 'multijoin') {
+                const rawValues = objToSave[fieldName];
+                const normalizedValues = Array.isArray(rawValues)
+                    ? rawValues
+                    : typeof rawValues === 'string'
+                        ? rawValues.split(',').map(value => value.trim()).filter(Boolean)
+                        : rawValues == null || rawValues === ''
+                            ? []
+                            : [rawValues];
+
+                const values = normalizedValues
+                    .map(value => this.extractJoinKeyValue(value, field.join_table_key))
+                    .filter(value => value != null && value !== '');
+
+                objToSave[fieldName] = values.join(',');
+                console.log('[multijoin] serialized for save', {
+                    field: fieldName,
+                    raw: rawValues,
+                    normalized: normalizedValues,
+                    serialized: objToSave[fieldName]
+                });
+            }
+
+            if (field.type === 'join') {
+                const rawValue = objToSave[fieldName];
+                objToSave[fieldName] = typeof rawValue === 'object' && rawValue != null
+                    ? rawValue[field.join_table_key]
+                    : rawValue;
+            }
+
+            if (field.type === 'realtionships') {
+                const rawValues = objToSave[fieldName];
+                if (Array.isArray(rawValues)) {
+                    objToSave[fieldName] = rawValues.join(',');
                 }
+            }
+
+            if (field.type === 'time') {
+                objToSave[fieldName] = this.formatTime(objToSave[fieldName]);
+            }
+
+            if (field.type === 'date') {
+                objToSave[fieldName] = this.formatDate(objToSave[fieldName]);
+            }
+
+            if (field.type === 'datetime') {
+                objToSave[fieldName] = this.formatDateTime(objToSave[fieldName]);
+            }
+
+            // null = 0
+            if (field.type === 'input' &&
+                field.input_type === 'number' && objToSave[fieldName]) {
+                objToSave[fieldName] = +objToSave[fieldName];
             }
         }
         return objToSave;

@@ -195,6 +195,9 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
     }
 
     preSave(): boolean {
+        if (!this.validateNameWithoutSpaces()) {
+            return false;
+        }
         this.pre();
         if (this.element.searchable) {
             const elementName = this.element.name ?? '';
@@ -206,6 +209,9 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
 
 
     preUpdate(): boolean {
+        if (!this.validateNameWithoutSpaces()) {
+            return false;
+        }
         this.pre();
         if (this.element.searchable) {
             const elementName = this.element.name ?? '';
@@ -215,7 +221,22 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         return super.preUpdate();
     }
 
+    private validateNameWithoutSpaces(): boolean {
+        const name = this.element?.name;
+        if (typeof name !== 'string') {
+            return true;
+        }
+
+        if (/\s/.test(name)) {
+            this.addError('Name cannot contain spaces (leading, trailing, or between words).');
+            return false;
+        }
+
+        return true;
+    }
+
     pre() {
+        this.enforceMandatoryForSlugKeyAddition();
         const fieldDefTypes = this.fieldType ? MAP_INPUT_TO_FIELD.get(this.fieldType) : undefined;
         const metadata = this.mapMetadata.get(this.element.metadata_uuid);
         if (metadata) {
@@ -238,6 +259,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
             this.element.input_type = undefined;
         }
         this.fieldType = this.mapFieldToType.get(this.element.type + this.element.input_type);
+        this.enforceMandatoryForSlugKeyAddition();
         this.syncJoinFieldsFromElement();
         super.postFind();
     }
@@ -246,6 +268,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         const selected = event && event.value ? event.value as Metadata : null;
         this.element.metadata_uuid = selected ? selected.uuid : '';
         this.selectedMetadata = selected;
+        this.enforceMandatoryForSlugKeyAddition();
         this.updateJoinMetadataOptions();
         this.element.tab_name = undefined;
         this.element.group_name = undefined;
@@ -467,6 +490,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
 
     onNameChanged(newName: string) {
         if (!newName || newName.trim() === '') {
+            this.enforceMandatoryForSlugKeyAddition();
             return;
         }
         // Trasforma snake_case in Title Case
@@ -478,6 +502,17 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
             .join(' ');               // Riunisce le parole
         
         this.element.label = label;
+        this.enforceMandatoryForSlugKeyAddition();
+    }
+
+    private enforceMandatoryForSlugKeyAddition() {
+        const metadata = this.selectedMetadata ?? this.mapMetadata.get(this.element.metadata_uuid);
+        const fieldName = (this.element.name ?? '').trim();
+        const tableKeyAddition = (metadata?.table_key_addition ?? '').trim();
+
+        if (metadata?.table_key_type === 'slug' && fieldName !== '' && fieldName === tableKeyAddition) {
+            this.element.mandatory = true;
+        }
     }
 
     changedFieldType (event: any) {

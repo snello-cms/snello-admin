@@ -16,15 +16,18 @@ import { AsyncPipe } from '@angular/common';
     standalone: true,
     template: `
         @if (joinList$ | async) {
-          <div class="form-group clearfix row" [formGroup]="group">
-            <div class="col-sm-12">
+                    <div class="form-group clearfix" [formGroup]="group">
+                        <div class="row">
               <label class="col-sm-3">
                 {{ field.name }}{{ field.mandatory ? ' (*)' : '' }}
               </label>
               <div class="col-sm-9">
                 <p-autoComplete
                   [suggestions]="options" (completeMethod)="search($event)" [size]="30"
-                                    [optionLabel]="labelField" [optionValue]="field.join_table_key" [dataKey]="field.join_table_key" [dropdown]="true"
+                                                                        [optionLabel]="labelField" [dataKey]="field.join_table_key" [dropdown]="true"
+                                    appendTo="body"
+                                    [autoZIndex]="true"
+                                    [baseZIndex]="3000"
                   [formControlName]="field.name" [forceSelection]="true" [multiple]="true">
                 </p-autoComplete>
               </div>
@@ -62,6 +65,7 @@ export class MultiJoinComponent implements OnInit {
         this.uuid = this.activatedRoute.snapshot.params['uuid'];
         this.name = this.activatedRoute.snapshot.params['name'];
         const fieldName = this.field.name;
+        const initialIds = this.normalizeMultijoinIds(this.field.value);
 
 
         this.apiService.getJoinList(this.field)
@@ -71,9 +75,24 @@ export class MultiJoinComponent implements OnInit {
                 }
             );
 
-        const observables = [];
-
-        if (this.uuid && fieldName) {
+        if (initialIds.length > 0 && fieldName) {
+            console.debug('[multijoin] loading from saved ids', {
+                field: fieldName,
+                ids: initialIds
+            });
+            this.joinList$ = this.loadObjectsByIds(initialIds)
+                .pipe(
+                    tap(join => {
+                        this.options = join;
+                        this.group.get(fieldName)?.setValue(join);
+                        console.debug('[multijoin] loaded linked objects', {
+                            field: fieldName,
+                            count: join.length,
+                            labels: join.map(item => item?.[this.labelField]).filter(Boolean)
+                        });
+                    })
+                );
+        } else if (this.uuid && fieldName) {
             this.joinList$ =
                 this.apiService.fetchJoinList(
                     this.name,
@@ -85,9 +104,7 @@ export class MultiJoinComponent implements OnInit {
                         tap(join => {
                             this.options = join;
                             this.group.get(fieldName)?.setValue(
-                                Array.isArray(join)
-                                    ? join.map(item => item?.[this.field.join_table_key]).filter(Boolean)
-                                    : []
+                                Array.isArray(join) ? join : []
                             );
                         }),
                     );
@@ -96,6 +113,65 @@ export class MultiJoinComponent implements OnInit {
             this.joinList$ = of([]);
         }
 
+    }
+
+    private normalizeMultijoinIds(rawValue: unknown): string[] {
+        if (rawValue == null || rawValue === '') {
+            return [];
+        }
+
+        if (Array.isArray(rawValue)) {
+            return rawValue
+                .map(value => this.extractJoinKey(value))
+                .filter((value): value is string => value != null && value !== '');
+        }
+
+        if (typeof rawValue === 'string') {
+            return rawValue
+                .split(',')
+                .map(value => value.trim())
+                .filter(Boolean);
+        }
+
+        const keyValue = this.extractJoinKey(rawValue);
+        return keyValue ? [keyValue] : [];
+    }
+
+    private extractJoinKey(value: unknown): string | null {
+        if (value == null || value === '') {
+            return null;
+        }
+        if (typeof value !== 'object') {
+            return String(value);
+        }
+
+        const candidate = value as Record<string, unknown>;
+        const keyName = this.field.join_table_key;
+        if (keyName && candidate[keyName] != null && candidate[keyName] !== '') {
+            return String(candidate[keyName]);
+        }
+        if (candidate.uuid != null && candidate.uuid !== '') {
+            return String(candidate.uuid);
+        }
+        if (candidate.id != null && candidate.id !== '') {
+            return String(candidate.id);
+        }
+
+        return null;
+    }
+
+    private loadObjectsByIds(ids: string[]): Observable<any[]> {
+        if (ids.length === 0) {
+            return of([]);
+        }
+
+        const selectFields = `${this.field.join_table_select_fields},${this.field.join_table_key}`;
+        return this.apiService.fetchObjectsByKeys(
+            this.field.join_table_name,
+            this.field.join_table_key,
+            ids,
+            selectFields
+        );
     }
 
 

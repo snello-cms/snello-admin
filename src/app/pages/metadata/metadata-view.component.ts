@@ -67,17 +67,48 @@ export class MetadataViewComponent extends AbstractViewComponent<Metadata>
     }
 
     public createTable() {
-        this.metadataService.createTable(this.element).subscribe(
-            res => {
-                this.addInfo('Table created successfully.');
-                if (res && typeof res === 'object' && res.body) {
-                    this.element = res.body;
-                } else {
-                    this.element = res;
+        this.fieldDefinitionService.getAllList({
+            metadata_uuid: this.element.uuid,
+            name_contains: '',
+            uuid: '',
+            _limit: 100000
+        }).subscribe(
+            fieldDefinitions => {
+                if (!fieldDefinitions || fieldDefinitions.length === 0) {
+                    this.addError('Unable to create metadata: at least one field definition is required.');
+                    return;
                 }
+
+                if (this.element.table_key_type === 'slug') {
+                    const tableKeyAddition = (this.element.table_key_addition ?? '').trim();
+                    if (!tableKeyAddition) {
+                        this.addError('Unable to create metadata: Table key Addition is required when table key type is slug.');
+                        return;
+                    }
+
+                    const existsMatchingField = fieldDefinitions.some(fd => fd.name === tableKeyAddition);
+                    if (!existsMatchingField) {
+                        this.addError('Unable to create metadata: Table key Addition must match the name of an existing field definition.');
+                        return;
+                    }
+                }
+
+                this.metadataService.createTable(this.element).subscribe(
+                    res => {
+                        this.addInfo('Table created successfully.');
+                        if (res && typeof res === 'object' && res.body) {
+                            this.element = res.body;
+                        } else {
+                            this.element = res;
+                        }
+                    },
+                    err => {
+                        this.addError('Error creating table.');
+                    }
+                );
             },
-            err => {
-                this.addError('Error creating table.');
+            () => {
+                this.addError('Error while validating field definitions.');
             }
         );
     }

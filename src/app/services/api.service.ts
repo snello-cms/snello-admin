@@ -78,6 +78,47 @@ export class ApiService implements OnInit {
         );
     }
 
+    public fetchObjectsByKeys(tableName: string, keyField: string, keys: string[], selectFields?: string): Observable<any[]> {
+        const normalizedKeys = keys
+            .map(key => key?.trim())
+            .filter((key): key is string => Boolean(key));
+
+        if (normalizedKeys.length === 0) {
+            return new Observable<any[]>(subscriber => {
+                subscriber.next([]);
+                subscriber.complete();
+            });
+        }
+
+        let params = new HttpParams();
+        params = params.set('_start', '0');
+        params = params.set('_limit', '0');
+        if (selectFields && selectFields.length > 0) {
+            params = params.set('select_fields', selectFields);
+        }
+        params = params.set(`${keyField}_in`, normalizedKeys.join(','));
+
+        return this.http.get<any[]>(`${this.url}/${tableName}`, {
+            observe: 'response',
+            params
+        }).pipe(
+            map(res => {
+                const items = res.body ?? [];
+                const keyedItems = new Map<string, any>();
+                for (const item of items) {
+                    const keyValue = item?.[keyField];
+                    if (keyValue != null) {
+                        keyedItems.set(String(keyValue), item);
+                    }
+                }
+                return normalizedKeys
+                    .map(key => keyedItems.get(key))
+                    .filter(item => item != null);
+            }),
+            catchError(this.handleError)
+        );
+    }
+
     public fetchJoinList(metadata_from_name: string, metadata_uuid: string, metadata_to_name: string,
                          select_fields?: string): Observable<any[]> {
         let params = new HttpParams();

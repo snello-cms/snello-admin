@@ -4,6 +4,7 @@ import {Component, OnInit} from '@angular/core';
 import {Metadata} from '../../models/metadata';
 import {NavigationExtras, Router} from '@angular/router';
 import {MetadataService} from '../../services/metadata.service';
+import {FieldDefinitionService} from '../../services/field-definition.service';
 import { SideBarComponent } from '../sidebar/sidebar.component';
 import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -21,6 +22,7 @@ export class MetadataListComponent extends AbstractListComponent<Metadata> imple
         public  router: Router,
         public confirmationService: ConfirmationService,
         public service: MetadataService,
+        public fieldDefinitionService: FieldDefinitionService,
         public messageService: MessageService) {
 
         super(messageService, router, confirmationService, service, 'metadata');
@@ -53,18 +55,61 @@ export class MetadataListComponent extends AbstractListComponent<Metadata> imple
     }
 
     public createTable(metadata: Metadata) {
-        this.service.createTable(metadata).subscribe(
-            res => {
-                this.reloadListData(metadata, res);
-                this.messageService.add({
-                    severity: 'info',
-                    summary: 'Table created successfully.'
-                });
+        this.fieldDefinitionService.getAllList({
+            metadata_uuid: metadata.uuid,
+            name_contains: '',
+            uuid: '',
+            _limit: 100000
+        }).subscribe(
+            fieldDefinitions => {
+                if (!fieldDefinitions || fieldDefinitions.length === 0) {
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Unable to create metadata: at least one field definition is required.'
+                    });
+                    return;
+                }
+
+                if (metadata.table_key_type === 'slug') {
+                    const tableKeyAddition = (metadata.table_key_addition ?? '').trim();
+                    if (!tableKeyAddition) {
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Unable to create metadata: Table key Addition is required when table key type is slug.'
+                        });
+                        return;
+                    }
+
+                    const existsMatchingField = fieldDefinitions.some(fd => fd.name === tableKeyAddition);
+                    if (!existsMatchingField) {
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Unable to create metadata: Table key Addition must match the name of an existing field definition.'
+                        });
+                        return;
+                    }
+                }
+
+                this.service.createTable(metadata).subscribe(
+                    res => {
+                        this.reloadListData(metadata, res);
+                        this.messageService.add({
+                            severity: 'info',
+                            summary: 'Table created successfully.'
+                        });
+                    },
+                    err => {
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Error creating table.'
+                        });
+                    }
+                );
             },
-            err => {
+            () => {
                 this.messageService.add({
                     severity: 'error',
-                    summary: 'Error creating table.'
+                    summary: 'Error while validating field definitions.'
                 });
             }
         );
