@@ -1,6 +1,6 @@
 import {SelectItem} from 'primeng/api';
 
-export const APP_VERSION = '4.1.3';
+export const APP_VERSION = '4.1.4';
 
 export const MAP_INPUT_TO_FIELD: Map<string, any> = new Map(
     [
