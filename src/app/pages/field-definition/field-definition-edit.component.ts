@@ -89,8 +89,15 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         super(router, route, confirmationService, fieldDefinitionService, messageService, 'fielddefinition');
         for (const key of Array.from(MAP_INPUT_TO_FIELD.keys())) {
             this.fieldTypes.push({value: key, label: key});
-            this.mapFieldToType.set(MAP_INPUT_TO_FIELD.get(key)[0] + MAP_INPUT_TO_FIELD.get(key)[1], key);
+            const fieldDefType = MAP_INPUT_TO_FIELD.get(key);
+            if (fieldDefType) {
+                this.mapFieldToType.set(this.buildFieldTypeKey(fieldDefType[0], fieldDefType[1]), key);
+            }
         }
+    }
+
+    private buildFieldTypeKey(type?: string, inputType?: string | null): string {
+        return `${type ?? ''}::${inputType ?? ''}`;
     }
 
 
@@ -258,7 +265,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         if (!this.element.input_type) {
             this.element.input_type = undefined;
         }
-        this.fieldType = this.mapFieldToType.get(this.element.type + this.element.input_type);
+        this.fieldType = this.mapFieldToType.get(this.buildFieldTypeKey(this.element.type, this.element.input_type));
         this.enforceMandatoryForSlugKeyAddition();
         this.syncJoinFieldsFromElement();
         super.postFind();
