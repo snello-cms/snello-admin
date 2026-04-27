@@ -2,9 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import {FieldDefinition} from '../../models/field-definition';
 import {ApiService} from '../../services/api.service';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
-import {tap, take} from 'rxjs/operators';
+import {tap} from 'rxjs/operators';
 import {FieldDefinitionService} from '../../services/field-definition.service';
 import { AsyncPipe } from '@angular/common';
 
@@ -48,8 +48,22 @@ export class JoinViewComponent implements OnInit {
         this.name = this.activatedRoute.snapshot.params['name'];
 
         const fieldName = this.field.name;
+        const rawJoinValue = this.field.value;
+        const joinKeyValue = typeof rawJoinValue === 'object' && rawJoinValue != null
+            ? rawJoinValue[this.field.join_table_key]
+            : rawJoinValue;
+        const hasJoinValue = joinKeyValue != null && joinKeyValue !== '';
+
+        if (!hasJoinValue) {
+            this.join$ = of({});
+            if (fieldName) {
+                this.group.get(fieldName)?.setValue(null);
+            }
+            return;
+        }
+
         this.join$ =
-            this.apiService.fetchObject(this.field.join_table_name, this.field.value, this.field.join_table_select_fields)
+            this.apiService.fetchObject(this.field.join_table_name, joinKeyValue, this.field.join_table_select_fields)
                 .pipe(
                     tap(join => {
                         if (!fieldName) {

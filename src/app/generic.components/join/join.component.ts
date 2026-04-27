@@ -22,7 +22,7 @@ import { AsyncPipe } from '@angular/common';
               <div class="col-sm-9">
                 <p-autoComplete
                   [suggestions]="options" (completeMethod)="search($event)" [size]="30"
-                                    [optionLabel]="labelField" [optionValue]="field.join_table_key" [dataKey]="field.join_table_key" [dropdown]="true"
+                                    [optionLabel]="labelField" [dataKey]="field.join_table_key" [dropdown]="true"
                                     appendTo="body"
                                     [autoZIndex]="true"
                                     [baseZIndex]="3000"
@@ -66,18 +66,23 @@ export class JoinComponent implements OnInit {
         this.uuid = this.activatedRoute.snapshot.params['uuid'];
         this.name = this.activatedRoute.snapshot.params['name'];
         const fieldName = this.field.name;
+        const rawJoinValue = this.field.value;
+        const joinKeyValue = typeof rawJoinValue === 'object' && rawJoinValue != null
+            ? rawJoinValue[this.field.join_table_key]
+            : rawJoinValue;
+        const hasJoinValue = joinKeyValue != null && joinKeyValue !== '';
 
-        if (this.uuid && fieldName) {
+        if (this.uuid && fieldName && hasJoinValue) {
             this.join$ =
                 this.apiService.fetchObject(
                     this.field.join_table_name,
-                    this.field.value,
+                    joinKeyValue,
                     this.field.join_table_select_fields + ',' + this.field.join_table_key
                 )
                     .pipe(
                         tap(join => {
                             this.options = join ? [join] : [];
-                            this.group.get(fieldName)?.setValue(join?.[this.field.join_table_key]);
+                            this.group.get(fieldName)?.setValue(join ?? null);
                         }),
                     );
 
@@ -98,9 +103,7 @@ export class JoinComponent implements OnInit {
         this.apiService.getJoinList(this.field, event.query, this.labelField)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(options => {
-                    if (options != null && options.length > 0) {
-                        this.options = options;
-                    }
+                    this.options = options ?? [];
                 }
             );
     }
