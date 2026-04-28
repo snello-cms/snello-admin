@@ -1,0 +1,158 @@
+.wizard-main {
+  .equal-height-row {
+    display: flex;
+    flex-wrap: wrap;
+
+    > [class*='col-'] {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .wizard-panel {
+      flex: 1;
+      height: 100%;
+    }
+  }
+
+  .metadata-definition-panel {
+    h4 {
+      margin-top: 0;
+      margin-bottom: 12px;
+    }
+  }
+
+  .wizard-steps {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+
+    .step {
+      border: 1px solid #d8dee9;
+      border-radius: 8px;
+      color: #4c566a;
+      font-weight: 600;
+      padding: 10px 12px;
+      background: #f8fafc;
+    }
+
+    .step.active {
+      border-color: #2e7d32;
+      color: #1b5e20;
+      background: #e8f5e9;
+    }
+  }
+
+  .wizard-panel {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    background: #fff;
+  }
+
+  .palette-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+    min-height: 120px;
+  }
+
+  .palette-item {
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 8px 10px;
+    background: #f8fafc;
+    cursor: move;
+  }
+
+  .field-type-with-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    i {
+      width: 12px;
+      font-size: 12px;
+      text-align: center;
+      opacity: 0.8;
+    }
+  }
+
+  .drop-zone {
+    border: 2px dashed #cbd5e1;
+    border-radius: 8px;
+    padding: 10px;
+    min-height: 80px;
+    margin-top: 12px;
+    background: #fcfcfd;
+
+    .drop-title {
+      font-size: 12px;
+      color: #64748b;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .drop-value {
+      font-weight: 700;
+      color: #0f172a;
+    }
+
+    .uuid-box-fields {
+      margin-top: 12px;
+
+      .form-group {
+        margin-bottom: 10px;
+      }
+
+      label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 4px;
+      }
+    }
+  }
+
+  .field-canvas {
+    min-height: 240px;
+  }
+
+  .canvas-field {
+    border: 1px solid #d8dee9;
+    border-radius: 6px;
+    background: #fff;
+    padding: 8px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    cursor: move;
+
+    small {
+      display: block;
+      color: #6b7280;
+    }
+  }
+
+  .canvas-field.active {
+    border-color: #2e7d32;
+    background: #f1f8e9;
+  }
+
+  .empty-zone {
+    color: #64748b;
+    font-style: italic;
+    padding: 12px 4px;
+  }
+
+  .review-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 8px 16px;
+  }
+}

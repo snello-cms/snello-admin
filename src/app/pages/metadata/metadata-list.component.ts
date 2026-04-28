@@ -42,6 +42,10 @@ export class MetadataListComponent extends AbstractListComponent<Metadata> imple
         this.router.navigate(['/metadata/import']);
     }
 
+    openWizardPage() {
+        this.router.navigate(['/metadata/wizard']);
+    }
+
     public new() {
         this.router.navigate(['/' + this.path + '/new']);
     }

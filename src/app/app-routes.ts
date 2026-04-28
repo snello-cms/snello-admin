@@ -26,6 +26,7 @@ export const MainRoutes: Routes = [
         children: [
             {path: '', redirectTo: '/metadata/list', pathMatch: 'full'},
             {path: 'list', loadComponent: () => import('./pages/metadata/metadata-list.component').then(m => m.MetadataListComponent)},
+            {path: 'wizard', loadComponent: () => import('./pages/metadata/metadata-wizard.component').then(m => m.MetadataWizardComponent)},
             {path: 'export', loadComponent: () => import('./pages/metadata/metadata-export.component').then(m => m.MetadataExportComponent)},
             {path: 'import', loadComponent: () => import('./pages/metadata/metadata-import.component').then(m => m.MetadataImportComponent)},
             {path: 'change-order/:id', loadComponent: () => import('./pages/metadata/metadata-field-definition-order.component').then(m => m.MetadataFieldDefinitionOrderComponent)},

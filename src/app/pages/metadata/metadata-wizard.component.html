@@ -1,0 +1,304 @@
+<sidebar></sidebar>
+
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>Metadata Wizard</h3>
+  <p>Create Metadata + Field Definition in 3 steps</p>
+</div>
+
+<div class="main wizard-main">
+  <div class="container-fluid">
+    <div class="wizard-steps">
+      <div class="step" [class.active]="step === 1">1. Metadata Base + UUID</div>
+      <div class="step" [class.active]="step === 2">2. Field Definition + Advanced</div>
+      <div class="step" [class.active]="step === 3">3. Configuration Review</div>
+    </div>
+
+    @if (step === 1) {
+      <div class="content view clearfix">
+        <div class="row equal-height-row">
+          <div class="col-md-7 col-sm-12">
+            <div class="wizard-panel metadata-definition-panel">
+              <h4>Metadata definition</h4>
+
+              <div class="form-group clearfix row">
+                <label class="label-text col-sm-3">Table Name (*)</label>
+                <div class="col-sm-9">
+                  <input [(ngModel)]="metadata.table_name" (ngModelChange)="onTableNameChanged()" required name="tableName" pInputText placeholder="Table (*)">
+                </div>
+              </div>
+
+              <div class="form-group clearfix row">
+                <label class="label-text col-sm-3">Label</label>
+                <div class="col-sm-9">
+                  <input [(ngModel)]="metadataLabel" (ngModelChange)="onMetadataLabelChanged()" name="metadataLabel" pInputText placeholder="Label">
+                </div>
+              </div>
+
+              <div class="form-group clearfix row">
+                <label class="label-text col-sm-3">Description</label>
+                <div class="col-sm-9">
+                  <textarea [(ngModel)]="metadata.description" name="description" pTextarea [autoResize]="false" maxlength="100" placeholder="Description (max 100)"></textarea>
+                  <small class="text-muted">{{(metadata.description || '').length}}/100</small>
+                </div>
+              </div>
+
+              <div class="form-group clearfix row">
+                <label class="label-text col-sm-3">Icon (*)</label>
+                <div class="col-sm-9">
+                  <p-select [options]="iconItems" [(ngModel)]="metadata.icon" filter="true" name="icon" required>
+                    <ng-template let-item pTemplate="selectedItem">
+                      <div style="display:flex; align-items:center; gap:.5rem; min-height:1.75rem; line-height:1;">
+                        <i class="{{item.value}}" style="width:1.1rem; text-align:center; font-size:1rem;"></i>
+                        <span style="font-size:14px; line-height:1.2;">{{ item.label }}</span>
+                      </div>
+                    </ng-template>
+                    <ng-template let-icon pTemplate="item">
+                      <div style="display:flex; align-items:center; gap:.5rem; min-height:1.75rem; line-height:1;">
+                        <i class="{{icon.value}}" style="width:1.1rem; text-align:center; font-size:1rem;"></i>
+                        <span style="font-size:14px; line-height:1.2;">{{ icon.label }}</span>
+                      </div>
+                    </ng-template>
+                  </p-select>
+                </div>
+              </div>
+
+              <div class="form-group clearfix row">
+                <label class="label-text col-sm-3">Order By</label>
+                <div class="col-sm-9">
+                  <input [(ngModel)]="metadata.order_by" name="order_by" pInputText placeholder="Order By">
+                </div>
+              </div>
+
+              <div class="form-group clearfix row">
+                <label class="label-text col-sm-3">It's a api protected?</label>
+                <div class="col-sm-9">
+                  <p-toggleswitch name="apiProtected" [(ngModel)]="apiProtected"></p-toggleswitch>
+                </div>
+              </div>
+
+              @if (apiProtected) {
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Username Field (*)</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="metadata.username_field" name="username_field" pInputText placeholder="Username Field">
+                  </div>
+                </div>
+              }
+
+              @if (false) {
+                <!-- Hidden for now: not used in this wizard flow. -->
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Tab & Groups</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="metadata.tab_groups" name="tab_groups" pInputText placeholder="(tab1:group0,group1;tab2:group3,group4)">
+                  </div>
+                </div>
+              }
+            </div>
+
+          </div>
+
+          <div class="col-md-5 col-sm-12">
+            <div class="wizard-panel">
+              <h4>uuid types</h4>
+              <div cdkDropList id="uuidPalette" [cdkDropListData]="uuidPalette" [cdkDropListConnectedTo]="['uuidTarget']" class="palette-list">
+                @for (uuidType of uuidPalette; track uuidType) {
+                  <div class="palette-item" cdkDrag [cdkDragData]="uuidType">
+                    <span class="field-type-with-icon">
+                      <i [class]="getUuidTypeIcon(uuidType)"></i>
+                      <span>{{uuidType}}</span>
+                    </span>
+                  </div>
+                }
+              </div>
+
+              <div class="drop-zone" cdkDropList id="uuidTarget" [cdkDropListData]="[selectedUuidType]" [cdkDropListConnectedTo]="['uuidPalette']" (cdkDropListDropped)="dropUuidType($event)">
+                <div class="drop-title">UUID Box</div>
+                <div class="drop-value field-type-with-icon">
+                  <i [class]="getUuidTypeIcon(selectedUuidType)"></i>
+                  <span>{{selectedUuidType || 'drop here'}}</span>
+                </div>
+
+                <div class="uuid-box-fields">
+                  <div class="form-group">
+                    <label>Table key (*)</label>
+                    <input [(ngModel)]="metadata.table_key" [required]="true" name="uuid_box_table_key" pInputText placeholder="table key (*)">
+                  </div>
+
+                  @if (selectedUuidType === 'slug') {
+                    <div class="form-group">
+                      <label>Table key Addition (*)</label>
+                      <input [(ngModel)]="metadata.table_key_addition" name="uuid_box_table_key_addition" pInputText placeholder="table key addition">
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <small>Drag one type into the UUID box. Only one is allowed.</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (step === 2) {
+      <div class="content view clearfix">
+        <div class="row">
+          <div class="col-md-3 col-sm-12">
+            <div class="wizard-panel">
+              <h4>Field Types</h4>
+              <small>Drag from the left panel to the center canvas</small>
+              <div cdkDropList id="fieldPalette" [cdkDropListData]="fieldPalette" [cdkDropListConnectedTo]="['fieldCanvas']" class="palette-list field-palette">
+                @for (fieldType of fieldPalette; track fieldType) {
+                  <div class="palette-item" cdkDrag [cdkDragData]="fieldType">
+                    <span class="field-type-with-icon">
+                      <i [class]="getFieldTypeIcon(fieldType)"></i>
+                      <span>{{fieldType}}</span>
+                    </span>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-5 col-sm-12">
+            <div class="wizard-panel">
+              <h4>Canvas</h4>
+              <small>Each field requires all advanced options to be filled</small>
+              <div class="drop-zone field-canvas" cdkDropList id="fieldCanvas" [cdkDropListData]="fields" [cdkDropListConnectedTo]="['fieldPalette']" (cdkDropListDropped)="dropFieldType($event)">
+                @if (fields.length === 0) {
+                  <div class="empty-zone">Drop a field type here</div>
+                }
+                @for (field of fields; track field.wizardId) {
+                  <div class="canvas-field" cdkDrag (click)="selectField(field)" [class.active]="selectedFieldId === field.wizardId">
+                    <div>
+                      <strong class="field-type-with-icon">
+                        <i [class]="getFieldTypeIcon(field.fieldType)"></i>
+                        <span>{{field.label || field.fieldType}}</span>
+                      </strong>
+                      <small>{{field.fieldType}} | order: {{field.order_num}}</small>
+                    </div>
+                    <button type="button" class="btn btn-danger btn-square" (click)="removeField(field)">
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 col-sm-12">
+            <div class="wizard-panel">
+              <h4>Field Editor</h4>
+              @if (selectedField) {
+                <div class="form-group">
+                  <label>Name (*)</label>
+                  <input [(ngModel)]="selectedField.name" name="field_name" pInputText (ngModelChange)="onFieldNameChange(selectedField)">
+                </div>
+
+                <div class="form-group">
+                  <label>Label (*)</label>
+                  <input [(ngModel)]="selectedField.label" name="field_label" pInputText>
+                </div>
+
+                <div class="form-group">
+                  <label>Default value</label>
+                  <input [(ngModel)]="selectedField.default_value" name="default_value" pInputText>
+                </div>
+
+                <div class="form-group">
+                  <label>Mandatory</label>
+                  <p-toggleswitch [(ngModel)]="selectedField.mandatory" name="mandatory"></p-toggleswitch>
+                </div>
+
+                <div class="form-group">
+                  <label>Show in list</label>
+                  <p-toggleswitch [(ngModel)]="selectedField.show_in_list" name="show_in_list"></p-toggleswitch>
+                </div>
+
+                <div class="form-group">
+                  <label>Searchable</label>
+                  <p-toggleswitch [(ngModel)]="selectedField.searchable" name="searchable"></p-toggleswitch>
+                </div>
+
+                <div class="form-group">
+                  <label>Search condition</label>
+                  <input [(ngModel)]="selectedField.search_condition" name="search_condition" pInputText>
+                </div>
+
+                @if (selectedField.fieldType === 'select') {
+                  <div class="form-group">
+                    <label>Options</label>
+                    <textarea [(ngModel)]="selectedField.options" name="options" pTextarea></textarea>
+                  </div>
+                }
+              } @else {
+                <div class="empty-zone">Select a field from the canvas</div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    @if (step === 3) {
+      <div class="content view clearfix">
+        <div class="wizard-panel">
+          <h4>Final Configuration Review</h4>
+          <div class="review-grid">
+            <div><strong>Label:</strong> {{metadataLabel || '-'}}</div>
+            <div><strong>Table Name:</strong> {{metadata.table_name}}</div>
+            <div><strong>Description:</strong> {{metadata.description || '-'}}</div>
+            <div><strong>Table key:</strong> {{metadata.table_key}}</div>
+            <div><strong>UUID Type:</strong> {{selectedUuidType}}</div>
+            <div><strong>API Protected:</strong> {{apiProtected ? 'yes' : 'no'}}</div>
+            <div><strong>Username Field:</strong> {{metadata.username_field || '-'}}</div>
+            <div><strong>Tab/Groups:</strong> {{metadata.tab_groups || '-'}}</div>
+          </div>
+
+          <div class="table-wrapper clearfix" style="margin-top: 18px;">
+            <table class="table table-striped table-bordered">
+              <thead>
+              <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Label</th>
+                <th>Type</th>
+              </tr>
+              </thead>
+              <tbody>
+                @for (field of fields; track field.wizardId) {
+                  <tr>
+                    <td>{{field.order_num}}</td>
+                    <td>{{field.name}}</td>
+                    <td>{{field.label}}</td>
+                    <td>{{field.fieldType}}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    }
+
+    <div class="btn-group btn-actions pull-right" style="margin-top: 16px;">
+      <button type="button" class="btn btn-reset" (click)="navigateToList()">Cancel</button>
+      @if (step > 1) {
+        <button type="button" class="btn btn-default" (click)="prevStep()">Back</button>
+      }
+      @if (step < 3) {
+        <button type="button" class="btn btn-search" (click)="nextStep()">Next</button>
+      }
+      @if (step === 3) {
+        <button type="button" class="btn btn-success" [disabled]="isSaving" (click)="createAll()">
+          {{isSaving ? 'Saving...' : 'Create All'}}
+        </button>
+      }
+    </div>
+  </div>
+</div>
