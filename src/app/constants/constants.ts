@@ -185,14 +185,6 @@ const ADMIN_ITEMS_LEGACY: any[] = [
     },
     {
         id: 'list',
-        icon: 'fa fa-cogs',
-        section: 'fielddefinition',
-        name: 'Field Definitions',
-        summary: 'Field definition management to populate forms',
-        roles: 'Admin, fielddefinitions_edit, fielddefinitions_view'
-    },
-    {
-        id: 'list',
         icon: 'fa fa-hand-spock-o',
         section: 'condition',
         name: 'Condition',

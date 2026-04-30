@@ -224,7 +224,20 @@
 
                 <div class="form-group">
                   <label>Default value</label>
-                  <input [(ngModel)]="selectedField.default_value" name="default_value" pInputText>
+                  <input [(ngModel)]="selectedField.default_value" name="default_value" pInputText
+                    [placeholder]="selectedField.fieldType === 'date' ? 'Ex. now() or always_now()' : selectedField.fieldType === 'datetime' ? 'Ex. now() or always_now()' : 'Default value'">
+                  @if (selectedField.fieldType === 'date') {
+                    <small class="text-muted">
+                      <code>now()</code> - current date only on create (format <code>yyyy-MM-dd</code>)<br>
+                      <code>always_now()</code> - current date on both create and update
+                    </small>
+                  }
+                  @if (selectedField.fieldType === 'datetime') {
+                    <small class="text-muted">
+                      <code>now()</code> - current date and time only on create (format <code>yyyy-MM-dd hh:mm</code>)<br>
+                      <code>always_now()</code> - current date and time on both create and update
+                    </small>
+                  }
                 </div>
 
                 <div class="form-group">
