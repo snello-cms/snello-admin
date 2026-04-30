@@ -23,6 +23,8 @@ type WizardStep = 1 | 2 | 3;
 interface WizardField extends FieldDefinition {
     wizardId: string;
     fieldType: string;
+    isSlugField?: boolean;
+    isUsernameField?: boolean;
 }
 
 @Component({
@@ -54,7 +56,20 @@ export class MetadataWizardComponent {
     ];
 
     readonly uuidPalette = this.uuidTypes.map(item => String(item.value));
-    readonly fieldPalette = Array.from(MAP_INPUT_TO_FIELD.keys());
+    readonly fieldGroups: {name: string; types: string[]}[] = [
+        {name: 'base',   types: ['string', 'number', 'decimal', 'password', 'email', 'text', 'boolean', 'passivation']},
+        {name: 'editor', types: ['tinymce', 'monaco']},
+        {name: 'time',   types: ['date', 'datetime', 'time']},
+        {name: 'media',  types: ['media', 'image']},
+        {name: 'join',   types: ['select', 'tags', 'join', 'multijoin', 'realtionships']},
+        {name: 'maps',   types: ['gmaplocation', 'gmappath']}
+    ];
+    readonly fieldPalette = this.fieldGroups.flatMap(g => g.types);
+    openGroup = 'base';
+
+    get palettePanelIds(): string[] {
+        return this.fieldGroups.map(g => `fieldPalette_${g.name}`);
+    }
     readonly iconItems: SelectItem[] = FONT_AWESOME_ICONS;
     readonly defaultSearchConditionByFieldType: {[key: string]: string} = {
         string: 'contains',
@@ -121,6 +136,23 @@ export class MetadataWizardComponent {
     selectedUuidType = 'uuid';
     apiProtected = false;
     isSaving = false;
+    orderByField = '';
+    orderByDirection = 'ASC';
+    readonly orderByDirections: SelectItem[] = [
+        {value: 'ASC', label: 'ASC'},
+        {value: 'DESC', label: 'DESC'}
+    ];
+
+    readonly searchConditionItems: SelectItem[] = [
+        {label: 'equals', value: ''},
+        {label: 'not equals', value: 'ne'},
+        {label: 'less than', value: 'lt'},
+        {label: 'greater than', value: 'gt'},
+        {label: 'less or equal', value: 'lte'},
+        {label: 'greater or equal', value: 'gte'},
+        {label: 'contains', value: 'contains'},
+        {label: 'contains case insensitive', value: 'icontains'}
+    ];
 
     constructor(
         private readonly router: Router,
@@ -136,6 +168,11 @@ export class MetadataWizardComponent {
 
     get selectedField(): WizardField | undefined {
         return this.fields.find(field => field.wizardId === this.selectedFieldId);
+    }
+
+    get orderByFieldOptions(): SelectItem[] {
+        const none: SelectItem = {value: '', label: '— none —'};
+        return [none, ...this.fields.map(f => ({value: f.name ?? '', label: `${f.label || f.name} (${f.fieldType})`}))];
     }
 
     onTableNameChanged() {
@@ -158,6 +195,14 @@ export class MetadataWizardComponent {
 
     get canGoToStepThree(): boolean {
         return this.validateStepTwo(false);
+    }
+
+    get canNavigateToStep2(): boolean {
+        return this.validateStepOne(false);
+    }
+
+    get canNavigateToStep3(): boolean {
+        return this.validateStepOne(false) && this.validateStepTwo(false);
     }
 
     dropUuidType(event: CdkDragDrop<string[]>) {
@@ -208,11 +253,25 @@ export class MetadataWizardComponent {
         }
     }
 
+    goToStep(target: WizardStep) {
+        if (target === this.step) { return; }
+        if (target === 1) { this.step = 1; return; }
+        if (target >= 2) {
+            if (!this.validateStepOne(false)) { return; }
+            if (target === 2) { this.syncAutoFields(); this.step = 2; return; }
+        }
+        if (target === 3) {
+            if (!this.validateStepTwo(false)) { return; }
+            this.step = 3;
+        }
+    }
+
     nextStep() {
         if (this.step === 1) {
             if (!this.validateStepOne(true)) {
                 return;
             }
+            this.syncAutoFields();
             this.step = 2;
             return;
         }
@@ -228,6 +287,55 @@ export class MetadataWizardComponent {
     prevStep() {
         if (this.step > 1) {
             this.step = (this.step - 1) as WizardStep;
+        }
+    }
+
+    private syncAutoFields() {
+        // Remove previously auto-generated fields
+        this.fields = this.fields.filter(f => !f.isSlugField && !f.isUsernameField);
+
+        const autoFields: WizardField[] = [];
+
+        if (this.selectedUuidType === 'slug') {
+            const name = (this.metadata.table_key_addition ?? '').trim();
+            if (name) {
+                const slugField = this.createFieldFromType('string', 0);
+                slugField.name = name;
+                slugField.label = this.buildLabelFromTableName(name);
+                slugField.mandatory = true;
+                slugField.isSlugField = true;
+                autoFields.push(slugField);
+            }
+        }
+
+        if (this.apiProtected) {
+            const name = (this.metadata.username_field ?? '').trim();
+            if (name) {
+                const usernameField = this.createFieldFromType('string', 0);
+                usernameField.name = name;
+                usernameField.label = this.buildLabelFromTableName(name);
+                usernameField.mandatory = true;
+                usernameField.isUsernameField = true;
+                autoFields.push(usernameField);
+            }
+        }
+
+        this.fields = [...autoFields, ...this.fields];
+        this.fields.forEach((f, i) => f.order_num = i + 1);
+    }
+
+    onShowInListChange(field: WizardField) {
+        if (!field.show_in_list) {
+            field.searchable = false;
+            field.search_condition = '';
+        }
+    }
+
+    onSearchableChange(field: WizardField) {
+        if (!field.searchable) {
+            field.search_condition = '';
+        } else {
+            field.search_condition = this.defaultSearchConditionByFieldType[field.fieldType] ?? '';
         }
     }
 
@@ -299,9 +407,9 @@ export class MetadataWizardComponent {
         field.name = `field_${this.fields.length + 1}`;
         field.label = `Field ${this.fields.length + 1}`;
         field.mandatory = false;
-        field.show_in_list = fieldType !== 'media';
-        field.searchable = fieldType !== 'media';
-        field.search_condition = this.defaultSearchConditionByFieldType[fieldType] ?? '';
+        field.show_in_list = false;
+        field.searchable = false;
+        field.search_condition = '';
         field.default_value = '';
         field.sql_type = '';
         field.sql_definition = '';
@@ -347,7 +455,7 @@ export class MetadataWizardComponent {
 
         if (this.selectedUuidType === 'slug' && !(this.metadata.table_key_addition ?? '').trim()) {
             if (showMessage) {
-                this.showValidationError('Step 1: with table key type slug, Table key Addition is required.');
+                this.showValidationError('Step 1: with table key type slug, "Name of field" is required.');
             }
             return false;
         }
@@ -391,7 +499,18 @@ export class MetadataWizardComponent {
             const hasKeyAdditionField = this.fields.some(field => (field.name ?? '').trim() === keyAddition);
             if (!hasKeyAdditionField) {
                 if (showMessage) {
-                    this.showValidationError('Step 2: with table key type slug, a field with name equal to Table key Addition is required.');
+                    this.showValidationError('Step 2: with table key type slug, a field with name equal to "Name of field" is required.');
+                }
+                return false;
+            }
+        }
+
+        if (this.apiProtected) {
+            const usernameFieldName = (this.metadata.username_field ?? '').trim();
+            const hasUsernameField = this.fields.some(field => (field.name ?? '').trim() === usernameFieldName);
+            if (!hasUsernameField) {
+                if (showMessage) {
+                    this.showValidationError('Step 2: with API protected enabled, a field with name equal to Username Field is required.');
                 }
                 return false;
             }
@@ -405,6 +524,7 @@ export class MetadataWizardComponent {
         payload.table_key_type = this.selectedUuidType;
         payload.already_exist = false;
         payload.api_protected = this.apiProtected;
+        payload.order_by = this.orderByField ? `${this.orderByField} ${this.orderByDirection}` : '';
         if (!this.apiProtected) {
             payload.username_field = '';
         }
@@ -416,6 +536,8 @@ export class MetadataWizardComponent {
         const payload = {...field} as any;
         delete payload.wizardId;
         delete payload.fieldType;
+        delete payload.isSlugField;
+        delete payload.isUsernameField;
         delete payload.value;
         delete payload.is_edit;
         delete payload.uuid;

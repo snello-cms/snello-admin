@@ -12,9 +12,9 @@
 <div class="main wizard-main">
   <div class="container-fluid">
     <div class="wizard-steps">
-      <div class="step" [class.active]="step === 1">1. Metadata Base + UUID</div>
-      <div class="step" [class.active]="step === 2">2. Field Definition + Advanced</div>
-      <div class="step" [class.active]="step === 3">3. Configuration Review</div>
+      <div class="step" [class.active]="step === 1" [class.navigable]="true" (click)="goToStep(1)">1. Metadata Base + UUID</div>
+      <div class="step" [class.active]="step === 2" [class.navigable]="canNavigateToStep2" [class.disabled-step]="!canNavigateToStep2" (click)="goToStep(2)">2. Field Definition</div>
+      <div class="step" [class.active]="step === 3" [class.navigable]="canNavigateToStep3" [class.disabled-step]="!canNavigateToStep3" (click)="goToStep(3)">3. Configuration Review</div>
     </div>
 
     @if (step === 1) {
@@ -67,13 +67,6 @@
               </div>
 
               <div class="form-group clearfix row">
-                <label class="label-text col-sm-3">Order By</label>
-                <div class="col-sm-9">
-                  <input [(ngModel)]="metadata.order_by" name="order_by" pInputText placeholder="Order By">
-                </div>
-              </div>
-
-              <div class="form-group clearfix row">
                 <label class="label-text col-sm-3">It's a api protected?</label>
                 <div class="col-sm-9">
                   <p-toggleswitch name="apiProtected" [(ngModel)]="apiProtected"></p-toggleswitch>
@@ -98,6 +91,28 @@
                   </div>
                 </div>
               }
+
+              <div class="drop-zone" cdkDropList id="uuidTarget" [cdkDropListData]="[selectedUuidType]" [cdkDropListConnectedTo]="['uuidPalette']" (cdkDropListDropped)="dropUuidType($event)">
+                <div class="drop-title">UUID Box</div>
+                <div class="drop-value field-type-with-icon">
+                  <i [class]="getUuidTypeIcon(selectedUuidType)"></i>
+                  <span>{{selectedUuidType || 'drop here'}}</span>
+                </div>
+
+                <div class="uuid-box-fields">
+                  <div class="form-group">
+                    <label>Name of Table key (*)</label>
+                    <input [(ngModel)]="metadata.table_key" [required]="true" name="uuid_box_table_key" pInputText placeholder="table key (*)">
+                  </div>
+
+                  @if (selectedUuidType === 'slug') {
+                    <div class="form-group">
+                      <label>Name of field (*)</label>
+                      <input [(ngModel)]="metadata.table_key_addition" name="uuid_box_table_key_addition" pInputText placeholder="name of field">
+                    </div>
+                  }
+                </div>
+              </div>
             </div>
 
           </div>
@@ -116,28 +131,6 @@
                 }
               </div>
 
-              <div class="drop-zone" cdkDropList id="uuidTarget" [cdkDropListData]="[selectedUuidType]" [cdkDropListConnectedTo]="['uuidPalette']" (cdkDropListDropped)="dropUuidType($event)">
-                <div class="drop-title">UUID Box</div>
-                <div class="drop-value field-type-with-icon">
-                  <i [class]="getUuidTypeIcon(selectedUuidType)"></i>
-                  <span>{{selectedUuidType || 'drop here'}}</span>
-                </div>
-
-                <div class="uuid-box-fields">
-                  <div class="form-group">
-                    <label>Table key (*)</label>
-                    <input [(ngModel)]="metadata.table_key" [required]="true" name="uuid_box_table_key" pInputText placeholder="table key (*)">
-                  </div>
-
-                  @if (selectedUuidType === 'slug') {
-                    <div class="form-group">
-                      <label>Table key Addition (*)</label>
-                      <input [(ngModel)]="metadata.table_key_addition" name="uuid_box_table_key_addition" pInputText placeholder="table key addition">
-                    </div>
-                  }
-                </div>
-              </div>
-
               <small>Drag one type into the UUID box. Only one is allowed.</small>
             </div>
           </div>
@@ -151,14 +144,30 @@
           <div class="col-md-3 col-sm-12">
             <div class="wizard-panel">
               <h4>Field Types</h4>
-              <small>Drag from the left panel to the center canvas</small>
-              <div cdkDropList id="fieldPalette" [cdkDropListData]="fieldPalette" [cdkDropListConnectedTo]="['fieldCanvas']" class="palette-list field-palette">
-                @for (fieldType of fieldPalette; track fieldType) {
-                  <div class="palette-item" cdkDrag [cdkDragData]="fieldType">
-                    <span class="field-type-with-icon">
-                      <i [class]="getFieldTypeIcon(fieldType)"></i>
-                      <span>{{fieldType}}</span>
-                    </span>
+              <small>Drag from the left panel to the field list</small>
+              <div class="field-groups">
+                @for (group of fieldGroups; track group.name) {
+                  <div class="field-group">
+                    <div class="field-group-header" (click)="openGroup = (openGroup === group.name ? '' : group.name)">
+                      <span>{{group.name}}</span>
+                      <i [class]="openGroup === group.name ? 'fa fa-chevron-up' : 'fa fa-chevron-down'"></i>
+                    </div>
+                    @if (openGroup === group.name) {
+                      <div cdkDropList
+                           [id]="'fieldPalette_' + group.name"
+                           [cdkDropListData]="group.types"
+                           [cdkDropListConnectedTo]="['fieldCanvas']"
+                           class="palette-list field-palette">
+                        @for (fieldType of group.types; track fieldType) {
+                          <div class="palette-item" cdkDrag [cdkDragData]="fieldType">
+                            <span class="field-type-with-icon">
+                              <i [class]="getFieldTypeIcon(fieldType)"></i>
+                              <span>{{fieldType}}</span>
+                            </span>
+                          </div>
+                        }
+                      </div>
+                    }
                   </div>
                 }
               </div>
@@ -167,9 +176,17 @@
 
           <div class="col-md-5 col-sm-12">
             <div class="wizard-panel">
-              <h4>Canvas</h4>
-              <small>Each field requires all advanced options to be filled</small>
-              <div class="drop-zone field-canvas" cdkDropList id="fieldCanvas" [cdkDropListData]="fields" [cdkDropListConnectedTo]="['fieldPalette']" (cdkDropListDropped)="dropFieldType($event)">
+              <h4>Field List</h4>
+              <div class="form-group clearfix row" style="margin-bottom:12px;">
+                <label class="label-text col-sm-3">Order By</label>
+                <div class="col-sm-5">
+                  <p-select [(ngModel)]="orderByField" name="order_by_field" [options]="orderByFieldOptions" placeholder="— none —" styleClass="w-100"></p-select>
+                </div>
+                <div class="col-sm-4">
+                  <p-select [(ngModel)]="orderByDirection" name="order_by_dir" [options]="orderByDirections" styleClass="w-100"></p-select>
+                </div>
+              </div>
+              <div class="drop-zone field-canvas" cdkDropList id="fieldCanvas" [cdkDropListData]="fields" [cdkDropListConnectedTo]="palettePanelIds" (cdkDropListDropped)="dropFieldType($event)">
                 @if (fields.length === 0) {
                   <div class="empty-zone">Drop a field type here</div>
                 }
@@ -217,18 +234,22 @@
 
                 <div class="form-group">
                   <label>Show in list</label>
-                  <p-toggleswitch [(ngModel)]="selectedField.show_in_list" name="show_in_list"></p-toggleswitch>
+                  <p-toggleswitch [(ngModel)]="selectedField.show_in_list" name="show_in_list" (ngModelChange)="onShowInListChange(selectedField)"></p-toggleswitch>
                 </div>
 
-                <div class="form-group">
-                  <label>Searchable</label>
-                  <p-toggleswitch [(ngModel)]="selectedField.searchable" name="searchable"></p-toggleswitch>
-                </div>
+                @if (selectedField.show_in_list) {
+                  <div class="form-group">
+                    <label>Searchable</label>
+                    <p-toggleswitch [(ngModel)]="selectedField.searchable" name="searchable" (ngModelChange)="onSearchableChange(selectedField)"></p-toggleswitch>
+                  </div>
 
-                <div class="form-group">
-                  <label>Search condition</label>
-                  <input [(ngModel)]="selectedField.search_condition" name="search_condition" pInputText>
-                </div>
+                  @if (selectedField.searchable) {
+                    <div class="form-group">
+                      <label>Search condition</label>
+                      <p-select [(ngModel)]="selectedField.search_condition" name="search_condition" [options]="searchConditionItems" placeholder="Select a condition" styleClass="w-100"></p-select>
+                    </div>
+                  }
+                }
 
                 @if (selectedField.fieldType === 'select') {
                   <div class="form-group">
@@ -249,25 +270,42 @@
       <div class="content view clearfix">
         <div class="wizard-panel">
           <h4>Final Configuration Review</h4>
+
           <div class="review-grid">
             <div><strong>Label:</strong> {{metadataLabel || '-'}}</div>
             <div><strong>Table Name:</strong> {{metadata.table_name}}</div>
             <div><strong>Description:</strong> {{metadata.description || '-'}}</div>
-            <div><strong>Table key:</strong> {{metadata.table_key}}</div>
+            <div>
+              <strong>Icon:</strong>&nbsp;
+              <i [class]="metadata.icon" style="font-size:1rem; margin-right:4px;"></i>
+              <span>{{metadata.icon || '-'}}</span>
+            </div>
             <div><strong>UUID Type:</strong> {{selectedUuidType}}</div>
+            <div><strong>Name of Table key:</strong> {{metadata.table_key}}</div>
+            @if (selectedUuidType === 'slug') {
+              <div><strong>Name of field (slug):</strong> {{metadata.table_key_addition || '-'}}</div>
+            }
+            <div><strong>Order By:</strong> {{orderByField ? (orderByField + ' ' + orderByDirection) : '-'}}</div>
             <div><strong>API Protected:</strong> {{apiProtected ? 'yes' : 'no'}}</div>
-            <div><strong>Username Field:</strong> {{metadata.username_field || '-'}}</div>
-            <div><strong>Tab/Groups:</strong> {{metadata.tab_groups || '-'}}</div>
+            @if (apiProtected) {
+              <div><strong>Username Field:</strong> {{metadata.username_field || '-'}}</div>
+            }
           </div>
 
-          <div class="table-wrapper clearfix" style="margin-top: 18px;">
-            <table class="table table-striped table-bordered">
+          <h5 style="margin-top:20px; margin-bottom:8px;">Field List</h5>
+          <div class="table-wrapper clearfix">
+            <table class="table table-striped table-bordered" style="font-size:13px;">
               <thead>
               <tr>
                 <th>#</th>
                 <th>Name</th>
                 <th>Label</th>
                 <th>Type</th>
+                <th>Mandatory</th>
+                <th>Show in list</th>
+                <th>Searchable</th>
+                <th>Search Condition</th>
+                <th>Default</th>
               </tr>
               </thead>
               <tbody>
@@ -276,7 +314,17 @@
                     <td>{{field.order_num}}</td>
                     <td>{{field.name}}</td>
                     <td>{{field.label}}</td>
-                    <td>{{field.fieldType}}</td>
+                    <td>
+                      <span class="field-type-with-icon">
+                        <i [class]="getFieldTypeIcon(field.fieldType)"></i>
+                        <span>{{field.fieldType}}</span>
+                      </span>
+                    </td>
+                    <td>{{field.mandatory ? '✓' : '—'}}</td>
+                    <td>{{field.show_in_list ? '✓' : '—'}}</td>
+                    <td>{{field.searchable ? '✓' : '—'}}</td>
+                    <td>{{field.search_condition || '—'}}</td>
+                    <td>{{field.default_value || '—'}}</td>
                   </tr>
                 }
               </tbody>
@@ -286,16 +334,16 @@
       </div>
     }
 
-    <div class="btn-group btn-actions pull-right" style="margin-top: 16px;">
-      <button type="button" class="btn btn-reset" (click)="navigateToList()">Cancel</button>
+    <div class="btn-group btn-actions pull-right" style="margin-top: 16px; display:flex; align-items:center; gap:6px;">
+      <button type="button" class="btn btn-reset" style="height:34px;" (click)="navigateToList()">Cancel</button>
       @if (step > 1) {
-        <button type="button" class="btn btn-default" (click)="prevStep()">Back</button>
+        <button type="button" class="btn btn-default" style="height:34px;" (click)="prevStep()">Back</button>
       }
       @if (step < 3) {
-        <button type="button" class="btn btn-search" (click)="nextStep()">Next</button>
+        <button type="button" class="btn btn-search" style="height:34px;" (click)="nextStep()">Next</button>
       }
       @if (step === 3) {
-        <button type="button" class="btn btn-success" [disabled]="isSaving" (click)="createAll()">
+        <button type="button" class="btn btn-success" style="height:34px;" [disabled]="isSaving" (click)="createAll()">
           {{isSaving ? 'Saving...' : 'Create All'}}
         </button>
       }
