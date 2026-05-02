@@ -1,6 +1,6 @@
 import { ConfirmationService, MessageService, PrimeTemplate } from 'primeng/api';
 import {AbstractListComponent} from '../../common/abstract-list-component';
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, inject} from '@angular/core';
 import {Router} from '@angular/router';
 import {SelectQueryService} from '../../services/select-query.service';
 import {SelectQuery} from '../../models/select-query';
@@ -20,14 +20,9 @@ export class SelectQueryListComponent extends AbstractListComponent<SelectQuery>
 
 
 
-  constructor(
-      public  router: Router,
-      public confirmationService: ConfirmationService,
-      public service: SelectQueryService,
-      public messageService: MessageService) {
-
-    super(messageService, router, confirmationService, service, 'selectqueries');
-    this.filters = new SelectQuery();
+  constructor() {
+      super(inject(MessageService), inject(Router), inject(ConfirmationService), inject(SelectQueryService), 'selectqueries');
+      this.filters = new SelectQuery();
   }
 
 

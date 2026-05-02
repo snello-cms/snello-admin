@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, inject} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {forkJoin} from 'rxjs';
@@ -20,21 +20,18 @@ import {AdminhomeTopBar} from '../adminhome-topbar/adminhome-topbar.component';
 })
 export class MetadataFieldDefinitionOrderComponent implements OnInit {
 
+    private readonly router = inject(Router);
+    private readonly route = inject(ActivatedRoute);
+    private readonly metadataService = inject(MetadataService);
+    private readonly fieldDefinitionService = inject(FieldDefinitionService);
+    private readonly messageService = inject(MessageService);
+
     metadata = new Metadata();
     fieldDefinitions: FieldDefinition[] = [];
     selectedFieldDefinitions: FieldDefinition[] = [];
     loading = false;
     saving = false;
     private savedOrderByUuid: Record<string, number> = {};
-
-    constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        private metadataService: MetadataService,
-        private fieldDefinitionService: FieldDefinitionService,
-        private messageService: MessageService
-    ) {
-    }
 
     ngOnInit() {
         const metadataId = this.route.snapshot.params['id'];

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, inject} from '@angular/core';
 import {Metadata} from '../../models/metadata';
 import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {MetadataService} from '../../services/metadata.service';
@@ -22,15 +22,10 @@ export class MetadataViewComponent extends AbstractViewComponent<Metadata>
     public colspan = 3;
     public activeTab: 'metadata' | 'fieldDefinitions' = 'metadata';
 
-    constructor(
-        router: Router,
-        route: ActivatedRoute,
-        public metadataService: MetadataService,
-        public confirmationService: ConfirmationService,
-        protected messageService: MessageService,
-        public fieldDefinitionService: FieldDefinitionService
-    ) {
-        super(router, route, metadataService, messageService, 'metadata');
+    readonly fieldDefinitionService = inject(FieldDefinitionService);
+
+    constructor() {
+        super(inject(Router), inject(ActivatedRoute), inject(MetadataService), inject(MessageService), 'metadata');
         this.element = new Metadata();
     }
 

@@ -6,6 +6,7 @@ export class Document {
     mimetype: string;
     table_key: string;
     table_name: string;
+    formats: string;
     size: number;
 
 }

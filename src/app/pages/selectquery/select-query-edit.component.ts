@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, inject} from '@angular/core';
 import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ConfirmationService, MessageService} from 'primeng/api';
@@ -18,14 +18,8 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 export class SelectQueryEditComponent extends AbstractEditComponent<SelectQuery>
   implements OnInit {
 
-  constructor(
-    router: Router,
-    route: ActivatedRoute,
-    confirmationService: ConfirmationService,
-    selectQueryService: SelectQueryService,
-    public messageService: MessageService
-  ) {
-    super(router, route, confirmationService, selectQueryService, messageService, 'selectqueries');
+  constructor() {
+    super(inject(Router), inject(ActivatedRoute), inject(ConfirmationService), inject(SelectQueryService), inject(MessageService), 'selectqueries');
   }
 
   createInstance(): SelectQuery {

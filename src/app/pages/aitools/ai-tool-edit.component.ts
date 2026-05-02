@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, inject} from '@angular/core';
 import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ConfirmationService, MessageService} from 'primeng/api';
@@ -8,15 +8,7 @@ import { SideBarComponent } from '../sidebar/sidebar.component';
 import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
-
-type ParameterType = 'string' | 'integer' | 'number' | 'boolean';
-
-type ParameterDraft = {
-    name: string;
-    type: ParameterType;
-    description: string;
-    required: boolean;
-};
+import {ParameterDraft, ParameterType} from '../../models/parameter-draft';
 
 @Component({
     standalone: true,
@@ -31,14 +23,8 @@ export class AiToolEditComponent extends AbstractEditComponent<AiTool>
     parameterDrafts: ParameterDraft[] = [];
     readonly parameterTypeOptions: ParameterType[] = ['string', 'integer', 'number', 'boolean'];
 
-    constructor(
-        router: Router,
-        route: ActivatedRoute,
-        confirmationService: ConfirmationService,
-        aiToolService: AiToolService,
-        public messageService: MessageService
-    ) {
-        super(router, route, confirmationService, aiToolService, messageService, 'aitools');
+    constructor() {
+        super(inject(Router), inject(ActivatedRoute), inject(ConfirmationService), inject(AiToolService), inject(MessageService), 'aitools');
     }
 
     createInstance(): AiTool {

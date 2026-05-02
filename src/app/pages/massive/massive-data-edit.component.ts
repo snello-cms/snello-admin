@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, inject} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FieldDefinition} from '../../models/field-definition';
 import {ApiService} from '../../services/api.service';
@@ -23,6 +23,14 @@ import {DynamicFieldDirective} from '../../generic.components/dynamic-field/dyna
 })
 export class MassiveDataEditComponent implements OnInit {
 
+    protected readonly router = inject(Router);
+    private readonly route = inject(ActivatedRoute);
+    private readonly apiService = inject(ApiService);
+    private readonly metadataService = inject(MetadataService);
+    private readonly fb = inject(UntypedFormBuilder);
+    private readonly cdr = inject(ChangeDetectorRef);
+    private readonly messageService = inject(MessageService);
+
     metadataName: string;
     metadata: Metadata;
     fieldDefinitionsList: FieldDefinition[] = [];
@@ -42,16 +50,6 @@ export class MassiveDataEditComponent implements OnInit {
     isSavingAll = false;
     
     searchTerm = '';
-
-    constructor(
-        protected router: Router,
-        private route: ActivatedRoute,
-        private apiService: ApiService,
-        private metadataService: MetadataService,
-        private fb: UntypedFormBuilder,
-        private cdr: ChangeDetectorRef,
-        private messageService: MessageService) {
-    }
     ngOnInit() {
         this.metadataName = this.route.snapshot.params['name'];
 

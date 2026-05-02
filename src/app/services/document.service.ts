@@ -53,8 +53,10 @@ export class DocumentService extends AbstractService<Document> {
     return new Promise((resolve, reject) => {
       if (blob) {
         this.updateProgress(0);
+        const originalName: string = blob.name || 'image';
         const formData: FormData = new FormData();
-        formData.append("file", blob, blob.name);
+        formData.append("file", blob, originalName);
+        formData.append("original_name", originalName);
         formData.append("table_name", table_name);
         formData.append("table_key", table_key);
         formData.append("mimeType", blob.type);

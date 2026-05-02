@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, inject} from '@angular/core';
 import {Router} from '@angular/router';
 import {Metadata} from '../../models/metadata';
 import {MetadataService} from '../../services/metadata.service';
@@ -14,17 +14,14 @@ import {PrimeTemplate} from 'primeng/api';
     imports: [SideBarComponent, AdminhomeTopBar, TableModule, PrimeTemplate]
 })
 export class MetadataExportComponent implements OnInit {
+    private readonly router = inject(Router);
+    private readonly service = inject(MetadataService);
+    private readonly messageService = inject(MessageService);
+
     model: Metadata[] = [];
     isLoading = false;
     isExporting = false;
     selectedExportUuids: Set<string> = new Set<string>();
-
-    constructor(
-        private readonly router: Router,
-        private readonly service: MetadataService,
-        private readonly messageService: MessageService
-    ) {
-    }
 
     ngOnInit() {
         this.loadMetadatas();

@@ -1,6 +1,6 @@
 import { ConfirmationService, MessageService, PrimeTemplate } from 'primeng/api';
 import {AbstractListComponent} from '../../common/abstract-list-component';
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, inject} from '@angular/core';
 import {Metadata} from '../../models/metadata';
 import {NavigationExtras, Router} from '@angular/router';
 import {MetadataService} from '../../services/metadata.service';
@@ -18,14 +18,10 @@ import { TableModule } from 'primeng/table';
 })
 export class MetadataListComponent extends AbstractListComponent<Metadata> implements OnInit {
 
-    constructor(
-        public  router: Router,
-        public confirmationService: ConfirmationService,
-        public service: MetadataService,
-        public fieldDefinitionService: FieldDefinitionService,
-        public messageService: MessageService) {
+    readonly fieldDefinitionService = inject(FieldDefinitionService);
 
-        super(messageService, router, confirmationService, service, 'metadata');
+    constructor() {
+        super(inject(MessageService), inject(Router), inject(ConfirmationService), inject(MetadataService), 'metadata');
         this.filters = new Metadata();
     }
 

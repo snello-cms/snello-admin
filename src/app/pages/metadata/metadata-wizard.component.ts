@@ -1,5 +1,5 @@
 import {CommonModule} from '@angular/common';
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Router} from '@angular/router';
 import {CdkDragDrop, DragDropModule, copyArrayItem, moveItemInArray} from '@angular/cdk/drag-drop';
@@ -17,15 +17,7 @@ import {Metadata} from '../../models/metadata';
 import {FONT_AWESOME_ICONS, MAP_INPUT_TO_FIELD} from '../../constants/constants';
 import {MetadataService} from '../../services/metadata.service';
 import {FieldDefinitionService} from '../../services/field-definition.service';
-
-type WizardStep = 1 | 2 | 3;
-
-interface WizardField extends FieldDefinition {
-    wizardId: string;
-    fieldType: string;
-    isSlugField?: boolean;
-    isUsernameField?: boolean;
-}
+import {WizardField, WizardStep} from '../../models/wizard-field';
 
 @Component({
     standalone: true,
@@ -154,12 +146,12 @@ export class MetadataWizardComponent {
         {label: 'contains case insensitive', value: 'icontains'}
     ];
 
-    constructor(
-        private readonly router: Router,
-        private readonly metadataService: MetadataService,
-        private readonly fieldDefinitionService: FieldDefinitionService,
-        private readonly messageService: MessageService
-    ) {
+    private readonly router = inject(Router);
+    private readonly metadataService = inject(MetadataService);
+    private readonly fieldDefinitionService = inject(FieldDefinitionService);
+    private readonly messageService = inject(MessageService);
+
+    constructor() {
         this.metadata.icon = this.iconItems[0]?.value as string;
         this.metadata.table_key = 'uuid';
         this.metadata.table_key_type = 'uuid';

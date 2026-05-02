@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, inject} from '@angular/core';
 import {Router} from '@angular/router';
 import {Metadata} from '../../models/metadata';
 import {MetadataService} from '../../services/metadata.service';
@@ -22,14 +22,10 @@ import {forkJoin, of} from 'rxjs';
 })
 export class MassiveMetadataSelectComponent extends AbstractListComponent<Metadata> implements OnInit {
     fieldCountByMetadata: Record<string, number> = {};
+    private readonly dataListService = inject(DataListService);
 
-    constructor(
-        public router: Router,
-        public confirmationService: ConfirmationService,
-        public service: MetadataService,
-        private dataListService: DataListService,
-        public messageService: MessageService) {
-        super(messageService, router, confirmationService, service, 'metadata');
+    constructor() {
+        super(inject(MessageService), inject(Router), inject(ConfirmationService), inject(MetadataService), 'metadata');
         this.filters = new Metadata();
     }
 

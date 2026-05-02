@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, inject} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FieldDefinition} from '../../models/field-definition';
 import {FieldDefinitionService} from '../../services/field-definition.service';
@@ -19,19 +19,17 @@ import {CommonModule} from '@angular/common';
 })
 export class MassiveAttributesSelectComponent implements OnInit {
 
+    private readonly router = inject(Router);
+    private readonly route = inject(ActivatedRoute);
+    private readonly fieldDefinitionService = inject(FieldDefinitionService);
+    private readonly metadataService = inject(MetadataService);
+    private readonly messageService = inject(MessageService);
+
     metadataName: string;
     metadata: Metadata;
     fieldDefinitions: FieldDefinition[] = [];
     selectedFields: FieldDefinition[] = [];
     isLoading = false;
-
-    constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        private fieldDefinitionService: FieldDefinitionService,
-        private metadataService: MetadataService,
-        private messageService: MessageService) {
-    }
 
     ngOnInit() {
         this.metadataName = this.route.snapshot.params['name'];

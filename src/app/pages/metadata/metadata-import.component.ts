@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {Router} from '@angular/router';
 import {MetadataService} from '../../services/metadata.service';
 import {MessageService} from 'primeng/api';
@@ -6,11 +6,7 @@ import {SideBarComponent} from '../sidebar/sidebar.component';
 import {AdminhomeTopBar} from '../adminhome-topbar/adminhome-topbar.component';
 import {TableModule} from 'primeng/table';
 import {PrimeTemplate} from 'primeng/api';
-
-interface MetadataImportPreviewRow {
-    tableName: string;
-    fieldsCount: number;
-}
+import {MetadataImportPreviewRow} from '../../models/metadata-import-preview-row';
 
 @Component({
     standalone: true,
@@ -18,17 +14,14 @@ interface MetadataImportPreviewRow {
     imports: [SideBarComponent, AdminhomeTopBar, TableModule, PrimeTemplate]
 })
 export class MetadataImportComponent {
+    private readonly router = inject(Router);
+    private readonly service = inject(MetadataService);
+    private readonly messageService = inject(MessageService);
+
     importFile: File | null = null;
     importFileName = '';
     importRows: MetadataImportPreviewRow[] = [];
     isImporting = false;
-
-    constructor(
-        private readonly router: Router,
-        private readonly service: MetadataService,
-        private readonly messageService: MessageService
-    ) {
-    }
 
     goToMetadataList() {
         this.router.navigate(['/metadata/list']);

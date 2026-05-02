@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, inject} from '@angular/core';
 import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {Metadata} from '../../models/metadata';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -31,14 +31,8 @@ export class MetadataEditComponent extends AbstractEditComponent<Metadata>
     public advanced = false;
     public api_protected = false;
 
-    constructor(
-        router: Router,
-        route: ActivatedRoute,
-        confirmationService: ConfirmationService,
-        metadataService: MetadataService,
-        public messageService: MessageService,
-    ) {
-        super(router, route, confirmationService, metadataService, messageService, 'metadata');
+    constructor() {
+        super(inject(Router), inject(ActivatedRoute), inject(ConfirmationService), inject(MetadataService), inject(MessageService), 'metadata');
     }
 
     iconItems: SelectItem[] = FONT_AWESOME_ICONS;

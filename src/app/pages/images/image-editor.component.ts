@@ -16,20 +16,12 @@ import { catchError } from 'rxjs/operators';
 import { forkJoin, of } from 'rxjs';
 import { DocumentService } from '../../services/document.service';
 import { Document as AppDocument } from '../../models/document';
+import { CropRect, ResizeHandle } from '../../models/crop-rect';
 import { SideBarComponent } from '../sidebar/sidebar.component';
 import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
-
-interface CropRect {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-}
-
-type ResizeHandle = 'nw' | 'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w';
 
 @Component({
   selector: 'app-image-editor',
@@ -340,13 +332,20 @@ export class ImageEditorComponent implements OnInit, AfterViewInit {
             return;
           }
 
-          this.saving = false;
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Image updated',
-            detail: filename,
+          // Reset formats so the server regenerates all format variants (webp, resized, etc.)
+          const updatedDoc = { ...this.doc!, formats: '' };
+          this.documentService.update(updatedDoc).pipe(
+            catchError(() => of(null)),
+            takeUntilDestroyed(this.destroyRef),
+          ).subscribe(() => {
+            this.saving = false;
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Image updated',
+              detail: filename,
+            });
+            this.refreshCurrentImage();
           });
-          this.refreshCurrentImage();
         },
         error: () => {
           this.saving = false;
