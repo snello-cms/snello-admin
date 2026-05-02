@@ -24,6 +24,9 @@ export class MetadataViewComponent extends AbstractViewComponent<Metadata>
 
     readonly fieldDefinitionService = inject(FieldDefinitionService);
 
+    readonly metadataService = inject(MetadataService);
+    readonly confirmationService = inject(ConfirmationService);
+
     constructor() {
         super(inject(Router), inject(ActivatedRoute), inject(MetadataService), inject(MessageService), 'metadata');
         this.element = new Metadata();

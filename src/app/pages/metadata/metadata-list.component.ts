@@ -19,6 +19,7 @@ import { TableModule } from 'primeng/table';
 export class MetadataListComponent extends AbstractListComponent<Metadata> implements OnInit {
 
     readonly fieldDefinitionService = inject(FieldDefinitionService);
+    readonly metadataService = inject(MetadataService);
 
     constructor() {
         super(inject(MessageService), inject(Router), inject(ConfirmationService), inject(MetadataService), 'metadata');
@@ -90,7 +91,7 @@ export class MetadataListComponent extends AbstractListComponent<Metadata> imple
                     }
                 }
 
-                this.service.createTable(metadata).subscribe(
+                this.metadataService.createTable(metadata).subscribe(
                     res => {
                         this.reloadListData(metadata, res);
                         this.messageService.add({
@@ -116,7 +117,7 @@ export class MetadataListComponent extends AbstractListComponent<Metadata> imple
     }
 
     public truncateTable(metadata: Metadata) {
-        this.service.truncateTable(metadata.uuid).subscribe(
+        this.metadataService.truncateTable(metadata.uuid).subscribe(
             res => {
                 this.reloadListData(metadata, res);
                 this.messageService.add({
@@ -134,7 +135,7 @@ export class MetadataListComponent extends AbstractListComponent<Metadata> imple
     }
 
     public deleteTable(metadata: Metadata) {
-        this.service.deleteTable(metadata.uuid).subscribe(
+        this.metadataService.deleteTable(metadata.uuid).subscribe(
             res => {
                 this.reloadListData(metadata, res);
                 this.messageService.add({
