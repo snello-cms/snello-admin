@@ -50,20 +50,20 @@ export class DocumentService extends AbstractService<Document> {
     table_name: string,
     table_key: string,
   ): Promise<any> {
-    return new Promise((resolve, reject) => {
-      if (blob) {
-        this.updateProgress(0);
-        const originalName: string = blob.name || 'image';
-        const formData: FormData = new FormData();
-        formData.append("file", blob, originalName);
-        formData.append("original_name", originalName);
-        formData.append("table_name", table_name);
-        formData.append("table_key", table_key);
-        formData.append("mimeType", blob.type);
-        // multipart/form-data
-        return this.httpClient.post<FormData>(this.url, formData).toPromise();
-      }
-    });
+    if (!blob) {
+      return Promise.reject(new Error("File is required"));
+    }
+
+    this.updateProgress(0);
+    const originalName: string = blob.name || "image";
+    const formData: FormData = new FormData();
+    formData.append("file", blob, originalName);
+    formData.append("original_name", originalName);
+    formData.append("table_name", table_name);
+    formData.append("table_key", table_key);
+    formData.append("mimeType", blob.type);
+    // multipart/form-data
+    return this.httpClient.post<FormData>(this.url, formData).toPromise();
   }
 
   private updateProgress(progress: number): void {
