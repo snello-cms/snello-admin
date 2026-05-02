@@ -23,6 +23,17 @@
         <button type="button" class="btn btn-secondary btn-sm" (click)="goBack()">
           <i class="fa fa-arrow-left"></i> Back to list
         </button>
+        <button
+          type="button"
+          class="btn btn-warning btn-sm"
+          [disabled]="saving || previewGenerating || deleting"
+          (click)="confirmDeleteCurrentImage()">
+          @if (deleting) {
+            <i class="fa fa-spinner fa-spin"></i> Deleting...
+          } @else {
+            <i class="fa fa-trash"></i> Delete
+          }
+        </button>
         <span class="ie-filename">{{ doc.original_name }}</span>
       </div>
 

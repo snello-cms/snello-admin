@@ -1,11 +1,11 @@
 {
   "/api": {
-    "target": "https://kayak.love",
+    "target": "https://snello.io",
     "secure": false,
     "changeOrigin": true
   },
   "/files": {
-    "target": "https://kayak.love",
+    "target": "https://snello.io",
     "secure": false,
     "changeOrigin": true
   }

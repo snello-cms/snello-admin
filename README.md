@@ -100,7 +100,7 @@ ng serve --proxy-config proxy.conf.json
 ```
 
 The app will be available at `http://localhost:4200`.  
-API calls are proxied to `https://kayak.love` by default (see [Proxy Configuration](#proxy-configuration) below).
+API calls are proxied to `https://snello.io` by default (see [Proxy Configuration](#proxy-configuration) below).
 
 ## Build for Production
 
@@ -141,7 +141,7 @@ Two proxy configs are provided:
 
 | File | Target | When to use |
 |---|---|---|
-| `proxy.conf.json` | `https://kayak.love` | Running against the live/staging API |
+| `proxy.conf.json` | `https://snello.io` | Running against the live/staging API |
 | `proxy.conf-local.json` | `http://localhost:8080` | Running the API locally |
 
 To develop against a local Snello API instance:

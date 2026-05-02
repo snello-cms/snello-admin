@@ -19,7 +19,7 @@ import { Document as AppDocument } from '../../models/document';
 import { CropRect, ResizeHandle } from '../../models/crop-rect';
 import { SideBarComponent } from '../sidebar/sidebar.component';
 import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 
@@ -44,6 +44,7 @@ export class ImageEditorComponent implements OnInit, AfterViewInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly documentService = inject(DocumentService);
+  private readonly confirmationService = inject(ConfirmationService);
   private readonly messageService = inject(MessageService);
   private readonly destroyRef = inject(DestroyRef);
 
@@ -53,6 +54,7 @@ export class ImageEditorComponent implements OnInit, AfterViewInit {
   imageLoaded = false;
   loading = true;
   saving = false;
+  deleting = false;
   previewGenerating = false;
   errorMsg = '';
   previewUrl: string | null = null;
@@ -428,6 +430,56 @@ export class ImageEditorComponent implements OnInit, AfterViewInit {
     this.imageLoaded = false;
     this.clearPreview();
     this.imageUrl = `${this.documentService.downloadPath(this.doc.uuid)}?t=${Date.now()}`;
+  }
+
+  confirmDeleteCurrentImage() {
+    if (!this.doc || this.deleting || this.saving || this.previewGenerating) {
+      return;
+    }
+
+    this.confirmationService.confirm({
+      message: 'Do you really want to delete this record?',
+      acceptLabel: 'Yes',
+      rejectLabel: 'No',
+      acceptButtonProps: {
+        severity: 'danger',
+        outlined: false,
+      },
+      rejectButtonProps: {
+        severity: 'secondary',
+        outlined: true,
+      },
+      accept: () => {
+        this.deleteCurrentImage();
+      },
+    });
+  }
+
+  private deleteCurrentImage() {
+    if (!this.doc?.uuid || this.deleting) {
+      return;
+    }
+
+    this.errorMsg = '';
+    this.deleting = true;
+
+    this.documentService
+      .delete(this.doc.uuid)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.deleting = false;
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Deletion completed successfully.',
+          });
+          this.goBack();
+        },
+        error: () => {
+          this.deleting = false;
+          this.errorMsg = 'Unable to complete the deletion.';
+        },
+      });
   }
 
   goBack() {
