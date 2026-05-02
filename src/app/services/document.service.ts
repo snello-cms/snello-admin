@@ -54,9 +54,10 @@ export class DocumentService extends AbstractService<Document> {
       if (blob) {
         this.updateProgress(0);
         const formData: FormData = new FormData();
-        formData.append("file", blob);
+        formData.append("file", blob, blob.name);
         formData.append("table_name", table_name);
         formData.append("table_key", table_key);
+        formData.append("mimeType", blob.type);
         // multipart/form-data
         return this.httpClient.post<FormData>(this.url, formData).toPromise();
       }
