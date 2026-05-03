@@ -85,13 +85,7 @@ export class FormGenerationListComponent implements OnInit {
         if (fromMetadata) {
             return fromMetadata;
         }
-
-        const fromFieldDefinitions = this.fieldDefinitionsList.find(fd => fd.table_key === true)?.name;
-        if (fromFieldDefinitions) {
-            return fromFieldDefinitions;
-        }
-
-        return 'uuid';
+        return '';
     }
 
     private resolveTableKeyValue(rawValue: unknown): string {
@@ -101,24 +95,6 @@ export class FormGenerationListComponent implements OnInit {
 
         if (typeof rawValue !== 'object') {
             return String(rawValue);
-        }
-
-        const tableKeyFieldName = this.getTableKeyFieldName();
-        const keyDefinition = this.fieldDefinitionsList.find(fd => fd.name === tableKeyFieldName);
-        const candidate = rawValue as Record<string, unknown>;
-
-        if (keyDefinition?.join_table_key && candidate[keyDefinition.join_table_key] != null) {
-            return String(candidate[keyDefinition.join_table_key]);
-        }
-        if (candidate.uuid != null) {
-            return String(candidate.uuid);
-        }
-        if (candidate.id != null) {
-            return String(candidate.id);
-        }
-
-        if (candidate.value != null && typeof candidate.value !== 'object') {
-            return String(candidate.value);
         }
 
         return '';
@@ -262,7 +238,9 @@ export class FormGenerationListComponent implements OnInit {
             model => {
                 for (let element of model) {
                     if (element != null) {
-                        element[this.rawTableKeyField] = this.getElementPropertyValue(element as Record<string, unknown>, tableKeyFieldName);
+                        element[this.rawTableKeyField] = tableKeyFieldName
+                            ? this.getElementPropertyValue(element as Record<string, unknown>, tableKeyFieldName)
+                            : null;
 
                         for (const definition_1 of this.fieldDefinitionsList) {
                             if (!definition_1.name) {
@@ -306,7 +284,9 @@ export class FormGenerationListComponent implements OnInit {
     public getTableKey(fieldDefinition: any): string {
         const tableKeyFieldName = this.getTableKeyFieldName();
         const rawValue = fieldDefinition?.[this.rawTableKeyField]
-            ?? this.getElementPropertyValue(fieldDefinition as Record<string, unknown>, tableKeyFieldName);
+            ?? (tableKeyFieldName
+                ? this.getElementPropertyValue(fieldDefinition as Record<string, unknown>, tableKeyFieldName)
+                : null);
         return this.resolveTableKeyValue(rawValue);
     }
 
