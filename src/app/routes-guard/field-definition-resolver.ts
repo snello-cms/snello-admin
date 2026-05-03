@@ -45,7 +45,7 @@ export class FieldDefinitionResolver  {
                                 definition_1.value = element[definition_1.name.toLowerCase()];
                             }
                             definition_1.table_name = name;
-                            definition_1.table_key_value = element.uuid;
+                            definition_1.table_key_value = key;
                         }
                     }
                     for (const definition_1 of fieldDefinitionList) {

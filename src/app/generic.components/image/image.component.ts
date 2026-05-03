@@ -128,12 +128,12 @@ export class ImageComponent implements OnInit {
     }
 
     if (!this.uploadTypes.includes(selectedFile.type)) {
-      this.uploadError = 'Formato non supportato. Carica solo PNG o JPG.';
+      this.uploadError = 'Unsupported format. Upload only PNG or JPG.';
       return;
     }
 
     if (!this.canUpload) {
-      this.uploadError = 'Salva prima il record per associare l\'immagine.';
+      this.uploadError = 'Save the record first to attach an image.';
       return;
     }
 
