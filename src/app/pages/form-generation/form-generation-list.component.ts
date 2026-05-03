@@ -58,6 +58,28 @@ export class FormGenerationListComponent implements OnInit {
 
     private readonly rawTableKeyField = '__rawTableKeyValue';
 
+    private getElementPropertyName(element: Record<string, unknown>, fieldName: string): string | null {
+        if (!element || !fieldName) {
+            return null;
+        }
+
+        if (Object.prototype.hasOwnProperty.call(element, fieldName)) {
+            return fieldName;
+        }
+
+        const lowerFieldName = fieldName.toLowerCase();
+        const matchedKey = Object.keys(element).find(key => key.toLowerCase() === lowerFieldName);
+        return matchedKey ?? null;
+    }
+
+    private getElementPropertyValue(element: Record<string, unknown>, fieldName: string): unknown {
+        const propertyName = this.getElementPropertyName(element, fieldName);
+        if (!propertyName) {
+            return null;
+        }
+        return element[propertyName];
+    }
+
     private getTableKeyFieldName(): string {
         const fromMetadata = this.metadata?.table_key;
         if (fromMetadata) {
@@ -95,7 +117,11 @@ export class FormGenerationListComponent implements OnInit {
             return String(candidate.id);
         }
 
-        return String(rawValue);
+        if (candidate.value != null && typeof candidate.value !== 'object') {
+            return String(candidate.value);
+        }
+
+        return '';
     }
 
 
@@ -105,22 +131,23 @@ export class FormGenerationListComponent implements OnInit {
             return of('');
         }
 
-        const fullValue = rowData[fieldName];
+        const fullValue = this.getElementPropertyValue(rowData as Record<string, unknown>, fieldName);
         if (fullValue == null || fullValue === '') {
             return of('');
         }
 
         if (fieldDefinition.type === 'join') {
             const labelField = this.fieldDefintionService.fetchFirstLabel(fieldDefinition);
+            const fullValueObject = fullValue as Record<string, unknown>;
             const joinValue = typeof fullValue === 'object' && fullValue != null && fieldDefinition.join_table_key
-                ? fullValue[fieldDefinition.join_table_key]
+                ? fullValueObject[fieldDefinition.join_table_key]
                 : fullValue;
 
             if (joinValue == null || joinValue === '') {
                 return of('');
             }
 
-            return this.apiService.fetchObject(fieldDefinition.join_table_name, joinValue, fieldDefinition.join_table_select_fields)
+            return this.apiService.fetchObject(fieldDefinition.join_table_name, String(joinValue), fieldDefinition.join_table_select_fields)
                 .pipe(
                     map(join => {
                         return join[labelField];
@@ -235,16 +262,16 @@ export class FormGenerationListComponent implements OnInit {
             model => {
                 for (let element of model) {
                     if (element != null) {
+                        element[this.rawTableKeyField] = this.getElementPropertyValue(element as Record<string, unknown>, tableKeyFieldName);
+
                         for (const definition_1 of this.fieldDefinitionsList) {
                             if (!definition_1.name) {
                                 continue;
                             }
                             definition_1.is_edit = true;
+                            const existingPropertyName = this.getElementPropertyName(element as Record<string, unknown>, definition_1.name);
                             //cerco la field defintion
-                            if (element.hasOwnProperty(definition_1.name) || element.hasOwnProperty(definition_1.name.toLowerCase())) {
-                                if (definition_1.name === tableKeyFieldName) {
-                                    element[this.rawTableKeyField] = element[definition_1.name];
-                                }
+                            if (existingPropertyName) {
                                 // Se è la mia devo scrivere il dato come observable
                                 element[definition_1.name] = this.datoAsObservableOfValue(element, definition_1);
                             }
@@ -278,7 +305,8 @@ export class FormGenerationListComponent implements OnInit {
 
     public getTableKey(fieldDefinition: any): string {
         const tableKeyFieldName = this.getTableKeyFieldName();
-        const rawValue = fieldDefinition?.[this.rawTableKeyField] ?? fieldDefinition?.[tableKeyFieldName];
+        const rawValue = fieldDefinition?.[this.rawTableKeyField]
+            ?? this.getElementPropertyValue(fieldDefinition as Record<string, unknown>, tableKeyFieldName);
         return this.resolveTableKeyValue(rawValue);
     }
 
