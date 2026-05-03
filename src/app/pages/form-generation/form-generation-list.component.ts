@@ -58,6 +58,20 @@ export class FormGenerationListComponent implements OnInit {
 
     private readonly rawTableKeyField = '__rawTableKeyValue';
 
+    private getTableKeyFieldName(): string {
+        const fromMetadata = this.metadata?.table_key;
+        if (fromMetadata) {
+            return fromMetadata;
+        }
+
+        const fromFieldDefinitions = this.fieldDefinitionsList.find(fd => fd.table_key === true)?.name;
+        if (fromFieldDefinitions) {
+            return fromFieldDefinitions;
+        }
+
+        return 'uuid';
+    }
+
     private resolveTableKeyValue(rawValue: unknown): string {
         if (rawValue == null) {
             return '';
@@ -67,7 +81,8 @@ export class FormGenerationListComponent implements OnInit {
             return String(rawValue);
         }
 
-        const keyDefinition = this.fieldDefinitionsList.find(fd => fd.name === this.metadata?.table_key);
+        const tableKeyFieldName = this.getTableKeyFieldName();
+        const keyDefinition = this.fieldDefinitionsList.find(fd => fd.name === tableKeyFieldName);
         const candidate = rawValue as Record<string, unknown>;
 
         if (keyDefinition?.join_table_key && candidate[keyDefinition.join_table_key] != null) {
@@ -198,6 +213,7 @@ export class FormGenerationListComponent implements OnInit {
     public loaddata(firstReload: boolean, datatable: any) {
         this.firstReload = firstReload;
         this.preLoaddata();
+        const tableKeyFieldName = this.getTableKeyFieldName();
 
         // if (this.searchForm && this.searchForm.value) {
         //     const objToSearch = JSON.parse(JSON.stringify(this.searchForm.value));
@@ -226,7 +242,7 @@ export class FormGenerationListComponent implements OnInit {
                             definition_1.is_edit = true;
                             //cerco la field defintion
                             if (element.hasOwnProperty(definition_1.name) || element.hasOwnProperty(definition_1.name.toLowerCase())) {
-                                if (definition_1.name === this.metadata?.table_key) {
+                                if (definition_1.name === tableKeyFieldName) {
                                     element[this.rawTableKeyField] = element[definition_1.name];
                                 }
                                 // Se è la mia devo scrivere il dato come observable
@@ -261,7 +277,8 @@ export class FormGenerationListComponent implements OnInit {
     }
 
     public getTableKey(fieldDefinition: any): string {
-        const rawValue = fieldDefinition?.[this.rawTableKeyField] ?? fieldDefinition?.[this.metadata.table_key];
+        const tableKeyFieldName = this.getTableKeyFieldName();
+        const rawValue = fieldDefinition?.[this.rawTableKeyField] ?? fieldDefinition?.[tableKeyFieldName];
         return this.resolveTableKeyValue(rawValue);
     }
 
