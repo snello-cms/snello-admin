@@ -28,6 +28,8 @@ export class FormGenerationListComponent implements OnInit {
     model: any[] = [];
     firstReload: boolean;
     metadata: Metadata;
+    private metadataReady = false;
+    private pendingLazyEvent: any | null = null;
 
     @ViewChild(DynamicSearchFormComponent) searchForm: DynamicSearchFormComponent;
 
@@ -170,6 +172,12 @@ export class FormGenerationListComponent implements OnInit {
             metadata => {
                 if (metadata != null && metadata.length > 0) {
                     this.metadata = metadata[0];
+                    this.metadataReady = !!this.metadata?.table_key;
+                    if (this.pendingLazyEvent) {
+                        const pendingEvent = this.pendingLazyEvent;
+                        this.pendingLazyEvent = null;
+                        this.lazyLoad(pendingEvent);
+                    }
                 }
             }
         );
@@ -267,6 +275,11 @@ export class FormGenerationListComponent implements OnInit {
 
     public lazyLoad(
         event: any, datatable?: any) {
+
+        if (!this.metadataReady) {
+            this.pendingLazyEvent = event;
+            return;
+        }
 
         if (!this.firstReload) {
             this.apiService._start = event.first;
