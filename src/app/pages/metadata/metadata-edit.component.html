@@ -159,6 +159,72 @@
               }
 
               <div class="form-group clearfix row">
+                <label class="label-text col-sm-3">Calendar Enabled?</label>
+                <div class="col-sm-9">
+                  <p-toggleswitch name="calendar_enabled" [(ngModel)]="element.calendar_enabled"></p-toggleswitch>
+                </div>
+              </div>
+
+              @if (element.calendar_enabled) {
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Calendar Field</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.calendar_field" name="calendar_field" pInputText
+                      placeholder="Calendar Field">
+                  </div>
+                </div>
+              }
+
+              @if (element.calendar_enabled) {
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Calendar Label</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.calendar_label" name="calendar_label" pInputText
+                      placeholder="Calendar Label">
+                  </div>
+                </div>
+              }
+
+              @if (element.calendar_enabled) {
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Date min</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="emulateDateMin" name="emulate_date_min" pInputText type="date"
+                      placeholder="Date min">
+                  </div>
+                </div>
+              }
+
+              @if (element.calendar_enabled) {
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Date max</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="emulateDateMax" name="emulate_date_max" pInputText type="date"
+                      placeholder="Date max">
+                  </div>
+                </div>
+              }
+
+              @if (element.calendar_enabled) {
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Cron expression</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="emulateCronExpression" name="emulate_cron_expression" pInputText
+                      placeholder="0 9 * * 1-5">
+                  </div>
+                </div>
+              }
+
+              @if (element.calendar_enabled) {
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3"></label>
+                  <div class="col-sm-9">
+                    <button (click)="emulateSchedule()" class="btn btn-primary" type="button">Emulate</button>
+                  </div>
+                </div>
+              }
+
+              <div class="form-group clearfix row">
                 <label class="label-text col-sm-3">Advanced Options?</label>
                 <div class="col-sm-9">
                   <p-toggleswitch name="advanced" [(ngModel)]="advanced"></p-toggleswitch>
@@ -221,3 +287,16 @@
       </div>
     </div>
   </div>
+
+  <p-dialog [(visible)]="emulateVisible" [modal]="true" [closable]="true" [style]="{width: '45vw'}" header="Emulated dates">
+    @if (emulateDates.length === 0) {
+      <p>No occurrences found.</p>
+    }
+    @if (emulateDates.length > 0) {
+      <ul>
+        @for (date of emulateDates; track date) {
+          <li>{{ date }}</li>
+        }
+      </ul>
+    }
+  </p-dialog>

@@ -135,7 +135,7 @@ export class MetadataWizardComponent {
         {value: 'DESC', label: 'DESC'}
     ];
 
-    readonly searchConditionItems: SelectItem[] = [
+    readonly defaultSearchConditionItems: SelectItem[] = [
         {label: 'equals', value: ''},
         {label: 'not equals', value: 'ne'},
         {label: 'less than', value: 'lt'},
@@ -144,6 +144,15 @@ export class MetadataWizardComponent {
         {label: 'greater or equal', value: 'gte'},
         {label: 'contains', value: 'contains'},
         {label: 'contains case insensitive', value: 'icontains'}
+    ];
+
+    readonly dateSearchConditionItems: SelectItem[] = [
+        {label: '=', value: ''},
+        {label: '<', value: 'lt'},
+        {label: '<=', value: 'lte'},
+        {label: '>', value: 'gt'},
+        {label: '>=', value: 'gte'},
+        {label: 'range', value: 'range'}
     ];
 
     private readonly router = inject(Router);
@@ -165,6 +174,25 @@ export class MetadataWizardComponent {
     get orderByFieldOptions(): SelectItem[] {
         const none: SelectItem = {value: '', label: '— none —'};
         return [none, ...this.fields.map(f => ({value: f.name ?? '', label: `${f.label || f.name} (${f.fieldType})`}))];
+    }
+
+    get calendarFieldOptions(): SelectItem[] {
+        const none: SelectItem = {value: '', label: '— none —'};
+        return [none, ...this.fields.map(f => ({value: f.name ?? '', label: `${f.label || f.name} (${f.fieldType})`}))];
+    }
+
+    onCalendarEnabledChange() {
+        if (!this.metadata.calendar_enabled) {
+            this.metadata.calendar_field = '';
+            this.metadata.calendar_label = '';
+        }
+    }
+
+    get searchConditionItems(): SelectItem[] {
+        const fieldType = this.selectedField?.fieldType;
+        return fieldType === 'date' || fieldType === 'datetime'
+            ? this.dateSearchConditionItems
+            : this.defaultSearchConditionItems;
     }
 
     onTableNameChanged() {
@@ -508,6 +536,22 @@ export class MetadataWizardComponent {
             }
         }
 
+        if (this.metadata.calendar_enabled) {
+            if (!(this.metadata.calendar_field ?? '').trim()) {
+                if (showMessage) {
+                    this.showValidationError('Step 2: with Calendar Enabled, Calendar Field is required.');
+                }
+                return false;
+            }
+
+            if (!(this.metadata.calendar_label ?? '').trim()) {
+                if (showMessage) {
+                    this.showValidationError('Step 2: with Calendar Enabled, Calendar Label is required.');
+                }
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -519,6 +563,10 @@ export class MetadataWizardComponent {
         payload.order_by = this.orderByField ? `${this.orderByField} ${this.orderByDirection}` : '';
         if (!this.apiProtected) {
             payload.username_field = '';
+        }
+        if (!payload.calendar_enabled) {
+            payload.calendar_field = '';
+            payload.calendar_label = '';
         }
         return payload;
     }
@@ -543,9 +591,11 @@ export class MetadataWizardComponent {
         if (!payload.searchable) {
             payload.search_field_name = '';
         } else {
-            payload.search_field_name = payload.search_condition
-                ? `${payload.name}_${payload.search_condition}`
-                : payload.name;
+            payload.search_field_name = payload.search_condition === 'range'
+                ? `${payload.name}_range`
+                : payload.search_condition
+                    ? `${payload.name}_${payload.search_condition}`
+                    : payload.name;
         }
 
         if (payload.input_type !== 'join' && payload.input_type !== 'multijoin' && payload.type !== 'join' && payload.type !== 'multijoin') {

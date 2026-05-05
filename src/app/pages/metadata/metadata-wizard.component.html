@@ -186,6 +186,26 @@
                   <p-select [(ngModel)]="orderByDirection" name="order_by_dir" [options]="orderByDirections" styleClass="w-100"></p-select>
                 </div>
               </div>
+              <div class="form-group clearfix row" style="margin-bottom:12px;">
+                <label class="label-text col-sm-3">Calendar Enabled</label>
+                <div class="col-sm-9">
+                  <p-toggleswitch [(ngModel)]="metadata.calendar_enabled" name="calendar_enabled" (ngModelChange)="onCalendarEnabledChange()"></p-toggleswitch>
+                </div>
+              </div>
+              @if (metadata.calendar_enabled) {
+                <div class="form-group clearfix row" style="margin-bottom:12px;">
+                  <label class="label-text col-sm-3">Calendar Field</label>
+                  <div class="col-sm-9">
+                    <p-select [(ngModel)]="metadata.calendar_field" name="calendar_field" [options]="calendarFieldOptions" placeholder="— none —" styleClass="w-100"></p-select>
+                  </div>
+                </div>
+                <div class="form-group clearfix row" style="margin-bottom:12px;">
+                  <label class="label-text col-sm-3">Calendar Label</label>
+                  <div class="col-sm-9">
+                    <p-select [(ngModel)]="metadata.calendar_label" name="calendar_label" [options]="calendarFieldOptions" placeholder="— none —" styleClass="w-100"></p-select>
+                  </div>
+                </div>
+              }
               <div class="drop-zone field-canvas" cdkDropList id="fieldCanvas" [cdkDropListData]="fields" [cdkDropListConnectedTo]="palettePanelIds" (cdkDropListDropped)="dropFieldType($event)">
                 @if (fields.length === 0) {
                   <div class="empty-zone">Drop a field type here</div>
@@ -299,6 +319,11 @@
               <div><strong>Name of field (slug):</strong> {{metadata.table_key_addition || '-'}}</div>
             }
             <div><strong>Order By:</strong> {{orderByField ? (orderByField + ' ' + orderByDirection) : '-'}}</div>
+            <div><strong>Calendar Enabled:</strong> {{metadata.calendar_enabled ? 'yes' : 'no'}}</div>
+            @if (metadata.calendar_enabled) {
+              <div><strong>Calendar Field:</strong> {{metadata.calendar_field || '-'}}</div>
+              <div><strong>Calendar Label:</strong> {{metadata.calendar_label || '-'}}</div>
+            }
             <div><strong>API Protected:</strong> {{apiProtected ? 'yes' : 'no'}}</div>
             @if (apiProtected) {
               <div><strong>Username Field:</strong> {{metadata.username_field || '-'}}</div>

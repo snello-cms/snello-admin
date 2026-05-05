@@ -176,7 +176,7 @@ export class ApiService implements OnInit {
             if (key.value != null) {
                 params = params.set(
                     key.search_field_name,
-                    key.value
+                    this.toQueryParam(key)
                 );
             }
 
@@ -218,11 +218,43 @@ export class ApiService implements OnInit {
             );
     }
 
-    protected toQueryParam(field: string, value: any) {
+    private pad(value: number): string {
+        return value.toString().padStart(2, '0');
+    }
+
+    private formatLocalDate(value: Date): string {
+        return `${value.getFullYear()}-${this.pad(value.getMonth() + 1)}-${this.pad(value.getDate())}`;
+    }
+
+    private formatLocalTime(value: Date): string {
+        return `${this.pad(value.getHours())}:${this.pad(value.getMinutes())}:${this.pad(value.getSeconds())}`;
+    }
+
+    private formatLocalDateTime(value: Date): string {
+        const timezoneOffsetMinutes = -value.getTimezoneOffset();
+        const sign = timezoneOffsetMinutes >= 0 ? '+' : '-';
+        const absoluteOffsetMinutes = Math.abs(timezoneOffsetMinutes);
+        const offsetHours = this.pad(Math.floor(absoluteOffsetMinutes / 60));
+        const offsetMinutes = this.pad(absoluteOffsetMinutes % 60);
+
+        return `${this.formatLocalDate(value)}T${this.formatLocalTime(value)}${sign}${offsetHours}:${offsetMinutes}`;
+    }
+
+    protected toQueryParam(field: FieldDefinition): string {
+        const value = field.value;
         if (value instanceof Date) {
-            return (value as Date).toLocaleString('it-IT', {hour12: false});
+            if (field.type === 'date') {
+                return this.formatLocalDate(value);
+            }
+            if (field.type === 'datetime') {
+                return this.formatLocalDateTime(value);
+            }
+            if (field.type === 'time') {
+                return this.formatLocalTime(value);
+            }
+            return this.formatLocalDateTime(value);
         }
-        return value;
+        return String(value);
     }
 
 

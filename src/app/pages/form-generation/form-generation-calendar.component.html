@@ -1,0 +1,73 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <homepage-topbar></homepage-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>{{metadataName}} Calendar</h3>
+  <button type="button" (click)="newForm()" class="btn btn-add pull-right btn-block">
+    <i class="fa fa-plus-circle"></i>
+    Add
+  </button>
+  @if (metadata?.calendar_enabled) {
+    <button type="button" (click)="newMassiveForm()" class="btn btn-primary pull-right btn-block" style="margin-right:.5rem">
+      <i class="fa fa-layer-group"></i>
+      Add massive
+    </button>
+  }
+  <button type="button" (click)="goToList()" class="btn btn-primary pull-right btn-block" style="margin-right:.5rem">
+    <i class="fa fa-list"></i>
+    List
+  </button>
+</div>
+
+<div class="main">
+  <div class="container-fluid">
+
+    @if (fieldDefinitionsSearch && fieldDefinitionsSearch.length > 0) {
+      <div class="row" style="margin-bottom:.5rem; margin-top:.5rem;">
+        <div class="col-sm-12">
+          <div class="filter-wrapper">
+            <div class="fw-search-fields">
+              <dynamic-search-form [fields]="fieldDefinitionsSearch"></dynamic-search-form>
+            </div>
+            <div class="fw-spacer"></div>
+            <div class="fw-actions">
+              <div class="btn-group">
+                <button type="button" class="btn btn-search" (click)="search()">Search</button>
+                <button type="button" class="btn btn-reset" (click)="reset()">Undo</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+    @if (errorMessage) {
+      <div class="row" style="margin-bottom:.5rem;">
+        <div class="col-sm-12">
+          <div class="alert alert-danger" role="alert">
+            {{ errorMessage }}
+          </div>
+        </div>
+      </div>
+    }
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <div class="content view clearfix">
+          <full-calendar [options]="calendarOptions"></full-calendar>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-dialog [(visible)]="detailVisible" [modal]="true" [closable]="true"
+  [style]="{width: '60vw'}" [header]="metadataName">
+  @if (detailFields && detailFields.length > 0) {
+    <dynamic-form [fields]="detailFields" [view]="true"></dynamic-form>
+    <div class="btn-group" style="margin-top:1rem">
+      <button type="button" class="btn btn-warning" (click)="editDetail()">Edit</button>
+      <button type="button" class="btn btn-secondary" (click)="detailVisible = false">Close</button>
+    </div>
+  }
+</p-dialog>

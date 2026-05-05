@@ -11,6 +11,18 @@
     <i class="fa fa-plus-circle"></i>
     Add
   </button>
+  @if (metadata?.calendar_enabled) {
+    <button type="button" (click)="newMassiveForm()" class="btn btn-primary pull-right btn-block" style="margin-right:.5rem">
+      <i class="fa fa-layer-group"></i>
+      Add massive
+    </button>
+  }
+  @if (metadata?.calendar_enabled) {
+    <button type="button" (click)="openCalendar()" class="btn btn-primary pull-right btn-block" style="margin-right:.5rem">
+      <i class="fa fa-calendar"></i>
+      Calendar
+    </button>
+  }
 </div>
 <div class="main">
 

@@ -25,4 +25,8 @@ export class Metadata {
   already_exist: boolean;
   fields: FieldDefinition[];
   conditions: Condition[];
+
+  calendar_enabled: boolean;
+  calendar_field: string;
+  calendar_label: string;
 }

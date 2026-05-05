@@ -119,6 +119,11 @@ export const MainRoutes: Routes = [
         loadComponent: () => import('./pages/form-generation/form-generation-list-general.component').then(m => m.FormGenerationListGeneralComponent),
     },
     {
+        path: 'calendar/list/:name',
+        canActivate: [AppAuthGuard],
+        loadComponent: () => import('./pages/form-generation/form-generation-calendar.component').then(m => m.FormGenerationCalendarComponent),
+    },
+    {
         path: 'datalist',
         component: OutletComponent,
         canActivate: [AppAuthGuard],

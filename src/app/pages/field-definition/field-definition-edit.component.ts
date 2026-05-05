@@ -24,6 +24,25 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 })
 export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDefinition> implements OnInit {
 
+    private readonly defaultSearchConditionItems: SelectItem[] = [
+        {label: 'equals', value: ''},
+        {label: 'not equals', value: 'ne'},
+        {label: 'less than', value: 'lt'},
+        {label: 'greater than', value: 'gt'},
+        {label: 'less or equal', value: 'lte'},
+        {label: 'greater or equal', value: 'gte'},
+        {label: 'contains', value: 'contains'},
+        {label: 'contains case insensitive', value: 'contains'}];
+
+    private readonly dateSearchConditionItems: SelectItem[] = [
+        {label: '=', value: ''},
+        {label: '<', value: 'lt'},
+        {label: '<=', value: 'lte'},
+        {label: '>', value: 'gt'},
+        {label: '>=', value: 'gte'},
+        {label: 'range', value: 'range'}
+    ];
+
     metadatas: Metadata[] = [];
     metadatasSelect: Metadata[] = [];
     selectedMetadata: Metadata | null = null;
@@ -45,15 +64,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
     groups: SelectItem[] = [];
 
     tabToGroups: Map<string, SelectItem[]> = new Map();
-    searchConditionItems: SelectItem[] = [
-        {label: 'equals', value: ''},
-        {label: 'not equals', value: 'ne'},
-        {label: 'less than', value: 'lt'},
-        {label: 'greater than', value: 'gt'},
-        {label: 'less or equal', value: 'lte'},
-        {label: 'greater or equal', value: 'gte'},
-        {label: 'contains', value: 'contains'},
-        {label: 'contains case insensitive', value: 'contains'}];
+    searchConditionItems: SelectItem[] = [...this.defaultSearchConditionItems];
 
     componentDefaultValuesMapper = {
         string: 'contains',
@@ -208,8 +219,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         this.pre();
         if (this.element.searchable) {
             const elementName = this.element.name ?? '';
-            this.element.search_field_name =
-                this.element.search_condition === '' ? elementName : elementName + '_' + this.element.search_condition;
+            this.element.search_field_name = this.buildSearchFieldName(elementName, this.element.search_condition);
         }
         return super.preSave();
     }
@@ -222,10 +232,21 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         this.pre();
         if (this.element.searchable) {
             const elementName = this.element.name ?? '';
-            this.element.search_field_name =
-                this.element.search_condition === '' ? elementName : elementName + '_' + this.element.search_condition;
+            this.element.search_field_name = this.buildSearchFieldName(elementName, this.element.search_condition);
         }
         return super.preUpdate();
+    }
+
+    private buildSearchFieldName(elementName: string, searchCondition: string): string {
+        if (!searchCondition) {
+            return elementName;
+        }
+
+        if (searchCondition === 'range') {
+            return `${elementName}_range`;
+        }
+
+        return `${elementName}_${searchCondition}`;
     }
 
     private validateNameWithoutSpaces(): boolean {
@@ -266,6 +287,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
             this.element.input_type = undefined;
         }
         this.fieldType = this.mapFieldToType.get(this.buildFieldTypeKey(this.element.type, this.element.input_type));
+        this.syncSearchConditionItems();
         this.enforceMandatoryForSlugKeyAddition();
         this.syncJoinFieldsFromElement();
         super.postFind();
@@ -524,9 +546,23 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
 
     changedFieldType (event: any) {
         const key = event.value as keyof typeof this.componentDefaultValuesMapper;
+        this.fieldType = key;
+        this.syncSearchConditionItems();
         this.element.search_condition = this.componentDefaultValuesMapper[key] ?? '';
         if (key === 'join' || key === 'multijoin') {
             this.initializeJoinMetadata();
+        }
+    }
+
+    private syncSearchConditionItems() {
+        const isDateField = this.fieldType === 'date' || this.fieldType === 'datetime';
+        this.searchConditionItems = isDateField
+            ? [...this.dateSearchConditionItems]
+            : [...this.defaultSearchConditionItems];
+
+        const allowedValues = new Set(this.searchConditionItems.map(item => item.value));
+        if (!allowedValues.has(this.element.search_condition ?? '')) {
+            this.element.search_condition = this.componentDefaultValuesMapper[this.fieldType as keyof typeof this.componentDefaultValuesMapper] ?? '';
         }
     }
 

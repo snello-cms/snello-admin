@@ -6,7 +6,7 @@ import {SelectItem} from 'primeng/api';
 import {ApiService} from '../../services/api.service';
 import {Observable, of} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
-import {tap} from 'rxjs/operators';
+import {catchError, tap} from 'rxjs/operators';
 import {FieldDefinitionService} from "../../services/field-definition.service";
 import { AutoComplete } from 'primeng/autocomplete';
 import { AsyncPipe } from '@angular/common';
@@ -69,7 +69,10 @@ export class MultiJoinComponent implements OnInit {
 
 
         this.apiService.getJoinList(this.field)
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(
+                catchError(() => of([])),
+                takeUntilDestroyed(this.destroyRef)
+            )
             .subscribe(options => {
                     this.options = options;
                 }
@@ -82,6 +85,7 @@ export class MultiJoinComponent implements OnInit {
             });
             this.joinList$ = this.loadObjectsByIds(initialIds)
                 .pipe(
+                    catchError(() => of([])),
                     tap(join => {
                         this.options = join;
                         this.group.get(fieldName)?.setValue(join);
@@ -92,23 +96,6 @@ export class MultiJoinComponent implements OnInit {
                         });
                     })
                 );
-        } else if (this.uuid && fieldName) {
-            this.joinList$ =
-                this.apiService.fetchJoinList(
-                    this.name,
-                    this.uuid,
-                    this.field.join_table_name,
-                    this.field.join_table_select_fields + ',' + this.field.join_table_key
-                )
-                    .pipe(
-                        tap(join => {
-                            this.options = join;
-                            this.group.get(fieldName)?.setValue(
-                                Array.isArray(join) ? join : []
-                            );
-                        }),
-                    );
-
         } else {
             this.joinList$ = of([]);
         }
@@ -177,7 +164,10 @@ export class MultiJoinComponent implements OnInit {
 
     search(event: { query?: string }) {
         this.apiService.getJoinList(this.field, event.query, this.labelField)
-            .pipe(takeUntilDestroyed(this.destroyRef))
+            .pipe(
+                catchError(() => of([])),
+                takeUntilDestroyed(this.destroyRef)
+            )
             .subscribe(options => {
                     this.options = options;
                 }
