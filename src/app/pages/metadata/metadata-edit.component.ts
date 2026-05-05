@@ -11,13 +11,11 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
-import { DialogModule } from 'primeng/dialog';
-import {getDatesInRange} from '../../common/cron.util';
 
 @Component({
     standalone: true,
     templateUrl: './metadata-edit.component.html',
-    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, SelectModule, PrimeTemplate, ToggleSwitchModule, DialogModule]
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, SelectModule, PrimeTemplate, ToggleSwitchModule]
 })
 export class MetadataEditComponent extends AbstractEditComponent<Metadata>
     implements OnInit {
@@ -32,11 +30,6 @@ export class MetadataEditComponent extends AbstractEditComponent<Metadata>
     public newtable = true;
     public advanced = false;
     public api_protected = false;
-    public emulateDateMin = '';
-    public emulateDateMax = '';
-    public emulateCronExpression = '';
-    public emulateDates: string[] = [];
-    public emulateVisible = false;
 
     constructor() {
         super(inject(Router), inject(ActivatedRoute), inject(ConfirmationService), inject(MetadataService), inject(MessageService), 'metadata');
@@ -127,44 +120,5 @@ export class MetadataEditComponent extends AbstractEditComponent<Metadata>
             }
         );
     }
-
-    emulateSchedule() {
-        const start = this.tryParseDate(this.emulateDateMin, false);
-        const end = this.tryParseDate(this.emulateDateMax, true);
-        const cronExpression = this.emulateCronExpression.trim();
-
-        if (!start || !end || !cronExpression) {
-            this.addError('Compila Date min, Date max e Cron expression per emulare.');
-            return;
-        }
-
-        const dates = getDatesInRange(cronExpression, start, end);
-        this.emulateDates = dates.map(date => this.formatPreviewDate(date));
-        this.emulateVisible = true;
-        this.clearMsgs();
-    }
-
-    private tryParseDate(value: string, endOfDay: boolean): Date | null {
-        if (!value) {
-            return null;
-        }
-
-        const parsed = new Date(value);
-        if (Number.isNaN(parsed.getTime())) {
-            return null;
-        }
-
-        if (endOfDay) {
-            parsed.setHours(23, 59, 59, 999);
-        } else {
-            parsed.setHours(0, 0, 0, 0);
-        }
-        return parsed;
-    }
-
-    private formatPreviewDate(value: Date): string {
-        return value.toISOString();
-    }
-
 
 }

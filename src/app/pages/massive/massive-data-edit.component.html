@@ -15,27 +15,30 @@
       <div class="col-md-12 col-sm-12">
         <div class="content list">
 
-          <!-- Search Bar -->
-          <div class="filter-wrapper filter-wrapper-spaced">
-            <div class="fw-search-fields">
-              <input 
-                [(ngModel)]="searchTerm" 
-                placeholder="Search..." 
-                type="text" 
-                class="form-control" 
-                pInputText />
-            </div>
-            <div class="fw-actions">
-              <div class="btn-group">
-                <button 
-                  type="button" 
-                  class="btn btn-search"
-                  (click)="datatable.reset()">
-                  Clear
-                </button>
+          @if (fieldDefinitionsSearch && fieldDefinitionsSearch.length > 0) {
+            <div class="filter-wrapper filter-wrapper-spaced" (keydown.enter)="onSearchEnter($event, datatable)">
+              <div class="fw-search-fields">
+                <dynamic-search-form [fields]="fieldDefinitionsSearch">
+                </dynamic-search-form>
+              </div>
+              <div class="fw-actions">
+                <div class="btn-group">
+                  <button
+                    type="button"
+                    class="btn btn-search"
+                    (click)="reload(datatable)">
+                    Search
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-reset"
+                    (click)="resetFilters(datatable)">
+                    Undo
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
+          }
 
           <!-- Data Table -->
           <div class="table-wrapper clearfix">
