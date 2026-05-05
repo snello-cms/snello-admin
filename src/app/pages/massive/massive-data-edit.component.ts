@@ -11,7 +11,6 @@ import {FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup} 
 import {TableModule} from 'primeng/table';
 import {PrimeTemplate} from 'primeng/api';
 import {CommonModule} from '@angular/common';
-import {InputText} from 'primeng/inputtext';
 import {DynamicFieldDirective} from '../../generic.components/dynamic-field/dynamic-field.directive';
 import {DynamicSearchFormComponent} from '../../generic.components/dynamic-form/dynamic-search-form.component';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -22,7 +21,7 @@ import {applySearchFormValues, buildSearchFieldDefinitions, isPassivationSearchF
     selector: 'app-massive-data-edit',
     templateUrl: './massive-data-edit.component.html',
     styleUrls: ['./massive-data-edit.component.scss'],
-    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, TableModule, PrimeTemplate, CommonModule, InputText, DynamicFieldDirective, DynamicSearchFormComponent]
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, TableModule, PrimeTemplate, CommonModule, DynamicFieldDirective, DynamicSearchFormComponent]
 })
 export class MassiveDataEditComponent implements OnInit {
 

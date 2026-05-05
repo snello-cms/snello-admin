@@ -120,9 +120,15 @@
                     (keydown)="handleDraftHistoryNavigation($event)"
                     (keydown.enter)="submitFromKeyboard($event)"></textarea>
 
-                <button type="button" class="snello-chat-send" (click)="sendMessage()" [disabled]="!draft.trim() || isSending">
-                    Send
-                </button>
+                <div class="snello-chat-footer-actions">
+                    <button type="button" class="snello-chat-send" (click)="sendMessage()" [disabled]="!draft.trim() || isSending">
+                        Send
+                    </button>
+
+                    <button type="button" class="snello-chat-clear" (click)="clearSessionChat()" [disabled]="isSending || isCreatingRecord" title="Clear session chat" aria-label="Clear session chat">
+                        Reset
+                    </button>
+                </div>
             </footer>
         </section>
     } @else {

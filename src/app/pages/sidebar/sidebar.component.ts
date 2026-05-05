@@ -1,6 +1,6 @@
 import {Component, DestroyRef, HostListener, inject} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {APP_VERSION, ASSET_PATH} from '../../constants/constants';
+import {APP_VERSION, ASSET_PATH, LOGO_URL} from '../../constants/constants';
 import { Router, RouterLink } from '@angular/router';
 import {ConfigurationService} from '../../services/configuration.service';
 import Keycloak from 'keycloak-js';
@@ -169,12 +169,19 @@ export class SideBarComponent {
 
     public selected = 'home';
     public asset_path: string;
+    public logo_url = '';
     public accountMenuOpen = false;
 
     constructor() {
         this.configurationService.getValue(ASSET_PATH).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: ass => {
                 this.asset_path = ass;
+            }
+        });
+
+        this.configurationService.getValue(LOGO_URL).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+            next: logoUrl => {
+                this.logo_url = (logoUrl ?? '').trim();
             }
         });
     }
@@ -220,6 +227,14 @@ export class SideBarComponent {
 
         const normalizedBase = basePath.endsWith('/') ? basePath.slice(0, -1) : basePath;
         return `${normalizedBase}/${path}`;
+    }
+
+    get logoSrc(): string {
+        if (this.logo_url) {
+            return this.logo_url;
+        }
+
+        return this.resolveAssetUrl('images/logo_white.svg');
     }
 
     isContenPage() {

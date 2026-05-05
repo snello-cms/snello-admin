@@ -68,12 +68,8 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
         ).subscribe((event) => {
             const nav = event as NavigationEnd;
             this.currentContext = this.describeContext(nav.urlAfterRedirects);
-            this.suggestions = this.getSuggestionsForUrl(nav.urlAfterRedirects);
-
-            // Reset chat on new session (user navigates to home after logout/login)
-            if (nav.urlAfterRedirects === '/home' || nav.urlAfterRedirects === '/') {
-                this.resetChat();
-            }
+            // On page change keep the conversation, clear only clickable suggestions.
+            this.suggestions = [];
         });
     }
 
@@ -212,6 +208,12 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
         });
     }
 
+    clearSessionChat(): void {
+        this.resetChat(false);
+        this.suggestions = [];
+        this.scrollToBottom(true);
+    }
+
     openAction(action: SnelloChatAction): void {
         if (action.type === 'create_preview') {
             this.pendingCreateAction = action;
@@ -249,22 +251,28 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
     }
 
     confirmCreatePreview(): void {
-        if (!this.pendingCreateAction || !this.pendingCreateAction.entity || !this.pendingCreateAction.payload || this.isCreatingRecord) {
+        if (!this.pendingCreateAction || !this.pendingCreateAction.payload || this.isCreatingRecord) {
             return;
         }
 
         const action = this.pendingCreateAction;
-        this.pushMessage('user', `I confirm the creation of the record in ${action.entity}.`);
+        const resolvedEntity = this.resolveCreatePreviewEntity(action);
+        if (!resolvedEntity) {
+            this.pushMessage('assistant', 'The target entity is missing in the confirmation action. Please retry specifying the exact table name.');
+            return;
+        }
+
+        this.pushMessage('user', `I confirm the creation of the record in ${resolvedEntity}.`);
         this.isCreatingRecord = true;
 
-        this.apiService.persist(action.entity!, action.payload)
+        this.apiService.persist(resolvedEntity, action.payload)
             .pipe(
                 switchMap(createdRecord => {
                     const idFromPayload = this.resolveCreatedRecordId(createdRecord, action.keyField);
                     if (idFromPayload) {
                         return of({ createdRecord, recordId: idFromPayload });
                     }
-                    return this.resolveMetadataKeyField(action.entity!).pipe(
+                    return this.resolveMetadataKeyField(resolvedEntity).pipe(
                         map(keyField => ({
                             createdRecord,
                             recordId: this.resolveCreatedRecordId(createdRecord, keyField)
@@ -291,15 +299,75 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
                     this.pushMessage(
                         'assistant',
                         `Record created successfully. I opened the single-record view (${recordId}).`,
-                        [{ type: 'open', entity: action.entity, id: recordId, label: 'Open created record' }]
+                        [{ type: 'open', entity: resolvedEntity, id: recordId, label: 'Open created record' }]
                     );
 
-                    this.router.navigate(['/datalist/view', action.entity, recordId]).catch(() => undefined);
+                    this.router.navigate(['/datalist/view', resolvedEntity, recordId]).catch(() => undefined);
                     return;
                 }
 
                 this.pushMessage('assistant', 'Record created successfully, but I could not determine the key to open the view automatically.');
             });
+    }
+
+    private resolveCreatePreviewEntity(action: SnelloChatAction): string | undefined {
+        const direct = action.entity?.trim();
+        if (direct && !this.isGenericCreatePreviewEntity(direct)) {
+            return direct;
+        }
+
+        const fromPayload = this.extractEntityFromPayload(action.payload);
+        if (fromPayload) {
+            return fromPayload;
+        }
+
+        return this.extractEntityFromContext(this.currentContext);
+    }
+
+    private isGenericCreatePreviewEntity(entity: string): boolean {
+        const normalized = entity.trim().toLowerCase();
+        return normalized === 'entity' || normalized === 'table';
+    }
+
+    private extractEntityFromPayload(payload?: Record<string, unknown>): string | undefined {
+        if (!payload || typeof payload !== 'object') {
+            return undefined;
+        }
+
+        const keys = ['entity', 'table', 'table_name', 'metadata', 'metadata_name'];
+        for (const key of keys) {
+            const value = payload[key];
+            if (typeof value !== 'string') {
+                continue;
+            }
+
+            const trimmed = value.trim();
+            if (!trimmed || this.isGenericCreatePreviewEntity(trimmed)) {
+                continue;
+            }
+
+            return trimmed;
+        }
+
+        return undefined;
+    }
+
+    private extractEntityFromContext(context: string): string | undefined {
+        const prefixes = ['Data list: ', 'View record: ', 'Edit record: ', 'Calendar list: '];
+        for (const prefix of prefixes) {
+            if (!context.startsWith(prefix)) {
+                continue;
+            }
+
+            const value = context.slice(prefix.length).trim();
+            if (!value || this.isGenericCreatePreviewEntity(value)) {
+                return undefined;
+            }
+
+            return value;
+        }
+
+        return undefined;
     }
 
     formatActionLabel(action: SnelloChatAction): string {
@@ -445,6 +513,11 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
             return entity ? `Data list: ${entity}` : 'Data list';
         }
 
+        if (url.includes('/calendar/list/')) {
+            const entity = decodeURIComponent(url.split('/calendar/list/')[1] || '').replace(/\?.*$/, '');
+            return entity ? `Calendar list: ${entity}` : 'Calendar list';
+        }
+
         if (url.includes('/datalist/edit/')) {
             const parts = url.split('/datalist/edit/')[1]?.split('/') || [];
             return parts[0] ? `Edit record: ${decodeURIComponent(parts[0])}` : 'Edit record';
@@ -548,6 +621,15 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
             ];
         }
 
+        if (url.includes('/calendar/list/')) {
+            const entity = decodeURIComponent(url.split('/calendar/list/')[1] || '').replace(/\?.*$/, '');
+            return [
+                `How do I filter records in calendar view for ${entity}?`,
+                `How do I add a new ${entity} record from calendar?`,
+                `How do I open record details from calendar?`
+            ];
+        }
+
         if (url.includes('/datalist/edit/')) {
             const parts = url.split('/datalist/edit/')[1]?.split('/') || [];
             const entity = parts[0] ? decodeURIComponent(parts[0]) : 'this record';
@@ -639,7 +721,7 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
         ];
     }
 
-    private resetChat(): void {
+    private resetChat(resetLayout = true): void {
         this.nextId = 2;
         this.conversationId = crypto.randomUUID();
         this.messages = [
@@ -655,8 +737,10 @@ export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {
         this.historyIndex = -1;
         this.historyDraftSnapshot = '';
         this.isSending = false;
-        this.isMaximized = false;
-        this.syncDockedBodyClass();
+        if (resetLayout) {
+            this.isMaximized = false;
+            this.syncDockedBodyClass();
+        }
         this.isCreatingRecord = false;
         this.pendingCreateAction = undefined;
     }

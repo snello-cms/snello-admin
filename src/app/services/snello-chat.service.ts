@@ -78,7 +78,43 @@ export class SnelloChatService {
         if (typeof response === 'string' || !Array.isArray(response.actions)) {
             return inlineActions;
         }
-        return [...response.actions, ...inlineActions];
+        return [...response.actions.map(action => this.normalizeAction(action)), ...inlineActions];
+    }
+
+    private normalizeAction(action: SnelloChatAction): SnelloChatAction {
+        if (action.type !== 'create_preview') {
+            return action;
+        }
+
+        const payload = action.payload as unknown;
+        if (typeof payload !== 'string') {
+            return action;
+        }
+
+        const trimmedPayload = payload.trim();
+        if (!trimmedPayload) {
+            return {...action, payload: {}};
+        }
+
+        const candidates = [trimmedPayload];
+        try {
+            candidates.push(atob(trimmedPayload));
+        } catch {
+            // Not a base64 payload, keep only the raw candidate.
+        }
+
+        for (const candidate of candidates) {
+            try {
+                const parsed = JSON.parse(candidate);
+                if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+                    return {...action, payload: parsed as Record<string, unknown>};
+                }
+            } catch {
+                // Try next decoding strategy.
+            }
+        }
+
+        return {...action, payload: {value: trimmedPayload}};
     }
 
     private extractInlineActions(text: string): SnelloChatAction[] {
