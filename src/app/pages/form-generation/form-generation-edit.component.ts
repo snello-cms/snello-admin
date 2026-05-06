@@ -599,6 +599,26 @@ export class FormGenerationEditComponent implements OnInit, AfterViewChecked {
         return `${this.formatDate(date)}T${this.formatTime(date)}${sign}${offsetHours}:${offsetMinutes}`;
     }
 
+    private serializeTemporalValue(value: unknown, type: 'time' | 'date' | 'datetime'): string | null {
+        if (value == null) {
+            return null;
+        }
+
+        if (typeof value === 'string' && value.trim() === '') {
+            return null;
+        }
+
+        if (type === 'time') {
+            return this.formatTime(value) || null;
+        }
+
+        if (type === 'date') {
+            return this.formatDate(value) || null;
+        }
+
+        return this.formatDateTime(value) || null;
+    }
+
     private parseTime(value: string): Date {
         const [hours = '0', minutes = '0', seconds = '0'] = value.split(':');
         const date = new Date();
@@ -771,15 +791,15 @@ export class FormGenerationEditComponent implements OnInit, AfterViewChecked {
             }
 
             if (field.type === 'time') {
-                objToSave[fieldName] = this.formatTime(objToSave[fieldName]);
+                objToSave[fieldName] = this.serializeTemporalValue(objToSave[fieldName], 'time');
             }
 
             if (field.type === 'date') {
-                objToSave[fieldName] = this.formatDate(objToSave[fieldName]);
+                objToSave[fieldName] = this.serializeTemporalValue(objToSave[fieldName], 'date');
             }
 
             if (field.type === 'datetime') {
-                objToSave[fieldName] = this.formatDateTime(objToSave[fieldName]);
+                objToSave[fieldName] = this.serializeTemporalValue(objToSave[fieldName], 'datetime');
             }
 
             // null = 0
