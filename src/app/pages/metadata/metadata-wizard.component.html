@@ -243,6 +243,11 @@
                 </div>
 
                 <div class="form-group">
+                  <label>Description</label>
+                  <textarea [(ngModel)]="selectedField.description" name="field_description" pTextarea></textarea>
+                </div>
+
+                <div class="form-group">
                   <label>Default value</label>
                   <input [(ngModel)]="selectedField.default_value" name="default_value" pInputText
                     [placeholder]="selectedField.fieldType === 'date' ? 'Ex. now() or always_now()' : selectedField.fieldType === 'datetime' ? 'Ex. now() or always_now()' : 'Default value'">
@@ -344,6 +349,7 @@
                 <th>Searchable</th>
                 <th>Search Condition</th>
                 <th>Default</th>
+                <th>Description</th>
               </tr>
               </thead>
               <tbody>
@@ -363,6 +369,7 @@
                     <td>{{field.searchable ? '✓' : '—'}}</td>
                     <td>{{field.search_condition || '—'}}</td>
                     <td>{{field.default_value || '—'}}</td>
+                    <td>{{field.description || '—'}}</td>
                   </tr>
                 }
               </tbody>

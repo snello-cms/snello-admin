@@ -435,6 +435,7 @@ export class MetadataWizardComponent {
         field.sql_definition = '';
         field.pattern = '';
         field.definition = '';
+        field.description = '';
         field.options = fieldType === 'select' ? '' : undefined;
         field.join_table_name = '';
         field.join_table_key = '';

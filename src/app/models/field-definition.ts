@@ -22,6 +22,7 @@ export class FieldDefinition {
   default_value?: string;
   pattern?: string;
   definition?: string;
+  description: string;
 
   group_name?: string;
   tab_name?: string;
