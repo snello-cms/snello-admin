@@ -196,6 +196,96 @@ export class FormGenerationListComponent implements OnInit {
         return '';
     }
 
+    private formatFieldValue(fullValue: unknown, fieldDefinition: FieldDefinition): unknown {
+        if (fullValue == null || fullValue === '') {
+            return '';
+        }
+
+        if (fieldDefinition.type === 'date') {
+            return this.formatDateValue(fullValue);
+        }
+
+        if (fieldDefinition.type === 'datetime') {
+            return this.formatDateTimeValue(fullValue);
+        }
+
+        if (fieldDefinition.type === 'time') {
+            return this.formatTimeValue(fullValue);
+        }
+
+        return fullValue;
+    }
+
+    private toValidDate(value: unknown): Date | null {
+        if (value instanceof Date) {
+            return Number.isNaN(value.getTime()) ? null : value;
+        }
+
+        if (typeof value !== 'string' || value.trim() === '') {
+            return null;
+        }
+
+        const parsed = new Date(value);
+        return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+
+    private formatDateValue(value: unknown): string {
+        if (typeof value === 'string') {
+            const match = value.trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
+            if (match) {
+                return `${match[3]}/${match[2]}/${match[1]}`;
+            }
+        }
+
+        const parsed = this.toValidDate(value);
+        if (!parsed) {
+            return String(value);
+        }
+
+        return new Intl.DateTimeFormat('it-IT', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        }).format(parsed);
+    }
+
+    private formatDateTimeValue(value: unknown): string {
+        const parsed = this.toValidDate(value);
+        if (!parsed) {
+            return String(value);
+        }
+
+        return new Intl.DateTimeFormat('it-IT', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        }).format(parsed);
+    }
+
+    private formatTimeValue(value: unknown): string {
+        if (typeof value === 'string') {
+            const match = value.trim().match(/^(\d{2}):(\d{2})(?::(\d{2}))?$/);
+            if (match) {
+                return `${match[1]}:${match[2]}:${match[3] ?? '00'}`;
+            }
+        }
+
+        const parsed = this.toValidDate(value);
+        if (!parsed) {
+            return String(value);
+        }
+
+        return new Intl.DateTimeFormat('it-IT', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        }).format(parsed);
+    }
+
 
     private datoAsObservableOfValue(rowData: any, fieldDefinition: FieldDefinition): Observable<any> {
         const fieldName = fieldDefinition.name;
@@ -251,7 +341,7 @@ export class FormGenerationListComponent implements OnInit {
                     .join(', '))
             );
         } else {
-            return of(fullValue);
+            return of(this.formatFieldValue(fullValue, fieldDefinition));
         }
 
     }
