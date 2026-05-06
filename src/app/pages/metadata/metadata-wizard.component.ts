@@ -121,6 +121,11 @@ export class MetadataWizardComponent {
     };
 
     metadata: Metadata = new Metadata();
+    metadatas: Metadata[] = [];
+    joinMetadatasSelect: Metadata[] = [];
+    selectedJoinMetadata: Metadata | null = null;
+    joinFieldOptions: SelectItem[] = [];
+    selectedJoinField?: string;
     metadataLabel = '';
     private metadataLabelManuallyEdited = false;
     fields: WizardField[] = [];
@@ -165,6 +170,7 @@ export class MetadataWizardComponent {
         this.metadata.table_key = 'uuid';
         this.metadata.table_key_type = 'uuid';
         this.metadataLabel = this.buildLabelFromTableName(this.metadata.table_name);
+        this.loadMetadatasForJoin();
     }
 
     get selectedField(): WizardField | undefined {
@@ -199,6 +205,8 @@ export class MetadataWizardComponent {
         if (!this.metadataLabelManuallyEdited) {
             this.metadataLabel = this.buildLabelFromTableName(this.metadata.table_name);
         }
+        this.updateJoinMetadataOptions();
+        this.syncJoinEditorState(this.selectedField);
     }
 
     onMetadataLabelChanged() {
@@ -259,10 +267,12 @@ export class MetadataWizardComponent {
         this.fields.splice(event.currentIndex, 1, this.createFieldFromType(droppedFieldType, event.currentIndex));
         this.fields.forEach((field, index) => field.order_num = index + 1);
         this.selectedFieldId = this.fields[event.currentIndex].wizardId;
+        this.syncJoinEditorState(this.fields[event.currentIndex]);
     }
 
     selectField(field: WizardField) {
         this.selectedFieldId = field.wizardId;
+        this.syncJoinEditorState(field);
     }
 
     removeField(fieldToRemove: WizardField) {
@@ -271,6 +281,40 @@ export class MetadataWizardComponent {
         if (this.selectedFieldId === fieldToRemove.wizardId) {
             this.selectedFieldId = this.fields[0]?.wizardId;
         }
+        this.syncJoinEditorState(this.selectedField);
+    }
+
+    changedJoinMetadata(event: any) {
+        const field = this.selectedField;
+        if (!field || !this.isJoinField(field)) {
+            return;
+        }
+
+        const selected = event && event.value ? event.value as Metadata : null;
+        this.selectedJoinMetadata = selected;
+        this.joinFieldOptions = [];
+        this.selectedJoinField = undefined;
+        field.join_table_select_fields = '';
+
+        if (!selected) {
+            field.join_table_name = '';
+            field.join_table_key = '';
+            return;
+        }
+
+        field.join_table_name = selected.table_name;
+        field.join_table_key = selected.table_key;
+        this.loadJoinFields(selected.uuid, field);
+    }
+
+    changedJoinFields(event: any) {
+        const field = this.selectedField;
+        if (!field || !this.isJoinField(field)) {
+            return;
+        }
+
+        this.selectedJoinField = event && event.value ? String(event.value) : undefined;
+        field.join_table_select_fields = this.selectedJoinField ?? '';
     }
 
     goToStep(target: WizardStep) {
@@ -512,6 +556,36 @@ export class MetadataWizardComponent {
                 }
                 return false;
             }
+
+            if (field.fieldType === 'select' && !(field.options ?? '').trim()) {
+                if (showMessage) {
+                    this.showValidationError(`Step 2: Options are required for select field "${field.name}".`);
+                }
+                return false;
+            }
+
+            if (this.isJoinField(field)) {
+                if (!(field.join_table_name ?? '').trim()) {
+                    if (showMessage) {
+                        this.showValidationError(`Step 2: Join Table Name is required for field "${field.name}".`);
+                    }
+                    return false;
+                }
+
+                if (!(field.join_table_key ?? '').trim()) {
+                    if (showMessage) {
+                        this.showValidationError(`Step 2: Join Table Key is required for field "${field.name}".`);
+                    }
+                    return false;
+                }
+
+                if (!(field.join_table_select_fields ?? '').trim()) {
+                    if (showMessage) {
+                        this.showValidationError(`Step 2: Join Table Fields is required for field "${field.name}".`);
+                    }
+                    return false;
+                }
+            }
         }
 
         if (this.selectedUuidType === 'slug') {
@@ -569,6 +643,113 @@ export class MetadataWizardComponent {
             payload.calendar_label = '';
         }
         return payload;
+    }
+
+    private loadMetadatasForJoin() {
+        this.metadataService.getAllList({
+            table_name_contains: '',
+            uuid: '',
+            _limit: 100000
+        }).subscribe({
+            next: (metadataList) => {
+                this.metadatas = [...metadataList];
+                this.updateJoinMetadataOptions();
+                this.syncJoinEditorState(this.selectedField);
+            },
+            error: (error) => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error while loading metadata list for join fields.',
+                    detail: String(error || '')
+                });
+            }
+        });
+    }
+
+    private updateJoinMetadataOptions() {
+        const currentTableName = (this.metadata.table_name ?? '').trim().toLowerCase();
+        this.joinMetadatasSelect = this.metadatas
+            .filter(metadata => (metadata.table_name ?? '').trim().toLowerCase() !== currentTableName)
+            .sort((left, right) => left.table_name.localeCompare(right.table_name, 'it'));
+    }
+
+    private syncJoinEditorState(field?: WizardField) {
+        if (!field || !this.isJoinField(field)) {
+            this.selectedJoinMetadata = null;
+            this.joinFieldOptions = [];
+            this.selectedJoinField = undefined;
+            return;
+        }
+
+        this.updateJoinMetadataOptions();
+        this.selectedJoinMetadata = this.joinMetadatasSelect.find(
+            metadata => metadata.table_name === field.join_table_name
+        ) ?? null;
+
+        this.selectedJoinField = field.join_table_select_fields
+            ? field.join_table_select_fields.split(',').map(item => item.trim()).filter(Boolean)[0]
+            : undefined;
+
+        if (this.selectedJoinMetadata) {
+            field.join_table_name = this.selectedJoinMetadata.table_name;
+            field.join_table_key = this.selectedJoinMetadata.table_key;
+            this.loadJoinFields(this.selectedJoinMetadata.uuid, field, true);
+        } else {
+            this.joinFieldOptions = [];
+            if (!field.join_table_name) {
+                field.join_table_key = '';
+                field.join_table_select_fields = '';
+            }
+        }
+    }
+
+    private loadJoinFields(metadataUuid: string, field: WizardField, preserveSelection = false) {
+        this.fieldDefinitionService.getAllList({
+            name_contains: '',
+            uuid: '',
+            metadata_uuid: metadataUuid,
+            _limit: 100000
+        }).subscribe({
+            next: (fieldDefinitions: FieldDefinition[]) => {
+                const options = fieldDefinitions
+                    .filter(definition => !!definition.name)
+                    .map(definition => ({
+                        label: definition.table_key
+                            ? `${definition.name} / key`
+                            : `${definition.name}`,
+                        value: definition.name
+                    }))
+                    .sort((left, right) => String(left.label).localeCompare(String(right.label), 'it'));
+
+                this.joinFieldOptions = options;
+
+                if (preserveSelection) {
+                    const allowedValues = new Set(options.map(option => String(option.value)));
+                    this.selectedJoinField = this.selectedJoinField && allowedValues.has(this.selectedJoinField)
+                        ? this.selectedJoinField
+                        : undefined;
+                }
+
+                if (!this.selectedJoinField && options.length > 0) {
+                    const firstField = options[0].value;
+                    this.selectedJoinField = firstField ? String(firstField) : undefined;
+                }
+
+                field.join_table_select_fields = this.selectedJoinField ?? '';
+            },
+            error: (error) => {
+                this.joinFieldOptions = [];
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error while loading join fields.',
+                    detail: String(error || '')
+                });
+            }
+        });
+    }
+
+    private isJoinField(field: WizardField): boolean {
+        return field.fieldType === 'join' || field.fieldType === 'multijoin';
     }
 
     private buildFieldPayload(field: WizardField, metadata: Metadata, orderNum: number): FieldDefinition {

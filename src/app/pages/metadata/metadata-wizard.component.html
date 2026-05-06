@@ -295,6 +295,40 @@
                     <textarea [(ngModel)]="selectedField.options" name="options" pTextarea></textarea>
                   </div>
                 }
+
+                @if (selectedField.fieldType === 'join' || selectedField.fieldType === 'multijoin') {
+                  <div class="form-group">
+                    <label>Join Table Name</label>
+                    <p-select
+                      [(ngModel)]="selectedJoinMetadata"
+                      [options]="joinMetadatasSelect"
+                      optionLabel="table_name"
+                      name="join_table_name"
+                      placeholder="Select join metadata"
+                      styleClass="w-100"
+                      (onChange)="changedJoinMetadata($event)">
+                    </p-select>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Join Table Key</label>
+                    <input [(ngModel)]="selectedField.join_table_key" name="join_table_key" pInputText readonly>
+                  </div>
+
+                  <div class="form-group">
+                    <label>Join Table Fields</label>
+                    <p-select
+                      [(ngModel)]="selectedJoinField"
+                      [options]="joinFieldOptions"
+                      optionLabel="label"
+                      optionValue="value"
+                      name="join_table_select_fields"
+                      placeholder="Select metadata field"
+                      styleClass="w-100"
+                      (onChange)="changedJoinFields($event)">
+                    </p-select>
+                  </div>
+                }
               } @else {
                 <div class="empty-zone">Select a field from the canvas</div>
               }
