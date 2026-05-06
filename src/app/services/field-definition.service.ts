@@ -37,4 +37,10 @@ export class FieldDefinitionService extends AbstractService<FieldDefinition> {
         }
         return labelField;
     }
+
+    protected marshall(element: FieldDefinition) {
+        const payload: any = {...element};
+        delete payload.definition;
+        return payload;
+    }
 }
