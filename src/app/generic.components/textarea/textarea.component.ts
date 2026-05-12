@@ -13,7 +13,7 @@ import { Textarea } from 'primeng/textarea';
             <textarea pTextarea
               [formControlName]="field.name"
             [placeholder]="field.label"></textarea>
-            @for (validation of field.validations; track validation) {
+            @for (validation of field.validations; track validation?.name ?? validation?.message ?? $index) {
             }
           </div>
         </div>

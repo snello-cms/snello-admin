@@ -45,6 +45,14 @@ export class DynamicFieldDirective implements OnInit {
             componentType = (await import('../realtionships/realtionships.component')).RealtionshipsComponent;
         } else if (this.view() && this.field().type === 'realtionships') {
             componentType = (await import('../realtionships/realtionships-view.component')).RealtionshipsViewComponent;
+        } else if (!this.view() && this.field().type === 'join' && this.field().input_type === 'lookup') {
+            componentType = (await import('../lookup/lookup.component')).LookupComponent;
+        } else if (this.view() && this.field().type === 'join' && this.field().input_type === 'lookup') {
+            componentType = (await import('../lookup/lookup-view.component')).LookupViewComponent;
+        } else if (!this.view() && this.field().type === 'multijoin' && this.field().input_type === 'multilookup') {
+            componentType = (await import('../multilookup/multilookup.component')).MultiLookupComponent;
+        } else if (this.view() && this.field().type === 'multijoin' && this.field().input_type === 'multilookup') {
+            componentType = (await import('../multilookup/multilookup-view.component')).MultiLookupViewComponent;
         } else {
             componentType = this.view()
                 ? componentViewMapper[this.field().type]

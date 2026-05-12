@@ -83,7 +83,9 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         monaco: 'contains',
         tags: 'contains',
         join: '',
+        lookup: '',
         multijoin: 'contains',
+        multilookup: '',
         realtionships: 'contains',
         media: 'null',
         image: 'null'
@@ -273,6 +275,9 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         if (fieldDefTypes) {
             this.element.type = fieldDefTypes[0];
             this.element.input_type = fieldDefTypes[1];
+        }
+        if (this.fieldType === 'lookup' || this.fieldType === 'multilookup') {
+            this.element.search_condition = '';
         }
         delete this.element.value;
         delete (this.element as any).is_edit;
@@ -549,12 +554,18 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         this.fieldType = key;
         this.syncSearchConditionItems();
         this.element.search_condition = this.componentDefaultValuesMapper[key] ?? '';
-        if (key === 'join' || key === 'multijoin') {
+        if (key === 'join' || key === 'lookup' || key === 'multijoin' || key === 'multilookup') {
             this.initializeJoinMetadata();
         }
     }
 
     private syncSearchConditionItems() {
+        if (this.fieldType === 'lookup' || this.fieldType === 'multilookup') {
+            this.searchConditionItems = [...this.defaultSearchConditionItems];
+            this.element.search_condition = '';
+            return;
+        }
+
         const isDateField = this.fieldType === 'date' || this.fieldType === 'datetime';
         this.searchConditionItems = isDateField
             ? [...this.dateSearchConditionItems]

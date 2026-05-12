@@ -53,7 +53,7 @@ export class MetadataWizardComponent {
         {name: 'editor', types: ['tinymce', 'monaco']},
         {name: 'time',   types: ['date', 'datetime', 'time']},
         {name: 'media',  types: ['media', 'image']},
-        {name: 'join',   types: ['select', 'tags', 'join', 'multijoin', 'realtionships']},
+        {name: 'join',   types: ['select', 'tags', 'join', 'lookup', 'multijoin', 'multilookup', 'realtionships']},
         {name: 'maps',   types: ['gmaplocation', 'gmappath']}
     ];
     readonly fieldPalette = this.fieldGroups.flatMap(g => g.types);
@@ -80,7 +80,9 @@ export class MetadataWizardComponent {
         monaco: 'contains',
         tags: 'contains',
         join: '',
+        lookup: '',
         multijoin: 'contains',
+        multilookup: '',
         realtionships: 'contains',
         media: 'null',
         image: 'null',
@@ -107,7 +109,9 @@ export class MetadataWizardComponent {
         image: 'fa fa-image',
         tags: 'fa fa-tags',
         join: 'fa fa-link',
+        lookup: 'fa fa-search',
         multijoin: 'fa fa-chain',
+        multilookup: 'fa fa-object-group',
         realtionships: 'fa fa-sitemap',
         gmaplocation: 'fa fa-map-marker',
         gmappath: 'fa fa-map'
@@ -399,7 +403,9 @@ export class MetadataWizardComponent {
         if (!field.searchable) {
             field.search_condition = '';
         } else {
-            field.search_condition = this.defaultSearchConditionByFieldType[field.fieldType] ?? '';
+            field.search_condition = field.fieldType === 'lookup' || field.fieldType === 'multilookup'
+                ? ''
+                : (this.defaultSearchConditionByFieldType[field.fieldType] ?? '');
         }
     }
 
@@ -749,7 +755,7 @@ export class MetadataWizardComponent {
     }
 
     private isJoinField(field: WizardField): boolean {
-        return field.fieldType === 'join' || field.fieldType === 'multijoin';
+        return field.fieldType === 'join' || field.fieldType === 'lookup' || field.fieldType === 'multijoin' || field.fieldType === 'multilookup';
     }
 
     private buildFieldPayload(field: WizardField, metadata: Metadata, orderNum: number): FieldDefinition {
@@ -772,6 +778,9 @@ export class MetadataWizardComponent {
         if (!payload.searchable) {
             payload.search_field_name = '';
         } else {
+            if (field.fieldType === 'lookup' || field.fieldType === 'multilookup') {
+                payload.search_condition = '';
+            }
             payload.search_field_name = payload.search_condition === 'range'
                 ? `${payload.name}_range`
                 : payload.search_condition
@@ -779,7 +788,14 @@ export class MetadataWizardComponent {
                     : payload.name;
         }
 
-        if (payload.input_type !== 'join' && payload.input_type !== 'multijoin' && payload.type !== 'join' && payload.type !== 'multijoin') {
+        if (
+            payload.input_type !== 'join'
+            && payload.input_type !== 'lookup'
+            && payload.input_type !== 'multijoin'
+            && payload.input_type !== 'multilookup'
+            && payload.type !== 'join'
+            && payload.type !== 'multijoin'
+        ) {
             payload.join_table_name = '';
             payload.join_table_key = '';
             payload.join_table_select_fields = '';

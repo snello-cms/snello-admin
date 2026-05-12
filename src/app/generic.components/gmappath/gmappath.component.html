@@ -21,9 +21,15 @@
   </div>
 </div>
 
-@if (showMap) {
-  <div class="gmap-popup" (click)="closeMap()">
-    <div class="gmap-popup-content" (click)="$event.stopPropagation()">
+<p-dialog
+  [visible]="showMap"
+  header="Select path"
+  [modal]="true"
+  (onHide)="closeMap()"
+  [maximizable]="true"
+  [appendTo]="'body'"
+  [style]="{width: '90vw', height: '90vh'}">
+  <ng-template pTemplate="content">
       <div class="gmap-search">
         <div class="gmap-search-row">
           <input
@@ -74,6 +80,5 @@
         <button type="button" class="btn btn-success" (click)="confirmPath()">Confirm</button>
         <button type="button" class="btn btn-secondary" (click)="closeMap()">Cancel</button>
       </div>
-    </div>
-  </div>
-}
+  </ng-template>
+</p-dialog>

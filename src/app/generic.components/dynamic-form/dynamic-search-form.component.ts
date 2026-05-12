@@ -8,7 +8,7 @@ import { DynamicFieldDirective } from '../dynamic-field/dynamic-field.directive'
     standalone: true,
     template: `
     <form class="dynamic-form" [formGroup]="searchForm" (submit)="onSubmit($event)">
-      @for (field of fields(); track field) {
+      @for (field of fields(); track field.name ?? field.search_field_name ?? $index) {
         <ng-container dynamicField [field]="field" [group]="searchForm">
         </ng-container>
       }

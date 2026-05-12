@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild, model } from '@angular/core';
 import { FormsModule, UntypedFormGroup } from '@angular/forms';
+import { DialogModule } from 'primeng/dialog';
 import * as L from 'leaflet';
 import { FieldDefinition } from '../../models/field-definition';
 import {
@@ -18,7 +19,7 @@ import {
   templateUrl: './gmaplocation.component.html',
   styleUrls: ['./gmaplocation.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, DialogModule]
 })
 export class GMapLocationComponent {
   value = model('');

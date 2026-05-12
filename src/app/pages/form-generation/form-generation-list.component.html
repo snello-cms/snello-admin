@@ -68,7 +68,7 @@
               <ng-template let-columns pTemplate="header">
                 <tr class="sort-header">
                   <th class="Operations">Index</th>
-                  @for (def of fieldDefinitionsList; track def) {
+                  @for (def of fieldDefinitionsList; track def.uuid ?? def.name ?? $index) {
                     @if (def.show_in_list) {
                       <th>{{def.label}}</th>
                     }
@@ -87,7 +87,7 @@
               <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
                 <tr>
                   <td class="RowIndex">{{ rowIndex + 1 }}</td>
-                  @for (def of fieldDefinitionsList; track def) {
+                  @for (def of fieldDefinitionsList; track def.uuid ?? def.name ?? $index) {
                     @if (def.show_in_list) {
                       <td>
                         {{rowData[def.name] | async  }}

@@ -84,7 +84,7 @@
               </div>
 
 
-              @if (fieldType == 'join'|| fieldType == 'multijoin') {
+              @if (fieldType == 'join'|| fieldType == 'lookup' || fieldType == 'multijoin' || fieldType == 'multilookup') {
                 <div class="form-group clearfix row">
                   <label class="label-text col-sm-3">Join Table Name</label>
                   <div class="col-sm-9">
@@ -97,7 +97,7 @@
                 </div>
               }
 
-              @if (fieldType == 'join'|| fieldType == 'multijoin') {
+              @if (fieldType == 'join'|| fieldType == 'lookup' || fieldType == 'multijoin' || fieldType == 'multilookup') {
                 <div class="form-group clearfix row">
                   <label class="label-text col-sm-3">Join Table Key</label>
                   <div class="col-sm-9">
@@ -107,7 +107,7 @@
                 </div>
               }
 
-              @if (fieldType == 'join'|| fieldType == 'multijoin') {
+              @if (fieldType == 'join' || fieldType == 'lookup' || fieldType == 'multijoin' || fieldType == 'multilookup') {
                 <div class="form-group clearfix row">
                   <label class="label-text col-sm-3">Join Table Fields</label>
                   <div class="col-sm-9">
@@ -185,7 +185,7 @@
               }
 
 
-              @if (element.searchable &&fieldType !== 'media') {
+              @if (element.searchable && fieldType !== 'media' && fieldType !== 'lookup' && fieldType !== 'multilookup') {
                 <div class="form-group clearfix row">
                   <label class="label-text col-sm-3">Search Condition</label>
                   <div class="col-sm-9">

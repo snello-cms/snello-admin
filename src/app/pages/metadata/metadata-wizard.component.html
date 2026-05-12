@@ -281,7 +281,7 @@
                     <p-toggleswitch [(ngModel)]="selectedField.searchable" name="searchable" (ngModelChange)="onSearchableChange(selectedField)"></p-toggleswitch>
                   </div>
 
-                  @if (selectedField.searchable) {
+                  @if (selectedField.searchable && selectedField.fieldType !== 'lookup' && selectedField.fieldType !== 'multilookup') {
                     <div class="form-group">
                       <label>Search condition</label>
                       <p-select [(ngModel)]="selectedField.search_condition" name="search_condition" [options]="searchConditionItems" placeholder="Select a condition" styleClass="w-100"></p-select>
@@ -296,7 +296,7 @@
                   </div>
                 }
 
-                @if (selectedField.fieldType === 'join' || selectedField.fieldType === 'multijoin') {
+                @if (selectedField.fieldType === 'join' || selectedField.fieldType === 'lookup' || selectedField.fieldType === 'multijoin' || selectedField.fieldType === 'multilookup') {
                   <div class="form-group">
                     <label>Join Table Name</label>
                     <p-select
@@ -315,6 +315,7 @@
                     <input [(ngModel)]="selectedField.join_table_key" name="join_table_key" pInputText readonly>
                   </div>
 
+                  @if (selectedField.fieldType === 'join' || selectedField.fieldType === 'lookup' || selectedField.fieldType === 'multijoin' || selectedField.fieldType === 'multilookup') {
                   <div class="form-group">
                     <label>Join Table Fields</label>
                     <p-select
@@ -328,6 +329,7 @@
                       (onChange)="changedJoinFields($event)">
                     </p-select>
                   </div>
+                  }
                 }
               } @else {
                 <div class="empty-zone">Select a field from the canvas</div>

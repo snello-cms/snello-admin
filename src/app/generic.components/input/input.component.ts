@@ -25,7 +25,7 @@ import {MassivePreviewService} from '../../pages/form-generation/massive-preview
             </button>
           }
         </div>
-        @for (validation of field.validations; track validation) {
+        @for (validation of field.validations; track validation?.name ?? validation?.message ?? $index) {
         }
       </div>
     </div>

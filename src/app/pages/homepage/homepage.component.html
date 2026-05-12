@@ -14,7 +14,7 @@
       <div class="col-md-12 col-sm-12">
         <div class="content list">
           <div class="row g-3">
-            @for (component of model; track component) {
+            @for (component of model; track component.table_name ?? component.uuid ?? $index) {
               <div class="col-lg-4 col-md-6 col-sm-6 col-12">
                 <div class="card-home-user">
                   <a [routerLink]="'/datalist/new/' + component.table_name" class="btn btn-add float-end">
@@ -41,7 +41,7 @@
           <div class="content list">
             <b>Extensions</b><br/>
             <div class="row g-3">
-              @for (extension of extensions; track extension) {
+              @for (extension of extensions; track extension.uuid ?? extension.name ?? $index) {
                 <div class="col-lg-4 col-md-6 col-sm-6 col-12">
                   <div class="card-home">
                     <i class="{{extension.icon}} fa-3x float-end"></i>

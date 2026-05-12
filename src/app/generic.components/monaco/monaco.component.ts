@@ -19,7 +19,7 @@ import { EditorComponent } from 'ngx-monaco-editor-v2';
               type="text"
               name="header"
                             [formControlName]="field.name"></ngx-monaco-editor>
-            @for (validation of field.validations; track validation) {
+            @for (validation of field.validations; track validation?.name ?? validation?.message ?? $index) {
             }
           </div>
         </div>
