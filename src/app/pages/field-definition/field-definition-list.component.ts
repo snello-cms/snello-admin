@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, inject} from '@angular/core';
 import {AbstractListComponent} from '../../common/abstract-list-component';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {FieldDefinitionService} from '../../services/field-definition.service';
 import {FieldDefinition} from '../../models/field-definition';
 import {MetadataService} from '../../services/metadata.service';
@@ -21,6 +21,7 @@ export class FieldDefinitionListComponent extends AbstractListComponent<FieldDef
 
     public metadatasItems: SelectItem[];
     metadatas: Map<string, boolean> = new Map<string, boolean>();
+    private readonly route = inject(ActivatedRoute);
 
     constructor(
         public router: Router,
@@ -47,6 +48,10 @@ export class FieldDefinitionListComponent extends AbstractListComponent<FieldDef
 
     ngOnInit() {
         this.service.buildSearch();
+        const metadataUuid = this.route.snapshot.queryParamMap.get('metadata_uuid');
+        if (metadataUuid) {
+            this.service.search.metadata_uuid = metadataUuid;
+        }
         this.firstReload = true;
     }
 

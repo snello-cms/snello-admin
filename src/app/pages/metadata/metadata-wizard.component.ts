@@ -1,15 +1,16 @@
 import {CommonModule} from '@angular/common';
 import {Component, inject} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {CdkDragDrop, DragDropModule, copyArrayItem, moveItemInArray} from '@angular/cdk/drag-drop';
-import {forkJoin, of} from 'rxjs';
-import {switchMap} from 'rxjs/operators';
+import {forkJoin, Observable, of} from 'rxjs';
+import {map, switchMap} from 'rxjs/operators';
 import {MessageService, SelectItem} from 'primeng/api';
 import {InputText} from 'primeng/inputtext';
 import {SelectModule} from 'primeng/select';
 import {Textarea} from 'primeng/textarea';
 import {ToggleSwitchModule} from 'primeng/toggleswitch';
+import {AutoComplete} from 'primeng/autocomplete';
 import {SideBarComponent} from '../sidebar/sidebar.component';
 import {AdminhomeTopBar} from '../adminhome-topbar/adminhome-topbar.component';
 import {FieldDefinition} from '../../models/field-definition';
@@ -34,7 +35,8 @@ import {WizardField, WizardStep} from '../../models/wizard-field';
         SelectModule,
         ToggleSwitchModule,
         Textarea,
-        DragDropModule
+        DragDropModule,
+        AutoComplete
     ]
 })
 export class MetadataWizardComponent {
@@ -123,8 +125,9 @@ export class MetadataWizardComponent {
         autoincrement: 'fa fa-sort-numeric-asc',
         userdefined: 'fa fa-user'
     };
-
     metadata: Metadata = new Metadata();
+    metadataGroups: string[] = [];
+    filteredMetadataGroups: string[] = [];
     metadatas: Metadata[] = [];
     joinMetadatasSelect: Metadata[] = [];
     selectedJoinMetadata: Metadata | null = null;
@@ -137,6 +140,8 @@ export class MetadataWizardComponent {
     selectedUuidType = 'uuid';
     apiProtected = false;
     isSaving = false;
+    isWizardEditMode = false;
+    editingMetadataUuid = '';
     orderByField = '';
     orderByDirection = 'ASC';
     readonly orderByDirections: SelectItem[] = [
@@ -165,6 +170,7 @@ export class MetadataWizardComponent {
     ];
 
     private readonly router = inject(Router);
+    private readonly route = inject(ActivatedRoute);
     private readonly metadataService = inject(MetadataService);
     private readonly fieldDefinitionService = inject(FieldDefinitionService);
     private readonly messageService = inject(MessageService);
@@ -174,7 +180,97 @@ export class MetadataWizardComponent {
         this.metadata.table_key = 'uuid';
         this.metadata.table_key_type = 'uuid';
         this.metadataLabel = this.buildLabelFromTableName(this.metadata.table_name);
+        this.loadMetadataGroups();
         this.loadMetadatasForJoin();
+        this.initWizardEditMode();
+    }
+
+    private initWizardEditMode() {
+        const metadataUuid = this.route.snapshot.queryParamMap.get('metadata_uuid');
+        if (!metadataUuid) {
+            return;
+        }
+
+        this.isWizardEditMode = true;
+        this.editingMetadataUuid = metadataUuid;
+        this.loadWizardFromExistingMetadata(metadataUuid);
+    }
+
+    private loadWizardFromExistingMetadata(metadataUuid: string) {
+        this.metadataService.find(metadataUuid).pipe(
+            switchMap((metadata: Metadata) => this.fieldDefinitionService.getAllList({
+                name_contains: '',
+                uuid: '',
+                metadata_uuid: metadata.uuid,
+                _limit: 100000
+            }).pipe(
+                map((fieldDefinitions: FieldDefinition[]) => ({metadata, fieldDefinitions}))
+            ))
+        ).subscribe({
+            next: ({metadata, fieldDefinitions}) => {
+                this.metadata = {...metadata};
+                this.selectedUuidType = this.metadata.table_key_type || 'uuid';
+                this.apiProtected = !!this.metadata.api_protected;
+                this.metadataLabel = this.buildLabelFromTableName(this.metadata.table_name);
+                this.metadataLabelManuallyEdited = false;
+
+                this.syncOrderByFromMetadata();
+
+                const sortedDefinitions = [...(fieldDefinitions ?? [])]
+                    .sort((left, right) => (left.order_num ?? 0) - (right.order_num ?? 0));
+
+                this.fields = sortedDefinitions.map((definition, index) => {
+                    const wizardField = {...definition} as WizardField;
+                    wizardField.wizardId = definition.uuid || `${Date.now()}_${index}_${Math.random().toString(36).slice(2)}`;
+                    wizardField.fieldType = this.resolveFieldType(definition.type, definition.input_type);
+                    wizardField.search_condition = wizardField.search_condition ?? '';
+                    wizardField.is_edit = false;
+                    return wizardField;
+                });
+
+                this.selectedFieldId = this.fields[0]?.wizardId;
+                this.updateJoinMetadataOptions();
+                this.syncJoinEditorState(this.selectedField);
+            },
+            error: (error) => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error while loading metadata into wizard.',
+                    detail: String(error || '')
+                });
+            }
+        });
+    }
+
+    private syncOrderByFromMetadata() {
+        const rawOrderBy = (this.metadata.order_by ?? '').trim();
+        if (!rawOrderBy) {
+            this.orderByField = '';
+            this.orderByDirection = 'ASC';
+            return;
+        }
+
+        const chunks = rawOrderBy.split(/\s+/).filter(Boolean);
+        const maybeDirection = (chunks[chunks.length - 1] ?? '').toUpperCase();
+        if (maybeDirection === 'ASC' || maybeDirection === 'DESC') {
+            this.orderByDirection = maybeDirection;
+            this.orderByField = chunks.slice(0, -1).join(' ');
+            return;
+        }
+
+        this.orderByField = rawOrderBy;
+        this.orderByDirection = 'ASC';
+    }
+
+    private resolveFieldType(type?: string, inputType?: string | null): string {
+        for (const [key, mapping] of MAP_INPUT_TO_FIELD.entries()) {
+            const mappingType = mapping?.[0];
+            const mappingInputType = mapping?.[1] ?? null;
+            if (mappingType === type && mappingInputType === (inputType ?? null)) {
+                return key;
+            }
+        }
+        return type || 'string';
     }
 
     get selectedField(): WizardField | undefined {
@@ -215,6 +311,11 @@ export class MetadataWizardComponent {
 
     onMetadataLabelChanged() {
         this.metadataLabelManuallyEdited = true;
+    }
+
+    filterMetadataGroups(event: { query?: string }) {
+        const query = (event?.query ?? '').toLowerCase();
+        this.filteredMetadataGroups = this.metadataGroups.filter(group => group.toLowerCase().includes(query));
     }
 
     getFieldTypeIcon(fieldType: string): string {
@@ -433,6 +534,31 @@ export class MetadataWizardComponent {
         this.isSaving = true;
         const metadataToPersist = this.buildMetadataPayload();
 
+        if (this.isWizardEditMode && this.editingMetadataUuid) {
+            (metadataToPersist as Metadata).uuid = this.editingMetadataUuid;
+            this.metadataService.update(metadataToPersist).pipe(
+                switchMap(updatedMetadata => this.syncFieldDefinitionsForWizardEdit(updatedMetadata))
+            ).subscribe({
+                next: (updatedMetadata) => {
+                    this.isSaving = false;
+                    this.messageService.add({
+                        severity: 'info',
+                        summary: 'Wizard update completed successfully.'
+                    });
+                    this.router.navigate(['/metadata/view', updatedMetadata.uuid]);
+                },
+                error: (error) => {
+                    this.isSaving = false;
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error while updating the wizard.',
+                        detail: String(error || '')
+                    });
+                }
+            });
+            return;
+        }
+
         this.metadataService.persist(metadataToPersist).pipe(
             switchMap(savedMetadata => {
                 const fieldRequests = this.fields.map((field, index) => {
@@ -464,6 +590,43 @@ export class MetadataWizardComponent {
                 });
             }
         });
+    }
+
+    private syncFieldDefinitionsForWizardEdit(metadata: Metadata): Observable<Metadata> {
+        return this.fieldDefinitionService.getAllList({
+            name_contains: '',
+            uuid: '',
+            metadata_uuid: metadata.uuid,
+            _limit: 100000
+        }).pipe(
+            switchMap((existingDefinitions: FieldDefinition[]) => {
+                const updateOrCreateRequests = this.fields.map((field, index) => {
+                    const payload = this.buildFieldPayload(field, metadata, index + 1) as FieldDefinition;
+                    if (field.uuid) {
+                        payload.uuid = field.uuid;
+                        return this.fieldDefinitionService.update(payload);
+                    }
+                    return this.fieldDefinitionService.persist(payload);
+                });
+
+                const currentUuids = new Set(
+                    this.fields
+                        .map(field => field.uuid)
+                        .filter((uuid): uuid is string => !!uuid)
+                );
+
+                const deleteRequests = (existingDefinitions ?? [])
+                    .filter(definition => !!definition.uuid && !currentUuids.has(definition.uuid))
+                    .map(definition => this.fieldDefinitionService.delete(definition.uuid));
+
+                const allRequests = [...updateOrCreateRequests, ...deleteRequests];
+                if (allRequests.length === 0) {
+                    return of(metadata);
+                }
+
+                return forkJoin(allRequests).pipe(map(() => metadata));
+            })
+        );
     }
 
     navigateToList() {
@@ -641,6 +804,7 @@ export class MetadataWizardComponent {
         payload.already_exist = false;
         payload.api_protected = this.apiProtected;
         payload.order_by = this.orderByField ? `${this.orderByField} ${this.orderByDirection}` : '';
+        payload.metadata_group = (payload.metadata_group ?? '').trim();
         if (!this.apiProtected) {
             payload.username_field = '';
         }
@@ -649,6 +813,17 @@ export class MetadataWizardComponent {
             payload.calendar_label = '';
         }
         return payload;
+    }
+
+    private loadMetadataGroups() {
+        this.metadataService.getMetadataGroups().subscribe(groups => {
+            const normalized = (groups ?? [])
+                .map(group => group.trim())
+                .filter(Boolean);
+            this.metadataGroups = [...new Set(normalized)]
+                .sort((left, right) => left.localeCompare(right, 'it'));
+            this.filteredMetadataGroups = [...this.metadataGroups];
+        });
     }
 
     private loadMetadatasForJoin() {

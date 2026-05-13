@@ -11,14 +11,17 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
+import { AutoComplete } from 'primeng/autocomplete';
 
 @Component({
     standalone: true,
     templateUrl: './metadata-edit.component.html',
-    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, SelectModule, PrimeTemplate, ToggleSwitchModule]
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, SelectModule, PrimeTemplate, ToggleSwitchModule, AutoComplete]
 })
 export class MetadataEditComponent extends AbstractEditComponent<Metadata>
     implements OnInit {
+
+    private metadataService = inject(MetadataService);
 
     tableTypeSelect: SelectItem[] = [
         {value: 'uuid', label: 'uuid'},
@@ -30,6 +33,8 @@ export class MetadataEditComponent extends AbstractEditComponent<Metadata>
     public newtable = true;
     public advanced = false;
     public api_protected = false;
+    metadataGroups: string[] = [];
+    filteredMetadataGroups: string[] = [];
 
     constructor() {
         super(inject(Router), inject(ActivatedRoute), inject(ConfirmationService), inject(MetadataService), inject(MessageService), 'metadata');
@@ -50,23 +55,43 @@ export class MetadataEditComponent extends AbstractEditComponent<Metadata>
     ngOnInit() {
         this.element = new Metadata();
         super.ngOnInit();
+        this.loadMetadataGroups();
         if (this.element.uuid) {
             this.newtable = this.element.already_exist;
+            this.api_protected = !!this.element.api_protected;
         } else {
             this.element.table_key = 'uuid';
             this.element.table_key_type = 'uuid';
         }
     }
 
+    filterMetadataGroups(event: { query?: string }) {
+        const query = (event?.query ?? '').toLowerCase();
+        this.filteredMetadataGroups = this.metadataGroups.filter(group => group.toLowerCase().includes(query));
+    }
+
+    private loadMetadataGroups() {
+        this.metadataService.getMetadataGroups().subscribe(groups => {
+            const normalized = (groups ?? [])
+                .map(group => group.trim())
+                .filter(Boolean);
+            this.metadataGroups = [...new Set(normalized)]
+                .sort((left, right) => left.localeCompare(right, 'it'));
+            this.filteredMetadataGroups = [...this.metadataGroups];
+        });
+    }
+
     preSave(): boolean {
         this.element.api_protected = this.api_protected;
         this.element.already_exist = !this.newtable;
+        this.element.metadata_group = (this.element.metadata_group ?? '').trim();
         return true;
     }
 
     preUpdate(): boolean {
         this.element.api_protected = this.api_protected;
         this.element.already_exist = !this.newtable;
+        this.element.metadata_group = (this.element.metadata_group ?? '').trim();
         return true;
     }
 

@@ -44,9 +44,17 @@
               <div class="col-sm-12">
 
                 <div class="filter-wrapper" (keydown.enter)="onSearchEnter($event, datatable)">
-                  <div class="fw-search-fields">
+                  <div class="fw-search-fields" style="display:flex; align-items:center; gap:8px; flex-wrap:nowrap;">
                     @if (service.search) {
-                      <input id="nome" name="nome" type="text" placeholder="name" class="form-control" [(ngModel)]="service.search.table_name_contains" pInputText #nome="ngModel">
+                      <input id="nome" name="nome" type="text" placeholder="name" style="width:200px; flex-shrink:0;" [(ngModel)]="service.search.table_name_contains" pInputText #nome="ngModel">
+                      <p-select
+                        name="metadata_group_filter"
+                        [options]="metadataGroupItems"
+                        [(ngModel)]="service.search.metadata_group"
+                        placeholder="— all groups —"
+                        [showClear]="true"
+                        styleClass="flex-grow-1">
+                      </p-select>
                     }
                   </div>
                   <div class="fw-spacer"></div>
@@ -69,6 +77,7 @@
                   <tr class="sort-header">
                     <th pResizableColumn>Index</th>
                     <th pResizableColumn>Table Name</th>
+                    <th pResizableColumn>Group</th>
                     <th pResizableColumn>Table Type</th>
                     <th pResizableColumn>Description</th>
                     <th pResizableColumn>Table Key</th>
@@ -79,7 +88,7 @@
                 </ng-template>
                 <ng-template pTemplate="emptymessage">
                   <tr>
-                    <td [attr.colspan]="8">
+                    <td [attr.colspan]="9">
                       No results.
                     </td>
                   </tr>
@@ -91,8 +100,14 @@
                       <button type="button" class="btn btn-value" (click)="view(rowData)" title="View">
                         <i aria-hidden="true" class="fa fa-table"></i>  {{rowData.table_name}}
                       </button>
+                      @if (!rowData.created || rowData.already_exist) {
+                        <button type="button" class="btn btn-info btn-square" (click)="openFieldDefinitionListPage(rowData)" title="Field Definitions List">
+                          <i aria-hidden="true" class="fa fa-list"></i>
+                        </button>
+                      }
                     </td>
                     <td class="ui-resizable-column">{{rowData.already_exist ? 'already_exist' : 'created'}}</td>
+                    <td class="ui-resizable-column"><small style="color:#9e9e9e">{{rowData.metadata_group}}</small></td>
                     <td class="ui-resizable-column">{{rowData.description}}</td>
                     <td class="ui-resizable-column">{{rowData.table_key}}</td>
                     <td class="ui-resizable-column">{{rowData.alias_table}}</td>
@@ -102,6 +117,11 @@
                         @if (!rowData.created || rowData.already_exist) {
                           <button type="button" class="btn btn-default btn-square" (click)="edit(rowData)" title="Modify">
                             <i aria-hidden="true" class="fa fa-pencil"></i>
+                          </button>
+                        }
+                        @if (!rowData.created || rowData.already_exist) {
+                          <button type="button" class="btn btn-primary btn-square" (click)="openWizardEditPage(rowData)" title="Modify with Wizard">
+                            <i aria-hidden="true" class="fa fa-magic"></i>
                           </button>
                         }
                         @if (!rowData.created || rowData.already_exist) {

@@ -38,6 +38,10 @@ export class MetadataViewComponent extends AbstractViewComponent<Metadata>
 
     ngOnInit() {
         this.element = new Metadata();
+        const requestedTab = this.route.snapshot.queryParamMap.get('tab');
+        if (requestedTab === 'fieldDefinitions') {
+            this.activeTab = 'fieldDefinitions';
+        }
         super.ngOnInit();
     }
 
@@ -62,6 +66,14 @@ export class MetadataViewComponent extends AbstractViewComponent<Metadata>
 
     public edit() {
         this.router.navigate(['/' + this.path + '/edit', this.getId()]);
+    }
+
+    public editWithWizard() {
+        this.router.navigate(['/metadata/wizard'], {
+            queryParams: {
+                metadata_uuid: this.getId()
+            }
+        });
     }
 
     public createTable() {

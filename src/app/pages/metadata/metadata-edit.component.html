@@ -40,6 +40,24 @@
             </div>
 
             <div class="form-group clearfix row">
+              <label class="label-text col-sm-3">Metadata Group</label>
+              <div class="col-sm-9">
+                <p-autoComplete
+                  [(ngModel)]="element.metadata_group"
+                  [suggestions]="filteredMetadataGroups"
+                  (completeMethod)="filterMetadataGroups($event)"
+                  name="metadata_group"
+                  [dropdown]="true"
+                  [forceSelection]="false"
+                  appendTo="body"
+                  [autoZIndex]="true"
+                  [baseZIndex]="3000"
+                  placeholder="Metadata group">
+                </p-autoComplete>
+              </div>
+            </div>
+
+            <div class="form-group clearfix row">
               <label class="label-text col-sm-3">
                 @if (element.icon) {
                   <i class="{{element.icon}}"></i>

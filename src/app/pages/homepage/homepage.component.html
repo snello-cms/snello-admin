@@ -3,7 +3,25 @@
   <homepage-topbar></homepage-topbar>
 </div>
 <div class="sidebar-subpage">
-
+  @if (metadataGroups.length > 0) {
+    <div class="metadata-group-list">
+      <small class="group-list-label">Groups</small>
+      <ul class="list-unstyled">
+        @for (group of metadataGroups; track group) {
+          <li
+            class="group-item"
+            [class.active]="selectedGroup === group"
+            [class.btn-add]="selectedGroup === group"
+            (click)="selectGroup(group)"
+            [style.background]="selectedGroup === group ? '' : 'transparent'"
+            [style.color]="selectedGroup === group ? '' : 'inherit'"
+            style="cursor:pointer; padding:4px 8px; border-radius:4px; margin-bottom:2px; font-size:0.85rem;">
+            {{group}}
+          </li>
+        }
+      </ul>
+    </div>
+  }
 </div>
 
 
@@ -26,6 +44,9 @@
                         <i class="{{component.icon}} fa-3x"></i>
                         } {{component.table_name}}
                       </h3>
+                    @if (component.metadata_group) {
+                      <small style="color: #9e9e9e; font-size: 0.78rem; display: block; margin-top: -6px;">{{component.metadata_group}}</small>
+                    }
                     </a>
                   </div>
                 </div>

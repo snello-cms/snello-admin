@@ -10,16 +10,19 @@ import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component'
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
+import { SelectModule } from 'primeng/select';
+import { SelectItem } from 'primeng/api';
 
 @Component({
     standalone: true,
     templateUrl: './metadata-list.component.html',
-    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, TableModule, PrimeTemplate]
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, TableModule, PrimeTemplate, SelectModule]
 })
 export class MetadataListComponent extends AbstractListComponent<Metadata> implements OnInit {
 
     readonly fieldDefinitionService = inject(FieldDefinitionService);
     readonly metadataService = inject(MetadataService);
+    metadataGroupItems: SelectItem[] = [];
 
     constructor() {
         super(inject(MessageService), inject(Router), inject(ConfirmationService), inject(MetadataService), 'metadata');
@@ -29,6 +32,12 @@ export class MetadataListComponent extends AbstractListComponent<Metadata> imple
     ngOnInit() {
         this.service.buildSearch();
         this.firstReload = true;
+        this.metadataService.getMetadataGroups().subscribe(groups => {
+            this.metadataGroupItems = [
+                {label: '— all groups —', value: null},
+                ...groups.map(g => ({label: g, value: g}))
+            ];
+        });
     }
 
     openExportPage() {
@@ -41,6 +50,22 @@ export class MetadataListComponent extends AbstractListComponent<Metadata> imple
 
     openWizardPage() {
         this.router.navigate(['/metadata/wizard']);
+    }
+
+    openWizardEditPage(metadata: Metadata) {
+        this.router.navigate(['/metadata/wizard'], {
+            queryParams: {
+                metadata_uuid: metadata.uuid
+            }
+        });
+    }
+
+    openFieldDefinitionListPage(metadata: Metadata) {
+        this.router.navigate(['/metadata/view', metadata.uuid], {
+            queryParams: {
+                tab: 'fieldDefinitions'
+            }
+        });
     }
 
     public new() {

@@ -16,11 +16,15 @@ export class HomepageComponent implements OnInit {
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly destroyRef = inject(DestroyRef);
 
+    allModel: any[] = [];
     model: any[] = [];
     extensions: any[] = [];
     errorMessage: string;
+    metadataGroups: string[] = [];
+    selectedGroup: string | null = null;
 
     constructor() {
+        this.allModel = [];
         this.model = [];
         this.extensions = [];
     }
@@ -29,16 +33,36 @@ export class HomepageComponent implements OnInit {
         this.metadatasService.buildSearch();
         this.metadatasService.getAllList().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: model => {
-                this.model = [];
+                this.allModel = [];
                 for (const element of model) {
                     if (element.created || element.already_exist) {
-                        this.model.push(element);
+                        this.allModel.push(element);
                     }
                 }
+                const groupSet = new Set<string>(
+                    this.allModel
+                        .map(m => (m.metadata_group ?? '').trim())
+                        .filter(Boolean)
+                );
+                this.metadataGroups = [...groupSet].sort((a, b) => a.localeCompare(b, 'it'));
+                this.applyGroupFilter();
                 this.cdr.detectChanges();
             },
             error: error => (this.errorMessage = <any>error)
         });
+    }
+
+    selectGroup(group: string | null) {
+        this.selectedGroup = this.selectedGroup === group ? null : group;
+        this.applyGroupFilter();
+    }
+
+    private applyGroupFilter() {
+        if (!this.selectedGroup) {
+            this.model = [...this.allModel];
+        } else {
+            this.model = this.allModel.filter(m => (m.metadata_group ?? '').trim() === this.selectedGroup);
+        }
     }
 
 }

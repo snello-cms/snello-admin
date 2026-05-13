@@ -7,6 +7,7 @@ export class Metadata {
   select_fields: string;
   search_fields: string;
   description: string;
+  metadata_group: string;
   alias_table: string;
   alias_condition: string;
   table_key: string;

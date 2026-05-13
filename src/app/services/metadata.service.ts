@@ -4,7 +4,7 @@ import {Metadata} from '../models/metadata';
 import {Observable, of} from 'rxjs';
 import {AbstractService} from '../common/abstract-service';
 import {FieldDefinition} from '../models/field-definition';
-import {catchError, map, shareReplay, take, tap} from 'rxjs/operators';
+import {catchError, map, shareReplay, switchMap, take, tap} from 'rxjs/operators';
 import {MessageService} from 'primeng/api';
 import {ConfigurationService} from './configuration.service';
 import {EXPORT_API_PATH, IMPORT_API_PATH, METADATA_API_PATH} from '../constants/constants';
@@ -72,6 +72,7 @@ export class MetadataService extends AbstractService<Metadata> {
         this.search = {
             table_name_contains: '',
             uuid: '',
+            metadata_group: '',
             _limit: 10
         };
     }
@@ -168,5 +169,18 @@ export class MetadataService extends AbstractService<Metadata> {
         return this.httpClient
             .post(this.importUrl, formData)
             .pipe(catchError(this.handleError.bind(this)));
+    }
+
+    public getMetadataGroups(): Observable<string[]> {
+        return this.urlValue.pipe(
+            take(1),
+            switchMap((url: string) => {
+                this.url = url;
+                return this.httpClient.get<string[]>(`${url}/groups`).pipe(
+                    map((groups: string[] | null) => (groups ?? []).filter(group => !!group).map(group => group.trim()).filter(Boolean)),
+                    catchError(() => of([]))
+                );
+            })
+        );
     }
 }
