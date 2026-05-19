@@ -16,11 +16,22 @@ import { PrimeTemplate } from 'primeng/api';
 import { AsyncPipe } from '@angular/common';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {applySearchFormValues, buildSearchFieldDefinitions, isPassivationSearchField} from './search-filters.util';
+import {DocumentService} from '../../services/document.service';
 
 @Component({
     standalone: true,
     templateUrl: './form-generation-list.component.html',
-    imports: [SideBarComponent, HomepageTopBar, DynamicSearchFormComponent, TableModule, PrimeTemplate, AsyncPipe]
+    imports: [SideBarComponent, HomepageTopBar, DynamicSearchFormComponent, TableModule, PrimeTemplate, AsyncPipe],
+    styles: [`
+        .list-image-preview {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #d9d9d9;
+            background-color: #f7f7f7;
+        }
+    `]
 })
 export class FormGenerationListComponent implements OnInit {
     fieldDefinitionsList: FieldDefinition[] = [];
@@ -56,7 +67,30 @@ export class FormGenerationListComponent implements OnInit {
         private dataListService: DataListService,
         private metadataService: MetadataService,
         private fieldDefintionService: FieldDefinitionService,
+        public documentService: DocumentService,
         private cdr: ChangeDetectorRef) {
+    }
+
+    public getImagePreviewUrl(value: unknown): string {
+        const uuid = this.extractImageUuid(value);
+        return uuid ? this.documentService.downloadPath(uuid) : '';
+    }
+
+    public hasImagePreview(value: unknown): boolean {
+        return this.extractImageUuid(value) !== '';
+    }
+
+    private extractImageUuid(value: unknown): string {
+        if (typeof value === 'string') {
+            return value.trim();
+        }
+
+        if (value && typeof value === 'object') {
+            const uuid = (value as { uuid?: unknown }).uuid;
+            return typeof uuid === 'string' ? uuid.trim() : '';
+        }
+
+        return '';
     }
 
     private applySearchDefaults() {
@@ -199,6 +233,10 @@ export class FormGenerationListComponent implements OnInit {
     private formatFieldValue(fullValue: unknown, fieldDefinition: FieldDefinition): unknown {
         if (fullValue == null || fullValue === '') {
             return '';
+        }
+
+        if (fieldDefinition.type === 'image') {
+            return this.extractImageUuid(fullValue);
         }
 
         if (fieldDefinition.type === 'date') {

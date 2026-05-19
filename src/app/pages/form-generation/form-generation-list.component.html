@@ -90,7 +90,20 @@
                   @for (def of fieldDefinitionsList; track def.uuid ?? def.name ?? $index) {
                     @if (def.show_in_list) {
                       <td>
-                        {{rowData[def.name] | async  }}
+                        @if (def.type === 'image') {
+                          @if ((rowData[def.name] | async); as imageValue) {
+                            @if (hasImagePreview(imageValue)) {
+                              <img
+                                class="list-image-preview"
+                                [src]="getImagePreviewUrl(imageValue)"
+                                [alt]="def.label || def.name || 'Image preview'" />
+                            } @else {
+                              {{ imageValue }}
+                            }
+                          }
+                        } @else {
+                          {{rowData[def.name] | async  }}
+                        }
                       </td>
                     }
                   }
@@ -117,3 +130,4 @@
     </div>
   </div>
 </div>
+
