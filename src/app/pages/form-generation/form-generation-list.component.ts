@@ -6,7 +6,7 @@ import {DataListService} from '../../services/data-list.service';
 import {MetadataService} from '../../services/metadata.service';
 import {Metadata} from '../../models/metadata';
 import {DynamicSearchFormComponent} from '../../generic.components/dynamic-form/dynamic-search-form.component';
-import {map} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {FieldDefinitionService} from '../../services/field-definition.service';
 import { SideBarComponent } from '../sidebar/sidebar.component';
@@ -30,6 +30,10 @@ import {DocumentService} from '../../services/document.service';
             border-radius: 4px;
             border: 1px solid #d9d9d9;
             background-color: #f7f7f7;
+        }
+
+        .list-image-empty {
+            color: #8a8a8a;
         }
     `]
 })
@@ -72,8 +76,16 @@ export class FormGenerationListComponent implements OnInit {
     }
 
     public getImagePreviewUrl(value: unknown): string {
-        const uuid = this.extractImageUuid(value);
-        return uuid ? this.documentService.downloadPath(uuid) : '';
+        const imageRef = this.extractImageUuid(value);
+        if (!imageRef) {
+            return '';
+        }
+
+        if (this.isLikelyImageUrl(imageRef)) {
+            return imageRef;
+        }
+
+        return this.documentService.downloadPath(imageRef);
     }
 
     public hasImagePreview(value: unknown): boolean {
@@ -82,15 +94,68 @@ export class FormGenerationListComponent implements OnInit {
 
     private extractImageUuid(value: unknown): string {
         if (typeof value === 'string') {
-            return value.trim();
+            const trimmed = value.trim();
+            if (!trimmed) {
+                return '';
+            }
+
+            if ((trimmed.startsWith('{') && trimmed.endsWith('}')) || (trimmed.startsWith('[') && trimmed.endsWith(']'))) {
+                try {
+                    return this.extractImageUuid(JSON.parse(trimmed));
+                } catch {
+                    return trimmed;
+                }
+            }
+
+            return trimmed;
+        }
+
+        if (Array.isArray(value)) {
+            for (const item of value) {
+                const extracted = this.extractImageUuid(item);
+                if (extracted) {
+                    return extracted;
+                }
+            }
+            return '';
         }
 
         if (value && typeof value === 'object') {
-            const uuid = (value as { uuid?: unknown }).uuid;
-            return typeof uuid === 'string' ? uuid.trim() : '';
+            const candidate = value as {
+                uuid?: unknown;
+                id?: unknown;
+                _id?: unknown;
+                document_uuid?: unknown;
+                value?: unknown;
+                table_key?: unknown;
+                url?: unknown;
+                path?: unknown;
+            };
+
+            const keys: Array<unknown> = [
+                candidate.uuid,
+                candidate.document_uuid,
+                candidate.id,
+                candidate._id,
+                candidate.url,
+                candidate.path,
+                candidate.value,
+                candidate.table_key
+            ];
+
+            for (const keyValue of keys) {
+                const extracted = this.extractImageUuid(keyValue);
+                if (extracted) {
+                    return extracted;
+                }
+            }
         }
 
         return '';
+    }
+
+    private isLikelyImageUrl(value: string): boolean {
+        return /^https?:\/\//i.test(value) || value.startsWith('/') || value.startsWith('data:image/');
     }
 
     private applySearchDefaults() {
@@ -332,6 +397,27 @@ export class FormGenerationListComponent implements OnInit {
         }
 
         const fullValue = this.getElementPropertyValue(rowData as Record<string, unknown>, fieldName);
+
+        if (fieldDefinition.type === 'image') {
+            const imageRef = this.extractImageUuid(fullValue);
+            if (imageRef) {
+                return of(imageRef);
+            }
+
+            const tableKey = this.getTableKey(rowData);
+            if (!tableKey) {
+                return of('');
+            }
+
+            return this.documentService.getDocumentsByTable(this.metadataName, tableKey).pipe(
+                map(docs => {
+                    const imageDoc = (docs ?? []).find(doc => doc?.uuid);
+                    return imageDoc?.uuid ?? '';
+                }),
+                catchError(() => of(''))
+            );
+        }
+
         if (fullValue == null || fullValue === '') {
             return of('');
         }

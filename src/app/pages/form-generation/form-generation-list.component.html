@@ -100,6 +100,8 @@
                             } @else {
                               {{ imageValue }}
                             }
+                          } @else {
+                            <span class="list-image-empty">-</span>
                           }
                         } @else {
                           {{rowData[def.name] | async  }}
