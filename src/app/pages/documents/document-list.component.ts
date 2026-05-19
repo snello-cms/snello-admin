@@ -30,6 +30,7 @@ export class DocumentListComponent extends AbstractListComponent<Document> imple
         { label: 'SVG', value: 'image/svg+xml' },
         { label: 'BMP', value: 'image/bmp' },
         { label: 'TIFF', value: 'image/tiff' },
+        { label: 'MP4', value: 'video/mp4' },
         { label: 'PDF', value: 'application/pdf' }
     ];
 
