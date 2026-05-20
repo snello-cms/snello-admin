@@ -9,6 +9,7 @@ import {catchError, map} from 'rxjs/operators';
 import {MessageService} from 'primeng/api';
 import {DomSanitizer} from '@angular/platform-browser';
 import {FileUpload} from 'primeng/fileupload';
+import { DialogModule } from 'primeng/dialog';
 import {Document} from '../../models/document';
 
 @Component({
@@ -24,14 +25,30 @@ import {Document} from '../../models/document';
                 <br>
                   <div class="clearfix"></div>
                   Uploaded file name: {{uploadedFile.original_name}}
-                  <a target="_blank" class="btn btn-default pull-right" href="{{downloadPath()}}">Download</a>
+                                    <a target="_blank" class="btn btn-default pull-right" href="{{downloadPath()}}">Download</a>
+                                    @if (isMp4Video(uploadedFile)) {
+                                        <button type="button" class="btn btn-default pull-right" style="margin-right: 8px;" (click)="openVideoPreview()">View video</button>
+                                    }
                 </div>
               </div>
             </div>
           }
+
+                    <p-dialog
+                        [(visible)]="showVideoDialog"
+                        [header]="uploadedFile?.original_name || 'Video preview'"
+                        [modal]="true"
+                        [style]="{ width: '70vw', maxWidth: '960px' }"
+                        (onHide)="closeVideoPreview()">
+                        @if (uploadedFile) {
+                            <video style="width: 100%; height: auto;" controls [src]="downloadPath()">
+                                Your browser does not support the video tag.
+                            </video>
+                        }
+                    </p-dialog>
         `,
     styles: [],
-    imports: [ReactiveFormsModule]
+        imports: [ReactiveFormsModule, DialogModule]
 })
 export class MediaViewComponent implements OnInit {
     field: FieldDefinition;
@@ -39,6 +56,7 @@ export class MediaViewComponent implements OnInit {
     group: UntypedFormGroup;
 
     public uploadedFile: Document | null = null;
+    public showVideoDialog = false;
 
     @ViewChild('fileInput', {static: true}) fileInput: FileUpload;
     private destroyRef = inject(DestroyRef);
@@ -93,6 +111,20 @@ export class MediaViewComponent implements OnInit {
 
     public downloadPath() {
         return this.uploadedFile ? this.documentService.downloadPath(this.uploadedFile.uuid) : '';
+    }
+
+    public isMp4Video(document: Document | null): boolean {
+        return (document?.mimetype || '').toLowerCase() === 'video/mp4';
+    }
+
+    public openVideoPreview() {
+        if (this.isMp4Video(this.uploadedFile)) {
+            this.showVideoDialog = true;
+        }
+    }
+
+    public closeVideoPreview() {
+        this.showVideoDialog = false;
     }
 
     private showMedia(documentUuid: string): Observable<any> {
