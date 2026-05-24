@@ -465,9 +465,17 @@ export class MetadataWizardComponent {
 
         const autoFields: WizardField[] = [];
 
+        const normalizeFieldName = (value: string): string => value.trim().toLowerCase();
+
+        const hasFieldWithName = (name: string): boolean => {
+            const normalizedName = normalizeFieldName(name);
+            return this.fields.some(field => normalizeFieldName(field.name ?? '') === normalizedName)
+                || autoFields.some(field => normalizeFieldName(field.name ?? '') === normalizedName);
+        };
+
         if (this.selectedUuidType === 'slug') {
             const name = (this.metadata.table_key_addition ?? '').trim();
-            if (name) {
+            if (name && !hasFieldWithName(name)) {
                 const slugField = this.createFieldFromType('string', 0);
                 slugField.name = name;
                 slugField.label = this.buildLabelFromTableName(name);
@@ -479,7 +487,7 @@ export class MetadataWizardComponent {
 
         if (this.apiProtected) {
             const name = (this.metadata.username_field ?? '').trim();
-            if (name) {
+            if (name && !hasFieldWithName(name)) {
                 const usernameField = this.createFieldFromType('string', 0);
                 usernameField.name = name;
                 usernameField.label = this.buildLabelFromTableName(name);
@@ -758,8 +766,8 @@ export class MetadataWizardComponent {
         }
 
         if (this.selectedUuidType === 'slug') {
-            const keyAddition = (this.metadata.table_key_addition ?? '').trim();
-            const hasKeyAdditionField = this.fields.some(field => (field.name ?? '').trim() === keyAddition);
+            const keyAddition = (this.metadata.table_key_addition ?? '').trim().toLowerCase();
+            const hasKeyAdditionField = this.fields.some(field => (field.name ?? '').trim().toLowerCase() === keyAddition);
             if (!hasKeyAdditionField) {
                 if (showMessage) {
                     this.showValidationError('Step 2: with table key type slug, a field with name equal to "Name of field" is required.');
@@ -769,8 +777,8 @@ export class MetadataWizardComponent {
         }
 
         if (this.apiProtected) {
-            const usernameFieldName = (this.metadata.username_field ?? '').trim();
-            const hasUsernameField = this.fields.some(field => (field.name ?? '').trim() === usernameFieldName);
+            const usernameFieldName = (this.metadata.username_field ?? '').trim().toLowerCase();
+            const hasUsernameField = this.fields.some(field => (field.name ?? '').trim().toLowerCase() === usernameFieldName);
             if (!hasUsernameField) {
                 if (showMessage) {
                     this.showValidationError('Step 2: with API protected enabled, a field with name equal to Username Field is required.');
@@ -981,8 +989,8 @@ export class MetadataWizardComponent {
     }
 
     private enforceMandatoryWhenSlugKeyAddition(field: WizardField) {
-        const keyAddition = (this.metadata.table_key_addition ?? '').trim();
-        if (this.selectedUuidType === 'slug' && keyAddition && (field.name ?? '').trim() === keyAddition) {
+        const keyAddition = (this.metadata.table_key_addition ?? '').trim().toLowerCase();
+        if (this.selectedUuidType === 'slug' && keyAddition && (field.name ?? '').trim().toLowerCase() === keyAddition) {
             field.mandatory = true;
         }
     }

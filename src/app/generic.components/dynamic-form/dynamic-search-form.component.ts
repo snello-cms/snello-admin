@@ -39,6 +39,7 @@ export class DynamicSearchFormComponent implements OnInit {
       if (!field.name) {
         return;
       }
+      (field as FieldDefinition & { __isSearchField?: boolean }).__isSearchField = true;
       const control = this.fb.control(
         field.value, this.bindValidations(field.validations || [])
       );
