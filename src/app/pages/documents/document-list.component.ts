@@ -1,5 +1,6 @@
 import {AbstractListComponent} from '../../common/abstract-list-component';
 import {Component, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {Router} from '@angular/router';
 import {Document} from '../../models/document';
 import {DocumentService} from '../../services/document.service';
@@ -10,17 +11,24 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { DialogModule } from 'primeng/dialog';
 import { CopyClipboardDirective } from '../../directives/copy-clipboard.directive';
 
 @Component({
     standalone: true,
     templateUrl: './document-list.component.html',
-    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, TableModule, MultiSelectModule, PrimeTemplate, CopyClipboardDirective]
+    imports: [CommonModule, SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, TableModule, MultiSelectModule, PrimeTemplate, DialogModule, CopyClipboardDirective]
 })
 export class DocumentListComponent extends AbstractListComponent<Document> implements OnInit {
 
 
     uuid: string;
+    selectedImagePreview: Document | null = null;
+    showImageDialog = false;
+    selectedVideoPreview: Document | null = null;
+    showVideoDialog = false;
+    videoLoopEnabled = true;
+    failedVideoPreviewIds = new Set<string>();
     selectedMimeTypes: string[] = [];
     readonly mimeTypeOptions: SelectItem[] = [
         { label: 'JPG', value: 'image/jpeg' },
@@ -134,6 +142,10 @@ export class DocumentListComponent extends AbstractListComponent<Document> imple
         return this.service.downloadPath(uuid);
     }
 
+    previewPath(uuid: string) {
+        return this.service.downloadPath(uuid);
+    }
+
     public notify(info: string) {
         const dwl =
             // Might want to notify the user that something has been pushed to the clipboard
@@ -141,6 +153,129 @@ export class DocumentListComponent extends AbstractListComponent<Document> imple
                 severity: 'info',
                 summary: `'${info}' has been copied to clipboard`
             });
+    }
+
+    getFormat(mimetype?: string): string {
+        if (!mimetype) {
+            return '-';
+        }
+
+        const format = mimetype.split('/').pop()?.toUpperCase() || '-';
+        if (format === 'JPEG') {
+            return 'JPG';
+        }
+        if (format === 'SVG+XML') {
+            return 'SVG';
+        }
+
+        return format;
+    }
+
+    formatCreationDate(value?: string): string {
+        if (!value) {
+            return '-';
+        }
+
+        const parsed = new Date(value);
+        if (Number.isNaN(parsed.getTime())) {
+            return value;
+        }
+
+        return new Intl.DateTimeFormat('it-IT', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        }).format(parsed);
+    }
+
+    isImageMimeType(mimetype?: string): boolean {
+        return typeof mimetype === 'string' && mimetype.startsWith('image/');
+    }
+
+    isVideoMimeType(mimetype?: string): boolean {
+        return typeof mimetype === 'string' && mimetype.startsWith('video/');
+    }
+
+    openPreview(doc: Document): void {
+        if (this.isImageMimeType(doc?.mimetype)) {
+            this.selectedImagePreview = doc;
+            this.showImageDialog = true;
+            return;
+        }
+
+        if (this.isVideoMimeType(doc?.mimetype)) {
+            this.selectedVideoPreview = doc;
+            this.videoLoopEnabled = true;
+            this.showVideoDialog = true;
+        }
+    }
+
+    closeImagePreview(): void {
+        this.showImageDialog = false;
+        this.selectedImagePreview = null;
+    }
+
+    closeVideoPreview(): void {
+        this.showVideoDialog = false;
+        this.selectedVideoPreview = null;
+        this.videoLoopEnabled = true;
+    }
+
+    hasVideoPreview(doc: Document): boolean {
+        return Boolean(doc?.uuid) && !this.failedVideoPreviewIds.has(doc.uuid);
+    }
+
+    onVideoThumbLoadedMetadata(video: HTMLVideoElement): void {
+        try {
+            video.currentTime = 0.1;
+        } catch {
+            // Ignore seek errors; browser policies differ.
+        }
+    }
+
+    onVideoThumbSeeked(video: HTMLVideoElement): void {
+        video.pause();
+    }
+
+    onVideoThumbError(doc: Document): void {
+        if (doc?.uuid) {
+            this.failedVideoPreviewIds.add(doc.uuid);
+        }
+    }
+
+    fileIconClass(mimetype?: string): string {
+        if (!mimetype) {
+            return 'fa fa-file-o';
+        }
+
+        if (mimetype.includes('pdf')) {
+            return 'fa fa-file-pdf-o';
+        }
+
+        if (mimetype.includes('word') || mimetype.includes('msword')) {
+            return 'fa fa-file-word-o';
+        }
+
+        if (mimetype.includes('excel') || mimetype.includes('spreadsheet')) {
+            return 'fa fa-file-excel-o';
+        }
+
+        if (mimetype.includes('powerpoint') || mimetype.includes('presentation')) {
+            return 'fa fa-file-powerpoint-o';
+        }
+
+        if (mimetype.includes('zip') || mimetype.includes('rar') || mimetype.includes('7z') || mimetype.includes('tar')) {
+            return 'fa fa-file-archive-o';
+        }
+
+        if (mimetype.startsWith('text/') || mimetype.includes('json') || mimetype.includes('xml')) {
+            return 'fa fa-file-text-o';
+        }
+
+        return 'fa fa-file-o';
     }
 
     delete(element: Document) {

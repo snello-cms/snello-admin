@@ -11,6 +11,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
+import { CopyClipboardDirective } from '../../directives/copy-clipboard.directive';
 
 @Component({
     standalone: true,
@@ -24,7 +25,8 @@ import { DialogModule } from 'primeng/dialog';
         InputText,
         TableModule,
         PrimeTemplate,
-        DialogModule
+        DialogModule,
+        CopyClipboardDirective
     ]
 })
 export class ImagesListComponent extends AbstractListComponent<Document> implements OnInit {
@@ -107,8 +109,29 @@ export class ImagesListComponent extends AbstractListComponent<Document> impleme
         this.router.navigate(['/images/edit', doc.uuid]);
     }
 
-    viewDocument(doc: Document) {
-        this.router.navigate(['/document/view', doc.uuid]);
+    download(uuid: string): void {
+        this.service.simplDownload(uuid).subscribe(response => {
+            const newBlob = new Blob([(response)], { type: 'application/octet-stream' });
+            const nav = window.navigator as Navigator & { msSaveOrOpenBlob?: (blob: Blob) => void };
+            if (nav.msSaveOrOpenBlob) {
+                nav.msSaveOrOpenBlob(newBlob);
+                return;
+            }
+
+            const downloadURL = URL.createObjectURL(response);
+            window.open(downloadURL);
+        });
+    }
+
+    downloadPath(uuid: string) {
+        return this.service.downloadPath(uuid);
+    }
+
+    notify(info: string) {
+        this.messageService.add({
+            severity: 'info',
+            summary: `'${info}' has been copied to clipboard`
+        });
     }
 
     getFormat(mimetype: string): string {
@@ -132,5 +155,25 @@ export class ImagesListComponent extends AbstractListComponent<Document> impleme
     closeImagePreview() {
         this.showImageDialog = false;
         this.selectedImagePreview = null;
+    }
+
+    formatCreationDate(value?: string): string {
+        if (!value) {
+            return '-';
+        }
+
+        const parsed = new Date(value);
+        if (Number.isNaN(parsed.getTime())) {
+            return value;
+        }
+
+        return new Intl.DateTimeFormat('it-IT', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        }).format(parsed);
     }
 }

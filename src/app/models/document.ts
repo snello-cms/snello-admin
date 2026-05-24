@@ -8,6 +8,7 @@ export class Document {
     table_name: string;
     formats: string;
     size: number;
+    creation_date: string;
 
 }
 

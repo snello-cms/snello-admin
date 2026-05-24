@@ -72,37 +72,89 @@
                 <ng-template let-columns pTemplate="header">
                   <tr class="sort-header">
                     <th pResizableColumn>Index</th>
-                    <th pResizableColumn>Table name/ key</th>
-                    <th pResizableColumn>Original name</th>
-                    <th pResizableColumn>Path</th>
-                    <th pResizableColumn>Mimetype / Size</th>
+                    <th pResizableColumn>Preview</th>
+                    <th pResizableColumn>Name</th>
+                    <th pResizableColumn>Mimetype</th>
+                    <th pResizableColumn>Formats</th>
                     <th class="Operations">Operations</th>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="emptymessage">
                   <tr>
-                    <td colspan="9">No results.</td>
+                    <td colspan="6">No results.</td>
                   </tr>
                 </ng-template>
                 <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
                   <tr>
                     <td class="RowIndex">{{ rowIndex + 1 }}</td>
-                    <td class="ui-resizable-column">{{ rowData.table_name }} <br/>
-                      {{rowData.table_key }}
+                    <td>
+                      @if (isImageMimeType(rowData.mimetype)) {
+                        <img
+                          [src]="previewPath(rowData.uuid)"
+                          [alt]="rowData.original_name"
+                          style="width:56px;height:56px;object-fit:cover;border-radius:6px;border:1px solid #ddd;cursor:pointer;"
+                          (click)="openPreview(rowData)" />
+                      } @else if (isVideoMimeType(rowData.mimetype)) {
+                        @if (hasVideoPreview(rowData)) {
+                          <video
+                            [src]="previewPath(rowData.uuid)"
+                            preload="metadata"
+                            muted
+                            playsinline
+                            (click)="openPreview(rowData)"
+                            (keydown.enter)="openPreview(rowData)"
+                            (keydown.space)="openPreview(rowData)"
+                            (loadedmetadata)="onVideoThumbLoadedMetadata($event.target)"
+                            (seeked)="onVideoThumbSeeked($event.target)"
+                            (error)="onVideoThumbError(rowData)"
+                            style="width:96px;height:56px;object-fit:cover;border-radius:6px;border:1px solid #ddd;background:#000;cursor:pointer;"
+                            tabindex="0"
+                            aria-label="Open video preview">
+                          </video>
+                        } @else {
+                          <span class="text-muted">No preview</span>
+                        }
+                      } @else {
+                        <div style="width:56px;height:56px;display:flex;align-items:center;justify-content:center;border-radius:6px;border:1px solid #ddd;background:#f8f9fa;">
+                          <i [class]="fileIconClass(rowData.mimetype)" style="font-size:24px;color:#6c757d;"></i>
+                        </div>
+                      }
                     </td>
-                    <td class="ui-resizable-column">{{ rowData.original_name }}</td>
-                    <td class="ui-resizable-column">
-                      <button type="button" (click)="download(rowData.uuid)" class="btn btn-success btn-sm">
-                        <i aria-hidden="true" class="fa fa-download"></i>
-                      </button>
-                      {{ rowData.path }}
-                      <a role="button" [copy-clipboard]="downloadPath(rowData.uuid)"
-                        (copied)="notify($event)">
-                        <i class="fa fa-clipboard"></i></a>
-                      </td>
-                      <td class="ui-resizable-column">{{ rowData.mimetype }}
-                      <br/> {{ rowData.size }}</td>
-                      <td>
+                    <td>
+                      <div>{{ rowData.original_name }}</div>
+                      <div class="text-muted" style="font-size:12px;line-height:1.3;">
+                        table_name: {{ rowData.table_name || '-' }}
+                      </div>
+                      <div class="text-muted" style="font-size:12px;line-height:1.3;">
+                        table_key: {{ rowData.table_key || '-' }}
+                      </div>
+                      <div class="text-muted" style="font-size:12px;line-height:1.3;">
+                        creation_date: {{ formatCreationDate(rowData.creation_date) }}
+                      </div>
+                    </td>
+                    <td>
+                      <div>{{ getFormat(rowData.mimetype) }}</div>
+                      <div class="text-muted" style="font-size:12px;line-height:1.3;">
+                        size: {{ rowData.size ?? '-' }}
+                      </div>
+                    </td>
+                    <td>
+                      <div>{{ rowData.formats || '-' }}</div>
+                      <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+                        <button type="button" (click)="download(rowData.uuid)" class="btn btn-success btn-sm" title="Download">
+                          <i aria-hidden="true" class="fa fa-download"></i>
+                        </button>
+                        <a
+                          role="button"
+                          class="btn btn-success btn-sm"
+                          [copy-clipboard]="downloadPath(rowData.uuid)"
+                          (copied)="notify($event)"
+                          title="Copy path">
+                          <i aria-hidden="true" class="fa fa-clipboard"></i>
+                        </a>
+                      </div>
+                    </td>
+                    <td>
                         <button type="button" (click)="edit(rowData)" class="btn btn-success btn-sm">
                           <i aria-hidden="true" class="fa fa-pencil"></i> Modify
                         </button>
@@ -111,13 +163,48 @@
                           <i aria-hidden="true" class="fa fa-trash"></i> Delete
                         </button>
 
-                      </td>
-                    </tr>
-                  </ng-template>
-                </p-table>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
               </div>
             </form>
           </div>
         </div>
       </div>
     </div>
+
+<p-dialog
+  [(visible)]="showImageDialog"
+  [header]="selectedImagePreview?.original_name || 'Image preview'"
+  [modal]="true"
+  [maximizable]="true"
+  [style]="{width: '90vw', height: '90vh'}"
+  (onHide)="closeImagePreview()">
+  @if (selectedImagePreview) {
+    <img
+      [src]="previewPath(selectedImagePreview.uuid)"
+      [alt]="selectedImagePreview.original_name"
+      style="width:100%;height:100%;object-fit:contain;" />
+  }
+</p-dialog>
+
+<p-dialog
+  [(visible)]="showVideoDialog"
+  [header]="selectedVideoPreview?.original_name || 'Video preview'"
+  [modal]="true"
+  [maximizable]="true"
+  [style]="{width: '90vw', height: '90vh'}"
+  (onHide)="closeVideoPreview()">
+  @if (selectedVideoPreview) {
+    <div style="display:flex;justify-content:flex-end;align-items:center;margin-bottom:10px;">
+      <label style="display:flex;align-items:center;gap:6px;font-weight:600;margin:0;">
+        <input type="checkbox" [(ngModel)]="videoLoopEnabled" [ngModelOptions]="{ standalone: true }" />
+        Loop
+      </label>
+    </div>
+    <video style="width:100%;height:100%;object-fit:contain;" controls [loop]="videoLoopEnabled" [src]="previewPath(selectedVideoPreview.uuid)">
+      Your browser does not support the video tag.
+    </video>
+  }
+</p-dialog>
