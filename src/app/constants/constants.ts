@@ -1,6 +1,6 @@
 import {SelectItem} from 'primeng/api';
 
-export const APP_VERSION = '4.1.25';
+export const APP_VERSION = '4.1.26';
 
 export const MAP_INPUT_TO_FIELD: Map<string, any> = new Map(
     [
@@ -196,6 +196,14 @@ const ADMIN_ITEMS_LEGACY: any[] = [
     },
     {
         id: 'list',
+        icon: 'fa fa-list',
+        section: 'selectqueries',
+        name: 'SelectQuery',
+        summary: 'Select Queries Management',
+        roles: 'Admin, selectqueries_edit, selectqueries_view'
+    },
+    {
+        id: 'list',
         icon: 'fa fa-files-o',
         section: 'document',
         name: 'Document',
@@ -212,19 +220,11 @@ const ADMIN_ITEMS_LEGACY: any[] = [
     },
     {
         id: 'list',
-        icon: 'fa fa-list',
-        section: 'selectqueries',
-        name: 'SelectQuery',
-        summary: 'Select Queries Management',
-        roles: 'Admin, selectqueries_edit, selectqueries_view'
-    },
-    {
-        id: 'list',
-        icon: 'fa fa-wrench',
-        section: 'aitools',
-        name: 'AiTools',
-        summary: 'AI Tools Management',
-        roles: 'Admin, aitools_edit, aitools_view, ai_tools_edit, ai_tools_view'
+        icon: 'fa fa-video-camera',
+        section: 'videos',
+        name: 'Video',
+        summary: 'Videos management',
+        roles: 'Admin, documents_edit, documents_view'
     },
     {
         id: 'list',
@@ -241,6 +241,14 @@ const ADMIN_ITEMS_LEGACY: any[] = [
         name: 'Massive',
         summary: 'Massive Modifications',
         roles: 'Admin, metadatas_edit, metadatas_view'
+    },
+    {
+        id: 'list',
+        icon: 'fa fa-wrench',
+        section: 'aitools',
+        name: 'AiTools',
+        summary: 'AI Tools Management',
+        roles: 'Admin, aitools_edit, aitools_view, ai_tools_edit, ai_tools_view'
     },
     {
         id: 'list',

@@ -14,6 +14,9 @@
         <div class="content list">
           <div class="row g-3">
             @for (component of items; track component.section ?? component.id ?? $index) {
+              @if (component.section === 'aitools') {
+                <div class="w-100 d-none d-lg-block"></div>
+              }
               <div class="col-lg-4 col-md-6 col-sm-6 col-12" *permit="component.roles">
                 <div class="card-home">
                   <i class="{{component.icon}} fa-3x float-end"></i>

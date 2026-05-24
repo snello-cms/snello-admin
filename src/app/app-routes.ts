@@ -80,6 +80,15 @@ export const MainRoutes: Routes = [
         ]
     },
     {
+        path: 'videos',
+        component: OutletComponent,
+        canActivate: [AppAuthGuard],
+        children: [
+            {path: '', redirectTo: '/videos/list', pathMatch: 'full'},
+            {path: 'list', loadComponent: () => import('./pages/videos/videos-list.component').then(m => m.VideosListComponent)}
+        ]
+    },
+    {
         path: 'selectqueries',
         component: OutletComponent,
         canActivate: [AppAuthGuard],

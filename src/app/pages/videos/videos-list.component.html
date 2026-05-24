@@ -1,0 +1,153 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>Video</h3>
+</div>
+
+<div class="main">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <div class="content list">
+          <form>
+            <div class="row">
+              <div class="clearfix"></div>
+              <div class="col-sm-12">
+                <div class="filter-wrapper" (keydown.enter)="onSearchEnter($event, datatable)">
+                  <div class="fw-search-fields">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="name"
+                      [(ngModel)]="searchOriginalName"
+                      [ngModelOptions]="{ standalone: true }"
+                      pInputText />
+                  </div>
+                  <div class="fw-search-fields">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="table_name"
+                      [(ngModel)]="searchTableName"
+                      [ngModelOptions]="{ standalone: true }"
+                      pInputText />
+                  </div>
+                  <div class="fw-search-fields">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="table_key"
+                      [(ngModel)]="searchTableKey"
+                      [ngModelOptions]="{ standalone: true }"
+                      pInputText />
+                  </div>
+                  <div class="fw-actions">
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-search" (click)="reload(datatable)">Search</button>
+                      <button type="button" class="btn btn-reset" (click)="reset(datatable)">Undo</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="table-wrapper clearfix">
+              <p-table #datatable (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true" [resizableColumns]="true" [rows]="10" [totalRecords]="service.listSize" [value]="model">
+                <ng-template pTemplate="header">
+                  <tr class="sort-header">
+                    <th pResizableColumn>Index</th>
+                    <th pResizableColumn>Preview</th>
+                    <th pResizableColumn>Name</th>
+                    <th pResizableColumn>Mimetype</th>
+                    <th pResizableColumn>Formats</th>
+                    <th class="Operations">Operations</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="6">No results.</td>
+                  </tr>
+                </ng-template>
+                <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
+                  <tr>
+                    <td class="RowIndex">{{ rowIndex + 1 }}</td>
+                    <td>
+                      @if (hasVideoPreview(rowData)) {
+                        <video
+                          [src]="previewPath(rowData.uuid)"
+                          preload="metadata"
+                          muted
+                          playsinline
+                          (click)="openVideoPreview(rowData)"
+                          (keydown.enter)="openVideoPreview(rowData)"
+                          (keydown.space)="openVideoPreview(rowData)"
+                          (loadedmetadata)="onVideoThumbLoadedMetadata($event.target)"
+                          (seeked)="onVideoThumbSeeked($event.target)"
+                          (error)="onVideoThumbError(rowData)"
+                          style="width:96px;height:56px;object-fit:cover;border-radius:6px;border:1px solid #ddd;background:#000;cursor:pointer;"
+                          tabindex="0"
+                          aria-label="Open video preview">
+                        </video>
+                      } @else {
+                        <span class="text-muted">No preview</span>
+                      }
+                    </td>
+                    <td>
+                      <div>{{ rowData.original_name }}</div>
+                      <div class="text-muted" style="font-size:12px;line-height:1.3;">
+                        table_name:
+                        @if (rowData.table_name) {
+                          <a href="#" (click)="$event.preventDefault(); setSearchTableNameFromRow(rowData.table_name, datatable)">{{ rowData.table_name }}</a>
+                        } @else {
+                          -
+                        }
+                      </div>
+                      <div class="text-muted" style="font-size:12px;line-height:1.3;">
+                        table_key:
+                        @if (rowData.table_key) {
+                          <a href="#" (click)="$event.preventDefault(); setSearchTableKeyFromRow(rowData.table_key, datatable)">{{ rowData.table_key }}</a>
+                        } @else {
+                          -
+                        }
+                      </div>
+                    </td>
+                    <td>{{ rowData.mimetype }}</td>
+                    <td>{{ rowData.formats || '-' }}</td>
+                    <td>
+                      <button type="button" class="btn btn-success btn-sm" (click)="openVideoPreview(rowData)">
+                        <i aria-hidden="true" class="fa fa-eye"></i> View
+                      </button>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-dialog
+  [(visible)]="showVideoDialog"
+  [header]="selectedVideoPreview?.original_name || 'Video preview'"
+  [modal]="true"
+  [maximizable]="true"
+  [style]="{width: '90vw', height: '90vh'}"
+  (onHide)="closeVideoPreview()">
+  @if (selectedVideoPreview) {
+    <div style="display:flex;justify-content:flex-end;align-items:center;margin-bottom:10px;">
+      <label style="display:flex;align-items:center;gap:6px;font-weight:600;margin:0;">
+        <input type="checkbox" [(ngModel)]="videoLoopEnabled" [ngModelOptions]="{ standalone: true }" />
+        Loop
+      </label>
+    </div>
+    <video style="width:100%;height:100%;object-fit:contain;" controls [loop]="videoLoopEnabled" [src]="previewPath(selectedVideoPreview.uuid)">
+      Your browser does not support the video tag.
+    </video>
+  }
+</p-dialog>

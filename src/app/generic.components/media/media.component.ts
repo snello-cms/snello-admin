@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild, DestroyRef, inject} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
+import { UntypedFormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {FieldDefinition} from '../../models/field-definition';
 import {ApiService} from '../../services/api.service';
 import {DocumentService} from '../../services/document.service';
@@ -52,17 +52,24 @@ import {Document} from '../../models/document';
                     [(visible)]="showVideoDialog"
                     [header]="uploadedFile?.original_name || 'Video preview'"
                     [modal]="true"
-                    [style]="{ width: '70vw', maxWidth: '960px' }"
+                    [maximizable]="true"
+                    [style]="{width: '90vw', height: '90vh'}"
                     (onHide)="closeVideoPreview()">
                     @if (uploadedFile) {
-                        <video style="width: 100%; height: auto;" controls [src]="downloadPath()">
+                        <div style="display:flex;justify-content:flex-end;align-items:center;margin-bottom:10px;">
+                            <label style="display:flex;align-items:center;gap:6px;font-weight:600;margin:0;">
+                                <input type="checkbox" [(ngModel)]="videoLoopEnabled" [ngModelOptions]="{ standalone: true }" />
+                                Loop
+                            </label>
+                        </div>
+                        <video style="width:100%;height:100%;object-fit:contain;" controls [loop]="videoLoopEnabled" [src]="downloadPath()">
                             Your browser does not support the video tag.
                         </video>
                     }
                 </p-dialog>
         `,
     styles: [],
-        imports: [ReactiveFormsModule, FileUpload, DialogModule]
+        imports: [ReactiveFormsModule, FormsModule, FileUpload, DialogModule]
 })
 export class MediaComponent implements OnInit {
     field: FieldDefinition;
@@ -71,6 +78,7 @@ export class MediaComponent implements OnInit {
 
     public uploadedFile: Document | null = null;
     public showVideoDialog = false;
+    public videoLoopEnabled = true;
 
     @ViewChild('fileInput', {static: true}) fileInput?: FileUpload;
     private destroyRef = inject(DestroyRef);
@@ -138,12 +146,14 @@ export class MediaComponent implements OnInit {
 
     public openVideoPreview() {
         if (this.isMp4Video(this.uploadedFile)) {
+            this.videoLoopEnabled = true;
             this.showVideoDialog = true;
         }
     }
 
     public closeVideoPreview() {
         this.showVideoDialog = false;
+        this.videoLoopEnabled = true;
     }
 
     private showMedia(documentUuid: string): Observable<any> {
