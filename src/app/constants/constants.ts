@@ -190,7 +190,7 @@ const ADMIN_ITEMS_LEGACY: any[] = [
         id: 'list',
         icon: 'fa fa-hand-spock-o',
         section: 'condition',
-        name: 'Condition',
+        name: 'Conditions',
         summary: 'Management of table filter conditions',
         roles: 'Admin, conditions_edit, conditions_view'
     },
@@ -198,7 +198,7 @@ const ADMIN_ITEMS_LEGACY: any[] = [
         id: 'list',
         icon: 'fa fa-list',
         section: 'selectqueries',
-        name: 'SelectQuery',
+        name: 'SelectQueries',
         summary: 'Select Queries Management',
         roles: 'Admin, selectqueries_edit, selectqueries_view'
     },
@@ -206,7 +206,7 @@ const ADMIN_ITEMS_LEGACY: any[] = [
         id: 'list',
         icon: 'fa fa-files-o',
         section: 'document',
-        name: 'Document',
+        name: 'Documents',
         summary: 'Documents management',
         roles: 'Admin, documents_edit, documents_view'
     },
@@ -222,7 +222,7 @@ const ADMIN_ITEMS_LEGACY: any[] = [
         id: 'list',
         icon: 'fa fa-video-camera',
         section: 'videos',
-        name: 'Video',
+        name: 'Videos',
         summary: 'Videos management',
         roles: 'Admin, documents_edit, documents_view'
     },
