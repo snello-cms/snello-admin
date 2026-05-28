@@ -1,0 +1,105 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>
+    Actions
+  </h3>
+
+  <button type="button" class="btn btn-add pull-right btn-block" (click)="new()"><i class="fa fa-plus-circle"></i> Add
+  </button>
+</div>
+
+<div class="main">
+
+  <div class="container-fluid">
+    <div class="row">
+
+      <div class="col-md-12 col-sm-12">
+        <div class="content list">
+
+          <form>
+
+            <div class="row">
+              <div class="clearfix"></div>
+              <div class="col-sm-12">
+
+                <div class="filter-wrapper" (keydown.enter)="onSearchEnter($event, datatable)">
+                  <div class="fw-search-fields">
+                    @if (service.search) {
+                      <input id="name" name="name" type="text" class="form-control"
+                        placeholder="name" [(ngModel)]="service.search.name_contains" pInputText #nameModel="ngModel">
+                    }
+                  </div>
+                  <div class="fw-search-fields">
+                    @if (service.search) {
+                      <input id="metadata" name="metadata" type="text" class="form-control"
+                        placeholder="metadata name" [(ngModel)]="service.search.metadata_name_contains" pInputText #metadataName="ngModel">
+                    }
+                  </div>
+                  <div class="fw-search-fields">
+                    @if (service.search) {
+                      <p-select id="condition" name="condition" [style]="{'width':'100%'}" placeholder="condition"
+                        [options]="conditionItems" [(ngModel)]="service.search.condition">
+                      </p-select>
+                    }
+                  </div>
+                  <div class="fw-actions">
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-search" (click)="reload(datatable)">Search</button>
+                      <button type="button" class="btn btn-reset" (click)="reset(datatable)">Undo</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="table-wrapper clearfix">
+
+              <p-table #datatable (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true" [resizableColumns]="true" [rows]="10" [totalRecords]="service.listSize" [value]="model">
+                <ng-template let-columns pTemplate="header">
+                  <tr class="sort-header">
+                    <th pResizableColumn>Index</th>
+                    <th pResizableColumn>Name</th>
+                    <th pResizableColumn>Description</th>
+                    <th pResizableColumn>Metadata Name</th>
+                    <th pResizableColumn>Condition</th>
+                    <th class="Operations">Operations</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td colspan="6">
+                      No results.
+                    </td>
+                  </tr>
+                </ng-template>
+                <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
+                  <tr>
+                    <td class="RowIndex">{{ rowIndex + 1 }}</td>
+                    <td class="ui-resizable-column">{{rowData.name}}</td>
+                    <td class="ui-resizable-column">{{rowData.description}}</td>
+                    <td class="ui-resizable-column">{{rowData.metadata_name}}</td>
+                    <td class="ui-resizable-column">{{rowData.condition}}</td>
+                    <td>
+                      <button type="button" (click)="edit(rowData)" class="btn btn-success btn-sm">
+                        <i aria-hidden="true" class="fa fa-pencil"></i>
+                        Modify
+                      </button>
+                      <button type="button" (click)="view(rowData)" class="btn btn-success btn-sm">
+                        <i aria-hidden="true" class="fa fa-info"></i>
+                        Vedi
+                      </button>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -123,6 +123,18 @@ export const MainRoutes: Routes = [
         ]
     },
     {
+        path: 'actions',
+        component: OutletComponent,
+        canActivate: [AppAuthGuard],
+        children: [
+            {path: '', redirectTo: '/actions/list', pathMatch: 'full'},
+            {path: 'list', loadComponent: () => import('./pages/actions/actions-list.component').then(m => m.ActionsListComponent)},
+            {path: 'edit/:id', loadComponent: () => import('./pages/actions/actions-edit.component').then(m => m.ActionsEditComponent)},
+            {path: 'new', loadComponent: () => import('./pages/actions/actions-edit.component').then(m => m.ActionsEditComponent)},
+            {path: 'view/:id', loadComponent: () => import('./pages/actions/actions-view.component').then(m => m.ActionsViewComponent)}
+        ]
+    },
+    {
         path: 'datalistgeneral/list/:name',
         canActivate: [AppAuthGuard],
         loadComponent: () => import('./pages/form-generation/form-generation-list-general.component').then(m => m.FormGenerationListGeneralComponent),

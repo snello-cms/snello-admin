@@ -1,4 +1,5 @@
 {
+  "actions_api_path": "https://kayak.love/api/actions",
   "ai_tools_api_path": "https://kayak.love/api/ai_tools",
   "api_service_path": "https://kayak.love/api",
   "asset_path": "",

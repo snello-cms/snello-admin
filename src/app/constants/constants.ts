@@ -141,6 +141,7 @@ export const LOGO_URL = 'logo_url';
 export const CHAT_API_PATH = 'chat_api_path';
 export const CHATINTERACTIONS_API_PATH = 'chatinteractions_api_path';
 export const CONDITION_API_PATH = 'condition_api_path';
+export const ACTIONS_API_PATH = 'actions_api_path';
 export const DOCUMENT_API_PATH = 'document_api_path';
 export const EXTENSION_API_PATH = 'extension_api_path';
 export const EXPORT_API_PATH = 'export_api_path';
@@ -225,6 +226,14 @@ const ADMIN_ITEMS_LEGACY: any[] = [
         name: 'Videos',
         summary: 'Videos management',
         roles: 'Admin, documents_edit, documents_view'
+    },
+    {
+        id: 'list',
+        icon: 'fa fa-bolt',
+        section: 'actions',
+        name: 'Actions',
+        summary: 'Action management',
+        roles: 'Admin, actions_edit, actions_view'
     },
     {
         id: 'list',

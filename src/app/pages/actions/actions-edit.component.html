@@ -1,0 +1,91 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>
+    Edit Action
+  </h3>
+  <p>
+  </p>
+</div>
+
+<div class="main">
+
+  <div class="container-fluid">
+    <div class="row">
+
+      <div class="col-md-12 col-sm-12">
+        <div class="content view">
+          <div class="row">
+            <div class="col-md-12 col-sm-12">
+              <form #theform="ngForm">
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Name (*)</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.name" [required]="true" name="name" pInputText placeholder="Name (*)">
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Description</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.description" name="description" pInputText placeholder="Description">
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Metadata (*)</label>
+                  <div class="col-sm-9">
+                    <p-select [(ngModel)]="element.metadata_name" [filter]="false" [options]="metadatasSelect"
+                      [required]="true" [style]="{'width':'100%'}" filterBy="label" name="metadata_name"
+                      placeholder="Select metadata">
+                    </p-select>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Condition (*)</label>
+                  <div class="col-sm-9">
+                    <p-select [(ngModel)]="element.condition" [filter]="false" [options]="conditionItems"
+                      [required]="true" [style]="{'width':'100%'}" filterBy="label" name="condition"
+                      placeholder="Select condition">
+                    </p-select>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Body</label>
+                  <div class="col-sm-9">
+                    <textarea [(ngModel)]="element.body" name="body" pTextarea rows="8" style="width: 100%" placeholder="Body"></textarea>
+                  </div>
+                </div>
+
+                <div class="btn-group btn-actions pull-right">
+                  @if (!element.uuid) {
+                    <button type="button" [disabled]="!theform.form.valid" class="btn btn-success"
+                      (click)="save()">Save
+                    </button>
+                    }&nbsp;&nbsp;
+                    @if (element.uuid) {
+                      <button type="button" [disabled]="!theform.form.valid" class="btn btn-success"
+                        (click)="update()">Modify
+                      </button>
+                      }&nbsp;&nbsp;&nbsp;&nbsp;
+                      @if (element.uuid) {
+                        <button type="button" [disabled]="!theform.form.valid" class="btn btn-danger"
+                          (click)="confirmDelete()">Delete
+                        </button>
+                        }&nbsp;&nbsp;
+
+                        <button type="button" class="btn btn-danger" (click)="navigateToList()">Undo</button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
