@@ -55,7 +55,7 @@ export class MetadataWizardComponent {
         {name: 'editor', types: ['tinymce', 'monaco']},
         {name: 'time',   types: ['date', 'datetime', 'time']},
         {name: 'media',  types: ['media', 'image']},
-        {name: 'join',   types: ['select', 'tags', 'join', 'lookup', 'multijoin', 'multilookup', 'realtionships']},
+        {name: 'join',   types: ['select', 'tags', 'join', 'lookup', 'multiselect', 'multijoin', 'multilookup', 'realtionships']},
         {name: 'maps',   types: ['gmaplocation', 'gmappath']}
     ];
     readonly fieldPalette = this.fieldGroups.flatMap(g => g.types);
@@ -83,6 +83,7 @@ export class MetadataWizardComponent {
         tags: 'contains',
         join: '',
         lookup: '',
+        multiselect: 'contains',
         multijoin: 'contains',
         multilookup: '',
         realtionships: 'contains',
@@ -112,6 +113,7 @@ export class MetadataWizardComponent {
         tags: 'fa fa-tags',
         join: 'fa fa-link',
         lookup: 'fa fa-search',
+        multiselect: 'fa fa-list-ul',
         multijoin: 'fa fa-chain',
         multilookup: 'fa fa-object-group',
         realtionships: 'fa fa-sitemap',
@@ -133,6 +135,8 @@ export class MetadataWizardComponent {
     selectedJoinMetadata: Metadata | null = null;
     joinFieldOptions: SelectItem[] = [];
     selectedJoinField?: string;
+    selectedFieldOptionsTags: string[] = [];
+    readonly optionsTagSuggestions: string[] = [];
     metadataLabel = '';
     private metadataLabelManuallyEdited = false;
     fields: WizardField[] = [];
@@ -229,6 +233,7 @@ export class MetadataWizardComponent {
                 });
 
                 this.selectedFieldId = this.fields[0]?.wizardId;
+                this.syncSelectedFieldOptionsTags(this.selectedField);
                 this.updateJoinMetadataOptions();
                 this.syncJoinEditorState(this.selectedField);
             },
@@ -372,11 +377,13 @@ export class MetadataWizardComponent {
         this.fields.splice(event.currentIndex, 1, this.createFieldFromType(droppedFieldType, event.currentIndex));
         this.fields.forEach((field, index) => field.order_num = index + 1);
         this.selectedFieldId = this.fields[event.currentIndex].wizardId;
+        this.syncSelectedFieldOptionsTags(this.fields[event.currentIndex]);
         this.syncJoinEditorState(this.fields[event.currentIndex]);
     }
 
     selectField(field: WizardField) {
         this.selectedFieldId = field.wizardId;
+        this.syncSelectedFieldOptionsTags(field);
         this.syncJoinEditorState(field);
     }
 
@@ -386,7 +393,19 @@ export class MetadataWizardComponent {
         if (this.selectedFieldId === fieldToRemove.wizardId) {
             this.selectedFieldId = this.fields[0]?.wizardId;
         }
+        this.syncSelectedFieldOptionsTags(this.selectedField);
         this.syncJoinEditorState(this.selectedField);
+    }
+
+    onOptionsTagsChange(values: string[] | null | undefined) {
+        const field = this.selectedField;
+        if (!field || !this.isOptionTagField(field)) {
+            return;
+        }
+
+        const normalized = this.normalizeOptionTags(values ?? []);
+        this.selectedFieldOptionsTags = normalized;
+        field.options = normalized.join(',');
     }
 
     changedJoinMetadata(event: any) {
@@ -656,7 +675,7 @@ export class MetadataWizardComponent {
         field.sql_definition = '';
         field.pattern = '';
         field.description = '';
-        field.options = fieldType === 'select' ? '' : undefined;
+        field.options = (fieldType === 'select' || fieldType === 'multiselect') ? '' : undefined;
         field.join_table_name = '';
         field.join_table_key = '';
         field.join_table_select_fields = '';
@@ -734,9 +753,9 @@ export class MetadataWizardComponent {
                 return false;
             }
 
-            if (field.fieldType === 'select' && !(field.options ?? '').trim()) {
+            if ((field.fieldType === 'select' || field.fieldType === 'multiselect') && !(field.options ?? '').trim()) {
                 if (showMessage) {
-                    this.showValidationError(`Step 2: Options are required for select field "${field.name}".`);
+                    this.showValidationError(`Step 2: Options are required for field "${field.name}".`);
                 }
                 return false;
             }
@@ -938,7 +957,36 @@ export class MetadataWizardComponent {
     }
 
     private isJoinField(field: WizardField): boolean {
-        return field.fieldType === 'join' || field.fieldType === 'lookup' || field.fieldType === 'multijoin' || field.fieldType === 'multilookup';
+        return field.fieldType === 'join' || field.fieldType === 'lookup' || field.fieldType === 'multiselect' || field.fieldType === 'multijoin' || field.fieldType === 'multilookup';
+    }
+
+    private isOptionTagField(field?: WizardField): boolean {
+        return !!field && (field.fieldType === 'select' || field.fieldType === 'multiselect');
+    }
+
+    private syncSelectedFieldOptionsTags(field?: WizardField) {
+        if (!field || !this.isOptionTagField(field)) {
+            this.selectedFieldOptionsTags = [];
+            return;
+        }
+
+        const rawOptions = field.options ?? '';
+        if (!rawOptions.trim()) {
+            this.selectedFieldOptionsTags = [];
+            return;
+        }
+
+        this.selectedFieldOptionsTags = this.normalizeOptionTags(
+            rawOptions.split(',').map(value => value.trim()).filter(Boolean)
+        );
+    }
+
+    private normalizeOptionTags(values: string[]): string[] {
+        const normalized = values
+            .map(value => value.trim())
+            .filter(Boolean);
+
+        return Array.from(new Set(normalized));
     }
 
     private buildFieldPayload(field: WizardField, metadata: Metadata, orderNum: number): FieldDefinition {

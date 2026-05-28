@@ -28,6 +28,11 @@ export class ActionsEditComponent extends AbstractEditComponent<Action> implemen
         {value: 'DELETE', label: 'DELETE'}
     ];
 
+    phaseItems: SelectItem[] = [
+        {value: 'PRE', label: 'PRE'},
+        {value: 'POST', label: 'POST'}
+    ];
+
     constructor(
         public router: Router,
         public route: ActivatedRoute,

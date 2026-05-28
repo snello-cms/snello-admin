@@ -11,6 +11,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { TableModule } from 'primeng/table';
+import {MAP_INPUT_TO_FIELD} from '../../constants/constants';
 
 @Component({
     standalone: true,
@@ -21,6 +22,7 @@ export class FieldDefinitionListComponent extends AbstractListComponent<FieldDef
 
     public metadatasItems: SelectItem[];
     metadatas: Map<string, boolean> = new Map<string, boolean>();
+    private mapFieldToType: Map<string, string> = new Map<string, string>();
     private readonly route = inject(ActivatedRoute);
 
     constructor(
@@ -44,6 +46,13 @@ export class FieldDefinitionListComponent extends AbstractListComponent<FieldDef
                 });
             }
         });
+
+        for (const key of Array.from(MAP_INPUT_TO_FIELD.keys())) {
+            const fieldDefType = MAP_INPUT_TO_FIELD.get(key);
+            if (fieldDefType) {
+                this.mapFieldToType.set(this.buildFieldTypeKey(fieldDefType[0], fieldDefType[1]), key);
+            }
+        }
     }
 
     ngOnInit() {
@@ -68,5 +77,22 @@ export class FieldDefinitionListComponent extends AbstractListComponent<FieldDef
             return true;
         }
         return !this.metadatas.get(fieldDefinition.metadata_uuid);
+    }
+
+    getDisplayInputType(fieldDefinition: FieldDefinition): string {
+        const mapped = this.mapFieldToType.get(this.buildFieldTypeKey(fieldDefinition.type, fieldDefinition.input_type));
+        if (mapped) {
+            return mapped;
+        }
+
+        if (fieldDefinition.input_type) {
+            return fieldDefinition.input_type;
+        }
+
+        return fieldDefinition.type;
+    }
+
+    private buildFieldTypeKey(type?: string, inputType?: string | null): string {
+        return `${type ?? ''}::${inputType ?? ''}`;
     }
 }

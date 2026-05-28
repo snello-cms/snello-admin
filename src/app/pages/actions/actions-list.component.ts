@@ -25,6 +25,12 @@ export class ActionsListComponent extends AbstractListComponent<Action> implemen
         {label: 'DELETE', value: 'DELETE'}
     ];
 
+    phaseItems: SelectItem[] = [
+        {label: '', value: ''},
+        {label: 'PRE', value: 'PRE'},
+        {label: 'POST', value: 'POST'}
+    ];
+
     constructor(
         public router: Router,
         public confirmationService: ConfirmationService,

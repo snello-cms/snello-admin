@@ -46,6 +46,13 @@
                       </p-select>
                     }
                   </div>
+                  <div class="fw-search-fields">
+                    @if (service.search) {
+                      <p-select id="phase" name="phase" [style]="{'width':'100%'}" placeholder="phase"
+                        [options]="phaseItems" [(ngModel)]="service.search.phase">
+                      </p-select>
+                    }
+                  </div>
                   <div class="fw-actions">
                     <div class="btn-group">
                       <button type="button" class="btn btn-search" (click)="reload(datatable)">Search</button>
@@ -66,12 +73,13 @@
                     <th pResizableColumn>Description</th>
                     <th pResizableColumn>Metadata Name</th>
                     <th pResizableColumn>Condition</th>
+                      <th pResizableColumn>Phase</th>
                     <th class="Operations">Operations</th>
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="emptymessage">
                   <tr>
-                    <td colspan="6">
+                      <td colspan="7">
                       No results.
                     </td>
                   </tr>
@@ -83,6 +91,7 @@
                     <td class="ui-resizable-column">{{rowData.description}}</td>
                     <td class="ui-resizable-column">{{rowData.metadata_name}}</td>
                     <td class="ui-resizable-column">{{rowData.condition}}</td>
+                      <td class="ui-resizable-column">{{rowData.phase}}</td>
                     <td>
                       <button type="button" (click)="edit(rowData)" class="btn btn-success btn-sm">
                         <i aria-hidden="true" class="fa fa-pencil"></i>

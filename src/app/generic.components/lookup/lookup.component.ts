@@ -181,10 +181,8 @@ export class LookupComponent implements OnInit {
 
     ngOnInit() {
         this.labelField = this.fetchLabelField();
-        this.syncCurrentValue();
-        if (this.currentValue) {
-            this.loadCurrentLabel(this.currentValue);
-        }
+        this.bindControlChanges();
+        this.applyExternalValue(this.getControlRawValue());
     }
 
     openDialog() {
@@ -262,12 +260,69 @@ export class LookupComponent implements OnInit {
         const rawValue = fieldName ? this.group.get(fieldName)?.value : this.field.value;
         if (rawValue == null || rawValue === '') {
             this.currentValue = '';
+            this.currentLabel = '';
             return;
         }
 
         this.currentValue = typeof rawValue === 'object'
             ? String(rawValue[this.field.join_table_key] ?? rawValue.uuid ?? '')
             : String(rawValue);
+    }
+
+    private bindControlChanges() {
+        const fieldName = this.field.name;
+        if (!fieldName) {
+            return;
+        }
+
+        const control = this.group.get(fieldName);
+        if (!control) {
+            return;
+        }
+
+        control.valueChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(value => this.applyExternalValue(value));
+    }
+
+    private getControlRawValue(): any {
+        const fieldName = this.field.name;
+        return fieldName ? this.group.get(fieldName)?.value : this.field.value;
+    }
+
+    private applyExternalValue(rawValue: any) {
+        if (rawValue == null || rawValue === '') {
+            this.currentValue = '';
+            this.currentLabel = '';
+            this.field.value = null;
+            return;
+        }
+
+        const normalized = typeof rawValue === 'object'
+            ? String(rawValue[this.field.join_table_key] ?? rawValue.uuid ?? '')
+            : String(rawValue);
+
+        if (!normalized) {
+            this.currentValue = '';
+            this.currentLabel = '';
+            this.field.value = null;
+            return;
+        }
+
+        if (normalized === this.currentValue && this.currentLabel) {
+            return;
+        }
+
+        this.currentValue = normalized;
+        this.field.value = normalized;
+
+        if (typeof rawValue === 'object') {
+            this.currentLabel = this.extractRowLabel(rawValue, normalized);
+            return;
+        }
+
+        this.currentLabel = '';
+        this.loadCurrentLabel(normalized);
     }
 
     private fetchLabelField(): string {

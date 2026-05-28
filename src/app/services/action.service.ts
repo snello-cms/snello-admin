@@ -25,6 +25,7 @@ export class ActionService extends AbstractService<Action> {
             uuid: '',
             metadata_name_contains: '',
             condition: '',
+            phase: '',
             _limit: 10
         };
     }

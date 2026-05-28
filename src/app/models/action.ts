@@ -4,5 +4,6 @@ export class Action {
     description: string;
     metadata_name: string;
     condition: string;
+    phase: string;
     body: string;
 }

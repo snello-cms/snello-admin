@@ -307,14 +307,26 @@
                   }
                 }
 
-                @if (selectedField.fieldType === 'select') {
+                @if (selectedField.fieldType === 'select' || selectedField.fieldType === 'multiselect') {
                   <div class="form-group">
                     <label>Options</label>
-                    <textarea [(ngModel)]="selectedField.options" name="options" pTextarea></textarea>
+                    <p-autoComplete
+                      [(ngModel)]="selectedFieldOptionsTags"
+                      [suggestions]="optionsTagSuggestions"
+                      [multiple]="true"
+                      [typeahead]="false"
+                      [addOnBlur]="true"
+                      [addOnTab]="true"
+                      separator="," 
+                      name="options_tags"
+                      placeholder="Add options"
+                      (ngModelChange)="onOptionsTagsChange($event)">
+                    </p-autoComplete>
+                    <small class="text-muted">Options are saved as comma-separated values.</small>
                   </div>
                 }
 
-                @if (selectedField.fieldType === 'join' || selectedField.fieldType === 'lookup' || selectedField.fieldType === 'multijoin' || selectedField.fieldType === 'multilookup') {
+                @if (selectedField.fieldType === 'join' || selectedField.fieldType === 'lookup' || selectedField.fieldType === 'multiselect' || selectedField.fieldType === 'multijoin' || selectedField.fieldType === 'multilookup') {
                   <div class="form-group">
                     <label>Join Table Name</label>
                     <p-select
@@ -333,7 +345,7 @@
                     <input [(ngModel)]="selectedField.join_table_key" name="join_table_key" pInputText readonly>
                   </div>
 
-                  @if (selectedField.fieldType === 'join' || selectedField.fieldType === 'lookup' || selectedField.fieldType === 'multijoin' || selectedField.fieldType === 'multilookup') {
+                  @if (selectedField.fieldType === 'join' || selectedField.fieldType === 'lookup' || selectedField.fieldType === 'multiselect' || selectedField.fieldType === 'multijoin' || selectedField.fieldType === 'multilookup') {
                   <div class="form-group">
                     <label>Join Table Fields</label>
                     <p-select

@@ -215,7 +215,8 @@ export class MultiLookupComponent implements OnInit {
 
     ngOnInit() {
         this.labelField = this.fetchLabelField();
-        this.syncSelectedIdsFromValue();
+        this.bindControlChanges();
+        this.syncSelectedIdsFromValue(this.getControlRawValue());
         this.refreshSelectedItems();
     }
 
@@ -311,9 +312,7 @@ export class MultiLookupComponent implements OnInit {
         this.refreshSelectedItems();
     }
 
-    private syncSelectedIdsFromValue() {
-        const fieldName = this.field.name;
-        const rawValue = fieldName ? this.group.get(fieldName)?.value : this.field.value;
+    private syncSelectedIdsFromValue(rawValue: unknown) {
 
         if (rawValue == null || rawValue === '') {
             this.selectedIds = [];
@@ -364,9 +363,33 @@ export class MultiLookupComponent implements OnInit {
     private updateStoredValue() {
         const serialized = this.selectedIds.join(',');
         if (this.field.name) {
-            this.group.get(this.field.name)?.setValue(serialized);
+            this.group.get(this.field.name)?.setValue(serialized, {emitEvent: false});
         }
         this.field.value = serialized;
+    }
+
+    private bindControlChanges() {
+        const fieldName = this.field.name;
+        if (!fieldName) {
+            return;
+        }
+
+        const control = this.group.get(fieldName);
+        if (!control) {
+            return;
+        }
+
+        control.valueChanges
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(value => {
+                this.syncSelectedIdsFromValue(value);
+                this.refreshSelectedItems();
+            });
+    }
+
+    private getControlRawValue(): unknown {
+        const fieldName = this.field.name;
+        return fieldName ? this.group.get(fieldName)?.value : this.field.value;
     }
 
     private refreshSelectedItems() {

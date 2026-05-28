@@ -778,6 +778,23 @@ export class FormGenerationEditComponent implements OnInit, AfterViewChecked {
 
             if (field.type === 'join') {
                 const rawValue = objToSave[fieldName];
+                if (field.input_type === 'multiselect') {
+                    const normalizedValues = Array.isArray(rawValue)
+                        ? rawValue
+                        : typeof rawValue === 'string'
+                            ? rawValue.split(',').map(value => value.trim()).filter(Boolean)
+                            : rawValue == null || rawValue === ''
+                                ? []
+                                : [rawValue];
+
+                    const values = normalizedValues
+                        .map(value => this.extractJoinKeyValue(value, field.join_table_key))
+                        .filter(value => value != null && value !== '');
+
+                    objToSave[fieldName] = values.join(',');
+                    continue;
+                }
+
                 objToSave[fieldName] = typeof rawValue === 'object' && rawValue != null
                     ? rawValue[field.join_table_key]
                     : rawValue;
@@ -855,6 +872,24 @@ export class FormGenerationEditComponent implements OnInit, AfterViewChecked {
                 }
             }
             if (field.type === 'join') {
+                if (field.input_type === 'multiselect') {
+                    if (field.value == null || field.value === '') {
+                        field.value = [];
+                    } else if (Array.isArray(field.value)) {
+                        field.value = field.value
+                            .map(value => typeof value === 'object' && value != null
+                                ? value[field.join_table_key]
+                                : value)
+                            .filter(value => value != null && value !== '');
+                    } else {
+                        field.value = (<string>field.value)
+                            .split(',')
+                            .map(value => value.trim())
+                            .filter(Boolean);
+                    }
+                    continue;
+                }
+
                 if (typeof field.value === 'object' && field.value != null) {
                     field.value = field.value[field.join_table_key];
                 }

@@ -65,9 +65,10 @@ export class MultiLookupViewComponent implements OnInit {
 
         const selectFields = this.buildSelectFields();
         const labelField = this.fetchLabelField();
+        const joinKey = this.field.join_table_key || 'uuid';
         this.values$ = this.apiService.fetchObjectsByKeys(
             this.field.join_table_name,
-            this.field.join_table_key,
+            joinKey,
             ids,
             selectFields
         ).pipe(
@@ -96,26 +97,34 @@ export class MultiLookupViewComponent implements OnInit {
     }
 
     private extractIds(): string[] {
-        const rawValue = this.field?.value;
+        const rawValue = this.getRawValue();
         if (rawValue == null || rawValue === '') {
             return [];
         }
 
         if (Array.isArray(rawValue)) {
-            return rawValue
+            return Array.from(new Set(rawValue
                 .map(value => this.extractJoinKey(value))
-                .filter((value): value is string => value != null && value !== '');
+                .filter((value): value is string => value != null && value !== '')));
         }
 
         if (typeof rawValue === 'string') {
-            return rawValue
+            return Array.from(new Set(rawValue
                 .split(',')
                 .map(value => value.trim())
-                .filter(Boolean);
+                .filter(Boolean)));
         }
 
         const key = this.extractJoinKey(rawValue);
         return key ? [key] : [];
+    }
+
+    private getRawValue(): unknown {
+        const fieldName = this.field?.name;
+        if (fieldName && this.group?.get(fieldName)) {
+            return this.group.get(fieldName)?.value;
+        }
+        return this.field?.value;
     }
 
     private extractJoinKey(value: unknown): string | null {

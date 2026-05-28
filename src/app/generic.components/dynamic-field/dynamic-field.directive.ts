@@ -14,6 +14,7 @@ import {JoinComponent} from '../join/join.component';
 import {TimeComponent} from '../time/time.component';
 import {MultiJoinComponent} from '../multi-join/multi-join.component';
 import {MediaComponent} from '../media/media.component';
+import {MultiSelectComponent} from '../multiselect/multiselect.component';
 import {InputViewComponent} from '../input/input-view.component';
 import {HtmlViewComponent} from '../input/html-view.component';
 import { GMapLocationViewComponent } from '../gmaplocation/gmaplocation-view.component';
@@ -49,6 +50,10 @@ export class DynamicFieldDirective implements OnInit {
             componentType = (await import('../lookup/lookup.component')).LookupComponent;
         } else if (this.view() && this.field().type === 'join' && this.field().input_type === 'lookup') {
             componentType = (await import('../lookup/lookup-view.component')).LookupViewComponent;
+        } else if (!this.view() && this.field().type === 'join' && this.field().input_type === 'multiselect') {
+            componentType = MultiSelectComponent;
+        } else if (this.view() && this.field().type === 'join' && this.field().input_type === 'multiselect') {
+            componentType = MultiJoinViewComponent;
         } else if (!this.view() && this.field().type === 'multijoin' && this.field().input_type === 'multilookup') {
             componentType = (await import('../multilookup/multilookup.component')).MultiLookupComponent;
         } else if (this.view() && this.field().type === 'multijoin' && this.field().input_type === 'multilookup') {

@@ -84,6 +84,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         tags: 'contains',
         join: '',
         lookup: '',
+        multiselect: 'contains',
         multijoin: 'contains',
         multilookup: '',
         realtionships: 'contains',
@@ -554,7 +555,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         this.fieldType = key;
         this.syncSearchConditionItems();
         this.element.search_condition = this.componentDefaultValuesMapper[key] ?? '';
-        if (key === 'join' || key === 'lookup' || key === 'multijoin' || key === 'multilookup') {
+        if (key === 'join' || key === 'lookup' || key === 'multiselect' || key === 'multijoin' || key === 'multilookup') {
             this.initializeJoinMetadata();
         }
     }
