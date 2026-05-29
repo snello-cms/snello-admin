@@ -35,6 +35,28 @@ import {DocumentService} from '../../services/document.service';
         .list-image-empty {
             color: #8a8a8a;
         }
+
+        .list-media-preview {
+            width: 56px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            background: #f8f9fa;
+        }
+
+        .list-media-icon-box {
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            background: #f8f9fa;
+            color: #6c757d;
+            font-size: 24px;
+        }
     `]
 })
 export class FormGenerationListComponent implements OnInit {
@@ -319,6 +341,72 @@ export class FormGenerationListComponent implements OnInit {
         return fullValue;
     }
 
+    private extractMediaMimeType(value: unknown): string {
+        if (!value || typeof value !== 'object') {
+            return '';
+        }
+
+        const candidate = value as Record<string, unknown>;
+        const mimeType = candidate['mimetype'];
+        return typeof mimeType === 'string' ? mimeType.toLowerCase() : '';
+    }
+
+    public getMediaPreviewUrl(value: unknown): string {
+        const mediaRef = this.extractImageUuid(value);
+        if (!mediaRef) {
+            return '';
+        }
+
+        if (this.isLikelyImageUrl(mediaRef)) {
+            return mediaRef;
+        }
+
+        return this.documentService.downloadPath(mediaRef);
+    }
+
+    public isMediaImage(value: unknown): boolean {
+        const mimeType = this.extractMediaMimeType(value);
+        if (mimeType) {
+            return mimeType.startsWith('image/');
+        }
+
+        const mediaRef = this.extractImageUuid(value);
+        return this.isLikelyImageUrl(mediaRef);
+    }
+
+    public mediaIconClass(value: unknown): string {
+        const mimeType = this.extractMediaMimeType(value);
+        if (!mimeType) {
+            return 'fa fa-file-o';
+        }
+
+        if (mimeType.includes('pdf')) {
+            return 'fa fa-file-pdf-o';
+        }
+
+        if (mimeType.includes('word') || mimeType.includes('msword')) {
+            return 'fa fa-file-word-o';
+        }
+
+        if (mimeType.includes('excel') || mimeType.includes('spreadsheet')) {
+            return 'fa fa-file-excel-o';
+        }
+
+        if (mimeType.includes('powerpoint') || mimeType.includes('presentation')) {
+            return 'fa fa-file-powerpoint-o';
+        }
+
+        if (mimeType.includes('zip') || mimeType.includes('rar') || mimeType.includes('7z') || mimeType.includes('tar')) {
+            return 'fa fa-file-archive-o';
+        }
+
+        if (mimeType.startsWith('text/') || mimeType.includes('json') || mimeType.includes('xml')) {
+            return 'fa fa-file-text-o';
+        }
+
+        return 'fa fa-file-o';
+    }
+
     private toValidDate(value: unknown): Date | null {
         if (value instanceof Date) {
             return Number.isNaN(value.getTime()) ? null : value;
@@ -415,6 +503,26 @@ export class FormGenerationListComponent implements OnInit {
                     return imageDoc?.uuid ?? '';
                 }),
                 catchError(() => of(''))
+            );
+        }
+
+        if (fieldDefinition.type === 'media') {
+            const mediaRef = this.extractImageUuid(fullValue);
+            if (!mediaRef) {
+                return of('');
+            }
+
+            if (this.isLikelyImageUrl(mediaRef)) {
+                return of({uuid: mediaRef, mimetype: 'image/*'});
+            }
+
+            return this.documentService.find(mediaRef).pipe(
+                map(document => ({
+                    uuid: document?.uuid ?? mediaRef,
+                    mimetype: document?.mimetype ?? '',
+                    original_name: document?.original_name ?? ''
+                })),
+                catchError(() => of({uuid: mediaRef, mimetype: ''}))
             );
         }
 

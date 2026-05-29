@@ -14,10 +14,13 @@ It provides a full UI to configure and manage every aspect of the headless CMS w
 - **Metadata management** — create and edit tables, configure columns, set display options and icons
 - **Field Definitions** — define custom field types with validation rules and UI components
 - **Dynamic Forms** — auto-generated create/edit forms driven by field definitions
+- **Advanced lookup selectors** — single and multi-record selection dialogs with search for relational fields
+- **Dynamic multiselect support** — PrimeNG `p-multiselect` for static options and join-based multiple selections, including legacy metadata compatibility
 - **Massive Modifications** — multi-step bulk editing flow to update many records inline with per-row or global save actions
 - **Select Queries** — build and test named SQL-like query templates exposed as API endpoints
 - **Conditions** — define filter rules applied at runtime to REST queries
 - **Document & Image management** — upload, organise and preview files and images stored by the API
+- **Document preview and filtering** — MIME-type multiselect filter, image modal preview, and video preview with loop toggle
 - **Links** — manage URL mapping rules for the routing layer
 - **User & Role management** — administer users, assign roles and control permissions via the `permit` directive
 - **Monaco editor integration** — edit JSON, SQL and code payloads directly in the browser
@@ -67,9 +70,12 @@ Each **Field Definition** defines how a column is rendered in forms and list vie
 | `datetime` | Datetime Picker | Date + time selector; supports `now()` (create-only) or `always_now()` (create + update) as default |
 | `time` | Time Picker | Time-only selector |
 | `select` | Dropdown | Fixed list of options defined in the `options` field |
+| `multiselect` | MultiSelect | Multi-value fixed option list rendered with PrimeNG multi-select |
 | `tags` | Tag input | Free-text comma-separated tag list |
 | `join` | Join Select | Single-value foreign key: resolves values from another metadata table |
+| `lookup` | Lookup Dialog | Single-value relational selector with searchable modal picker |
 | `multijoin` | Multi-Join Select | Multi-value foreign key from another metadata table |
+| `multilookup` | Multi Lookup Dialog | Multi-value relational selector with searchable modal picker |
 | `realtionships` | Relationships | Embedded list of related records from a linked metadata table |
 | `media` | Media Upload | File/document upload linked to the document storage |
 | `image` | Image Upload | Image upload with preview; supports derived format generation |
@@ -87,10 +93,17 @@ Each **Field Definition** defines how a column is rendered in forms and list vie
 - **`searchable`** — enables the field as a search filter
 - **`group_name`** / **`tab_name`** — organise fields into collapsible fieldsets or tabs within the form
 - **`order_num`** — controls display order
-- **`options`** — comma-separated option list (used by `select`)
-- **`join_table_name`** / **`join_table_key`** / **`join_table_select_fields`** — configuration for `join` and `multijoin` types
+- **`options`** — comma-separated option list (used by `select` and `multiselect`)
+- **`join_table_name`** / **`join_table_key`** / **`join_table_select_fields`** — configuration for `join`, `lookup`, `multijoin`, and `multilookup`
 - **`sql_type`** / **`sql_definition`** — (advanced) override the underlying SQL column type or definition
 - **`pattern`** — validation regex pattern
+
+## Additional Implemented Features
+
+- **Clone existing records** — from view/list flows, a new create form can be opened with `clone_uuid`, prefilled from an existing record while resetting primary key fields.
+- **Massive create in form generation** — the create route accepts `massive=true` and injects virtual fields (`date min`, `date max`, `cron expression`) to generate multiple records in one save.
+- **Massive date preview dialog** — cron occurrences are previewable before saving in massive mode.
+- **Multiselect legacy compatibility** — if legacy metadata stores a multiselect-like field as `type=select` and missing `input_type`, the UI falls back to multiselect behavior for known legacy naming patterns.
 
 ## Quick Start
 

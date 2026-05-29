@@ -33,7 +33,7 @@
                 <div class="filter-wrapper" (keydown.enter)="onSearchEnter($event, datatable)">
                   <div class="fw-search-fields">
                     @if (service.search) {
-                      <input id="table_name" name="table_name" placeholder="table name" type="text" class="form-control" [(ngModel)]="service.search.table_name_contains" pInputText #nome="ngModel"/>
+                      <input id="original_name" name="original_name" placeholder="original name" type="text" class="form-control" [(ngModel)]="service.search.original_name_containss" pInputText #nome="ngModel"/>
                     }
                   </div>
                   <div class="fw-search-fields">

@@ -103,6 +103,21 @@
                           } @else {
                             <span class="list-image-empty">-</span>
                           }
+                        } @else if (def.type === 'media') {
+                          @if ((rowData[def.name] | async); as mediaValue) {
+                            @if (isMediaImage(mediaValue)) {
+                              <img
+                                class="list-media-preview"
+                                [src]="getMediaPreviewUrl(mediaValue)"
+                                [alt]="def.label || def.name || 'Media preview'" />
+                            } @else {
+                              <div class="list-media-icon-box" aria-hidden="true">
+                                <i [class]="mediaIconClass(mediaValue)"></i>
+                              </div>
+                            }
+                          } @else {
+                            <span class="list-image-empty">-</span>
+                          }
                         } @else {
                           {{rowData[def.name] | async  }}
                         }

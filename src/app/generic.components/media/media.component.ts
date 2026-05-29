@@ -110,13 +110,14 @@ export class MediaComponent implements OnInit {
 
     private uploadFile(fileToUpload: File): Promise<any> {
         const fieldName = this.field.name;
+        const tableName = this.field.table_name;
         const tableKeyValue = this.field.table_key_value;
-        if (!fieldName || !tableKeyValue) {
+        if (!fieldName || !tableName || !tableKeyValue) {
             return Promise.resolve();
         }
         const formData = new FormData();
         formData.append('filename', fileToUpload.name);
-        formData.append('table_name', tableKeyValue);
+        formData.append('table_name', tableName);
         formData.append('table_key', tableKeyValue);
         formData.append('mimeType', fileToUpload.type);
         formData.append('file', fileToUpload);

@@ -80,6 +80,8 @@ export class DocumentService extends AbstractService<Document> {
   buildSearch() {
     this.search = {
       uuid: "",
+      original_name_containss: "",
+      _sort: "creation_date:desc",
       _limit: 10,
     };
   }
