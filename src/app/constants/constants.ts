@@ -1,6 +1,6 @@
 import {SelectItem} from 'primeng/api';
 
-export const APP_VERSION = '4.1.30';
+export const APP_VERSION = '4.1.32';
 
 export const MAP_INPUT_TO_FIELD: Map<string, any> = new Map(
     [
@@ -23,7 +23,7 @@ export const MAP_INPUT_TO_FIELD: Map<string, any> = new Map(
         ['tags', ['tags', null]],
         ['join', ['join', null]],
         ['lookup', ['join', 'lookup']],
-        ['multiselect', ['join', 'multiselect']],
+        ['multiselect', ['select', 'multiselect']],
         ['multijoin', ['multijoin', null]],
         ['multilookup', ['multijoin', 'multilookup']],
         ['realtionships', ['realtionships', null]],

@@ -5,6 +5,7 @@ import {MultiSelectModule} from 'primeng/multiselect';
 import {FieldDefinition} from '../../models/field-definition';
 import {ApiService} from '../../services/api.service';
 import {FieldDefinitionService} from '../../services/field-definition.service';
+import {of} from 'rxjs';
 
 @Component({
     selector: 'app-multiselect',
@@ -15,8 +16,8 @@ import {FieldDefinitionService} from '../../services/field-definition.service';
         <div class="col-sm-9">
           <p-multiselect
             [options]="options"
-            [optionLabel]="labelField"
-            [optionValue]="field.join_table_key"
+                        [optionLabel]="optionLabel"
+                        [optionValue]="optionValue"
             [formControlName]="field.name"
             [placeholder]="field.label || field.name"
             [showClear]="true"
@@ -35,6 +36,8 @@ export class MultiSelectComponent implements OnInit {
 
     options: any[] = [];
     labelField = '';
+    optionLabel = 'label';
+    optionValue = 'value';
 
     private destroyRef = inject(DestroyRef);
 
@@ -49,11 +52,34 @@ export class MultiSelectComponent implements OnInit {
         this.bindControlChanges();
         this.applyExternalValue(this.getControlRawValue());
 
-        this.apiService.getJoinList(this.field)
+        this.loadOptions()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(options => {
                 this.options = options ?? [];
             });
+    }
+
+    private loadOptions() {
+        const fieldName = `${this.field.name ?? ''} ${this.field.label ?? ''}`.toLowerCase();
+        const isLegacyStaticMultiselect = this.field.type === 'select'
+            && !this.field.input_type
+            && fieldName.includes('multiselect');
+        const isStaticOptionsMultiselect = (this.field.type === 'select' && this.field.input_type === 'multiselect')
+            || isLegacyStaticMultiselect;
+        if (isStaticOptionsMultiselect) {
+            this.optionLabel = 'label';
+            this.optionValue = 'value';
+            const valuesSplit = this.field.options?.split(',') ?? [];
+            const staticOptions = valuesSplit
+                .map(value => value.trim())
+                .filter(Boolean)
+                .map(value => ({label: value, value}));
+            return of(staticOptions);
+        }
+
+        this.optionLabel = this.labelField;
+        this.optionValue = this.field.join_table_key;
+        return this.apiService.getJoinList(this.field);
     }
 
     private bindControlChanges() {

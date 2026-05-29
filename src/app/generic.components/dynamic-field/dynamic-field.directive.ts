@@ -37,31 +37,39 @@ export class DynamicFieldDirective implements OnInit {
 
     async ngOnInit() {
         let componentType: Type<any> | undefined;
+        const field = this.field();
+        const fieldName = `${field.name ?? ''} ${field.label ?? ''}`.toLowerCase();
+        const isLegacyStaticMultiselect = field.type === 'select'
+            && !field.input_type
+            && fieldName.includes('multiselect');
+        const isStaticMultiselect = ((field.type === 'select' && field.input_type === 'multiselect') || isLegacyStaticMultiselect);
 
-        if (!this.view() && this.field().type === 'tinymce') {
+        if (!this.view() && field.type === 'tinymce') {
             componentType = (await import('../tinymce/tinymce.component')).TinymceComponent;
-        } else if (!this.view() && this.field().type === 'monaco') {
+        } else if (!this.view() && field.type === 'monaco') {
             componentType = (await import('../monaco/monaco.component')).MonacoComponent;
-        } else if (!this.view() && this.field().type === 'realtionships') {
+        } else if (!this.view() && field.type === 'realtionships') {
             componentType = (await import('../realtionships/realtionships.component')).RealtionshipsComponent;
-        } else if (this.view() && this.field().type === 'realtionships') {
+        } else if (this.view() && field.type === 'realtionships') {
             componentType = (await import('../realtionships/realtionships-view.component')).RealtionshipsViewComponent;
-        } else if (!this.view() && this.field().type === 'join' && this.field().input_type === 'lookup') {
+        } else if (!this.view() && field.type === 'join' && field.input_type === 'lookup') {
             componentType = (await import('../lookup/lookup.component')).LookupComponent;
-        } else if (this.view() && this.field().type === 'join' && this.field().input_type === 'lookup') {
+        } else if (this.view() && field.type === 'join' && field.input_type === 'lookup') {
             componentType = (await import('../lookup/lookup-view.component')).LookupViewComponent;
-        } else if (!this.view() && this.field().type === 'join' && this.field().input_type === 'multiselect') {
+        } else if (!this.view() && isStaticMultiselect) {
             componentType = MultiSelectComponent;
-        } else if (this.view() && this.field().type === 'join' && this.field().input_type === 'multiselect') {
+        } else if (!this.view() && field.type === 'join' && field.input_type === 'multiselect') {
+            componentType = MultiSelectComponent;
+        } else if (this.view() && field.type === 'join' && field.input_type === 'multiselect') {
             componentType = MultiJoinViewComponent;
-        } else if (!this.view() && this.field().type === 'multijoin' && this.field().input_type === 'multilookup') {
+        } else if (!this.view() && field.type === 'multijoin' && field.input_type === 'multilookup') {
             componentType = (await import('../multilookup/multilookup.component')).MultiLookupComponent;
-        } else if (this.view() && this.field().type === 'multijoin' && this.field().input_type === 'multilookup') {
+        } else if (this.view() && field.type === 'multijoin' && field.input_type === 'multilookup') {
             componentType = (await import('../multilookup/multilookup-view.component')).MultiLookupViewComponent;
         } else {
             componentType = this.view()
-                ? componentViewMapper[this.field().type]
-                : componentMapper[this.field().type];
+                ? componentViewMapper[field.type]
+                : componentMapper[field.type];
         }
 
         if (!componentType) {

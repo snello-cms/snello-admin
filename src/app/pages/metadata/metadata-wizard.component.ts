@@ -55,7 +55,7 @@ export class MetadataWizardComponent {
         {name: 'editor', types: ['tinymce', 'monaco']},
         {name: 'time',   types: ['date', 'datetime', 'time']},
         {name: 'media',  types: ['media', 'image']},
-        {name: 'join',   types: ['select', 'tags', 'join', 'lookup', 'multiselect', 'multijoin', 'multilookup', 'realtionships']},
+        {name: 'join',   types: ['select', 'multiselect', 'tags', 'join', 'lookup', 'multijoin', 'multilookup', 'realtionships']},
         {name: 'maps',   types: ['gmaplocation', 'gmappath']}
     ];
     readonly fieldPalette = this.fieldGroups.flatMap(g => g.types);
@@ -268,6 +268,10 @@ export class MetadataWizardComponent {
     }
 
     private resolveFieldType(type?: string, inputType?: string | null): string {
+        if (type === 'join' && inputType === 'multiselect') {
+            return 'multiselect';
+        }
+
         for (const [key, mapping] of MAP_INPUT_TO_FIELD.entries()) {
             const mappingType = mapping?.[0];
             const mappingInputType = mapping?.[1] ?? null;
@@ -957,7 +961,7 @@ export class MetadataWizardComponent {
     }
 
     private isJoinField(field: WizardField): boolean {
-        return field.fieldType === 'join' || field.fieldType === 'lookup' || field.fieldType === 'multiselect' || field.fieldType === 'multijoin' || field.fieldType === 'multilookup';
+        return field.fieldType === 'join' || field.fieldType === 'lookup' || field.fieldType === 'multijoin' || field.fieldType === 'multilookup';
     }
 
     private isOptionTagField(field?: WizardField): boolean {

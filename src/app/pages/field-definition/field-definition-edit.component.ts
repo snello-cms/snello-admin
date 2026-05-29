@@ -108,6 +108,7 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
                 this.mapFieldToType.set(this.buildFieldTypeKey(fieldDefType[0], fieldDefType[1]), key);
             }
         }
+        this.mapFieldToType.set(this.buildFieldTypeKey('join', 'multiselect'), 'multiselect');
     }
 
     private buildFieldTypeKey(type?: string, inputType?: string | null): string {
@@ -280,6 +281,14 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         if (this.fieldType === 'lookup' || this.fieldType === 'multilookup') {
             this.element.search_condition = '';
         }
+
+        const isJoinFieldType = this.fieldType === 'join' || this.fieldType === 'lookup' || this.fieldType === 'multijoin' || this.fieldType === 'multilookup';
+        if (!isJoinFieldType) {
+            this.element.join_table_name = '';
+            this.element.join_table_key = '';
+            this.element.join_table_select_fields = '';
+        }
+
         delete this.element.value;
         delete (this.element as any).is_edit;
     }
@@ -555,8 +564,12 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         this.fieldType = key;
         this.syncSearchConditionItems();
         this.element.search_condition = this.componentDefaultValuesMapper[key] ?? '';
-        if (key === 'join' || key === 'lookup' || key === 'multiselect' || key === 'multijoin' || key === 'multilookup') {
+        if (key === 'join' || key === 'lookup' || key === 'multijoin' || key === 'multilookup') {
             this.initializeJoinMetadata();
+        } else {
+            this.selectedJoinMetadata = null;
+            this.joinFieldOptions = [];
+            this.selectedJoinField = undefined;
         }
     }
 

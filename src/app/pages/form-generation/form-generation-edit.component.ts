@@ -713,6 +713,38 @@ export class FormGenerationEditComponent implements OnInit, AfterViewChecked {
         return null;
     }
 
+    private isStaticMultiselectField(field: FieldDefinition): boolean {
+        const fieldName = `${field.name ?? ''} ${field.label ?? ''}`.toLowerCase();
+        const isLegacyStaticMultiselect = field.type === 'select'
+            && !field.input_type
+            && fieldName.includes('multiselect');
+
+        return (field.type === 'select' && field.input_type === 'multiselect') || isLegacyStaticMultiselect;
+    }
+
+    private normalizeMultiValues(rawValue: unknown, joinTableKey?: string): string[] {
+        if (rawValue == null || rawValue === '') {
+            return [];
+        }
+
+        if (Array.isArray(rawValue)) {
+            return Array.from(new Set(rawValue
+                .map(value => this.extractJoinKeyValue(value, joinTableKey))
+                .filter((value): value is string => value != null && value !== '')
+                .map(value => String(value))));
+        }
+
+        if (typeof rawValue === 'string') {
+            return Array.from(new Set(rawValue
+                .split(',')
+                .map(value => value.trim())
+                .filter(Boolean)));
+        }
+
+        const key = this.extractJoinKeyValue(rawValue, joinTableKey);
+        return key != null && key !== '' ? [String(key)] : [];
+    }
+
     // TODO: lo riusciamo a portare in tags.component.ts?
     preSaveUpdate(): any {
         const objToSave = JSON.parse(JSON.stringify(this.form.value));
@@ -751,6 +783,11 @@ export class FormGenerationEditComponent implements OnInit, AfterViewChecked {
             if (field.type === 'tags') {
                 const tagValues = objToSave[fieldName];
                 objToSave[fieldName] = Array.isArray(tagValues) ? tagValues.join(',') : (tagValues ?? '');
+            }
+
+            if (this.isStaticMultiselectField(field)) {
+                objToSave[fieldName] = this.normalizeMultiValues(objToSave[fieldName], field.join_table_key).join(',');
+                continue;
             }
 
             if (field.type === 'multijoin') {
@@ -870,6 +907,10 @@ export class FormGenerationEditComponent implements OnInit, AfterViewChecked {
                 } else {
                     field.value = (<string>field.value).split(',');
                 }
+            }
+            if (this.isStaticMultiselectField(field)) {
+                field.value = this.normalizeMultiValues(field.value, field.join_table_key);
+                continue;
             }
             if (field.type === 'join') {
                 if (field.input_type === 'multiselect') {
