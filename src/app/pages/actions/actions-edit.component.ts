@@ -13,13 +13,16 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SelectModule} from 'primeng/select';
 import {InputText} from 'primeng/inputtext';
 import {Textarea} from 'primeng/textarea';
+import {DialogModule} from 'primeng/dialog';
 
 @Component({
     standalone: true,
     templateUrl: './actions-edit.component.html',
-    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, SelectModule, InputText, Textarea]
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, SelectModule, InputText, Textarea, DialogModule]
 })
 export class ActionsEditComponent extends AbstractEditComponent<Action> implements OnInit {
+
+    showLegendDialog = false;
 
     metadatasSelect: SelectItem[] = [];
     conditionItems: SelectItem[] = [

@@ -68,6 +68,12 @@
                 <div class="form-group clearfix row">
                   <label class="label-text col-sm-3">Body</label>
                   <div class="col-sm-9">
+                    <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
+                      <button type="button" class="btn btn-default btn-sm" (click)="showLegendDialog = true" title="Available objects and functions">
+                        <i class="fa fa-info-circle" aria-hidden="true"></i>
+                        Info
+                      </button>
+                    </div>
                     <textarea [(ngModel)]="element.body" name="body" pTextarea rows="8" style="width: 100%" placeholder="Body"></textarea>
                   </div>
                 </div>
@@ -92,6 +98,54 @@
                         <button type="button" class="btn btn-danger" (click)="navigateToList()">Undo</button>
                       </div>
                     </form>
+
+                    <p-dialog
+                      [(visible)]="showLegendDialog"
+                      [modal]="true"
+                      [maximizable]="true"
+                      [style]="{width: '70vw', maxWidth: '980px'}"
+                      header="Available objects map and services legend"
+                      (onHide)="showLegendDialog = false">
+                      <div style="line-height:1.6;">
+                        <div><strong>available objects map:</strong></div>
+                        <ul>
+                          <li>"action", action</li>
+                          <li>"metadata", metadataService</li>
+                          <li>"db", jdbcRepository</li>
+                          <li>"documents", documentsService</li>
+                          <li>"mail", mailService</li>
+                          <li>"table", table</li>
+                          <li>"table_key", table_key</li>
+                          <li>"map", map</li>
+                        </ul>
+
+                        <div><strong>on service "db" - functions:</strong></div>
+                        <ul>
+                          <li>List&lt;Map&lt;String, Object&gt;&gt; list(String query)</li>
+                          <li>boolean executeQuery(String sql);</li>
+                          <li>Map&lt;String, Object&gt; create(String table, String table_key, Map&lt;String, Object&gt; map);</li>
+                          <li>Map&lt;String, Object&gt; update(String table, String table_key, Map&lt;String, Object&gt; map, String key);</li>
+                          <li>Map&lt;String, Object&gt; fetch(String select_fields, String table, String table_key, String uuid);</li>
+                          <li>boolean delete(String table, String table_key, String uuid);</li>
+                        </ul>
+
+                        <div><strong>on service "mail" - functions:</strong></div>
+                        <ul>
+                          <li>void send(String subject, String body, List&lt;String&gt; to, List&lt;String&gt; cc, List&lt;String&gt; bcc, List&lt;Attachment&gt; attachments);</li>
+                        </ul>
+
+                        <div><strong>on service "documents" - functions:</strong></div>
+                        <ul>
+                          <li>String basePath(String folder);</li>
+                          <li>Map&lt;String, Object&gt; upload(DocumentFormData documentFormData);</li>
+                          <li>Map&lt;String, Object&gt; write(File file, String uuid, String table_name);</li>
+                          <li>Map&lt;String, Object&gt; write(byte[] bytes, String uuid, String table_name, String extension);</li>
+                          <li>boolean delete(String path);</li>
+                          <li>File getFile(String path);</li>
+                          <li>StreamingOutput streamingOutput(String path, String mediatype);</li>
+                        </ul>
+                      </div>
+                    </p-dialog>
                   </div>
                 </div>
               </div>
