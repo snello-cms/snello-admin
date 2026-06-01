@@ -30,10 +30,21 @@
                     <div class="account-row"><b>User:</b> {{authService.userDetails?.username || '-'}}</div>
                     <div class="account-row"><b>Version:</b> {{version()}}</div>
 
-                    <div class="account-section-title">Session roles</div>
-                    @if (authService.roles?.length) {
+                    <div class="account-section-title">Groups</div>
+                    @if (authService.groups?.length) {
                         <ul class="account-roles-list">
-                            @for (role of authService.roles; track role) {
+                            @for (group of authService.groups; track group) {
+                                <li>{{group}}</li>
+                            }
+                        </ul>
+                    } @else {
+                        <div class="account-row">No groups available</div>
+                    }
+
+                    <div class="account-section-title">Roles</div>
+                    @if (authService.displayRoles?.length) {
+                        <ul class="account-roles-list">
+                            @for (role of authService.displayRoles; track role) {
                                 <li>{{role}}</li>
                             }
                         </ul>

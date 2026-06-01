@@ -5,6 +5,7 @@ import {DataListService} from '../../services/data-list.service';
 import {ApiService} from '../../services/api.service';
 import {MetadataService} from '../../services/metadata.service';
 import {Metadata} from '../../models/metadata';
+import {AuthenticationService} from '../../services/authentication.service';
 
 @Component({
     selector: 'homepage-topbar',
@@ -91,6 +92,7 @@ export class HomepageTopBar implements OnInit{
     readonly metadatasService = inject(MetadataService);
     readonly dataListService = inject(DataListService);
     private readonly apiService = inject(ApiService);
+    private readonly authService = inject(AuthenticationService);
     private readonly destroyRef = inject(DestroyRef);
 
     @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>;
@@ -201,11 +203,23 @@ export class HomepageTopBar implements OnInit{
 
         this.metadatasService.getSidebarMetadata().pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: model => {
-                this.model = <Metadata[]>model;
+                this.model = this.filterByUserGroups(<Metadata[]>model);
             },
             error: error => {
                 this.errorMessage = <any>error;
             }
+        });
+    }
+
+    private filterByUserGroups(items: Metadata[]): Metadata[] {
+        const isAdminOrManager = this.authService.displayRoles?.some(r => r === 'Admin' || r === 'Manager');
+        if (isAdminOrManager) {
+            return items;
+        }
+        const userGroups: string[] = (this.authService.groups ?? []).map(g => g.startsWith('/') ? g.slice(1) : g);
+        return items.filter(m => {
+            const tableName = m.table_name ?? '';
+            return userGroups.some(g => g === tableName || g.startsWith(tableName + '_'));
         });
     }
 }

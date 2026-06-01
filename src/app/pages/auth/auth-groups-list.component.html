@@ -1,0 +1,128 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>Auth - Groups</h3>
+  <p>Authentication &amp; Authorization</p>
+  <button type="button" class="btn btn-add pull-right btn-block" (click)="verifyGroups()">
+    <i class="fa fa-check-circle"></i> Verify Groups
+  </button>
+</div>
+
+<div class="main">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <div class="content list">
+
+          <div class="row mb-3">
+            <div class="col-sm-12">
+              <div class="btn-group">
+                <a [routerLink]="'/auth-users/list'" class="btn btn-sm btn-default">Users</a>
+                <a [routerLink]="'/auth-groups/list'" class="btn btn-sm btn-primary">Groups</a>
+              </div>
+            </div>
+          </div>
+
+          <form>
+            <div class="row">
+              <div class="clearfix"></div>
+              <div class="col-sm-12">
+                <div class="filter-wrapper" (keydown.enter)="onSearchEnter($event, datatable)">
+                  <div class="fw-search-fields">
+                    @if (service.search) {
+                      <input id="name" name="name" type="text" class="form-control"
+                        placeholder="name" [(ngModel)]="service.search.name_contains"
+                        pInputText #name="ngModel">
+                    }
+                  </div>
+                  <div class="fw-spacer"></div>
+                  <div class="fw-actions">
+                    <div class="btn-group">
+                      <button type="button" class="btn btn-search" (click)="reload(datatable)">Search</button>
+                      <button type="button" class="btn btn-reset" (click)="reset(datatable)">Undo</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="table-wrapper clearfix">
+              <p-table #datatable (onLazyLoad)="lazyLoad($event)" [lazy]="true" [paginator]="true"
+                [resizableColumns]="true" [rows]="10"
+                [totalRecords]="service.listSize" [value]="model">
+
+                <ng-template let-columns pTemplate="header">
+                  <tr class="sort-header">
+                    <th pResizableColumn>#</th>
+                    <th pResizableColumn>Name</th>
+                    <th pResizableColumn>Path</th>
+                    <th class="Operations">Operations</th>
+                  </tr>
+                </ng-template>
+                <ng-template pTemplate="emptymessage">
+                  <tr>
+                    <td [attr.colspan]="colspan">No results.</td>
+                  </tr>
+                </ng-template>
+                <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
+                  <tr>
+                    <td class="RowIndex">{{ rowIndex + 1 }}</td>
+                    <td class="ui-resizable-column">{{ rowData.name }}</td>
+                    <td class="ui-resizable-column">{{ rowData.path }}</td>
+                    <td>
+                      <button type="button" (click)="users(rowData)" class="btn btn-primary btn-sm">
+                        <i aria-hidden="true" class="fa fa-users"></i> Users
+                      </button>
+                    </td>
+                  </tr>
+                </ng-template>
+              </p-table>
+            </div>
+
+            @if (selectedGroupName) {
+              <div class="table-wrapper clearfix mt-3">
+                <h4>Users in group: {{ selectedGroupName }}</h4>
+                <p-table [value]="selectedGroupUsers">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th>Username</th>
+                      <th>Email</th>
+                      <th>Name</th>
+                      <th>Surname</th>
+                      <th>Operations</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-user>
+                    <tr>
+                      <td>{{ user.username }}</td>
+                      <td>{{ user.email }}</td>
+                      <td>{{ user.name }}</td>
+                      <td>{{ user.surname }}</td>
+                      <td>
+                        <button type="button" (click)="viewUser(user)" class="btn btn-primary btn-sm">
+                          <i aria-hidden="true" class="fa fa-eye"></i>
+                        </button>
+                        <button type="button" (click)="editUser(user)" class="btn btn-success btn-sm">
+                          <i aria-hidden="true" class="fa fa-pencil"></i>
+                        </button>
+                      </td>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="emptymessage">
+                    <tr>
+                      <td colspan="5">No users found.</td>
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+            }
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

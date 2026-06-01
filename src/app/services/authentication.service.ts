@@ -24,6 +24,8 @@ export class AuthenticationService {
 
     public userDetails: KeycloakProfile;
     public roles: string[];
+    public displayRoles: string[];
+    public groups: string[];
     public decodedToken: any;
     public decodedRefreshToken: string;
     public extraroles: string[];
@@ -58,6 +60,8 @@ export class AuthenticationService {
             this.token = this.keycloak.token ?? '';
             this.decodedToken = this.keycloak.tokenParsed;
             this.extraroles = ((this.decodedToken as { extraroles?: string[] } | undefined)?.extraroles) ?? [];
+            this.groups = ((this.decodedToken as { groups?: string[] } | undefined)?.groups) ?? [];
+            this.displayRoles = this.getDisplayRoles();
             this.refreshToken = this.keycloak.refreshToken ?? '';
         }
     }
@@ -90,6 +94,14 @@ export class AuthenticationService {
         const resourceRoles = Object.values(parsed?.resource_access ?? {})
             .flatMap(resource => resource.roles ?? []);
         return [...new Set([...realmRoles, ...resourceRoles])];
+    }
+
+    private getDisplayRoles(): string[] {
+        const allowedRoles = ['User', 'Manager', 'Admin'];
+        const sourceRoles = [...(this.roles ?? []), ...(this.extraroles ?? [])];
+        const loweredSourceRoles = new Set(sourceRoles.map(role => (role || '').toLowerCase()));
+
+        return allowedRoles.filter(role => loweredSourceRoles.has(role.toLowerCase()));
     }
 
 }

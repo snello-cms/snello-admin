@@ -1,6 +1,6 @@
 import {SelectItem} from 'primeng/api';
 
-export const APP_VERSION = '4.1.33';
+export const APP_VERSION = '4.1.36';
 
 export const MAP_INPUT_TO_FIELD: Map<string, any> = new Map(
     [
@@ -160,6 +160,7 @@ export const USER_ROLES_API_PATH = 'user_roles_api_path';
 export const URL_MAP_RULES_API_PATH = 'url_map_rules_api_path';
 export const API_SERVICE_PATH = 'api_service_path';
 export const LOGIN_API_PATH = 'login_api_path';
+export const AUTH_API_PATH = 'auth_api_path';
 export const CHANGEPASSWORD_API_PATH = 'changepassword_api_path';
 export const RESETPASSWORD_API_PATH = 'resetpassword_api_path';
 
@@ -266,6 +267,14 @@ const ADMIN_ITEMS_LEGACY: any[] = [
         section: 'chatinteractions',
         name: 'Chat Interactions',
         summary: 'Historical chat interactions',
+        roles: 'Admin'
+    },
+    {
+        id: 'list',
+        icon: 'fa fa-shield',
+        section: 'auth-users',
+        name: 'Auth',
+        summary: 'Authentication & Authorization',
         roles: 'Admin'
     },
     // {

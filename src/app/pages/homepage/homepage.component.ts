@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {MetadataService} from '../../services/metadata.service';
 import { SideBarComponent } from '../sidebar/sidebar.component';
 import { HomepageTopBar } from '../homepage-topbar/homepage-topbar.component';
+import {AuthenticationService} from '../../services/authentication.service';
 
 @Component({
     standalone: true,
@@ -13,6 +14,7 @@ import { HomepageTopBar } from '../homepage-topbar/homepage-topbar.component';
 export class HomepageComponent implements OnInit {
     readonly router = inject(Router);
     readonly metadatasService = inject(MetadataService);
+    private readonly authService = inject(AuthenticationService);
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly destroyRef = inject(DestroyRef);
 
@@ -39,6 +41,7 @@ export class HomepageComponent implements OnInit {
                         this.allModel.push(element);
                     }
                 }
+                this.allModel = this.filterByUserGroups(this.allModel);
                 const groupSet = new Set<string>(
                     this.allModel
                         .map(m => (m.metadata_group ?? '').trim())
@@ -52,8 +55,19 @@ export class HomepageComponent implements OnInit {
         });
     }
 
-    selectGroup(group: string | null) {
-        this.selectedGroup = this.selectedGroup === group ? null : group;
+    private filterByUserGroups(items: any[]): any[] {
+        const isAdminOrManager = this.authService.displayRoles?.some(r => r === 'Admin' || r === 'Manager');
+        if (isAdminOrManager) {
+            return items;
+        }
+        const userGroups: string[] = (this.authService.groups ?? []).map(g => g.startsWith('/') ? g.slice(1) : g);
+        return items.filter(m => {
+            const tableName: string = m.table_name ?? '';
+            return userGroups.some(g => g === tableName || g.startsWith(tableName + '_'));
+        });
+    }
+
+    selectGroup(group: string | null) {        this.selectedGroup = this.selectedGroup === group ? null : group;
         this.applyGroupFilter();
     }
 

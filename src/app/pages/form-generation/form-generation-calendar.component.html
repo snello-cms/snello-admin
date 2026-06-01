@@ -5,11 +5,13 @@
 
 <div class="sidebar-subpage">
   <h3>{{metadataName}} Calendar</h3>
-  <button type="button" (click)="newForm()" class="btn btn-add pull-right btn-block">
-    <i class="fa fa-plus-circle"></i>
-    Add
-  </button>
-  @if (metadata?.calendar_enabled) {
+  @if (canEditContent) {
+    <button type="button" (click)="newForm()" class="btn btn-add pull-right btn-block">
+      <i class="fa fa-plus-circle"></i>
+      Add
+    </button>
+  }
+  @if (metadata?.calendar_enabled && canEditContent) {
     <button type="button" (click)="newMassiveForm()" class="btn btn-primary pull-right btn-block" style="margin-right:.5rem">
       <i class="fa fa-layer-group"></i>
       Add massive

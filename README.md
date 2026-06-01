@@ -19,14 +19,68 @@ It provides a full UI to configure and manage every aspect of the headless CMS w
 - **Massive Modifications** — multi-step bulk editing flow to update many records inline with per-row or global save actions
 - **Select Queries** — build and test named SQL-like query templates exposed as API endpoints
 - **Conditions** — define filter rules applied at runtime to REST queries
+- **Actions** — configure PRE/POST action hooks by metadata and operation (`PERSIST`, `MERGE`, `DELETE`)
 - **Document & Image management** — upload, organise and preview files and images stored by the API
 - **Document preview and filtering** — MIME-type multiselect filter, image modal preview, and video preview with loop toggle
 - **Links** — manage URL mapping rules for the routing layer
-- **User & Role management** — administer users, assign roles and control permissions via the `permit` directive
+- **Authentication & Authorization** — Keycloak login/logout, route guards, role/group checks, and UI permission gating via the `permit` directive
 - **Monaco editor integration** — edit JSON, SQL and code payloads directly in the browser
 - **TinyMCE rich-text editor** — full WYSIWYG editing for long-text fields
 - **Google Maps components** — point and path pickers for geo-enabled metadata
 - **Chat widget** — built-in Snello chat widget panel
+
+## Authentication & Authorization
+
+Snello Admin uses **Keycloak** as identity provider and applies authorization at both route and UI levels.
+
+### Authentication
+
+- Unauthenticated users are redirected to Keycloak login.
+- User profile, roles and groups are loaded from the Keycloak token.
+- Logout is handled through Keycloak logout flow.
+
+### Route Authorization
+
+- **Role-protected routes** use route metadata (`data.roles`) and the global auth guard.
+- **Group-protected routes** (content area) use `requiresGroup: true` and require at least one group in token claims.
+
+### UI Authorization
+
+- The `permit` directive conditionally renders UI blocks by ACL role list.
+- Admin and content navigation entries are shown/hidden based on token roles.
+
+### Content List/View Role Matrix
+
+For content pages in form generation:
+
+- **`contents_edit`** (or `admin`):
+  - list page: can use **Add**, **Clone**, **Modify**, **View**
+  - view page: can use **Edit**, **Clone**, **Gallery**
+- **`contents_view`**:
+  - list page: can use **View** only (no add/clone/modify)
+  - view page: can use **Gallery** and **Back**
+
+## Actions Management
+
+The **Actions** area is used to configure server-side hooks linked to metadata lifecycle events.
+
+### What You Can Configure
+
+- **Name** and **Description**
+- **Metadata target** (`metadata_name`)
+- **Condition**: `PERSIST`, `MERGE`, `DELETE`
+- **Phase**: `PRE`, `POST`
+- **Body**: custom script/body payload executed by backend action engine
+
+### List and Filtering
+
+- Search by **name** and **metadata name**
+- Filter by **condition** and **phase**
+- Standard operations: **view** and **modify** existing actions, plus **add** new action
+
+### Editor Help
+
+- The edit page includes an **Info** dialog with a legend of available objects/services (`action`, `metadata`, `db`, `documents`, `mail`, etc.) and related callable functions.
 
 ## Massive Modifications
 
@@ -104,6 +158,9 @@ Each **Field Definition** defines how a column is rendered in forms and list vie
 - **Massive create in form generation** — the create route accepts `massive=true` and injects virtual fields (`date min`, `date max`, `cron expression`) to generate multiple records in one save.
 - **Massive date preview dialog** — cron occurrences are previewable before saving in massive mode.
 - **Multiselect legacy compatibility** — if legacy metadata stores a multiselect-like field as `type=select` and missing `input_type`, the UI falls back to multiselect behavior for known legacy naming patterns.
+- **Metadata visibility by group** — non-admin/non-manager users see only metadata linked to their Keycloak groups in homepage and content sidebar.
+- **Auth administration pages** — dedicated management pages for auth users and auth groups (`/auth-users`, `/auth-groups`).
+- **Chat interactions history** — admin-only page to inspect stored chat interactions.
 
 ## Quick Start
 

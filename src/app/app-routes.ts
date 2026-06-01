@@ -12,17 +12,20 @@ export const MainRoutes: Routes = [
     {
         path: 'home',
         loadComponent: () => import('./pages/homepage/homepage.component').then(m => m.HomepageComponent),
-        canActivate: [AppAuthGuard]
+        canActivate: [AppAuthGuard],
+        data: { requiresGroup: true }
     },
     {
         path: 'adminpage',
         loadComponent: () => import('./pages/admin-home/adminpage.component').then(m => m.AdminpageComponent),
-        canActivate: [AppAuthGuard]
+        canActivate: [AppAuthGuard],
+        data: { roles: ['Admin', 'Manager'] }
     },
     {
         path: 'metadata',
         component: OutletComponent,
         canActivate: [AppAuthGuard],
+        data: { roles: ['Admin', 'Manager'] },
         children: [
             {path: '', redirectTo: '/metadata/list', pathMatch: 'full'},
             {path: 'list', loadComponent: () => import('./pages/metadata/metadata-list.component').then(m => m.MetadataListComponent)},
@@ -39,6 +42,7 @@ export const MainRoutes: Routes = [
         path: 'fielddefinition',
         component: OutletComponent,
         canActivate: [AppAuthGuard],
+        data: { roles: ['Admin', 'Manager'] },
         children: [
             {path: '', redirectTo: '/fielddefinition/list', pathMatch: 'full'},
             {path: 'list', loadComponent: () => import('./pages/field-definition/field-definition-list.component').then(m => m.FieldDefinitionListComponent)},
@@ -50,6 +54,7 @@ export const MainRoutes: Routes = [
         path: 'condition',
         component: OutletComponent,
         canActivate: [AppAuthGuard],
+        data: { roles: ['Admin', 'Manager'] },
         children: [
             {path: '', redirectTo: '/condition/list', pathMatch: 'full'},
             {path: 'list', loadComponent: () => import('./pages/conditions/condition-list.component').then(m => m.ConditionListComponent)},
@@ -61,6 +66,7 @@ export const MainRoutes: Routes = [
         path: 'document',
         component: OutletComponent,
         canActivate: [AppAuthGuard],
+        data: { roles: ['Admin', 'Manager'] },
         children: [
             {path: '', redirectTo: '/document/list', pathMatch: 'full'},
             {path: 'list', loadComponent: () => import('./pages/documents/document-list.component').then(m => m.DocumentListComponent)},
@@ -73,6 +79,7 @@ export const MainRoutes: Routes = [
         path: 'images',
         component: OutletComponent,
         canActivate: [AppAuthGuard],
+        data: { roles: ['Admin', 'Manager'] },
         children: [
             {path: '', redirectTo: '/images/list', pathMatch: 'full'},
             {path: 'list', loadComponent: () => import('./pages/images/images-list.component').then(m => m.ImagesListComponent)},
@@ -83,6 +90,7 @@ export const MainRoutes: Routes = [
         path: 'videos',
         component: OutletComponent,
         canActivate: [AppAuthGuard],
+        data: { roles: ['Admin', 'Manager'] },
         children: [
             {path: '', redirectTo: '/videos/list', pathMatch: 'full'},
             {path: 'list', loadComponent: () => import('./pages/videos/videos-list.component').then(m => m.VideosListComponent)}
@@ -92,6 +100,7 @@ export const MainRoutes: Routes = [
         path: 'selectqueries',
         component: OutletComponent,
         canActivate: [AppAuthGuard],
+        data: { roles: ['Admin', 'Manager'] },
         children: [
             {path: '', redirectTo: '/selectqueries/list', pathMatch: 'full'},
             {path: 'list', loadComponent: () => import('./pages/selectquery/select-query-list.component').then(m => m.SelectQueryListComponent)},
@@ -103,6 +112,7 @@ export const MainRoutes: Routes = [
         path: 'aitools',
         component: OutletComponent,
         canActivate: [AppAuthGuard],
+        data: { roles: ['Admin', 'Manager'] },
         children: [
             {path: '', redirectTo: '/aitools/list', pathMatch: 'full'},
             {path: 'list', loadComponent: () => import('./pages/aitools/ai-tool-list.component').then(m => m.AiToolListComponent)},
@@ -114,6 +124,7 @@ export const MainRoutes: Routes = [
         path: 'links',
         component: OutletComponent,
         canActivate: [AppAuthGuard],
+        data: { roles: ['Admin', 'Manager'] },
         children: [
             {path: '', redirectTo: '/links/list', pathMatch: 'full'},
             {path: 'list', loadComponent: () => import('./pages/links/links-list.component').then(m => m.LinksListComponent)},
@@ -126,6 +137,7 @@ export const MainRoutes: Routes = [
         path: 'actions',
         component: OutletComponent,
         canActivate: [AppAuthGuard],
+        data: { roles: ['Admin', 'Manager'] },
         children: [
             {path: '', redirectTo: '/actions/list', pathMatch: 'full'},
             {path: 'list', loadComponent: () => import('./pages/actions/actions-list.component').then(m => m.ActionsListComponent)},
@@ -137,17 +149,20 @@ export const MainRoutes: Routes = [
     {
         path: 'datalistgeneral/list/:name',
         canActivate: [AppAuthGuard],
+        data: { requiresGroup: true },
         loadComponent: () => import('./pages/form-generation/form-generation-list-general.component').then(m => m.FormGenerationListGeneralComponent),
     },
     {
         path: 'calendar/list/:name',
         canActivate: [AppAuthGuard],
+        data: { requiresGroup: true },
         loadComponent: () => import('./pages/form-generation/form-generation-calendar.component').then(m => m.FormGenerationCalendarComponent),
     },
     {
         path: 'datalist',
         component: OutletComponent,
         canActivate: [AppAuthGuard],
+        data: { requiresGroup: true },
         children: [
             {
                 path: 'list/:name',
@@ -183,6 +198,7 @@ export const MainRoutes: Routes = [
         path: 'massive',
         component: OutletComponent,
         canActivate: [AppAuthGuard],
+        data: { roles: ['Admin', 'Manager'] },
         children: [
             {path: '', redirectTo: '/massive/metadata', pathMatch: 'full'},
             {path: 'metadata', loadComponent: () => import('./pages/massive/massive-metadata-select.component').then(m => m.MassiveMetadataSelectComponent)},
@@ -194,9 +210,35 @@ export const MainRoutes: Routes = [
         path: 'chatinteractions',
         component: OutletComponent,
         canActivate: [AppAuthGuard],
+        data: { roles: ['Admin', 'Manager'] },
         children: [
             {path: '', redirectTo: '/chatinteractions/list', pathMatch: 'full'},
             {path: 'list', loadComponent: () => import('./pages/chat-interactions/chat-interaction-list.component').then(m => m.ChatInteractionListComponent)},
+        ]
+    },
+    {
+        path: 'auth-users',
+        component: OutletComponent,
+        canActivate: [AppAuthGuard],
+        data: { roles: ['Admin', 'Manager'] },
+        children: [
+            {path: '', redirectTo: '/auth-users/list', pathMatch: 'full'},
+            {path: 'list', loadComponent: () => import('./pages/auth/auth-users-list.component').then(m => m.AuthUsersListComponent)},
+            {path: 'new', loadComponent: () => import('./pages/auth/auth-users-edit.component').then(m => m.AuthUsersEditComponent)},
+            {path: 'view/:id', loadComponent: () => import('./pages/auth/auth-users-view.component').then(m => m.AuthUsersViewComponent)},
+            {path: 'edit/:id', loadComponent: () => import('./pages/auth/auth-users-edit.component').then(m => m.AuthUsersEditComponent)}
+        ]
+    },
+    {
+        path: 'auth-groups',
+        component: OutletComponent,
+        canActivate: [AppAuthGuard],
+        data: { roles: ['Admin', 'Manager'] },
+        children: [
+            {path: '', redirectTo: '/auth-groups/list', pathMatch: 'full'},
+            {path: 'list', loadComponent: () => import('./pages/auth/auth-groups-list.component').then(m => m.AuthGroupsListComponent)},
+            {path: 'new', loadComponent: () => import('./pages/auth/auth-groups-edit.component').then(m => m.AuthGroupsEditComponent)},
+            {path: 'edit/:id', loadComponent: () => import('./pages/auth/auth-groups-edit.component').then(m => m.AuthGroupsEditComponent)}
         ]
     },
     {path: '**', loadComponent: () => import('./pages/homepage/homepage.component').then(m => m.HomepageComponent), canActivate: [AppAuthGuard]}
