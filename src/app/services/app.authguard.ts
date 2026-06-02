@@ -22,17 +22,20 @@ const isAccessAllowed = async (
     const realmRoles = grantedRoles.realmRoles ?? [];
     const resourceRoles = Object.values(grantedRoles.resourceRoles ?? {}).flat();
     const roles = [...realmRoles, ...resourceRoles];
+    const normalizedRoles = roles.map(role => (role ?? '').toLowerCase());
+    const isPrivilegedRole = normalizedRoles.includes('admin') || normalizedRoles.includes('manager');
 
     const requiredRoles = route.data['roles'] as string[] | undefined;
     if (requiredRoles && requiredRoles.length > 0) {
-        if (!requiredRoles.some(requiredRole => roles.includes(requiredRole))) {
+        if (!requiredRoles.some(requiredRole => normalizedRoles.includes((requiredRole ?? '').toLowerCase()))) {
             await router.navigate(['/home']);
             return false;
         }
     }
 
     const requiresGroup = route.data['requiresGroup'] as boolean | undefined;
-    if (requiresGroup) {
+    const isContentsRoute = route.routeConfig?.path === 'home';
+    if (requiresGroup && !(isContentsRoute && isPrivilegedRole)) {
         const tokenParsed = keycloak.tokenParsed as { groups?: string[] } | undefined;
         const groups = tokenParsed?.groups ?? [];
         if (groups.length === 0) {
