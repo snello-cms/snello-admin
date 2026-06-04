@@ -19,6 +19,7 @@ import {AuthUser} from '../../models/auth-user';
 })
 export class AuthGroupsListComponent extends AbstractListComponent<AuthGroup> implements OnInit {
 
+    allGroups: AuthGroup[] = [];
     selectedGroupUsers: AuthUser[] = [];
     selectedGroupName = '';
 
@@ -34,7 +35,47 @@ export class AuthGroupsListComponent extends AbstractListComponent<AuthGroup> im
 
     ngOnInit() {
         this.service.buildSearch();
-        this.firstReload = true;
+        this.loadGroups();
+    }
+
+    loadGroups() {
+        this.service.listAllGroups().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
+            groups => {
+                this.allGroups = groups || [];
+                this.applyFilters();
+            },
+            () => {
+                this.allGroups = [];
+                this.model = [];
+                this.service.listSize = 0;
+            }
+        );
+    }
+
+    onSearch(datatable: any) {
+        this.applyFilters();
+        datatable.first = 0;
+    }
+
+    onUndo(datatable: any) {
+        this.service.buildSearch();
+        this.applyFilters();
+        datatable.first = 0;
+    }
+
+    private applyFilters() {
+        const nameContains = (this.service.search?.name_contains || '').toLowerCase().trim();
+
+        if (!nameContains) {
+            this.model = [...this.allGroups];
+            this.service.listSize = this.model.length;
+            return;
+        }
+
+        this.model = this.allGroups.filter(group =>
+            (group.name || '').toLowerCase().includes(nameContains)
+        );
+        this.service.listSize = this.model.length;
     }
 
     public verifyGroups() {

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {catchError, map, take} from 'rxjs/operators';
+import {catchError, map, switchMap, take} from 'rxjs/operators';
 import {AbstractService} from '../common/abstract-service';
 import {MessageService} from 'primeng/api';
 import {AuthGroup} from '../models/auth-group';
@@ -31,8 +31,21 @@ export class AuthGroupService extends AbstractService<AuthGroup> {
 
     buildSearch() {
         this.search = {
-            _limit: 10
+            name_contains: ''
         };
+    }
+
+    listAllGroups(): Observable<AuthGroup[]> {
+        return this.withGroupsUrl(url => this.httpClient
+            .get<AuthGroup[]>(url)
+            .pipe(
+                map(groups => {
+                    const safeGroups = groups || [];
+                    this.listSize = safeGroups.length;
+                    return safeGroups;
+                }),
+                catchError(this.handleError.bind(this))
+            ));
     }
 
     verifyGroups(): Observable<any> {
@@ -55,5 +68,18 @@ export class AuthGroupService extends AbstractService<AuthGroup> {
         return this.httpClient
             .post<AuthGroup>(createUrl, body)
             .pipe(catchError(this.handleError.bind(this)));
+    }
+
+    private withGroupsUrl<R>(requestFactory: (url: string) => Observable<R>): Observable<R> {
+        if (this.url) {
+            return requestFactory(this.url);
+        }
+        return this.urlValue.pipe(
+            take(1),
+            switchMap(url => {
+                this.url = url;
+                return requestFactory(url);
+            })
+        );
     }
 }
