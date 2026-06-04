@@ -4,6 +4,7 @@ export class AuthUser {
     email: string;
     name: string;
     surname: string;
+    userType?: 'Admin' | 'Manager' | 'User';
     groupNames: string[];
     enabled: boolean;
     emailVerified: boolean;

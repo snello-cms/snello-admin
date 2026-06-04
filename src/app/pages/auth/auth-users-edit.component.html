@@ -49,9 +49,21 @@
               </div>
 
               <div class="form-group clearfix row">
+                <label class="label-text col-sm-3">User Type</label>
+                <div class="col-sm-9">
+                  <select class="form-control" [ngModel]="selectedUserType" (ngModelChange)="onUserTypeChange($event)" name="userType">
+                    @for (userType of userTypes; track userType) {
+                      <option [value]="userType">{{ userType }}</option>
+                    }
+                  </select>
+                </div>
+              </div>
+
+              @if (selectedUserType === 'User') {
+              <div class="form-group clearfix row">
                 <label class="label-text col-sm-3">Groups</label>
                 <div class="col-sm-9">
-                  @if (availableGroups.length > 0) {
+                  @if (availableMetadataGroups.length > 0) {
                     <div class="group-options">
                       <div style="margin-bottom: 12px;">
                         <label class="checkbox-inline" style="margin-right: 16px;">
@@ -71,7 +83,7 @@
                         </label>
                       </div>
 
-                      @for (group of availableGroups; track group.id) {
+                      @for (group of availableMetadataGroups; track group.id) {
                         <label class="checkbox-inline" style="margin-right: 16px; margin-bottom: 8px;">
                           <input type="checkbox"
                             [checked]="isGroupSelected(group.name)"
@@ -85,6 +97,7 @@
                   }
                 </div>
               </div>
+              }
 
               @if (!editMode) {
                 <div class="form-group clearfix row">

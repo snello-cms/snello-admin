@@ -56,7 +56,15 @@ export class HomepageComponent implements OnInit {
     }
 
     private filterByUserGroups(items: any[]): any[] {
-        const isAdminOrManager = this.authService.displayRoles?.some(r => r === 'Admin' || r === 'Manager');
+        const normalizedRoles = [
+            ...(this.authService.displayRoles ?? []),
+            ...(this.authService.roles ?? []),
+            ...(this.authService.extraroles ?? []),
+            ...((this.authService.groups ?? []).map(g => g.startsWith('/') ? g.slice(1) : g))
+        ]
+            .map(role => (role ?? '').trim().toLowerCase())
+            .filter(Boolean);
+        const isAdminOrManager = normalizedRoles.includes('admin') || normalizedRoles.includes('manager');
         if (isAdminOrManager) {
             return items;
         }
