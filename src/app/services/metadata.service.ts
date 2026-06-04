@@ -171,6 +171,12 @@ export class MetadataService extends AbstractService<Metadata> {
             .pipe(catchError(this.handleError.bind(this)));
     }
 
+    public importMetadatas(payload: any): Observable<any> {
+        return this.httpClient
+            .post(this.importUrl, payload)
+            .pipe(catchError(this.handleError.bind(this)));
+    }
+
     public getMetadataGroups(): Observable<string[]> {
         return this.urlValue.pipe(
             take(1),

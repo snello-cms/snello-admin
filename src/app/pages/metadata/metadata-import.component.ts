@@ -20,6 +20,7 @@ export class MetadataImportComponent {
 
     importFile: File | null = null;
     importFileName = '';
+    importPayload: any = null;
     importRows: MetadataImportPreviewRow[] = [];
     isImporting = false;
 
@@ -30,6 +31,7 @@ export class MetadataImportComponent {
     onImportFileSelected(event: Event) {
         const target = event.target as HTMLInputElement;
         if (!target?.files?.length) {
+            this.importPayload = null;
             return;
         }
 
@@ -42,9 +44,11 @@ export class MetadataImportComponent {
             try {
                 const raw = String(reader.result || '{}');
                 const parsed = JSON.parse(raw);
+                this.importPayload = parsed;
                 this.buildImportPreview(parsed);
             } catch (error) {
                 this.importRows = [];
+                this.importPayload = null;
                 this.messageService.add({
                     severity: 'error',
                     summary: 'Invalid JSON file.'
@@ -54,6 +58,7 @@ export class MetadataImportComponent {
 
         reader.onerror = () => {
             this.importRows = [];
+            this.importPayload = null;
             this.messageService.add({
                 severity: 'error',
                 summary: 'Unable to read file.'
@@ -64,7 +69,7 @@ export class MetadataImportComponent {
     }
 
     uploadImportFile() {
-        if (!this.importFile) {
+        if (!this.importPayload) {
             this.messageService.add({
                 severity: 'warn',
                 summary: 'Select a file first.'
@@ -73,7 +78,7 @@ export class MetadataImportComponent {
         }
 
         this.isImporting = true;
-        this.service.importMetadatasFile(this.importFile).subscribe(
+        this.service.importMetadatas(this.importPayload).subscribe(
             () => {
                 this.messageService.add({
                     severity: 'success',
