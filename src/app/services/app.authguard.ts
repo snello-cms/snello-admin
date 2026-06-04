@@ -34,8 +34,7 @@ const isAccessAllowed = async (
     }
 
     const requiresGroup = route.data['requiresGroup'] as boolean | undefined;
-    const isContentsRoute = route.routeConfig?.path === 'home';
-    if (requiresGroup && !(isContentsRoute && isPrivilegedRole)) {
+    if (requiresGroup && !isPrivilegedRole) {
         const tokenParsed = keycloak.tokenParsed as { groups?: string[] } | undefined;
         const groups = tokenParsed?.groups ?? [];
         if (groups.length === 0) {
