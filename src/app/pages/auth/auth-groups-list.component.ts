@@ -41,7 +41,7 @@ export class AuthGroupsListComponent extends AbstractListComponent<AuthGroup> im
     loadGroups() {
         this.service.listAllGroups().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
             groups => {
-                this.allGroups = groups || [];
+                this.allGroups = this.sortGroups(groups || []);
                 this.applyFilters();
             },
             () => {
@@ -49,6 +49,12 @@ export class AuthGroupsListComponent extends AbstractListComponent<AuthGroup> im
                 this.model = [];
                 this.service.listSize = 0;
             }
+        );
+    }
+
+    private sortGroups(groups: AuthGroup[]): AuthGroup[] {
+        return [...groups].sort((a, b) =>
+            (a.name || '').localeCompare((b.name || ''), 'it', { sensitivity: 'base' })
         );
     }
 
