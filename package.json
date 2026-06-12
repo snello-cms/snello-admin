@@ -48,7 +48,7 @@
     "primeicons": "^6.0.1",
     "primeng": "^21.1.8",
     "rxjs": "^7.8.2",
-    "tinymce": "^8.4.0",
+    "tinymce": "^8.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.15.1"
   },
