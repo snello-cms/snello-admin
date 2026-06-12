@@ -63,20 +63,20 @@
 
           <div class="table-wrapper clearfix">
 
-            <p-table #table [paginator]="true" [resizableColumns]="true" lazy="true"
+            <p-table #table [paginator]="true" [resizableColumns]="true" columnResizeMode="expand" lazy="true"
               (onLazyLoad)="lazyLoad($event)" [rows]="10"
               [totalRecords]="apiService.listSize" [value]="model">
 
               <ng-template let-columns pTemplate="header">
                 <tr class="sort-header">
-                  <th class="Operations">Index</th>
+                  <th class="Operations" pResizableColumn>Index</th>
                   @for (def of fieldDefinitionsList; track def.uuid ?? def.name ?? $index) {
                     @if (def.show_in_list) {
-                      <th>{{def.label}}</th>
+                      <th pResizableColumn>{{def.label}}</th>
                     }
                   }
 
-                  <th class="Operations">Operations</th>
+                  <th class="Operations" pResizableColumn>Operations</th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="emptymessage">
@@ -93,7 +93,7 @@
                     @if (def.show_in_list) {
                       <td>
                         @if (def.type === 'image') {
-                          @if ((rowData[def.name] | async); as imageValue) {
+                          @if ((getRowFieldValueObservable(rowData, def) | async); as imageValue) {
                             @if (hasImagePreview(imageValue)) {
                               <img
                                 class="list-image-preview"
@@ -106,7 +106,7 @@
                             <span class="list-image-empty">-</span>
                           }
                         } @else if (def.type === 'media') {
-                          @if ((rowData[def.name] | async); as mediaValue) {
+                          @if ((getRowFieldValueObservable(rowData, def) | async); as mediaValue) {
                             @if (isMediaImage(mediaValue)) {
                               <img
                                 class="list-media-preview"
@@ -121,7 +121,7 @@
                             <span class="list-image-empty">-</span>
                           }
                         } @else {
-                          {{rowData[def.name] | async  }}
+                          {{ formatListCellValue((getRowFieldValueObservable(rowData, def) | async), def) }}
                         }
                       </td>
                     }

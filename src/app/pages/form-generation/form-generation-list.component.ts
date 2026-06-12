@@ -61,6 +61,7 @@ import Keycloak, {KeycloakTokenParsed} from 'keycloak-js';
     `]
 })
 export class FormGenerationListComponent implements OnInit {
+    private static readonly LIST_TEXT_MAX_LENGTH = 100;
     fieldDefinitionsList: FieldDefinition[] = [];
     fieldDefinitionsSearch: FieldDefinition[] = [];
 
@@ -432,6 +433,32 @@ export class FormGenerationListComponent implements OnInit {
         return 'fa fa-file-o';
     }
 
+    public formatListCellValue(value: unknown, fieldDefinition: FieldDefinition): string {
+        if (value == null) {
+            return '';
+        }
+
+        const normalizedValue = typeof value === 'string' ? value : String(value);
+        if (fieldDefinition.type !== 'textarea') {
+            return normalizedValue;
+        }
+
+        if (normalizedValue.length <= FormGenerationListComponent.LIST_TEXT_MAX_LENGTH) {
+            return normalizedValue;
+        }
+
+        return `${normalizedValue.slice(0, FormGenerationListComponent.LIST_TEXT_MAX_LENGTH)}...`;
+    }
+
+    public getRowFieldValueObservable(rowData: Record<string, unknown>, fieldDefinition: FieldDefinition): Observable<unknown> {
+        const fieldName = fieldDefinition.name;
+        if (!fieldName) {
+            return of('');
+        }
+
+        return (rowData[fieldName] as Observable<unknown>) ?? of('');
+    }
+
     private toValidDate(value: unknown): Date | null {
         if (value instanceof Date) {
             return Number.isNaN(value.getTime()) ? null : value;
@@ -759,7 +786,7 @@ export class FormGenerationListComponent implements OnInit {
         this.refresh(datatable);
     }
 
-    public onSearchEnter(event: KeyboardEvent, datatable: any) {
+    public onSearchEnter(event: Event, datatable: any) {
         event.preventDefault();
         this.reload(datatable);
     }

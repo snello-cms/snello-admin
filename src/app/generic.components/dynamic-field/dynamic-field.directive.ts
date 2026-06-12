@@ -38,6 +38,7 @@ export class DynamicFieldDirective implements OnInit {
     async ngOnInit() {
         let componentType: Type<any> | undefined;
         const field = this.field();
+        const isSearchField = !!(field as FieldDefinition & { __isSearchField?: boolean }).__isSearchField;
         const fieldName = `${field.name ?? ''} ${field.label ?? ''}`.toLowerCase();
         const isLegacyStaticMultiselect = field.type === 'select'
             && !field.input_type
@@ -66,6 +67,8 @@ export class DynamicFieldDirective implements OnInit {
             componentType = (await import('../multilookup/multilookup.component')).MultiLookupComponent;
         } else if (this.view() && field.type === 'multijoin' && field.input_type === 'multilookup') {
             componentType = (await import('../multilookup/multilookup-view.component')).MultiLookupViewComponent;
+        } else if (!this.view() && isSearchField && field.type === 'textarea') {
+            componentType = InputComponent;
         } else {
             componentType = this.view()
                 ? componentViewMapper[field.type]
