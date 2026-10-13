@@ -3,10 +3,10 @@ import * as L from 'leaflet';
 export const DEFAULT_MAP_CENTER: L.LatLngTuple = [45.4642, 9.19];
 
 export function addBaseTileLayer(map: L.Map): L.TileLayer {
-  return L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
-    subdomains: 'abcd',
-    maxZoom: 20,
+  return L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors',
+    subdomains: 'abc',
+    maxZoom: 19,
     crossOrigin: true,
     referrerPolicy: 'strict-origin-when-cross-origin'
   }).addTo(map);

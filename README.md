@@ -133,8 +133,8 @@ Each **Field Definition** defines how a column is rendered in forms and list vie
 | `realtionships` | Relationships | Embedded list of related records from a linked metadata table |
 | `media` | Media Upload | File/document upload linked to the document storage |
 | `image` | Image Upload | Image upload with preview; supports derived format generation |
-| `gmaplocation` | Map Point Picker | Geo-point selector on Google Maps |
-| `gmappath` | Map Path Picker | Geo-path (polyline) selector on Google Maps |
+| `gmaplocation` | Map Point Picker | Geo-point selector using Leaflet and OpenStreetMap tiles (no API key required) |
+| `gmappath` | Map Path Picker | Geo-path (polyline) selector using Leaflet and OpenStreetMap tiles (no API key required) |
 
 ### Common Field Options
 
@@ -221,4 +221,3 @@ ng serve --proxy-config proxy.conf-local.json
 ```
 
 Both configs forward `/api` and `/files` paths to the configured backend.
-
