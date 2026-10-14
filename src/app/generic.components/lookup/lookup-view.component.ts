@@ -1,5 +1,5 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -20,6 +20,7 @@ import { ApiService } from '../../services/api.service';
       }
     `,
     styles: [],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, AsyncPipe]
 })
 export class LookupViewComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FieldDefinition } from '../../models/field-definition';
 import { CommonModule } from '@angular/common';
@@ -54,6 +54,7 @@ import { CommonModule } from '@angular/common';
         }
         `
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, CommonModule]
 })
 export class RealtionshipsViewComponent implements OnInit {

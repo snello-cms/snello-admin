@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {AbstractListComponent} from '../../common/abstract-list-component';
 import {Router} from '@angular/router';
 import {Condition} from '../../models/condtion';
@@ -15,6 +15,7 @@ import { TableModule } from 'primeng/table';
 @Component({
     standalone: true,
     templateUrl: './condition-list.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, SelectModule, TableModule, PrimeTemplate]
 })
 export class ConditionListComponent extends AbstractListComponent<Condition> implements OnInit {

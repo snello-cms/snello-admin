@@ -1,5 +1,5 @@
 import {CommonModule} from '@angular/common';
-import {Component, inject} from '@angular/core';
+import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CdkDragDrop, DragDropModule, copyArrayItem, moveItemInArray} from '@angular/cdk/drag-drop';
@@ -25,6 +25,7 @@ import {WizardField, WizardStep} from '../../models/wizard-field';
     selector: 'metadata-wizard',
     templateUrl: './metadata-wizard.component.html',
     styleUrl: './metadata-wizard.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         CommonModule,
         SideBarComponent,

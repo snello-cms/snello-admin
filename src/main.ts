@@ -1,7 +1,7 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter, withPreloading, PreloadAllModules, withHashLocation, withComponentInputBinding } from '@angular/router';
 import { importProvidersFrom, LOCALE_ID, provideZoneChangeDetection } from '@angular/core';
-import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS, withXhr } from '@angular/common/http';
 import { registerLocaleData } from '@angular/common';
 import localeIt from '@angular/common/locales/it';
 
@@ -40,7 +40,7 @@ const bootstrap = async (): Promise<void> => {
                 }
             }),
             provideRouter(MainRoutes, withPreloading(PreloadAllModules), withHashLocation(), withComponentInputBinding()),
-            provideHttpClient(withInterceptorsFromDi()),
+            provideHttpClient(withXhr(), withInterceptorsFromDi()),
             { provide: HTTP_INTERCEPTORS, useClass: BasicHttpInterceptor, multi: true },
             { provide: LOCALE_ID, useValue: 'it' },
             MessageService,

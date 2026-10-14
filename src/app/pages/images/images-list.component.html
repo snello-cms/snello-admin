@@ -133,7 +133,7 @@
 
 <p-dialog 
   [(visible)]="showImageDialog" 
-  [header]="selectedImagePreview?.original_name" 
+  [header]="$safeNavigationMigration(selectedImagePreview?.original_name)"
   [modal]="true" 
   [maximizable]="true"
   [style]="{width: '90vw', height: '90vh'}"

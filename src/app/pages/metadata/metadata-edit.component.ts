@@ -1,4 +1,4 @@
-import {Component, OnInit, inject} from '@angular/core';
+import {Component, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {Metadata} from '../../models/metadata';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -16,6 +16,7 @@ import { AutoComplete } from 'primeng/autocomplete';
 @Component({
     standalone: true,
     templateUrl: './metadata-edit.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, SelectModule, PrimeTemplate, ToggleSwitchModule, AutoComplete]
 })
 export class MetadataEditComponent extends AbstractEditComponent<Metadata>

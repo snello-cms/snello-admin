@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -18,6 +18,7 @@ import {DialogModule} from 'primeng/dialog';
 @Component({
     standalone: true,
     templateUrl: './actions-edit.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, SelectModule, InputText, Textarea, DialogModule]
 })
 export class ActionsEditComponent extends AbstractEditComponent<Action> implements OnInit {

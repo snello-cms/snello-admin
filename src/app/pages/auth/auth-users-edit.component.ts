@@ -1,4 +1,4 @@
-import {Component, OnInit, inject} from '@angular/core';
+import {Component, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {ConfirmationService, MessageService} from 'primeng/api';
@@ -15,6 +15,7 @@ import {AuthGroup} from '../../models/auth-group';
 @Component({
     standalone: true,
     templateUrl: './auth-users-edit.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, CheckboxModule, RouterLink]
 })
 export class AuthUsersEditComponent extends AbstractEditComponent<AuthUser> implements OnInit {

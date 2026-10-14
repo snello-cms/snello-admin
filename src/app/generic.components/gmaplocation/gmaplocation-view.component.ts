@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FieldDefinition } from '../../models/field-definition';
 import { parsePoint } from '../map-utils';
@@ -8,6 +8,7 @@ import { parsePoint } from '../map-utils';
   selector: 'gmaplocation-view',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
+  changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="form-group clearfix row" [formGroup]="group">
       <label class="col-sm-3">{{ field?.name }}</label>

@@ -1,4 +1,4 @@
-import {Component, DestroyRef, OnInit, ViewChild, inject} from '@angular/core';
+import {Component, DestroyRef, OnInit, ViewChild, inject, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarOptions, DatesSetArg, EventClickArg, EventInput} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -22,6 +22,7 @@ import Keycloak, {KeycloakTokenParsed} from 'keycloak-js';
 @Component({
     standalone: true,
     templateUrl: './form-generation-calendar.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, HomepageTopBar, FullCalendarModule, DynamicFormComponent, DynamicSearchFormComponent, DialogModule]
 })
 export class FormGenerationCalendarComponent implements OnInit {

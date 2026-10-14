@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {ActivatedRoute, Params, Router} from '@angular/router';
 import {FieldDefinitionService} from '../../services/field-definition.service';
@@ -20,6 +20,7 @@ import { ToggleSwitchModule } from 'primeng/toggleswitch';
 @Component({
     standalone: true,
     templateUrl: './field-definition-edit.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, SelectModule, InputText, Textarea, ToggleSwitchModule]
 })
 export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDefinition> implements OnInit {

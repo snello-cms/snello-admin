@@ -1,4 +1,4 @@
-import {Component, OnInit, inject} from '@angular/core';
+import {Component, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import {AbstractListComponent} from '../../common/abstract-list-component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FieldDefinitionService} from '../../services/field-definition.service';
@@ -16,6 +16,7 @@ import {MAP_INPUT_TO_FIELD} from '../../constants/constants';
 @Component({
     standalone: true,
     templateUrl: './field-definition-list.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, SelectModule, TableModule, PrimeTemplate]
 })
 export class FieldDefinitionListComponent extends AbstractListComponent<FieldDefinition> implements OnInit {

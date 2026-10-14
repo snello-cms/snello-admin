@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {AbstractListComponent} from '../../common/abstract-list-component';
 import {Router} from '@angular/router';
@@ -16,6 +16,7 @@ import {CopyClipboardDirective} from '../../directives/copy-clipboard.directive'
 @Component({
     standalone: true,
     templateUrl: './chat-interaction-list.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CommonModule, SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, TableModule, PrimeTemplate, DialogModule, CopyClipboardDirective]
 })
 export class ChatInteractionListComponent extends AbstractListComponent<ChatInteraction> implements OnInit {

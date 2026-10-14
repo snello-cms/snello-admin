@@ -1,4 +1,4 @@
-import {Component, OnInit, inject, input, output} from '@angular/core';
+import {Component, OnInit, inject, input, output, ChangeDetectionStrategy} from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import {FieldDefinition} from '../../models/field-definition';
 import { DynamicFieldDirective } from '../dynamic-field/dynamic-field.directive';
@@ -15,6 +15,7 @@ import { DynamicFieldDirective } from '../dynamic-field/dynamic-field.directive'
     </form>
     `,
     styles: [],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, DynamicFieldDirective]
 })
 export class DynamicSearchFormComponent implements OnInit {

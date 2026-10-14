@@ -1,4 +1,4 @@
-import {Component, OnInit, inject} from '@angular/core';
+import {Component, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import {Router} from '@angular/router';
 import {Metadata} from '../../models/metadata';
 import {MetadataService} from '../../services/metadata.service';
@@ -18,6 +18,7 @@ import {forkJoin, of} from 'rxjs';
     selector: 'app-massive-metadata-select',
     templateUrl: './massive-metadata-select.component.html',
     styleUrls: ['./massive-metadata-select.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, TableModule, PrimeTemplate]
 })
 export class MassiveMetadataSelectComponent extends AbstractListComponent<Metadata> implements OnInit {

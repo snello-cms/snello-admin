@@ -1,4 +1,4 @@
-import {Component, OnInit, DestroyRef, inject} from '@angular/core';
+import {Component, OnInit, DestroyRef, inject, ChangeDetectionStrategy} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import {FieldDefinition} from '../../models/field-definition';
@@ -34,6 +34,7 @@ import { AsyncPipe } from '@angular/common';
         }
         `,
     styles: [],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, AutoComplete, AsyncPipe]
 })
 export class JoinComponent implements OnInit {

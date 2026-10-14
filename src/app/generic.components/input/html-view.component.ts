@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import {FieldDefinition} from '../../models/field-definition';
 import {SelectItem} from 'primeng/api';
@@ -14,6 +14,7 @@ import {SelectItem} from 'primeng/api';
         </div>
     `,
     styles: [],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule]
 })
 export class HtmlViewComponent implements OnInit {

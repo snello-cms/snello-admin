@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, DestroyRef, inject } from '@angular/core';
+import { Component, OnInit, DestroyRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
@@ -34,7 +34,7 @@ import { Document } from '../../models/document';
 
     <p-dialog
       [(visible)]="showImageDialog"
-      [header]="selectedDocument?.original_name"
+      [header]="$safeNavigationMigration(selectedDocument?.original_name)"
       [modal]="true"
       [maximizable]="true"
       [style]="{width: '90vw', height: '90vh'}"
@@ -54,6 +54,7 @@ import { Document } from '../../models/document';
   `,
   styleUrls: ['./image-view.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CommonModule, ReactiveFormsModule, DialogModule]
 })
 export class ImageViewComponent implements OnInit {

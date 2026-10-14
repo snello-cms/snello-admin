@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DocumentService } from '../../services/document.service';
 import { Document } from '../../models/document';
@@ -8,6 +8,7 @@ import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component'
 @Component({
     standalone: true,
     templateUrl: './document-view.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar]
 })
 export class DocumentViewComponent implements OnInit {

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import {FieldDefinition} from '../../models/field-definition';
 import { Textarea } from 'primeng/textarea';
@@ -19,6 +19,7 @@ import { Textarea } from 'primeng/textarea';
         </div>
         `,
     styles: [],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, Textarea]
 })
 export class TextAreaComponent implements OnInit {

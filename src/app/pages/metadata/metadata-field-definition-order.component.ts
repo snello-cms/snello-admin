@@ -1,4 +1,4 @@
-import {Component, OnInit, inject} from '@angular/core';
+import {Component, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {forkJoin} from 'rxjs';
@@ -16,6 +16,7 @@ import {AdminhomeTopBar} from '../adminhome-topbar/adminhome-topbar.component';
     standalone: true,
     templateUrl: './metadata-field-definition-order.component.html',
     styleUrl: './metadata-field-definition-order.component.scss',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CommonModule, SideBarComponent, AdminhomeTopBar, OrderListModule, ButtonModule]
 })
 export class MetadataFieldDefinitionOrderComponent implements OnInit {

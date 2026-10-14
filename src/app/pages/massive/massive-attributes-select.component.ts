@@ -1,4 +1,4 @@
-import {Component, OnInit, inject} from '@angular/core';
+import {Component, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FieldDefinition} from '../../models/field-definition';
 import {FieldDefinitionService} from '../../services/field-definition.service';
@@ -15,6 +15,7 @@ import {CommonModule} from '@angular/common';
     selector: 'app-massive-attributes-select',
     templateUrl: './massive-attributes-select.component.html',
     styleUrls: ['./massive-attributes-select.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, CommonModule]
 })
 export class MassiveAttributesSelectComponent implements OnInit {

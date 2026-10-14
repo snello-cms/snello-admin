@@ -1,4 +1,4 @@
-import {Component, DestroyRef, ElementRef, HostListener, OnInit, ViewChild, inject} from '@angular/core';
+import {Component, DestroyRef, ElementRef, HostListener, OnInit, ViewChild, inject, ChangeDetectionStrategy} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {DataListService} from '../../services/data-list.service';
@@ -12,6 +12,7 @@ import {AuthenticationService} from '../../services/authentication.service';
     standalone: true,
     templateUrl: './homepage-topbar.component.html',
     imports: [RouterLink],
+    changeDetection: ChangeDetectionStrategy.Eager,
     styles: [`
         :host {
             display: block;

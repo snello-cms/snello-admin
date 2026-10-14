@@ -1,4 +1,4 @@
-import {Component, OnInit, DestroyRef, inject} from '@angular/core';
+import {Component, OnInit, DestroyRef, inject, ChangeDetectionStrategy} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {ReactiveFormsModule, UntypedFormGroup} from '@angular/forms';
 import {MultiSelectModule} from 'primeng/multiselect';
@@ -28,6 +28,7 @@ import {of} from 'rxjs';
       </div>
     `,
     styles: [],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, MultiSelectModule]
 })
 export class MultiSelectComponent implements OnInit {

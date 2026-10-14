@@ -1,5 +1,5 @@
 import {AbstractListComponent} from '../../common/abstract-list-component';
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {Router} from '@angular/router';
 import {Document} from '../../models/document';
@@ -17,6 +17,7 @@ import { CopyClipboardDirective } from '../../directives/copy-clipboard.directiv
 @Component({
     standalone: true,
     templateUrl: './document-list.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CommonModule, SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, TableModule, MultiSelectModule, PrimeTemplate, DialogModule, CopyClipboardDirective]
 })
 export class DocumentListComponent extends AbstractListComponent<Document> implements OnInit {

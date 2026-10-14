@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FieldDefinition} from '../../models/field-definition';
 import {DynamicFormComponent} from '../../generic.components/dynamic-form/dynamic-form.component';
@@ -9,6 +9,7 @@ import Keycloak, {KeycloakTokenParsed} from 'keycloak-js';
 @Component({
     standalone: true,
     templateUrl: './form-generation-view.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, HomepageTopBar, DynamicFormComponent]
 })
 export class FormGenerationViewComponent implements OnInit {

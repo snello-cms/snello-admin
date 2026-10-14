@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {ADMIN_ITEMS, SEVERITY_VALUES} from '../../constants/constants';
 import {MessageService} from 'primeng/api';
@@ -10,6 +10,7 @@ import { AuthenticationService } from '../../services/authentication.service';
 @Component({
     standalone: true,
     templateUrl: './adminpage.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar, PermitDirective, RouterLink]
 })
 export class AdminpageComponent {

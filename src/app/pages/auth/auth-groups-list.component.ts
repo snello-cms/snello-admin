@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {AbstractListComponent} from '../../common/abstract-list-component';
 import {Router, RouterLink} from '@angular/router';
 import {ConfirmationService, MessageService, PrimeTemplate} from 'primeng/api';
@@ -15,6 +15,7 @@ import {AuthUser} from '../../models/auth-user';
 @Component({
     standalone: true,
     templateUrl: './auth-groups-list.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, TableModule, PrimeTemplate, RouterLink]
 })
 export class AuthGroupsListComponent extends AbstractListComponent<AuthGroup> implements OnInit {

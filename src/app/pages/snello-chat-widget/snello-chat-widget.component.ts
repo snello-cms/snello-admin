@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectorRef, Component, DestroyRef, ElementRef, HostBinding, OnDestroy, SecurityContext, ViewChild, inject} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, DestroyRef, ElementRef, HostBinding, OnDestroy, SecurityContext, ViewChild, inject, ChangeDetectionStrategy} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {NavigationEnd, Router} from '@angular/router';
@@ -17,6 +17,7 @@ import {AuthenticationService} from '../../services/authentication.service';
     standalone: true,
     selector: 'snello-chat-widget',
     templateUrl: './snello-chat-widget.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./snello-chat-widget.component.scss']
 })
 export class SnelloChatWidgetComponent implements AfterViewInit, OnDestroy {

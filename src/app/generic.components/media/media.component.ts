@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, DestroyRef, inject} from '@angular/core';
+import {Component, OnInit, ViewChild, DestroyRef, inject, ChangeDetectionStrategy} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import {FieldDefinition} from '../../models/field-definition';
@@ -20,8 +20,8 @@ import {Document} from '../../models/document';
           <label class="col-sm-3">{{ field.name }}{{ field.mandatory ? ' (*)' : '' }}</label>
           <div class="col-sm-9">
             <div class="upload-box">
-              <p-fileUpload #fileInput mode="basic" [name]="field.name" (onSelect)="uploader($event)" [disabled]="!field.is_edit">
-              </p-fileUpload>
+              <p-fileupload #fileInput mode="basic" [name]="field.name" (onSelect)="uploader($event)" [disabled]="!field.is_edit">
+              </p-fileupload>
             </div>
             <div class="clearfix"></div>
             @if (uploadedFile) {
@@ -69,6 +69,7 @@ import {Document} from '../../models/document';
                 </p-dialog>
         `,
     styles: [],
+        changeDetection: ChangeDetectionStrategy.Eager,
         imports: [ReactiveFormsModule, FormsModule, FileUpload, DialogModule]
 })
 export class MediaComponent implements OnInit {

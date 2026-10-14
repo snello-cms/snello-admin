@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, DestroyRef, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, DestroyRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntypedFormGroup, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FieldDefinition } from '../../models/field-definition';
@@ -140,6 +140,7 @@ import { DynamicSearchFormComponent } from '../dynamic-form/dynamic-search-form.
             padding: 0.5rem;
         }`
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, FormsModule, SelectModule, TableModule, DialogModule, CommonModule, DynamicSearchFormComponent]
 })
 export class RealtionshipsComponent implements OnInit {

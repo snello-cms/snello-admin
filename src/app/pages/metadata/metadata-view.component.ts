@@ -1,4 +1,4 @@
-import {Component, OnInit, inject} from '@angular/core';
+import {Component, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import {Metadata} from '../../models/metadata';
 import {ActivatedRoute, NavigationExtras, Router} from '@angular/router';
 import {MetadataService} from '../../services/metadata.service';
@@ -13,6 +13,7 @@ import { TableModule } from 'primeng/table';
 @Component({
     standalone: true,
     templateUrl: './metadata-view.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar, TableModule, PrimeTemplate]
 })
 export class MetadataViewComponent extends AbstractViewComponent<Metadata>

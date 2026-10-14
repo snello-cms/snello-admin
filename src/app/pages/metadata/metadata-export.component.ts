@@ -1,4 +1,4 @@
-import {Component, OnInit, inject} from '@angular/core';
+import {Component, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import {Router} from '@angular/router';
 import {Metadata} from '../../models/metadata';
 import {MetadataService} from '../../services/metadata.service';
@@ -11,6 +11,7 @@ import {PrimeTemplate} from 'primeng/api';
 @Component({
     standalone: true,
     templateUrl: './metadata-export.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar, TableModule, PrimeTemplate]
 })
 export class MetadataExportComponent implements OnInit {

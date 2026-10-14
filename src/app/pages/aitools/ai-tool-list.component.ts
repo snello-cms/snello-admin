@@ -1,6 +1,6 @@
 import { ConfirmationService, MessageService, PrimeTemplate } from 'primeng/api';
 import {AbstractListComponent} from '../../common/abstract-list-component';
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {Router} from '@angular/router';
 import {AiToolService} from '../../services/ai-tool.service';
 import {AiTool} from '../../models/ai-tool';
@@ -13,6 +13,7 @@ import { TableModule } from 'primeng/table';
 @Component({
     standalone: true,
     templateUrl: './ai-tool-list.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, TableModule, PrimeTemplate]
 })
 export class AiToolListComponent extends AbstractListComponent<AiTool> implements OnInit {

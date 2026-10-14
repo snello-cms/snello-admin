@@ -1,6 +1,6 @@
 import {DocumentService} from '../../services/document.service';
 import {Document} from '../../models/document';
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild, ChangeDetectionStrategy} from '@angular/core';
 import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ConfirmationService, MessageService} from 'primeng/api';
@@ -19,6 +19,7 @@ import { optionalQueryParam } from '../../common/route-params.util';
 @Component({
     standalone: true,
     templateUrl: './document-edit.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, FileUpload, ProgressBar, Panel]
 })
 export class DocumentEditComponent

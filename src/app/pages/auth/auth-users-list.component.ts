@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {AbstractListComponent} from '../../common/abstract-list-component';
 import {Router, RouterLink} from '@angular/router';
 import {ConfirmationService, MessageService, PrimeTemplate} from 'primeng/api';
@@ -13,6 +13,7 @@ import {TableModule} from 'primeng/table';
 @Component({
     standalone: true,
     templateUrl: './auth-users-list.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, TableModule, PrimeTemplate, RouterLink]
 })
 export class AuthUsersListComponent extends AbstractListComponent<AuthUser> implements OnInit {

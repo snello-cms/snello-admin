@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ChangeDetectionStrategy} from '@angular/core';
 import {ADMIN_ITEMS} from '../../constants/constants';
 import { RouterLink } from '@angular/router';
 import { PermitDirective } from '../../directives/permit.directive';
@@ -7,6 +7,7 @@ import { PermitDirective } from '../../directives/permit.directive';
     selector: 'adminhome-topbar',
     standalone: true,
     templateUrl: './adminhome-topbar.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [RouterLink, PermitDirective]
 })
 export class AdminhomeTopBar {

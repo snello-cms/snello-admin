@@ -42,7 +42,7 @@
             <div class="form-group clearfix row">
               <label class="label-text col-sm-3">Metadata Group</label>
               <div class="col-sm-9">
-                <p-autoComplete
+                <p-autocomplete
                   [(ngModel)]="element.metadata_group"
                   [suggestions]="filteredMetadataGroups"
                   (completeMethod)="filterMetadataGroups($event)"
@@ -53,7 +53,7 @@
                   [autoZIndex]="true"
                   [baseZIndex]="3000"
                   placeholder="Metadata group">
-                </p-autoComplete>
+                </p-autocomplete>
               </div>
             </div>
 
@@ -266,4 +266,3 @@
       </div>
     </div>
   </div>
-

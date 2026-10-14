@@ -1,4 +1,4 @@
-import {Component, OnInit, inject} from '@angular/core';
+import {Component, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ConfirmationService, MessageService} from 'primeng/api';
@@ -13,6 +13,7 @@ import {ParameterDraft, ParameterType} from '../../models/parameter-draft';
 @Component({
     standalone: true,
     templateUrl: './ai-tool-edit.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText]
 })
 export class AiToolEditComponent extends AbstractEditComponent<AiTool>

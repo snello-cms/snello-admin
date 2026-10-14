@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
 import {Router} from '@angular/router';
 import {MetadataService} from '../../services/metadata.service';
 import {MessageService} from 'primeng/api';
@@ -11,6 +11,7 @@ import {MetadataImportPreviewRow} from '../../models/metadata-import-preview-row
 @Component({
     standalone: true,
     templateUrl: './metadata-import.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar, TableModule, PrimeTemplate]
 })
 export class MetadataImportComponent {

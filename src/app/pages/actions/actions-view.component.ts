@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AbstractViewComponent} from '../../common/abstract-view-component';
 import {ConfirmationService, MessageService} from 'primeng/api';
@@ -10,6 +10,7 @@ import {AdminhomeTopBar} from '../adminhome-topbar/adminhome-topbar.component';
 @Component({
     standalone: true,
     templateUrl: './actions-view.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar]
 })
 export class ActionsViewComponent extends AbstractViewComponent<Action> implements OnInit {

@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, DestroyRef, OnInit, inject} from '@angular/core';
+import {ChangeDetectorRef, Component, DestroyRef, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {MetadataService} from '../../services/metadata.service';
@@ -9,6 +9,7 @@ import {AuthenticationService} from '../../services/authentication.service';
 @Component({
     standalone: true,
     templateUrl: './homepage.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, HomepageTopBar, RouterLink]
 })
 export class HomepageComponent implements OnInit {

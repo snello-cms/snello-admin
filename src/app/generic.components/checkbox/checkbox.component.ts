@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import {FieldDefinition} from '../../models/field-definition';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
@@ -27,6 +27,7 @@ import { CheckboxModule } from 'primeng/checkbox';
     </div>
   `,
     styles: [],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, ToggleSwitchModule, CheckboxModule]
 })
 export class CheckboxComponent implements OnInit {

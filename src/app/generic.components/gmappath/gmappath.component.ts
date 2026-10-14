@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild, model } from '@angular/core';
+import { Component, ElementRef, ViewChild, model, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule, UntypedFormGroup } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import * as L from 'leaflet';
@@ -20,6 +20,7 @@ import {
   templateUrl: './gmappath.component.html',
   styleUrls: ['./gmappath.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CommonModule, FormsModule, DialogModule]
 })
 export class GMapPathComponent {
@@ -42,7 +43,7 @@ export class GMapPathComponent {
   polyline?: L.Polyline;
 
   get currentValue(): string {
-    const controlValue = this.field.name ? this.group.get(this.field.name)?.value : null;
+    const controlValue = this.field?.name ? this.group?.controls[this.field.name]?.value : null;
     return controlValue || this.value() || '';
   }
 
@@ -74,15 +75,21 @@ export class GMapPathComponent {
   }
 
   private syncValue(nextValue: string) {
-    this.value.set(nextValue);
+    const fieldName = this.field?.name;
+    const control = fieldName ? this.group?.controls[fieldName] : null;
 
-    if (this.field.name) {
-      const control = this.group.get(this.field.name);
-      control?.setValue(nextValue);
-      control?.markAsDirty();
-      control?.markAsTouched();
-      control?.updateValueAndValidity({ emitEvent: true });
+    if (!fieldName || !control) {
+      this.searchError = 'Unable to save the path because its form field is not available.';
+      return false;
     }
+
+    this.value.set(nextValue);
+    this.field.value = nextValue;
+    control.setValue(nextValue);
+    control.markAsDirty();
+    control.markAsTouched();
+    control.updateValueAndValidity({ emitEvent: true });
+    return true;
   }
 
   addPoint(lat: number, lng: number) {
@@ -102,7 +109,9 @@ export class GMapPathComponent {
   }
 
   confirmPath() {
-    this.syncValue(this.path.join('; '));
+    if (!this.syncValue(this.path.join('; '))) {
+      return;
+    }
     this.closeMap(true);
   }
 

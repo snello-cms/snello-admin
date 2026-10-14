@@ -1,4 +1,4 @@
-import {Component, DestroyRef, HostListener, inject} from '@angular/core';
+import {Component, DestroyRef, HostListener, inject, ChangeDetectionStrategy} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {APP_VERSION, ASSET_PATH, LOGO_URL} from '../../constants/constants';
 import { Router, RouterLink } from '@angular/router';
@@ -12,6 +12,7 @@ import { AuthenticationService } from '../../services/authentication.service';
     standalone: true,
     templateUrl: './sidebar.component.html',
     imports: [RouterLink, PermitDirective],
+    changeDetection: ChangeDetectionStrategy.Eager,
     styles: [
         `.user-menu {
             position: absolute;

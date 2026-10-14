@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import {FieldDefinition} from '../../models/field-definition';
 import { AutoCompleteModule } from 'primeng/autocomplete';
@@ -24,6 +24,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
     </div>
   `,
     styles: [],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, AutoCompleteModule]
 })
 export class TagComponent implements OnInit {

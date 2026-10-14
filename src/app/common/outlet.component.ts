@@ -1,4 +1,4 @@
-import {Component, DestroyRef, OnInit, inject} from '@angular/core';
+import {Component, DestroyRef, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {MessageService, ToastMessageOptions} from 'primeng/api';
 import { ConfirmDialog } from 'primeng/confirmdialog';
@@ -9,6 +9,7 @@ import { RouterOutlet } from '@angular/router';
     standalone: true,
     templateUrl: './outlet.component.html',
     styleUrls: ['./outlet.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ConfirmDialog, Message, RouterOutlet]
 })
 export class OutletComponent implements OnInit {

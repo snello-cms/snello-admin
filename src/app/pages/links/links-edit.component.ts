@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import {AbstractEditComponent} from '../../common/abstract-edit-component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
@@ -18,6 +18,7 @@ import { SelectModule } from 'primeng/select';
 @Component({
     standalone: true,
     templateUrl: './links-edit.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, InputText, SelectModule]
 })
 export class LinksEditComponent extends AbstractEditComponent<Link> implements OnInit {

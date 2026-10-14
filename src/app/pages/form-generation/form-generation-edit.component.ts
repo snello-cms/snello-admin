@@ -1,4 +1,4 @@
-import {AfterViewChecked, Component, DestroyRef, OnInit, ViewChild, inject} from '@angular/core';
+import {AfterViewChecked, Component, DestroyRef, OnInit, ViewChild, inject, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FieldDefinition} from '../../models/field-definition';
 import {DynamicFormComponent} from '../../generic.components/dynamic-form/dynamic-form.component';
@@ -19,6 +19,7 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
     standalone: true,
     templateUrl: './form-generation-edit.component.html',
     providers: [MetadataService, MassivePreviewService],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, HomepageTopBar, DynamicFormComponent, DialogModule]
 })
 export class FormGenerationEditComponent implements OnInit, AfterViewChecked {

@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, inject, input, output} from '@angular/core';
+import {Component, ElementRef, OnInit, inject, input, output, ChangeDetectionStrategy} from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators, ReactiveFormsModule, ValidatorFn } from '@angular/forms';
 import {FieldDefinition} from '../../models/field-definition';
 import { DynamicFieldDirective } from '../dynamic-field/dynamic-field.directive';
@@ -75,6 +75,7 @@ import { FieldsetModule } from 'primeng/fieldset';
         </form>
         `,
     styles: [],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, DynamicFieldDirective, TabsModule, FieldsetModule]
 })
 export class DynamicFormComponent implements OnInit {

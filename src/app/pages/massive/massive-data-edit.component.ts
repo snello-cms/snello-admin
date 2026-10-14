@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, DestroyRef, OnInit, ViewChild, inject} from '@angular/core';
+import {ChangeDetectorRef, Component, DestroyRef, OnInit, ViewChild, inject, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FieldDefinition} from '../../models/field-definition';
 import {ApiService} from '../../services/api.service';
@@ -21,6 +21,7 @@ import {applySearchFormValues, buildSearchFieldDefinitions, isPassivationSearchF
     selector: 'app-massive-data-edit',
     templateUrl: './massive-data-edit.component.html',
     styleUrls: ['./massive-data-edit.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, TableModule, PrimeTemplate, CommonModule, DynamicFieldDirective, DynamicSearchFormComponent]
 })
 export class MassiveDataEditComponent implements OnInit {

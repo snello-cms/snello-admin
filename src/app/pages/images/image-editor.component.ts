@@ -7,6 +7,7 @@ import {
   HostListener,
   DestroyRef,
   inject,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -28,6 +29,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
   templateUrl: './image-editor.component.html',
   styleUrls: ['./image-editor.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     CommonModule,
     FormsModule,

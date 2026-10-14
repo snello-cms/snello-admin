@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AbstractListComponent } from '../../common/abstract-list-component';
 import { Document } from '../../models/document';
@@ -16,6 +16,7 @@ import { CopyClipboardDirective } from '../../directives/copy-clipboard.directiv
 @Component({
     standalone: true,
     templateUrl: './images-list.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         CommonModule,
         SideBarComponent,

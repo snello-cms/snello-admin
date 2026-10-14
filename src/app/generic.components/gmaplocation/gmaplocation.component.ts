@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild, model } from '@angular/core';
+import { Component, ElementRef, ViewChild, model, ChangeDetectionStrategy } from '@angular/core';
 import { FormsModule, UntypedFormGroup } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import * as L from 'leaflet';
@@ -19,6 +19,7 @@ import {
   templateUrl: './gmaplocation.component.html',
   styleUrls: ['./gmaplocation.component.scss'],
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CommonModule, FormsModule, DialogModule]
 })
 export class GMapLocationComponent {

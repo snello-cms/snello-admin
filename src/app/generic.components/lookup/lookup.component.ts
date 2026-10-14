@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, DestroyRef, OnInit, ViewChild, inject, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, ReactiveFormsModule, UntypedFormGroup } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
@@ -155,6 +155,7 @@ import { DynamicSearchFormComponent } from '../dynamic-form/dynamic-search-form.
             padding: 0.5rem;
         }`
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, FormsModule, DialogModule, TableModule, CommonModule, DynamicSearchFormComponent]
 })
 export class LookupComponent implements OnInit {

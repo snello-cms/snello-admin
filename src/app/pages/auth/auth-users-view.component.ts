@@ -1,4 +1,4 @@
-import {Component, OnInit, inject} from '@angular/core';
+import {Component, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {MessageService} from 'primeng/api';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -12,6 +12,7 @@ import {AdminhomeTopBar} from '../adminhome-topbar/adminhome-topbar.component';
 @Component({
     standalone: true,
     templateUrl: './auth-users-view.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar, RouterLink]
 })
 export class AuthUsersViewComponent extends AbstractViewComponent<AuthUser> implements OnInit {

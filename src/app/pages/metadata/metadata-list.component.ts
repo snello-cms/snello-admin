@@ -1,6 +1,6 @@
 import { ConfirmationService, MessageService, PrimeTemplate } from 'primeng/api';
 import {AbstractListComponent} from '../../common/abstract-list-component';
-import {Component, OnInit, inject} from '@angular/core';
+import {Component, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import {Metadata} from '../../models/metadata';
 import {NavigationExtras, Router} from '@angular/router';
 import {MetadataService} from '../../services/metadata.service';
@@ -16,6 +16,7 @@ import { SelectItem } from 'primeng/api';
 @Component({
     standalone: true,
     templateUrl: './metadata-list.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, TableModule, PrimeTemplate, SelectModule]
 })
 export class MetadataListComponent extends AbstractListComponent<Metadata> implements OnInit {

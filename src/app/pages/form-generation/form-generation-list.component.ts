@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, DestroyRef, OnInit, ViewChild, inject} from '@angular/core';
+import {ChangeDetectorRef, Component, DestroyRef, OnInit, ViewChild, inject, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FieldDefinition} from '../../models/field-definition';
 import {ApiService} from '../../services/api.service';
@@ -23,6 +23,7 @@ import Keycloak, {KeycloakTokenParsed} from 'keycloak-js';
     standalone: true,
     templateUrl: './form-generation-list.component.html',
     imports: [SideBarComponent, HomepageTopBar, DynamicSearchFormComponent, TableModule, PrimeTemplate, AsyncPipe],
+    changeDetection: ChangeDetectionStrategy.Eager,
     styles: [`
         .list-image-preview {
             width: 150px;

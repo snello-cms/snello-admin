@@ -1,6 +1,6 @@
 import { ConfirmationService, MessageService, PrimeTemplate } from 'primeng/api';
 import {AbstractListComponent} from '../../common/abstract-list-component';
-import {Component, OnInit, inject} from '@angular/core';
+import {Component, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import {Router} from '@angular/router';
 import {SelectQueryService} from '../../services/select-query.service';
 import {SelectQuery} from '../../models/select-query';
@@ -13,6 +13,7 @@ import { TableModule } from 'primeng/table';
 @Component({
     standalone: true,
     templateUrl: './select-query-list.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, TableModule, PrimeTemplate]
 })
 export class SelectQueryListComponent extends AbstractListComponent<SelectQuery> implements OnInit {

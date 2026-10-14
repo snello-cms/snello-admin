@@ -1,4 +1,4 @@
-import {Component, OnInit, inject} from '@angular/core';
+import {Component, OnInit, inject, ChangeDetectionStrategy} from '@angular/core';
 import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import {FieldDefinition} from '../../models/field-definition';
 import { InputText } from 'primeng/inputtext';
@@ -31,6 +31,7 @@ import {MassivePreviewService} from '../../pages/form-generation/massive-preview
     </div>
     `,
     styles: [],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, InputText]
 })
 export class InputComponent implements OnInit {

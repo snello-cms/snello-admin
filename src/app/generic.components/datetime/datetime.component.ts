@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import {FieldDefinition} from '../../models/field-definition';
 import { DatePicker } from 'primeng/datepicker';
@@ -21,6 +21,7 @@ import { DatePicker } from 'primeng/datepicker';
         </div>
     `,
     styles: [],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, DatePicker]
 })
 export class DatetimeComponent implements OnInit {
