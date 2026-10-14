@@ -34,6 +34,7 @@ export class GMapLocationComponent {
   searchLoading = false;
   searchError = '';
   private originalValue = '';
+  private preserveValueOnHide = false;
 
   @ViewChild('mapContainer') mapContainer?: ElementRef<HTMLDivElement>;
 
@@ -47,6 +48,7 @@ export class GMapLocationComponent {
 
   openMap() {
     this.originalValue = this.currentValue;
+    this.preserveValueOnHide = false;
     this.selectedLocation = this.currentValue;
     this.searchResults = [];
     this.searchError = '';
@@ -62,6 +64,17 @@ export class GMapLocationComponent {
       this.syncValue(this.originalValue);
     }
 
+    this.preserveValueOnHide = commit;
+    this.showMap = false;
+    this.destroyMap();
+  }
+
+  onDialogHide() {
+    if (!this.preserveValueOnHide && this.originalValue !== this.currentValue) {
+      this.syncValue(this.originalValue);
+    }
+
+    this.preserveValueOnHide = false;
     this.showMap = false;
     this.destroyMap();
   }
