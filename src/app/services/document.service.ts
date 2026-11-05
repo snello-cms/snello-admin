@@ -92,6 +92,29 @@ export class DocumentService extends AbstractService<Document> {
     });
   }
 
+  /**
+   * Downloads the document and saves it under `filename` (the user's original name). A blob URL opened with
+   * window.open() is named by the browser with a random id, so the name has to be set on a download link.
+   */
+  public saveToDisk(uuid: string, filename?: string): void {
+    console.info("[documents] download uuid=" + uuid + " filename=" + filename);
+    this.simplDownload(uuid).subscribe((blob: Blob) => {
+      const nav = window.navigator as Navigator & { msSaveOrOpenBlob?: (blob: Blob, name?: string) => void };
+      if (nav.msSaveOrOpenBlob) {
+        nav.msSaveOrOpenBlob(blob, filename);
+        return;
+      }
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename || uuid;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+    });
+  }
+
   public downloadPath(uuid: string): string {
     return this.url + "/" + uuid + "/download";
   }

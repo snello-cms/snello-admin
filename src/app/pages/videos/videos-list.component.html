@@ -124,7 +124,7 @@
                     <td>
                       <div>{{ rowData.formats || '-' }}</div>
                       <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
-                        <button type="button" (click)="download(rowData.uuid)" class="btn btn-success btn-sm" title="Download">
+                        <button type="button" (click)="download(rowData.uuid, rowData.original_name)" class="btn btn-success btn-sm" title="Download">
                           <i aria-hidden="true" class="fa fa-download"></i>
                         </button>
                         <a

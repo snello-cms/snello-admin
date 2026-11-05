@@ -54,8 +54,9 @@ export class AuthenticationService {
     }
 
     async refreshKeycloak() {
+        console.info('[auth] refreshKeycloak: authenticated=', this.keycloak.authenticated);
         if (this.keycloak.authenticated) {
-            this.userDetails = await this.keycloak.loadUserProfile();
+            // Token-derived values first: they must not depend on the (fallible) profile call.
             this.roles = this.getUserRoles();
             this.token = this.keycloak.token ?? '';
             this.decodedToken = this.keycloak.tokenParsed;
@@ -63,6 +64,13 @@ export class AuthenticationService {
             this.groups = ((this.decodedToken as { groups?: string[] } | undefined)?.groups) ?? [];
             this.displayRoles = this.getDisplayRoles();
             this.refreshToken = this.keycloak.refreshToken ?? '';
+            console.info('[auth] roles=', this.roles, 'extraroles=', this.extraroles,
+                'groups=', this.groups, 'displayRoles=', this.displayRoles);
+            try {
+                this.userDetails = await this.keycloak.loadUserProfile();
+            } catch (error) {
+                console.error('[auth] loadUserProfile failed, continuing without profile', error);
+            }
         }
     }
 
