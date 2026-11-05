@@ -18,10 +18,31 @@ import { AppComponent } from './app/app.component';
 
 registerLocaleData(localeIt);
 
+const fetchConfig = async (path: string): Promise<RuntimeConfig | null> => {
+    try {
+        const response = await fetch(path);
+        if (!response.ok || !(response.headers.get('content-type') ?? '').includes('json')) {
+            return null;
+        }
+        return await response.json() as RuntimeConfig;
+    } catch {
+        return null;
+    }
+};
+
+// config.local.json is git-ignored and overrides config.json for local development.
+const loadRuntimeConfig = async (): Promise<RuntimeConfig> => {
+    const local = await fetchConfig('/assets/config.local.json');
+    if (local) {
+        console.info('[config] using /assets/config.local.json');
+        return local;
+    }
+    console.info('[config] using /assets/config.json');
+    return await fetch('/assets/config.json').then(response => response.json() as Promise<RuntimeConfig>);
+};
+
 const bootstrap = async (): Promise<void> => {
-    const runtimeConfig = await fetch('/assets/config.json').then(
-        response => response.json() as Promise<RuntimeConfig>
-    );
+    const runtimeConfig = await loadRuntimeConfig();
 
     await bootstrapApplication(AppComponent, {
         providers: [

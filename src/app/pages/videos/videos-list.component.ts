@@ -116,18 +116,8 @@ export class VideosListComponent extends AbstractListComponent<Document> impleme
         return this.service.downloadPath(uuid);
     }
 
-    download(uuid: string): void {
-        this.service.simplDownload(uuid).subscribe(response => {
-            const newBlob = new Blob([(response)], { type: 'application/octet-stream' });
-            const nav = window.navigator as Navigator & { msSaveOrOpenBlob?: (blob: Blob) => void };
-            if (nav.msSaveOrOpenBlob) {
-                nav.msSaveOrOpenBlob(newBlob);
-                return;
-            }
-
-            const downloadURL = URL.createObjectURL(response);
-            window.open(downloadURL);
-        });
+    download(uuid: string, filename?: string): void {
+        this.service.saveToDisk(uuid, filename);
     }
 
     downloadPath(uuid: string) {

@@ -7,3 +7,4 @@ dist
 /.idea/
 
 mise.toml
+/src/assets/config.local.json
