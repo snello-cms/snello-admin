@@ -16,6 +16,11 @@ export const MainRoutes: Routes = [
         data: { requiresGroup: true }
     },
     {
+        // authenticated, but nothing to show: neither Admin/Manager nor in a table group (no guard on purpose)
+        path: 'no-access',
+        loadComponent: () => import('./pages/no-access/no-access.component').then(m => m.NoAccessComponent)
+    },
+    {
         path: 'adminpage',
         loadComponent: () => import('./pages/admin-home/adminpage.component').then(m => m.AdminpageComponent),
         canActivate: [AppAuthGuard],

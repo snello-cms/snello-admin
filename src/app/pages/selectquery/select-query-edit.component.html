@@ -55,6 +55,30 @@
               </div>
             </div>
 
+            <div class="form-group clearfix row">
+              <label class="label-text col-sm-3">Api protected</label>
+              <div class="col-sm-9">
+                <p-toggleswitch [(ngModel)]="element.api_protected" name="api_protected"></p-toggleswitch>
+                <small class="d-block text-muted">
+                  Anonymous callers get 401; users other than Admin / Manager only see rows they own.
+                </small>
+              </div>
+            </div>
+
+            @if (element.api_protected) {
+              <div class="form-group clearfix row">
+                <label class="label-text col-sm-3">Username field (*)</label>
+                <div class="col-sm-9">
+                  <input [(ngModel)]="element.username_field" name="username_field" required
+                    pattern="[A-Za-z_][A-Za-z0-9_]*" pInputText placeholder="owner column of the query result">
+                  <small class="d-block text-muted">
+                    A column (or alias) the query returns, e.g. <code>username</code>. Must not end with an
+                    operator suffix such as _ne or _in.
+                  </small>
+                </div>
+              </div>
+            }
+
 
             <div class="btn-group btn-actions pull-right">
 

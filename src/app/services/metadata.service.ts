@@ -114,7 +114,8 @@ export class MetadataService extends AbstractService<Metadata> {
 
     public createTable(metadata: Metadata) {
         return this.httpClient
-            .get(this.url + '/' + metadata.uuid + '/create', {
+            // table DDL is POST + Admin on the API (it used to be a public GET)
+            .post(this.url + '/' + metadata.uuid + '/create', null, {
                 observe: 'response'
             })
             .pipe(
@@ -128,7 +129,8 @@ export class MetadataService extends AbstractService<Metadata> {
 
     public deleteTable(uuid: string) {
         return this.httpClient
-            .get(this.url + '/' + uuid + '/delete', {
+            // table DDL is POST + Admin on the API (it used to be a public GET)
+            .post(this.url + '/' + uuid + '/delete', null, {
                 observe: 'response'
             })
             .pipe(
@@ -142,7 +144,8 @@ export class MetadataService extends AbstractService<Metadata> {
 
     public truncateTable(uuid: string) {
         return this.httpClient
-            .get(this.url + '/' + uuid + '/truncate', {
+            // table DDL is POST + Admin on the API (it used to be a public GET)
+            .post(this.url + '/' + uuid + '/truncate', null, {
                 observe: 'response'
             })
             .pipe(

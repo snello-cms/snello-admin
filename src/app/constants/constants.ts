@@ -138,6 +138,7 @@ function dedupeIconsByValue(icons: SelectItem[]): SelectItem[] {
 }
 
 export const ASSET_PATH = 'asset_path';
+export const TINYMCE_LICENSE_KEY = 'tinymce_license_key';
 export const LOGO_URL = 'logo_url';
 export const CHAT_API_PATH = 'chat_api_path';
 export const CHATINTERACTIONS_API_PATH = 'chatinteractions_api_path';

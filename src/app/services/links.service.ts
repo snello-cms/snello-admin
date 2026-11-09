@@ -32,7 +32,8 @@ export class LinksService extends AbstractService<Link> {
     create(link: Link): Observable<any> {
         const body = this.marshall(link);
         return this.httpClient
-            .get<any>(this.url + '/' + link.name + '/create')
+            // creates a table: POST + Admin on the API (it used to be a public GET)
+            .post<any>(this.url + '/' + link.name + '/create', null)
             .pipe(catchError(this.handleError.bind(this)));
     }
 }
