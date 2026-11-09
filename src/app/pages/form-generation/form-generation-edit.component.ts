@@ -215,7 +215,12 @@ export class FormGenerationEditComponent implements OnInit, AfterViewChecked {
             .subscribe(
                 element => {
                     if (element) {
-                        this.router.navigate(['datalist/view', this.metadataName, this.uuid]);
+                        // a slug key is renewed when its source field changes: follow the key the API returns
+                        const savedKey = this.resolvePersistedTableKey(element as Record<string, unknown>) || this.uuid;
+                        if (savedKey !== this.uuid) {
+                            console.info('[form-generation] key changed on update', this.uuid, '->', savedKey);
+                        }
+                        this.router.navigate(['datalist/view', this.metadataName, savedKey]);
                     }
                 }
             );
