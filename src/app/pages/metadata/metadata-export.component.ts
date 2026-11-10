@@ -23,6 +23,8 @@ export class MetadataExportComponent implements OnInit {
     isLoading = false;
     isExporting = false;
     selectedExportUuids: Set<string> = new Set<string>();
+    includeData = false;
+    exportFormat: 'json' | 'zip' = 'json';
 
     ngOnInit() {
         this.loadMetadatas();
@@ -105,10 +107,15 @@ export class MetadataExportComponent implements OnInit {
         }
 
         this.isExporting = true;
-        this.service.exportMetadatas(Array.from(this.selectedExportUuids)).subscribe(
+        const stamp = new Date().getTime();
+        this.service.exportMetadatas(Array.from(this.selectedExportUuids), this.includeData, this.exportFormat).subscribe(
             response => {
-                const payload = this.extractExportPayload(response);
-                this.downloadJson(payload, `metadatas-export-${new Date().getTime()}.json`);
+                if (this.exportFormat === 'zip') {
+                    this.downloadBlob(response as Blob, `metadatas-export-${stamp}.zip`);
+                } else {
+                    const payload = this.extractExportPayload(response);
+                    this.downloadJson(payload, `metadatas-export-${stamp}.json`);
+                }
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Export completed successfully.'
@@ -143,7 +150,10 @@ export class MetadataExportComponent implements OnInit {
 
     private downloadJson(payload: any, fileName: string) {
         const data = JSON.stringify(payload, null, 2);
-        const blob = new Blob([data], {type: 'application/json'});
+        this.downloadBlob(new Blob([data], {type: 'application/json'}), fileName);
+    }
+
+    private downloadBlob(blob: Blob, fileName: string) {
         const url = window.URL.createObjectURL(blob);
         const anchor = document.createElement('a');
         anchor.href = url;

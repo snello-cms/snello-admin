@@ -24,6 +24,10 @@ export class MetadataImportComponent {
     importPayload: any = null;
     importRows: MetadataImportPreviewRow[] = [];
     isImporting = false;
+    /** zip archives are sent as is: no client-side preview, the server reports what it imported */
+    isZip = false;
+    hasData = false;
+    lastResult: any = null;
 
     goToMetadataList() {
         this.router.navigate(['/metadata/list']);
@@ -39,6 +43,15 @@ export class MetadataImportComponent {
         const file = target.files[0];
         this.importFile = file;
         this.importFileName = file.name;
+        this.lastResult = null;
+        this.isZip = file.name.toLowerCase().endsWith('.zip') || file.type === 'application/zip'
+            || file.type === 'application/x-zip-compressed';
+        if (this.isZip) {
+            this.importPayload = null;
+            this.importRows = [];
+            this.hasData = false;
+            return;
+        }
 
         const reader = new FileReader();
         reader.onload = () => {
@@ -70,7 +83,7 @@ export class MetadataImportComponent {
     }
 
     uploadImportFile() {
-        if (!this.importPayload) {
+        if (!this.importPayload && !(this.isZip && this.importFile)) {
             this.messageService.add({
                 severity: 'warn',
                 summary: 'Select a file first.'
@@ -79,18 +92,31 @@ export class MetadataImportComponent {
         }
 
         this.isImporting = true;
-        this.service.importMetadatas(this.importPayload).subscribe(
-            () => {
+        const request = this.isZip
+            ? this.service.importMetadatasFile(this.importFile as File)
+            : this.service.importMetadatas(this.importPayload);
+        request.subscribe(
+            result => {
+                this.lastResult = result;
+                const data = result?.data;
+                const metadatas = Array.isArray(result?.imported) ? result.imported.length : 0;
+                let summary = `Imported ${metadatas} metadata(s).`;
+                if (data) {
+                    summary += ` Rows: ${data.imported} imported, ${data.skipped} skipped.`;
+                }
+                const hasErrors = Array.isArray(data?.errors) && data.errors.length > 0;
                 this.messageService.add({
-                    severity: 'success',
-                    summary: 'Import completed successfully.'
+                    severity: hasErrors ? 'warn' : 'success',
+                    summary,
+                    detail: hasErrors ? `${data.errors.length} row error(s), see details below.` : undefined
                 });
                 this.isImporting = false;
             },
-            () => {
+            error => {
                 this.messageService.add({
                     severity: 'error',
-                    summary: 'Import failed.'
+                    summary: 'Import failed.',
+                    detail: typeof error === 'string' ? error : (error?.error ?? undefined)
                 });
                 this.isImporting = false;
             }
@@ -102,6 +128,7 @@ export class MetadataImportComponent {
 
         if (!metadataList.length) {
             this.importRows = [];
+            this.hasData = false;
             this.messageService.add({
                 severity: 'warn',
                 summary: 'No metadatas found in JSON file.'
@@ -117,9 +144,11 @@ export class MetadataImportComponent {
 
             return {
                 tableName: metadataPayload?.table_name ? String(metadataPayload.table_name) : '(no table_name)',
-                fieldsCount: fields.length
+                fieldsCount: fields.length,
+                dataCount: Array.isArray(raw?.data) ? raw.data.length : null
             };
         });
+        this.hasData = this.importRows.some(row => row.dataCount !== null);
     }
 
     private extractMetadataList(parsedPayload: any): any[] {
