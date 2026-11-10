@@ -18,12 +18,26 @@
         <div class="content list">
           <div class="row" style="margin-bottom: 12px;">
             <div class="col-sm-12">
-              <input type="file" accept="application/json,.json" class="form-control" (change)="onImportFileSelected($event)" />
+              <input type="file" accept="application/json,.json,application/zip,.zip" class="form-control" (change)="onImportFileSelected($event)" />
             </div>
           </div>
 
           @if (importFileName) {
             <p><strong>Selected file:</strong> {{ importFileName }}</p>
+          }
+
+          @if (isZip) {
+            <p>ZIP archive: metadatas and table rows are read on the server, the result is shown after the import.
+              Missing tables are created.</p>
+            <div style="margin-top: 16px; text-align: right;">
+              <button
+                type="button"
+                class="btn btn-search"
+                [disabled]="!importFile || isImporting"
+                (click)="uploadImportFile()">
+                {{ isImporting ? 'Importing...' : 'Upload Import File' }}
+              </button>
+            </div>
           }
 
           @if (importRows.length > 0) {
@@ -34,12 +48,18 @@
                   <tr class="sort-header">
                     <th>Table Name</th>
                     <th>Fields</th>
+                    @if (hasData) {
+                      <th>Rows</th>
+                    }
                   </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-row>
                   <tr>
                     <td>{{ row.tableName }}</td>
                     <td>{{ row.fieldsCount }}</td>
+                    @if (hasData) {
+                      <td>{{ row.dataCount ?? '-' }}</td>
+                    }
                   </tr>
                 </ng-template>
               </p-table>
@@ -51,8 +71,28 @@
                 class="btn btn-search"
                 [disabled]="!importFile || isImporting"
                 (click)="uploadImportFile()">
-                Upload Import File
+                {{ isImporting ? 'Importing...' : 'Upload Import File' }}
               </button>
+            </div>
+          }
+
+          @if (lastResult?.data) {
+            <div style="margin-top: 16px;">
+              <h4>Data import result</h4>
+              <p>
+                Rows imported: <strong>{{ lastResult.data.imported }}</strong>,
+                skipped (already present): <strong>{{ lastResult.data.skipped }}</strong>
+                @if (lastResult.data.tables_created?.length) {
+                  <br/>Tables created: {{ lastResult.data.tables_created.join(', ') }}
+                }
+              </p>
+              @if (lastResult.data.errors?.length) {
+                <ul>
+                  @for (err of lastResult.data.errors; track $index) {
+                    <li>{{ err }}</li>
+                  }
+                </ul>
+              }
             </div>
           }
         </div>

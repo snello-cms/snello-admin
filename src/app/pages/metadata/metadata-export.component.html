@@ -67,12 +67,33 @@
               </ul>
             }
 
+            <div style="margin: 12px 0; display: flex; gap: 24px; align-items: center; flex-wrap: wrap;">
+              <label style="margin: 0;">
+                <input
+                  type="checkbox"
+                  [checked]="includeData"
+                  (change)="includeData = $any($event.target).checked" />
+                Include data (table rows)
+              </label>
+              <label style="margin: 0;">
+                Format
+                <select
+                  class="form-control"
+                  style="display: inline-block; width: auto; margin-left: 8px;"
+                  [value]="exportFormat"
+                  (change)="exportFormat = $any($event.target).value">
+                  <option value="json">JSON</option>
+                  <option value="zip">ZIP (recommended with data)</option>
+                </select>
+              </label>
+            </div>
+
             <button
               type="button"
               class="btn btn-search"
               [disabled]="selectedExportUuids.size === 0 || isExporting"
               (click)="exportSelectedMetadatas()">
-              Export All
+              {{ isExporting ? 'Exporting...' : 'Export' }}
             </button>
           </div>
         </div>

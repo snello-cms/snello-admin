@@ -157,11 +157,16 @@ export class MetadataService extends AbstractService<Metadata> {
             );
     }
 
-    public exportMetadatas(metadataUuids: string[]): Observable<any> {
+    /** includeData adds the table rows; format 'zip' comes back as a Blob (json as the parsed payload). */
+    public exportMetadatas(metadataUuids: string[], includeData = false, format: 'json' | 'zip' = 'json'): Observable<any> {
+        const body = {metadatas: metadataUuids, data: includeData, format};
+        if (format === 'zip') {
+            return this.httpClient
+                .post(this.exportUrl, body, {responseType: 'blob'})
+                .pipe(catchError(this.handleError.bind(this)));
+        }
         return this.httpClient
-            .post(this.exportUrl, {
-                metadatas: metadataUuids
-            })
+            .post(this.exportUrl, body)
             .pipe(catchError(this.handleError.bind(this)));
     }
 
