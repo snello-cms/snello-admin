@@ -1,0 +1,92 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>
+    View Scheduled Action
+  </h3>
+  <p>
+  </p>
+</div>
+
+<div class="main">
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="content view">
+        <div class="row">
+          <div class="col-sm-12">
+
+            <div class="form-group clearfix row">
+              <label class="label-text col-sm-3">UUID</label>
+              <div class="col-sm-9">{{element.uuid}}</div>
+            </div>
+
+            <div class="form-group clearfix row">
+              <label class="label-text col-sm-3">Name</label>
+              <div class="col-sm-9">{{element.name}}</div>
+            </div>
+
+            <div class="form-group clearfix row">
+              <label class="label-text col-sm-3">Description</label>
+              <div class="col-sm-9">{{element.description}}</div>
+            </div>
+
+            <div class="form-group clearfix row">
+              <label class="label-text col-sm-3">Frequency</label>
+              <div class="col-sm-9"><code>{{element.frequency}}</code></div>
+            </div>
+
+            <div class="form-group clearfix row">
+              <label class="label-text col-sm-3">Enabled</label>
+              <div class="col-sm-9">{{element.enabled ? 'yes' : 'no'}}</div>
+            </div>
+
+            <div class="form-group clearfix row">
+              <label class="label-text col-sm-3">Next run</label>
+              <div class="col-sm-9">{{element.next_run ? (element.next_run | date:'yyyy-MM-dd HH:mm') : '-'}}</div>
+            </div>
+
+            <div class="form-group clearfix row">
+              <label class="label-text col-sm-3">Last run</label>
+              <div class="col-sm-9">
+                @if (element.last_run) {
+                  {{element.last_run | date:'yyyy-MM-dd HH:mm:ss'}} -
+                  <b [class.text-danger]="element.last_status === 'ERROR'">{{element.last_status}}</b>
+                  @if (element.last_duration_ms != null) { ({{element.last_duration_ms}} ms) }
+                } @else {
+                  never
+                }
+              </div>
+            </div>
+
+            @if (element.last_message) {
+              <div class="form-group clearfix row">
+                <label class="label-text col-sm-3">Last message</label>
+                <div class="col-sm-9">
+                  <pre style="margin: 0; white-space: pre-wrap; word-break: break-word;">{{element.last_message}}</pre>
+                </div>
+              </div>
+            }
+
+            <div class="form-group clearfix row">
+              <label class="label-text col-sm-3">Body</label>
+              <div class="col-sm-9">
+                <pre style="margin: 0; white-space: pre-wrap; word-break: break-word;">{{element.body}}</pre>
+              </div>
+            </div>
+
+            <div class="btn-group btn-actions pull-right">
+              <button type="button" (click)="edit()" class="btn btn-success">Modify</button>
+              <button type="button" (click)="navigateToList()" class="btn btn-danger">Undo</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,180 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>
+    {{element.uuid ? 'Edit' : 'New'}} Scheduled Action
+  </h3>
+  <p>
+  </p>
+</div>
+
+<div class="main">
+
+  <div class="container-fluid">
+    <div class="row">
+
+      <div class="col-md-12 col-sm-12">
+        <div class="content view">
+          <div class="row">
+            <div class="col-md-12 col-sm-12">
+              <form #theform="ngForm">
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Name (*)</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.name" [required]="true" name="name" pInputText placeholder="Name (*)">
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Description</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.description" name="description" pInputText placeholder="Description">
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Enabled</label>
+                  <div class="col-sm-9">
+                    <p-toggleswitch [(ngModel)]="element.enabled" name="enabled"></p-toggleswitch>
+                    <small class="d-block text-muted">Disabled jobs are kept but never run. Re-enabling does not replay missed runs.</small>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Frequency (*)</label>
+                  <div class="col-sm-9">
+                    <div style="display:flex;gap:8px;align-items:center;">
+                      <p-select [(ngModel)]="preset" [options]="presetItems" name="preset" placeholder="Pick a common schedule"
+                        (onChange)="applyPreset()" [style]="{'min-width':'260px'}"></p-select>
+                      <input [(ngModel)]="element.frequency" (ngModelChange)="onFrequencyChange()" [required]="true"
+                        name="frequency" pInputText placeholder="cron, e.g. 0 17 * * *" style="flex:1;font-family:monospace;">
+                    </div>
+                    <small class="d-block text-muted">
+                      Cron with 5 fields (<code>minute hour day month weekday</code>, e.g. <code>0 17 * * *</code> = every day at 17:00)
+                      or Quartz with seconds (<code>0 0 17 * * ?</code>).
+                      The server checks jobs on its own timer (default every 5 minutes), so that is the finest precision.
+                    </small>
+                    @if (preview) {
+                      @if (preview.valid) {
+                        <div class="text-muted" style="margin-top:6px;">
+                          Next runs ({{preview.zone}}):
+                          @for (run of preview.next_runs; track run) {
+                            <code style="margin-right:8px;">{{run | date:'EEE yyyy-MM-dd HH:mm'}}</code>
+                          }
+                        </div>
+                      } @else {
+                        <div class="text-danger" style="margin-top:6px;">{{preview.error}}</div>
+                      }
+                    }
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Body</label>
+                  <div class="col-sm-9">
+                    <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
+                      <button type="button" class="btn btn-default btn-sm" (click)="showLegendDialog = true" title="Available objects and functions">
+                        <i class="fa fa-info-circle" aria-hidden="true"></i>
+                        Info
+                      </button>
+                    </div>
+                    <textarea [(ngModel)]="element.body" name="body" pTextarea rows="14"
+                      style="width: 100%;font-family:monospace;" placeholder="JavaScript, same objects as Actions (db, mail, http, documents, metadata, log)"></textarea>
+                  </div>
+                </div>
+
+                @if (element.uuid) {
+                  <div class="form-group clearfix row">
+                    <label class="label-text col-sm-3">Last run</label>
+                    <div class="col-sm-9">
+                      @if (element.last_run) {
+                        {{element.last_run | date:'yyyy-MM-dd HH:mm:ss'}} -
+                        <b [class.text-danger]="element.last_status === 'ERROR'">{{element.last_status}}</b>
+                        @if (element.last_duration_ms != null) { ({{element.last_duration_ms}} ms) }
+                        @if (element.last_message) {
+                          <pre style="margin:6px 0 0;white-space:pre-wrap;word-break:break-word;">{{element.last_message}}</pre>
+                        }
+                      } @else {
+                        never
+                      }
+                      <div class="text-muted">Next run: {{element.next_run ? (element.next_run | date:'yyyy-MM-dd HH:mm') : '-'}}</div>
+                    </div>
+                  </div>
+                }
+
+                <div class="btn-group btn-actions pull-right">
+                  @if (!element.uuid) {
+                    <button type="button" [disabled]="!theform.form.valid" class="btn btn-success"
+                      (click)="save()">Save
+                    </button>
+                  }&nbsp;&nbsp;
+                  @if (element.uuid) {
+                    <button type="button" [disabled]="!theform.form.valid" class="btn btn-success"
+                      (click)="update()">Modify
+                    </button>&nbsp;&nbsp;
+                    <button type="button" [disabled]="running" class="btn btn-default"
+                      (click)="runNow()" title="Runs the saved body now (unsaved edits are not used)">
+                      <i class="fa fa-play" aria-hidden="true"></i> {{running ? 'Running...' : 'Run now'}}
+                    </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="button" class="btn btn-danger"
+                      (click)="confirmDelete()">Delete
+                    </button>
+                  }&nbsp;&nbsp;
+                  <button type="button" class="btn btn-danger" (click)="navigateToList()">Undo</button>
+                </div>
+              </form>
+
+              <p-dialog
+                [(visible)]="showLegendDialog"
+                [modal]="true"
+                [maximizable]="true"
+                [style]="{width: '70vw', maxWidth: '980px'}"
+                header="Available objects and services"
+                (onHide)="showLegendDialog = false">
+                <div style="line-height:1.6;">
+                  <div><strong>available objects:</strong></div>
+                  <ul>
+                    <li>"action", this job (action.name, action.uuid; action.phase = "SCHEDULED")</li>
+                    <li>"metadata", metadataService</li>
+                    <li>"db", jdbcRepository</li>
+                    <li>"documents", documentsService</li>
+                    <li>"mail", mailService</li>
+                    <li>"http", httpCallService</li>
+                    <li>"log", logger</li>
+                    <li>"table", "table_key", "key" are null and "map" is empty: a scheduled job has no triggering row</li>
+                  </ul>
+
+                  <div><strong>on service "db" - functions:</strong></div>
+                  <ul>
+                    <li>List&lt;Map&lt;String, Object&gt;&gt; list(String query)</li>
+                    <li>boolean executeQuery(String sql);</li>
+                    <li>Map&lt;String, Object&gt; create(String table, String table_key, Map&lt;String, Object&gt; map);</li>
+                    <li>Map&lt;String, Object&gt; update(String table, String table_key, Map&lt;String, Object&gt; map, String key);</li>
+                    <li>Map&lt;String, Object&gt; fetch(String select_fields, String table, String table_key, String uuid);</li>
+                    <li>boolean delete(String table, String table_key, String uuid);</li>
+                  </ul>
+
+                  <div><strong>on service "mail" - functions:</strong></div>
+                  <ul>
+                    <li>void send(String subject, String body, List&lt;String&gt; to, List&lt;String&gt; cc, List&lt;String&gt; bcc, List&lt;Attachment&gt; attachments);</li>
+                  </ul>
+
+                  <div><strong>example:</strong> mail renters whose rental ends tomorrow</div>
+                  <pre style="white-space:pre-wrap;">var rows = db.list("SELECT email, name FROM rentals WHERE end_date = CURRENT_DATE + 1");
+for (var i = 0; i &lt; rows.size(); i++) {{ '{' }}
+  var r = rows.get(i);
+  mail.send("Your rental ends tomorrow", "&lt;p&gt;Hi " + r.get("name") + "&lt;/p&gt;", java.util.List.of(r.get("email")), null, null, null);
+{{ '}' }}
+log.info("reminders sent: " + rows.size());</pre>
+                </div>
+              </p-dialog>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -144,6 +144,8 @@ export const CHAT_API_PATH = 'chat_api_path';
 export const CHATINTERACTIONS_API_PATH = 'chatinteractions_api_path';
 export const CONDITION_API_PATH = 'condition_api_path';
 export const ACTIONS_API_PATH = 'actions_api_path';
+export const SCHEDULED_ACTIONS_API_PATH = 'scheduled_actions_api_path';
+export const PRINT_TEMPLATES_API_PATH = 'print_templates_api_path';
 export const DOCUMENT_API_PATH = 'document_api_path';
 export const EXTENSION_API_PATH = 'extension_api_path';
 export const EXPORT_API_PATH = 'export_api_path';
@@ -237,6 +239,22 @@ const ADMIN_ITEMS_LEGACY: any[] = [
         name: 'Actions',
         summary: 'Action management',
         roles: 'Admin, actions_edit, actions_view'
+    },
+    {
+        id: 'list',
+        icon: 'fa fa-clock-o',
+        section: 'scheduledactions',
+        name: 'Scheduled Actions',
+        summary: 'JavaScript jobs run on a schedule',
+        roles: 'Admin, actions_edit, actions_view'
+    },
+    {
+        id: 'list',
+        icon: 'fa fa-print',
+        section: 'printtemplates',
+        name: 'Print Templates',
+        summary: 'PDF / HTML / CSV / XLSX reports from a query',
+        roles: 'Admin, printtemplates_edit, printtemplates_view'
     },
     {
         id: 'list',

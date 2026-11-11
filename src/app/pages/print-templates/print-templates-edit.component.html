@@ -1,0 +1,194 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>
+    {{element.uuid ? 'Edit' : 'New'}} Print Template
+  </h3>
+  <p>
+  </p>
+</div>
+
+<div class="main">
+
+  <div class="container-fluid">
+    <div class="row">
+
+      <div class="col-md-12 col-sm-12">
+        <div class="content view">
+          <div class="row">
+            <div class="col-md-12 col-sm-12">
+              <form #theform="ngForm">
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Name (*)</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.name" [required]="true" name="name" pattern="[A-Za-z0-9_-]+" pInputText
+                      placeholder="e.g. invoices">
+                    <small class="d-block text-muted">Letters, digits, _ and -. Print URL: <code>{{printUrl}}</code></small>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Description</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.description" name="description" pInputText placeholder="Description">
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Export type (*)</label>
+                  <div class="col-sm-9">
+                    <p-select [(ngModel)]="element.export_type" [options]="typeItems" [required]="true"
+                      [style]="{'width':'100%'}" name="export_type"></p-select>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">SQL query (*)</label>
+                  <div class="col-sm-9">
+                    <textarea [(ngModel)]="element.sql_query" [required]="true" name="sql_query" pTextarea rows="6"
+                      style="width:100%;font-family:monospace;"
+                      placeholder="SELECT i.number, i.total, c.name AS customer, c.city FROM invoices i JOIN customers c ON c.uuid = i.customer_id"></textarea>
+                    <small class="d-block text-muted">
+                      Print parameters filter the result by column alias: <code>?city=Rome&amp;total_gte=100&amp;_sort=number:asc</code>
+                      (same operators as the data API: _ne, _gt, _gte, _lt, _lte, _contains, _in ...).
+                    </small>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Api protected</label>
+                  <div class="col-sm-9">
+                    <p-toggleswitch [(ngModel)]="element.api_protected" name="api_protected"></p-toggleswitch>
+                    <small class="d-block text-muted">
+                      Anonymous callers get 401; users other than Admin / Manager only get rows they own.
+                    </small>
+                  </div>
+                </div>
+
+                @if (element.api_protected) {
+                  <div class="form-group clearfix row">
+                    <label class="label-text col-sm-3">Username field (*)</label>
+                    <div class="col-sm-9">
+                      <input [(ngModel)]="element.username_field" name="username_field" required
+                        pattern="[A-Za-z_][A-Za-z0-9_]*" pInputText placeholder="owner column of the query result">
+                    </div>
+                  </div>
+                }
+
+                @if (usesBody) {
+                  <div class="form-group clearfix row">
+                    <label class="label-text col-sm-3">Body {{needsBody ? '(*)' : ''}}</label>
+                    <div class="col-sm-9">
+                      <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
+                        <button type="button" class="btn btn-default btn-sm" (click)="showLegendDialog = true" title="Template syntax">
+                          <i class="fa fa-info-circle" aria-hidden="true"></i>
+                          Info
+                        </button>
+                      </div>
+                      <textarea [(ngModel)]="element.html_body" [required]="needsBody" name="html_body" pTextarea rows="16"
+                        style="width:100%;font-family:monospace;"
+                        [placeholder]="element.export_type === 'csv' ? 'Empty = automatic CSV of every column. Or a Qute text template.' : 'Qute HTML template, see Info'"></textarea>
+                    </div>
+                  </div>
+                } @else {
+                  <div class="form-group clearfix row">
+                    <label class="label-text col-sm-3">Template file (*)</label>
+                    <div class="col-sm-9">
+                      <input type="file" accept=".xlsx" (change)="onTemplateFile($event)">
+                      @if (element.template_file) {
+                        <div style="margin-top:6px;">
+                          Current: <b>{{element.template_file_name || 'template.xlsx'}}</b>
+                          <button type="button" class="btn btn-default btn-sm" (click)="downloadTemplateFile()">
+                            <i class="fa fa-download" aria-hidden="true"></i> Download
+                          </button>
+                        </div>
+                      }
+                      <small class="d-block text-muted">
+                        A JXLS template. A1 comment: <code>jx:area(lastCell="D2")</code>; first data cell comment:
+                        <code>jx:each(items="rows" var="row" lastCell="D2")</code>; cells: <code>${{ '{' }}row.customer{{ '}' }}</code>.
+                        Also available: <code>${{ '{' }}params.city{{ '}' }}</code>, <code>${{ '{' }}count{{ '}' }}</code>, <code>${{ '{' }}now{{ '}' }}</code>.
+                      </small>
+                    </div>
+                  </div>
+                }
+
+                <div class="btn-group btn-actions pull-right">
+                  @if (!element.uuid) {
+                    <button type="button" [disabled]="!theform.form.valid || (!usesBody && !element.template_file)" class="btn btn-success"
+                      (click)="save()">Save
+                    </button>
+                  }&nbsp;&nbsp;
+                  @if (element.uuid) {
+                    <button type="button" [disabled]="!theform.form.valid || (!usesBody && !element.template_file)" class="btn btn-success"
+                      (click)="update()">Modify
+                    </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="button" class="btn btn-danger" (click)="confirmDelete()">Delete</button>
+                  }&nbsp;&nbsp;
+                  <button type="button" class="btn btn-danger" (click)="navigateToList()">Undo</button>
+                </div>
+              </form>
+
+              @if (element.uuid) {
+                <!-- the buttons above float right: clear them so the margin applies -->
+                <div class="clearfix"></div>
+                <div class="form-group clearfix row" style="margin-top:32px;padding-top:16px;border-top:1px solid #e5e7eb;">
+                  <label class="label-text col-sm-3">Test print</label>
+                  <div class="col-sm-9">
+                    <div style="display:flex;gap:8px;">
+                      <input [(ngModel)]="testQuery" name="testQuery" pInputText style="flex:1;font-family:monospace;"
+                        placeholder="parameters, e.g. city=Rome&_sort=number:asc">
+                      <button type="button" class="btn btn-default" [disabled]="printing" (click)="testPrint()">
+                        <i class="fa fa-print" aria-hidden="true"></i> {{printing ? 'Printing...' : 'Print'}}
+                      </button>
+                    </div>
+                    <small class="d-block text-muted">Uses the saved template: press Modify first to test your changes.</small>
+                  </div>
+                </div>
+              }
+
+              <p-dialog
+                [(visible)]="showLegendDialog"
+                [modal]="true"
+                [maximizable]="true"
+                [style]="{width: '70vw', maxWidth: '980px'}"
+                header="Template syntax (Qute)"
+                (onHide)="showLegendDialog = false">
+                <div style="line-height:1.6;">
+                  <div><strong>data:</strong></div>
+                  <ul>
+                    <li><code>rows</code>: the query rows; each column by its alias, e.g. <code>{{ '{' }}row.customer{{ '}' }}</code></li>
+                    <li><code>params</code>: the print parameters, e.g. <code>{{ '{' }}params.city{{ '}' }}</code></li>
+                    <li><code>count</code>, <code>now</code> (yyyy-MM-dd HH:mm), <code>template</code> (name)</li>
+                  </ul>
+                  <div>Values are HTML-escaped in pdf / html. A missing column is an error (the print answers 400 with the message).
+                    PDF supports CSS 2.1 (tables, floats, <code>&#64;page</code>), not flexbox or grid.</div>
+                  <div style="margin-top:8px;"><strong>example (pdf / html):</strong></div>
+                  <pre style="white-space:pre-wrap;">&lt;html&gt;&lt;head&gt;&lt;style&gt;
+  &#64;page {{ '{' }} size: A4; margin: 15mm; {{ '}' }}
+  table {{ '{' }} width: 100%; border-collapse: collapse; {{ '}' }}
+  td, th {{ '{' }} border: 1px solid #999; padding: 4px; {{ '}' }}
+&lt;/style&gt;&lt;/head&gt;&lt;body&gt;
+&lt;h1&gt;Invoices {{ '{' }}params.city ?: 'all cities'{{ '}' }}&lt;/h1&gt;
+&lt;table&gt;&lt;tr&gt;&lt;th&gt;Number&lt;/th&gt;&lt;th&gt;Customer&lt;/th&gt;&lt;th&gt;Total&lt;/th&gt;&lt;/tr&gt;
+{{ '{' }}#for row in rows{{ '}' }}
+  &lt;tr&gt;&lt;td&gt;{{ '{' }}row.number{{ '}' }}&lt;/td&gt;&lt;td&gt;{{ '{' }}row.customer{{ '}' }}&lt;/td&gt;&lt;td&gt;{{ '{' }}row.total{{ '}' }}&lt;/td&gt;&lt;/tr&gt;
+{{ '{' }}/for{{ '}' }}
+&lt;/table&gt;
+&lt;p&gt;{{ '{' }}count{{ '}' }} invoices, printed {{ '{' }}now{{ '}' }}&lt;/p&gt;
+&lt;/body&gt;&lt;/html&gt;</pre>
+                  <div><strong>example (csv):</strong></div>
+                  <pre style="white-space:pre-wrap;">number;customer;total
+{{ '{' }}#for row in rows{{ '}' }}{{ '{' }}row.number{{ '}' }};{{ '{' }}row.customer{{ '}' }};{{ '{' }}row.total{{ '}' }}
+{{ '{' }}/for{{ '}' }}</pre>
+                </div>
+              </p-dialog>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

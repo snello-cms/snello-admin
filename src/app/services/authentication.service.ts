@@ -66,12 +66,29 @@ export class AuthenticationService {
             this.refreshToken = this.keycloak.refreshToken ?? '';
             console.info('[auth] roles=', this.roles, 'extraroles=', this.extraroles,
                 'groups=', this.groups, 'displayRoles=', this.displayRoles);
-            try {
-                this.userDetails = await this.keycloak.loadUserProfile();
-            } catch (error) {
-                console.error('[auth] loadUserProfile failed, continuing without profile', error);
-            }
+            // The profile comes from the token claims: Keycloak's /account endpoint (loadUserProfile) needs the
+            // account view-profile role, which imported or SSO-managed users often lack (401/503).
+            this.userDetails = this.profileFromToken();
+            console.info('[auth] profile from token: username=', this.userDetails.username);
         }
+    }
+
+    private profileFromToken(): KeycloakProfile {
+        const t = (this.keycloak.idTokenParsed ?? this.keycloak.tokenParsed ?? {}) as KeycloakTokenParsed & {
+            preferred_username?: string;
+            given_name?: string;
+            family_name?: string;
+            email?: string;
+            email_verified?: boolean;
+        };
+        return {
+            id: t.sub,
+            username: t.preferred_username,
+            firstName: t.given_name,
+            lastName: t.family_name,
+            email: t.email,
+            emailVerified: t.email_verified
+        };
     }
 
     public getUtente(): Observable<UserInSession> {

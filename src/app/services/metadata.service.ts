@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {Metadata} from '../models/metadata';
+import {ExportConfigFlags} from '../models/export-config-flags';
 import {Observable, of} from 'rxjs';
 import {AbstractService} from '../common/abstract-service';
 import {FieldDefinition} from '../models/field-definition';
@@ -158,8 +159,10 @@ export class MetadataService extends AbstractService<Metadata> {
     }
 
     /** includeData adds the table rows; format 'zip' comes back as a Blob (json as the parsed payload). */
-    public exportMetadatas(metadataUuids: string[], includeData = false, format: 'json' | 'zip' = 'json'): Observable<any> {
-        const body = {metadatas: metadataUuids, data: includeData, format};
+    /** @param config flags of the config tables to export too (actions, conditions, select_queries, ...) */
+    public exportMetadatas(metadataUuids: string[], includeData = false, format: 'json' | 'zip' = 'json',
+                           config: ExportConfigFlags = {}): Observable<any> {
+        const body = {metadatas: metadataUuids, data: includeData, format, ...config};
         if (format === 'zip') {
             return this.httpClient
                 .post(this.exportUrl, body, {responseType: 'blob'})
