@@ -23,5 +23,7 @@
   "metadata_api_path": "https://kayak.love/api/metadatas",
   "resetpassword_api_path": "https://kayak.love/api/password/reset",
   "scope": "openid",
+  "print_templates_api_path": "https://kayak.love/api/printtemplates",
+  "scheduled_actions_api_path": "https://kayak.love/api/scheduledactions",
   "select_query_api_path": "https://kayak.love/api/selectqueries"
 }

@@ -50,7 +50,10 @@ const bootstrap = async (): Promise<void> => {
             provideZoneChangeDetection({ eventCoalescing: true }),
             providePrimeNG({
                 theme: {
-                    preset: Aura
+                    preset: Aura,
+                    // the admin layout (style.less) is light-only: following the OS dark mode made tables and
+                    // inputs dark with white text, unreadable under the light row hover
+                    options: { darkModeSelector: false }
                 }
             }),
             provideKeycloak({

@@ -20,7 +20,7 @@ export abstract class AbstractService<T> {
         this.initialize();
     }
 
-    private withUrl<R>(requestFactory: () => Observable<R>): Observable<R> {
+    protected withUrl<R>(requestFactory: () => Observable<R>): Observable<R> {
         if (this.url) {
             return requestFactory();
         }

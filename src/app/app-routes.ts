@@ -152,6 +152,32 @@ export const MainRoutes: Routes = [
         ]
     },
     {
+        path: 'scheduledactions',
+        component: OutletComponent,
+        canActivate: [AppAuthGuard],
+        data: { roles: ['Admin', 'Manager'] },
+        children: [
+            {path: '', redirectTo: '/scheduledactions/list', pathMatch: 'full'},
+            {path: 'list', loadComponent: () => import('./pages/scheduled-actions/scheduled-actions-list.component').then(m => m.ScheduledActionsListComponent)},
+            {path: 'edit/:id', loadComponent: () => import('./pages/scheduled-actions/scheduled-actions-edit.component').then(m => m.ScheduledActionsEditComponent)},
+            {path: 'new', loadComponent: () => import('./pages/scheduled-actions/scheduled-actions-edit.component').then(m => m.ScheduledActionsEditComponent)},
+            {path: 'view/:id', loadComponent: () => import('./pages/scheduled-actions/scheduled-actions-view.component').then(m => m.ScheduledActionsViewComponent)}
+        ]
+    },
+    {
+        path: 'printtemplates',
+        component: OutletComponent,
+        canActivate: [AppAuthGuard],
+        data: { roles: ['Admin', 'Manager'] },
+        children: [
+            {path: '', redirectTo: '/printtemplates/list', pathMatch: 'full'},
+            {path: 'list', loadComponent: () => import('./pages/print-templates/print-templates-list.component').then(m => m.PrintTemplatesListComponent)},
+            {path: 'edit/:id', loadComponent: () => import('./pages/print-templates/print-templates-edit.component').then(m => m.PrintTemplatesEditComponent)},
+            {path: 'new', loadComponent: () => import('./pages/print-templates/print-templates-edit.component').then(m => m.PrintTemplatesEditComponent)},
+            {path: 'view/:id', loadComponent: () => import('./pages/print-templates/print-templates-view.component').then(m => m.PrintTemplatesViewComponent)}
+        ]
+    },
+    {
         path: 'datalistgeneral/list/:name',
         canActivate: [AppAuthGuard],
         data: { requiresGroup: true },

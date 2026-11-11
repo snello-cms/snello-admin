@@ -28,6 +28,22 @@ export class MetadataImportComponent {
     isZip = false;
     hasData = false;
     lastResult: any = null;
+    /** config tables found in the JSON file: table -> row count */
+    configCounts: { table: string; count: number }[] = [];
+
+    /** per-table outcome of the last import: created / updated / errors */
+    get configResults(): { table: string; created: number; updated: number; errors: string[] }[] {
+        const config = this.lastResult?.config;
+        if (!config) {
+            return [];
+        }
+        return Object.keys(config).map(table => ({
+            table,
+            created: config[table]?.created ?? 0,
+            updated: config[table]?.updated ?? 0,
+            errors: config[table]?.errors ?? []
+        }));
+    }
 
     goToMetadataList() {
         this.router.navigate(['/metadata/list']);
@@ -49,6 +65,7 @@ export class MetadataImportComponent {
         if (this.isZip) {
             this.importPayload = null;
             this.importRows = [];
+            this.configCounts = [];
             this.hasData = false;
             return;
         }
@@ -104,11 +121,19 @@ export class MetadataImportComponent {
                 if (data) {
                     summary += ` Rows: ${data.imported} imported, ${data.skipped} skipped.`;
                 }
-                const hasErrors = Array.isArray(data?.errors) && data.errors.length > 0;
+                const configErrors = this.configResults.reduce((n, r) => n + r.errors.length, 0);
+                if (this.configResults.length) {
+                    const created = this.configResults.reduce((n, r) => n + r.created, 0);
+                    const updated = this.configResults.reduce((n, r) => n + r.updated, 0);
+                    summary += ` Configuration: ${created} created, ${updated} updated.`;
+                }
+                console.info('[import] result', result);
+                const rowErrors = Array.isArray(data?.errors) ? data.errors.length : 0;
+                const hasErrors = rowErrors + configErrors > 0;
                 this.messageService.add({
                     severity: hasErrors ? 'warn' : 'success',
                     summary,
-                    detail: hasErrors ? `${data.errors.length} row error(s), see details below.` : undefined
+                    detail: hasErrors ? `${rowErrors + configErrors} error(s), see details below.` : undefined
                 });
                 this.isImporting = false;
             },
@@ -125,14 +150,20 @@ export class MetadataImportComponent {
 
     private buildImportPreview(parsedPayload: any) {
         const metadataList = this.extractMetadataList(parsedPayload);
+        const config = parsedPayload?.config ?? {};
+        this.configCounts = Object.keys(config)
+            .filter(table => Array.isArray(config[table]))
+            .map(table => ({table, count: config[table].length}));
 
         if (!metadataList.length) {
             this.importRows = [];
             this.hasData = false;
-            this.messageService.add({
-                severity: 'warn',
-                summary: 'No metadatas found in JSON file.'
-            });
+            if (!this.configCounts.length) {
+                this.messageService.add({
+                    severity: 'warn',
+                    summary: 'No metadatas or configuration found in JSON file.'
+                });
+            }
             return;
         }
 

@@ -88,10 +88,25 @@
               </label>
             </div>
 
+            <div style="margin: 12px 0;">
+              <strong>Include configuration</strong>
+              <div style="display: flex; gap: 24px; flex-wrap: wrap; margin-top: 8px;">
+                @for (option of configOptions; track option.key) {
+                  <label style="margin: 0; display: flex; align-items: center; gap: 8px;">
+                    <p-toggleswitch [(ngModel)]="config[option.key]" [name]="option.key"></p-toggleswitch>
+                    {{ option.label }} <small class="text-muted">({{ option.hint }})</small>
+                  </label>
+                }
+              </div>
+              <small class="d-block text-muted" style="margin-top: 6px;">
+                On import, rows with the same name overwrite the existing ones; scheduled actions arrive disabled.
+              </small>
+            </div>
+
             <button
               type="button"
               class="btn btn-search"
-              [disabled]="selectedExportUuids.size === 0 || isExporting"
+              [disabled]="!canExport"
               (click)="exportSelectedMetadatas()">
               {{ isExporting ? 'Exporting...' : 'Export' }}
             </button>

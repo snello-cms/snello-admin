@@ -65,6 +65,26 @@
               </p-table>
             </div>
 
+          }
+
+          @if (configCounts.length > 0) {
+            <div class="table-wrapper clearfix" style="margin-top: 16px;">
+              <h4>Configuration summary</h4>
+              <p-table [value]="configCounts">
+                <ng-template pTemplate="header">
+                  <tr class="sort-header"><th>Table</th><th>Rows</th></tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-row>
+                  <tr><td>{{ row.table }}</td><td>{{ row.count }}</td></tr>
+                </ng-template>
+              </p-table>
+              <small class="d-block text-muted">
+                Rows with the same name overwrite the existing ones; scheduled actions are imported disabled.
+              </small>
+            </div>
+          }
+
+          @if (importRows.length > 0 || configCounts.length > 0) {
             <div style="margin-top: 16px; text-align: right;">
               <button
                 type="button"
@@ -73,6 +93,26 @@
                 (click)="uploadImportFile()">
                 {{ isImporting ? 'Importing...' : 'Upload Import File' }}
               </button>
+            </div>
+          }
+
+          @if (configResults.length > 0) {
+            <div style="margin-top: 16px;">
+              <h4>Configuration import result</h4>
+              <ul>
+                @for (r of configResults; track r.table) {
+                  <li>
+                    <strong>{{ r.table }}</strong>: {{ r.created }} created, {{ r.updated }} updated
+                    @if (r.errors.length) {
+                      <ul>
+                        @for (err of r.errors; track $index) {
+                          <li>{{ err }}</li>
+                        }
+                      </ul>
+                    }
+                  </li>
+                }
+              </ul>
             </div>
           }
 

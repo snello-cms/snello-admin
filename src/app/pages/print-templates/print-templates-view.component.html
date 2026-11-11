@@ -1,0 +1,80 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>
+    View Print Template
+  </h3>
+  <p>
+  </p>
+</div>
+
+<div class="main">
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="content view">
+        <div class="row">
+          <div class="col-sm-12">
+
+            <div class="form-group clearfix row">
+              <label class="label-text col-sm-3">UUID</label>
+              <div class="col-sm-9">{{element.uuid}}</div>
+            </div>
+
+            <div class="form-group clearfix row">
+              <label class="label-text col-sm-3">Name</label>
+              <div class="col-sm-9">{{element.name}} <small class="text-muted"><code>/api/printtemplates/{{element.name}}/print</code></small></div>
+            </div>
+
+            <div class="form-group clearfix row">
+              <label class="label-text col-sm-3">Description</label>
+              <div class="col-sm-9">{{element.description}}</div>
+            </div>
+
+            <div class="form-group clearfix row">
+              <label class="label-text col-sm-3">Export type</label>
+              <div class="col-sm-9">{{element.export_type}}</div>
+            </div>
+
+            <div class="form-group clearfix row">
+              <label class="label-text col-sm-3">Api protected</label>
+              <div class="col-sm-9">{{element.api_protected ? 'yes, owner column: ' + element.username_field : 'no'}}</div>
+            </div>
+
+            <div class="form-group clearfix row">
+              <label class="label-text col-sm-3">SQL query</label>
+              <div class="col-sm-9">
+                <pre style="margin: 0; white-space: pre-wrap; word-break: break-word;">{{element.sql_query}}</pre>
+              </div>
+            </div>
+
+            @if (element.export_type === 'xlsx') {
+              <div class="form-group clearfix row">
+                <label class="label-text col-sm-3">Template file</label>
+                <div class="col-sm-9">{{element.template_file_name || (element.template_file ? 'template.xlsx' : '-')}}</div>
+              </div>
+            } @else {
+              <div class="form-group clearfix row">
+                <label class="label-text col-sm-3">Body</label>
+                <div class="col-sm-9">
+                  <pre style="margin: 0; white-space: pre-wrap; word-break: break-word;">{{element.html_body || '(automatic CSV)'}}</pre>
+                </div>
+              </div>
+            }
+
+            <div class="btn-group btn-actions pull-right">
+              <button type="button" (click)="print()" class="btn btn-default"><i class="fa fa-print"></i> Print</button>
+              <button type="button" (click)="edit()" class="btn btn-success">Modify</button>
+              <button type="button" (click)="navigateToList()" class="btn btn-danger">Undo</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -7,12 +7,15 @@ import {SideBarComponent} from '../sidebar/sidebar.component';
 import {AdminhomeTopBar} from '../adminhome-topbar/adminhome-topbar.component';
 import {TableModule} from 'primeng/table';
 import {PrimeTemplate} from 'primeng/api';
+import {FormsModule} from '@angular/forms';
+import {ToggleSwitchModule} from 'primeng/toggleswitch';
+import {EXPORT_CONFIG_OPTIONS, ExportConfigFlags} from '../../models/export-config-flags';
 
 @Component({
     standalone: true,
     templateUrl: './metadata-export.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [SideBarComponent, AdminhomeTopBar, TableModule, PrimeTemplate]
+    imports: [SideBarComponent, AdminhomeTopBar, TableModule, PrimeTemplate, FormsModule, ToggleSwitchModule]
 })
 export class MetadataExportComponent implements OnInit {
     private readonly router = inject(Router);
@@ -25,6 +28,19 @@ export class MetadataExportComponent implements OnInit {
     selectedExportUuids: Set<string> = new Set<string>();
     includeData = false;
     exportFormat: 'json' | 'zip' = 'json';
+    readonly configOptions = EXPORT_CONFIG_OPTIONS;
+    /** all on: an export is meant to move a whole project setup */
+    config: ExportConfigFlags = {
+        actions: true, conditions: true, select_queries: true, scheduled_actions: true, print_templates: true
+    };
+
+    get anyConfig(): boolean {
+        return Object.values(this.config).some(v => !!v);
+    }
+
+    get canExport(): boolean {
+        return !this.isExporting && (this.selectedExportUuids.size > 0 || this.anyConfig);
+    }
 
     ngOnInit() {
         this.loadMetadatas();
@@ -98,17 +114,20 @@ export class MetadataExportComponent implements OnInit {
     }
 
     exportSelectedMetadatas() {
-        if (this.selectedExportUuids.size === 0) {
+        if (!this.canExport) {
             this.messageService.add({
                 severity: 'warn',
-                summary: 'Select at least one metadata to export.'
+                summary: 'Select at least one metadata or one configuration to export.'
             });
             return;
         }
 
         this.isExporting = true;
         const stamp = new Date().getTime();
-        this.service.exportMetadatas(Array.from(this.selectedExportUuids), this.includeData, this.exportFormat).subscribe(
+        console.info('[export] metadatas=', this.selectedExportUuids.size, 'data=', this.includeData, 'format=',
+            this.exportFormat, 'config=', this.config);
+        this.service.exportMetadatas(Array.from(this.selectedExportUuids), this.includeData, this.exportFormat,
+            this.config).subscribe(
             response => {
                 if (this.exportFormat === 'zip') {
                     this.downloadBlob(response as Blob, `metadatas-export-${stamp}.zip`);
