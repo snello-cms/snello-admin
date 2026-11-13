@@ -80,10 +80,11 @@ export class JoinComponent implements OnInit {
 
         if (this.uuid && fieldName && hasJoinValue) {
             this.join$ =
-                this.apiService.fetchObject(
+                this.apiService.fetchJoinedObject(
                     this.field.join_table_name,
-                    joinKeyValue,
-                    this.field.join_table_select_fields + ',' + this.field.join_table_key
+                    this.field.join_table_key,
+                    String(joinKeyValue),
+                    this.field.join_table_select_fields
                 )
                     .pipe(
                         tap(join => {

@@ -41,7 +41,8 @@ export class LookupViewComponent implements OnInit {
 
         const labelField = this.fetchLabelField();
         const selectFields = this.buildSelectFields(labelField);
-        this.value$ = this.apiService.fetchObject(this.field.join_table_name, keyValue, selectFields)
+        this.value$ = this.apiService.fetchJoinedObject(this.field.join_table_name, this.field.join_table_key, keyValue,
+            selectFields)
             .pipe(
                 tap(() => {
                     if (this.field.name) {

@@ -78,6 +78,28 @@ export class ApiService implements OnInit {
         );
     }
 
+    /**
+     * The row of a join / lookup target whose {@code keyField} equals {@code key}, or null.
+     * Not {@link fetchObject}: that reads by the target table's primary key, while a join may point at another unique
+     * column (video_parade.video stores video.id, the video table's key is uuid), which made every lookup a 404.
+     */
+    public fetchJoinedObject(tableName: string, keyField: string | null | undefined, key: string,
+                             selectFields?: string | null): Observable<any> {
+        if (!keyField) {
+            return this.fetchObject(tableName, key, selectFields ?? undefined);
+        }
+        const fields = selectFields ? Array.from(new Set([...selectFields.split(','), keyField])).join(',') : undefined;
+        return this.fetchObjectsByKeys(tableName, keyField, [key], fields).pipe(
+            map(rows => {
+                const row = rows.find(r => String(r?.[keyField]) === String(key)) ?? null;
+                if (!row) {
+                    console.warn(`[join] ${tableName}.${keyField}=${key} not found`);
+                }
+                return row;
+            })
+        );
+    }
+
     public fetchObjectsByKeys(tableName: string, keyField: string, keys: string[], selectFields?: string): Observable<any[]> {
         const normalizedKeys = keys
             .map(key => key?.trim())

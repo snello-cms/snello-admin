@@ -341,7 +341,7 @@ export class LookupComponent implements OnInit {
 
     private loadCurrentLabel(keyValue: string) {
         const selectFields = this.buildSelectFields();
-        this.apiService.fetchObject(this.field.join_table_name, keyValue, selectFields)
+        this.apiService.fetchJoinedObject(this.field.join_table_name, this.field.join_table_key, keyValue, selectFields)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: (item) => {
