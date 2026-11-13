@@ -1,0 +1,180 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>
+    {{element?.uuid ? 'Edit' : 'New'}} MCP Tool
+  </h3>
+</div>
+
+<div class="main">
+
+  <div class="container-fluid">
+    <div class="row">
+
+      <div class="col-md-12 col-sm-12">
+        <ai-nav></ai-nav>
+        <div class="content view">
+          <div class="row">
+            <div class="col-md-12 col-sm-12">
+              @if (element) {
+              <form #theform="ngForm">
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Project (*)</label>
+                  <div class="col-sm-9">
+                    <p-select [(ngModel)]="element.project_uuid" [required]="true" name="project_uuid" [options]="projectContext.options()" [style]="{'min-width':'260px'}"></p-select>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Name (*)</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.name" [required]="true" name="name" pInputText placeholder="Name" style="width:100%;">
+                    <small class="d-block text-muted">Function name shown to the model: snake_case, e.g. <code>list_events</code>.</small>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Description</label>
+                  <div class="col-sm-9">
+                    <textarea [(ngModel)]="element.description" name="description" pTextarea rows="3" style="width:100%;" placeholder=""></textarea>
+                    <small class="d-block text-muted">When and why the model should call this tool.</small>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Call (*)</label>
+                  <div class="col-sm-9">
+                    <div style="display:flex;gap:8px;align-items:center;">
+                      <p-select [(ngModel)]="element.http_method" name="http_method" [options]="methods" [style]="{'min-width':'120px'}"></p-select>
+                      <input [(ngModel)]="element.url" [required]="true" name="url" pInputText placeholder="/api/events or https://host/path/{id}" style="flex:1;font-family:monospace;">
+                    </div>
+                    <small class="d-block text-muted">Absolute URL, or relative to <code>snello.ai.mcp.http.base-url</code>. <code>&#123;arg&#125;</code> placeholders are filled from the arguments.</small>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Arguments go in</label>
+                  <div class="col-sm-9">
+                    <p-select [(ngModel)]="element.arg_binding" name="arg_binding" [options]="bindings" [style]="{'min-width':'260px'}"></p-select>
+                    <small class="d-block text-muted">BODY is ignored for GET / HEAD.</small>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Parameters (JSON schema) (*)</label>
+                  <div class="col-sm-9">
+                    <textarea [(ngModel)]="element.parameters_json" [required]="true" name="parameters_json" pTextarea rows="8" style="width:100%;font-family:monospace;" placeholder="" (ngModelChange)="checkJson()"></textarea>
+                    <small class="d-block text-muted">JSON schema of the arguments, e.g. <code>&#123;"type":"object","properties":&#123;"q":&#123;"type":"string"&#125;&#125;&#125;</code></small>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Argument names (JSON)</label>
+                  <div class="col-sm-9">
+                    <textarea [(ngModel)]="element.arg_names_json" name="arg_names_json" pTextarea rows="2" style="width:100%;font-family:monospace;" placeholder="" (ngModelChange)="checkJson()"></textarea>
+                    <small class="d-block text-muted">Optional map argument &rarr; HTTP name, e.g. <code>&#123;"q":"name_contains"&#125;</code></small>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Fixed query (JSON)</label>
+                  <div class="col-sm-9">
+                    <textarea [(ngModel)]="element.fixed_query_json" name="fixed_query_json" pTextarea rows="2" style="width:100%;font-family:monospace;" placeholder="" (ngModelChange)="checkJson()"></textarea>
+                    <small class="d-block text-muted">Optional query params always sent, e.g. <code>&#123;"_limit":"20"&#125;</code></small>
+                  </div>
+                </div>
+
+                @if (jsonErrors.length) {
+                  <div class="form-group clearfix row">
+                    <div class="col-sm-9 offset-sm-3 text-danger">
+                      @for (err of jsonErrors; track err) { <div>{{err}}</div> }
+                    </div>
+                  </div>
+                }
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Result type</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.result_type" name="result_type" pInputText placeholder="Result type" style="width:100%;">
+                    <small class="d-block text-muted">Cards with the same result type render the result of this tool in the chat.</small>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Result path</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.result_path" name="result_path" pInputText placeholder="Result path" style="width:100%;">
+                    <small class="d-block text-muted">Optional JSON path of the part of the response to keep.</small>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Catalog page path template</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.catalog_page_path_template" name="catalog_page_path_template" pInputText placeholder="Catalog page path template" style="width:100%;">
+                    <small class="d-block text-muted">Optional link template added to each result item.</small>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Authenticated</label>
+                  <div class="col-sm-9">
+                    <p-toggleswitch [(ngModel)]="element.authenticated" name="authenticated"></p-toggleswitch>
+                    <small class="d-block text-muted">Sends a bearer token obtained with the service account below.</small>
+                  </div>
+                </div>
+
+                @if (element.authenticated) {
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Service account (*)</label>
+                  <div class="col-sm-9">
+                    <p-select [(ngModel)]="element.service_account_uuid" [required]="true" name="service_account_uuid" [options]="serviceAccountOptions" [style]="{'min-width':'260px'}"></p-select>
+                    <small class="d-block text-muted">Service accounts of the selected project.</small>
+                  </div>
+                </div>
+                }
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Allowed roles</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.allowed_roles" name="allowed_roles" pInputText placeholder="Allowed roles" style="width:100%;">
+                    <small class="d-block text-muted">Comma-separated; empty = every user of the project.</small>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Enabled</label>
+                  <div class="col-sm-9">
+                    <p-toggleswitch [(ngModel)]="element.enabled" name="enabled"></p-toggleswitch>
+                  </div>
+                </div>
+
+                <div class="btn-group btn-actions pull-right">
+                  @if (!element.uuid) {
+                    <button type="button" [disabled]="!theform.form.valid" class="btn btn-success"
+                      (click)="save()">Save
+                    </button>
+                  }&nbsp;&nbsp;
+                  @if (element.uuid) {
+                    <button type="button" [disabled]="!theform.form.valid" class="btn btn-success"
+                      (click)="update()">Modify
+                    </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="button" class="btn btn-danger"
+                      (click)="confirmDelete()">Delete
+                    </button>
+                  }&nbsp;&nbsp;
+                  <button type="button" class="btn btn-danger" (click)="navigateToList()">Undo</button>
+                </div>
+              </form>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

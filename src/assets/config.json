@@ -1,12 +1,10 @@
 {
   "actions_api_path": "https://kayak.love/api/actions",
-  "ai_tools_api_path": "https://kayak.love/api/ai_tools",
   "api_service_path": "https://kayak.love/api",
   "asset_path": "",
   "auth_api_path": "https://kayak.love/api/auth",
   "changepassword_api_path": "https://kayak.love/api/password/change",
   "chat_api_path": "https://kayak.love/api/chat",
-  "chatinteractions_api_path": "https://kayak.love/api/chat_interactions",
   "condition_api_path": "https://kayak.love/api/conditions",
   "data_list_api_path": "https://kayak.love/api/datalist",
   "document_api_path": "https://kayak.love/api/documents",

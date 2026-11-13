@@ -58,7 +58,12 @@ export class JoinComponent implements OnInit {
 
     ngOnInit() {
 
-        const splittedFields = this.field.join_table_select_fields.split(',');
+        // select_fields may be missing (older or generated metadata): fall back to showing the key
+        const selectFields = this.field.join_table_select_fields || this.field.join_table_key || '';
+        if (!this.field.join_table_select_fields) {
+            console.warn(`[join] ${this.field.metadata_name}.${this.field.name}: no join_table_select_fields, showing ${selectFields}`);
+        }
+        const splittedFields = selectFields.split(',');
         this.labelField = splittedFields[0];
         if (this.labelField === this.field.join_table_key && splittedFields.length > 1) {
             this.labelField = splittedFields[1];
@@ -75,10 +80,11 @@ export class JoinComponent implements OnInit {
 
         if (this.uuid && fieldName && hasJoinValue) {
             this.join$ =
-                this.apiService.fetchObject(
+                this.apiService.fetchJoinedObject(
                     this.field.join_table_name,
-                    joinKeyValue,
-                    this.field.join_table_select_fields + ',' + this.field.join_table_key
+                    this.field.join_table_key,
+                    String(joinKeyValue),
+                    this.field.join_table_select_fields
                 )
                     .pipe(
                         tap(join => {

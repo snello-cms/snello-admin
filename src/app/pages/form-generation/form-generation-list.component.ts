@@ -594,10 +594,11 @@ export class FormGenerationListComponent implements OnInit {
                 return of('');
             }
 
-            return this.apiService.fetchObject(fieldDefinition.join_table_name, String(joinValue), fieldDefinition.join_table_select_fields)
+            return this.apiService.fetchJoinedObject(fieldDefinition.join_table_name, fieldDefinition.join_table_key,
+                String(joinValue), fieldDefinition.join_table_select_fields)
                 .pipe(
                     map(join => {
-                        return join[labelField];
+                        return join?.[labelField] ?? String(joinValue);
                     })
                 );
         } else if (fieldDefinition.type === 'multijoin') {

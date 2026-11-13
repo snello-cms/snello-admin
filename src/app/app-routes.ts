@@ -37,6 +37,7 @@ export const MainRoutes: Routes = [
             {path: 'wizard', loadComponent: () => import('./pages/metadata/metadata-wizard.component').then(m => m.MetadataWizardComponent)},
             {path: 'export', loadComponent: () => import('./pages/metadata/metadata-export.component').then(m => m.MetadataExportComponent)},
             {path: 'import', loadComponent: () => import('./pages/metadata/metadata-import.component').then(m => m.MetadataImportComponent)},
+            {path: 'introspect', loadComponent: () => import('./pages/metadata/metadata-introspect.component').then(m => m.MetadataIntrospectComponent)},
             {path: 'change-order/:id', loadComponent: () => import('./pages/metadata/metadata-field-definition-order.component').then(m => m.MetadataFieldDefinitionOrderComponent)},
             {path: 'edit/:id', loadComponent: () => import('./pages/metadata/metadata-edit.component').then(m => m.MetadataEditComponent)},
             {path: 'new', loadComponent: () => import('./pages/metadata/metadata-edit.component').then(m => m.MetadataEditComponent)},
@@ -111,18 +112,6 @@ export const MainRoutes: Routes = [
             {path: 'list', loadComponent: () => import('./pages/selectquery/select-query-list.component').then(m => m.SelectQueryListComponent)},
             {path: 'new', loadComponent: () => import('./pages/selectquery/select-query-edit.component').then(m => m.SelectQueryEditComponent)},
             {path: 'edit/:id', loadComponent: () => import('./pages/selectquery/select-query-edit.component').then(m => m.SelectQueryEditComponent)}
-        ]
-    },
-    {
-        path: 'aitools',
-        component: OutletComponent,
-        canActivate: [AppAuthGuard],
-        data: { roles: ['Admin', 'Manager'] },
-        children: [
-            {path: '', redirectTo: '/aitools/list', pathMatch: 'full'},
-            {path: 'list', loadComponent: () => import('./pages/aitools/ai-tool-list.component').then(m => m.AiToolListComponent)},
-            {path: 'new', loadComponent: () => import('./pages/aitools/ai-tool-edit.component').then(m => m.AiToolEditComponent)},
-            {path: 'edit/:id', loadComponent: () => import('./pages/aitools/ai-tool-edit.component').then(m => m.AiToolEditComponent)}
         ]
     },
     {
@@ -237,14 +226,76 @@ export const MainRoutes: Routes = [
             {path: 'edit/:name', loadComponent: () => import('./pages/massive/massive-data-edit.component').then(m => m.MassiveDataEditComponent), resolve: {fieldDefinitionValorized: FieldDefinitionResolver}}
         ]
     },
+    // AI: a project groups skills, MCP tools, cards and service accounts (snello-api /api/ai/*)
     {
-        path: 'chatinteractions',
+        path: 'ai-projects',
         component: OutletComponent,
         canActivate: [AppAuthGuard],
-        data: { roles: ['Admin', 'Manager'] },
+        data: { roles: ['Admin'] },
         children: [
-            {path: '', redirectTo: '/chatinteractions/list', pathMatch: 'full'},
-            {path: 'list', loadComponent: () => import('./pages/chat-interactions/chat-interaction-list.component').then(m => m.ChatInteractionListComponent)},
+            {path: '', redirectTo: '/ai-projects/list', pathMatch: 'full'},
+            {path: 'list', loadComponent: () => import('./pages/ai/projects/ai-project-list.component').then(m => m.AiProjectListComponent)},
+            {path: 'new', loadComponent: () => import('./pages/ai/projects/ai-project-edit.component').then(m => m.AiProjectEditComponent)},
+            {path: 'edit/:id', loadComponent: () => import('./pages/ai/projects/ai-project-edit.component').then(m => m.AiProjectEditComponent)}
+        ]
+    },
+    {
+        path: 'ai-skills',
+        component: OutletComponent,
+        canActivate: [AppAuthGuard],
+        data: { roles: ['Admin'] },
+        children: [
+            {path: '', redirectTo: '/ai-skills/list', pathMatch: 'full'},
+            {path: 'list', loadComponent: () => import('./pages/ai/skills/ai-skill-list.component').then(m => m.AiSkillListComponent)},
+            {path: 'new', loadComponent: () => import('./pages/ai/skills/ai-skill-edit.component').then(m => m.AiSkillEditComponent)},
+            {path: 'edit/:id', loadComponent: () => import('./pages/ai/skills/ai-skill-edit.component').then(m => m.AiSkillEditComponent)}
+        ]
+    },
+    {
+        path: 'ai-mcptools',
+        component: OutletComponent,
+        canActivate: [AppAuthGuard],
+        data: { roles: ['Admin'] },
+        children: [
+            {path: '', redirectTo: '/ai-mcptools/list', pathMatch: 'full'},
+            {path: 'list', loadComponent: () => import('./pages/ai/mcp-tools/ai-mcp-tool-list.component').then(m => m.AiMcpToolListComponent)},
+            {path: 'new', loadComponent: () => import('./pages/ai/mcp-tools/ai-mcp-tool-edit.component').then(m => m.AiMcpToolEditComponent)},
+            {path: 'edit/:id', loadComponent: () => import('./pages/ai/mcp-tools/ai-mcp-tool-edit.component').then(m => m.AiMcpToolEditComponent)}
+        ]
+    },
+    {
+        path: 'ai-cards',
+        component: OutletComponent,
+        canActivate: [AppAuthGuard],
+        data: { roles: ['Admin'] },
+        children: [
+            {path: '', redirectTo: '/ai-cards/list', pathMatch: 'full'},
+            {path: 'list', loadComponent: () => import('./pages/ai/cards/ai-ui-card-list.component').then(m => m.AiUiCardListComponent)},
+            {path: 'new', loadComponent: () => import('./pages/ai/cards/ai-ui-card-edit.component').then(m => m.AiUiCardEditComponent)},
+            {path: 'edit/:id', loadComponent: () => import('./pages/ai/cards/ai-ui-card-edit.component').then(m => m.AiUiCardEditComponent)}
+        ]
+    },
+    {
+        path: 'ai-serviceaccounts',
+        component: OutletComponent,
+        canActivate: [AppAuthGuard],
+        data: { roles: ['Admin'] },
+        children: [
+            {path: '', redirectTo: '/ai-serviceaccounts/list', pathMatch: 'full'},
+            {path: 'list', loadComponent: () => import('./pages/ai/service-accounts/ai-service-account-list.component').then(m => m.AiServiceAccountListComponent)},
+            {path: 'new', loadComponent: () => import('./pages/ai/service-accounts/ai-service-account-edit.component').then(m => m.AiServiceAccountEditComponent)},
+            {path: 'edit/:id', loadComponent: () => import('./pages/ai/service-accounts/ai-service-account-edit.component').then(m => m.AiServiceAccountEditComponent)}
+        ]
+    },
+    {
+        path: 'ai-history',
+        component: OutletComponent,
+        canActivate: [AppAuthGuard],
+        data: { roles: ['Admin'] },
+        children: [
+            {path: '', redirectTo: '/ai-history/list', pathMatch: 'full'},
+            {path: 'list', loadComponent: () => import('./pages/ai/history/ai-history-list.component').then(m => m.AiHistoryListComponent)},
+            {path: 'view/:id', loadComponent: () => import('./pages/ai/history/ai-history-view.component').then(m => m.AiHistoryViewComponent)}
         ]
     },
     {

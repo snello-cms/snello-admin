@@ -1,0 +1,101 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>
+    {{element?.uuid ? 'Edit' : 'New'}} AI Card
+  </h3>
+</div>
+
+<div class="main">
+
+  <div class="container-fluid">
+    <div class="row">
+
+      <div class="col-md-12 col-sm-12">
+        <ai-nav></ai-nav>
+        <div class="content view">
+          <div class="row">
+            <div class="col-md-12 col-sm-12">
+              @if (element) {
+              <form #theform="ngForm">
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Project (*)</label>
+                  <div class="col-sm-9">
+                    <p-select [(ngModel)]="element.project_uuid" [required]="true" name="project_uuid" [options]="projectContext.options()" [style]="{'min-width':'260px'}"></p-select>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Name (*)</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.name" [required]="true" name="name" pInputText placeholder="Name" style="width:100%;">
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Result type (*)</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.result_type" [required]="true" name="result_type" pInputText list="resultTypes" placeholder="result type" style="width:100%;font-family:monospace;">
+                    <datalist id="resultTypes">
+                      @for (rt of toolResultTypes; track rt) { <option [value]="rt"></option> }
+                    </datalist>
+                    <small class="d-block text-muted">The chat renders with this card every tool result of the same type.</small>
+                  </div>
+                </div>
+
+                @if (element.result_type) {
+                  <div class="form-group clearfix row">
+                    <div class="col-sm-9 offset-sm-3 text-muted">
+                      @if (producers().length) {
+                        Produced by: @for (t of producers(); track t) { <code style="margin-right:8px;">{{t}}</code> }
+                      } @else {
+                        <span class="text-warning">No MCP tool of this project returns this result type yet.</span>
+                      }
+                    </div>
+                  </div>
+                }
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Template</label>
+                  <div class="col-sm-9">
+                    <textarea [(ngModel)]="element.template" name="template" pTextarea rows="16" style="width:100%;font-family:monospace;" placeholder=""></textarea>
+                    <small class="d-block text-muted">Card markup rendered by the chat client for each result.</small>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Enabled</label>
+                  <div class="col-sm-9">
+                    <p-toggleswitch [(ngModel)]="element.enabled" name="enabled"></p-toggleswitch>
+                  </div>
+                </div>
+
+                <div class="btn-group btn-actions pull-right">
+                  @if (!element.uuid) {
+                    <button type="button" [disabled]="!theform.form.valid" class="btn btn-success"
+                      (click)="save()">Save
+                    </button>
+                  }&nbsp;&nbsp;
+                  @if (element.uuid) {
+                    <button type="button" [disabled]="!theform.form.valid" class="btn btn-success"
+                      (click)="update()">Modify
+                    </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="button" class="btn btn-danger"
+                      (click)="confirmDelete()">Delete
+                    </button>
+                  }&nbsp;&nbsp;
+                  <button type="button" class="btn btn-danger" (click)="navigateToList()">Undo</button>
+                </div>
+              </form>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

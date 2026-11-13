@@ -1,0 +1,94 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>
+    {{element?.uuid ? 'Edit' : 'New'}} AI Skill
+  </h3>
+</div>
+
+<div class="main">
+
+  <div class="container-fluid">
+    <div class="row">
+
+      <div class="col-md-12 col-sm-12">
+        <ai-nav></ai-nav>
+        <div class="content view">
+          <div class="row">
+            <div class="col-md-12 col-sm-12">
+              @if (element) {
+              <form #theform="ngForm">
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Project (*)</label>
+                  <div class="col-sm-9">
+                    <p-select [(ngModel)]="element.project_uuid" [required]="true" name="project_uuid" [options]="projectContext.options()" [style]="{'min-width':'260px'}"></p-select>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Name (*)</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.name" [required]="true" name="name" pInputText placeholder="Name" style="width:100%;">
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Description</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.description" name="description" pInputText placeholder="Description" style="width:100%;">
+                    <small class="d-block text-muted">Short: the model reads it to decide when the skill applies.</small>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Instructions</label>
+                  <div class="col-sm-9">
+                    <textarea [(ngModel)]="element.instructions" name="instructions" pTextarea rows="14" style="width:100%;font-family:monospace;" placeholder=""></textarea>
+                    <small class="d-block text-muted">What the agent should do and which MCP tools of this project to call. Markdown is fine.</small>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Allowed roles</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.allowed_roles" name="allowed_roles" pInputText placeholder="Allowed roles" style="width:100%;">
+                    <small class="d-block text-muted">Comma-separated; empty = every user of the project.</small>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Enabled</label>
+                  <div class="col-sm-9">
+                    <p-toggleswitch [(ngModel)]="element.enabled" name="enabled"></p-toggleswitch>
+                  </div>
+                </div>
+
+                <div class="btn-group btn-actions pull-right">
+                  @if (!element.uuid) {
+                    <button type="button" [disabled]="!theform.form.valid" class="btn btn-success"
+                      (click)="save()">Save
+                    </button>
+                  }&nbsp;&nbsp;
+                  @if (element.uuid) {
+                    <button type="button" [disabled]="!theform.form.valid" class="btn btn-success"
+                      (click)="update()">Modify
+                    </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="button" class="btn btn-danger"
+                      (click)="confirmDelete()">Delete
+                    </button>
+                  }&nbsp;&nbsp;
+                  <button type="button" class="btn btn-danger" (click)="navigateToList()">Undo</button>
+                </div>
+              </form>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

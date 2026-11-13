@@ -64,7 +64,8 @@ export class JoinViewComponent implements OnInit {
         }
 
         this.join$ =
-            this.apiService.fetchObject(this.field.join_table_name, joinKeyValue, this.field.join_table_select_fields)
+            this.apiService.fetchJoinedObject(this.field.join_table_name, this.field.join_table_key, joinKeyValue,
+                this.field.join_table_select_fields)
                 .pipe(
                     tap(join => {
                         if (!fieldName) {
