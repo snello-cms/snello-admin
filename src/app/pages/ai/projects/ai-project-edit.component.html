@@ -1,0 +1,104 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>
+    {{element?.uuid ? 'Edit' : 'New'}} AI Project
+  </h3>
+</div>
+
+<div class="main">
+
+  <div class="container-fluid">
+    <div class="row">
+
+      <div class="col-md-12 col-sm-12">
+        <ai-nav></ai-nav>
+        <div class="content view">
+          <div class="row">
+            <div class="col-md-12 col-sm-12">
+              @if (element) {
+              <form #theform="ngForm">
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Name (*)</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.name" [required]="true" name="name" pInputText placeholder="Name" style="width:100%;">
+                    <small class="d-block text-muted">Unique id used by the chat (forwardedProps.projectUuid is the uuid; the name is for people).</small>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Description</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.description" name="description" pInputText placeholder="Description" style="width:100%;">
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Global message</label>
+                  <div class="col-sm-9">
+                    <textarea [(ngModel)]="element.global_message" name="global_message" pTextarea rows="6" style="width:100%;" placeholder=""></textarea>
+                    <small class="d-block text-muted">System prompt prepended to every conversation of this project.</small>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">SSO group</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.sso_group" name="sso_group" pInputText placeholder="SSO group" style="width:100%;">
+                    <small class="d-block text-muted">Keycloak group a user must belong to; empty = every authenticated user.</small>
+                  </div>
+                </div>
+
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Roles</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.roles" name="roles" pInputText placeholder="Roles" style="width:100%;">
+                    <small class="d-block text-muted">Comma-separated roles, informative.</small>
+                  </div>
+                </div>
+
+                @if (element.uuid) {
+                  <div class="form-group clearfix row">
+                    <label class="label-text col-sm-3">Parts</label>
+                    <div class="col-sm-9">
+                      @for (part of parts; track part.path) {
+                        <a [routerLink]="'/' + part.path + '/list'" (click)="openPart()" style="margin-right:16px;">
+                          {{part.label}}: <b>{{part.count ?? '...'}}</b>
+                        </a>
+                      }
+                      @if (hasParts()) {
+                        <small class="d-block text-muted">A project with parts cannot be deleted: delete or move them first.</small>
+                      }
+                    </div>
+                  </div>
+                }
+
+                <div class="btn-group btn-actions pull-right">
+                  @if (!element.uuid) {
+                    <button type="button" [disabled]="!theform.form.valid" class="btn btn-success"
+                      (click)="save()">Save
+                    </button>
+                  }&nbsp;&nbsp;
+                  @if (element.uuid) {
+                    <button type="button" [disabled]="!theform.form.valid" class="btn btn-success"
+                      (click)="update()">Modify
+                    </button>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="button" class="btn btn-danger" [disabled]="hasParts()"
+                      (click)="confirmDelete()">Delete
+                    </button>
+                  }&nbsp;&nbsp;
+                  <button type="button" class="btn btn-danger" (click)="navigateToList()">Undo</button>
+                </div>
+              </form>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

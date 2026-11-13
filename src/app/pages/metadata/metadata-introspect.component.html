@@ -1,0 +1,167 @@
+<sidebar></sidebar>
+
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>From DB schema</h3>
+  <button type="button" class="btn btn-reset btn-block" style="display: block; width: 100%;" (click)="goToMetadataList()">
+    <i class="fa fa-arrow-left"></i> Back to List
+  </button>
+</div>
+
+<div class="main">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <div class="content list">
+          <p class="text-muted">
+            Generates metadata and field definitions for existing tables that no metadata describes yet.
+            Only configuration rows are written: tables and data are not touched.
+            Key type, order, list and search columns, selects and joins without a foreign key are guessed from
+            names and from the rows: review them before generating.
+          </p>
+
+          <div class="row g-2 align-items-end" style="margin-bottom: 12px;">
+            <div class="col-sm-5">
+              <label for="introspect-group">Metadata group (optional)</label>
+              <input id="introspect-group" class="form-control" [(ngModel)]="metadataGroup" placeholder="e.g. imported"/>
+            </div>
+            <div class="col-sm-3">
+              <label for="introspect-sample">Sample rows</label>
+              <input id="introspect-sample" type="number" min="0" max="200" class="form-control" [(ngModel)]="sampleRows"/>
+            </div>
+            <div class="col-sm-4" style="text-align: right;">
+              <button type="button" class="btn btn-search" [disabled]="loading" (click)="runPreview()">
+                <i class="fa fa-search"></i> {{ loading && !preview ? 'Scanning...' : 'Scan tables' }}
+              </button>
+            </div>
+          </div>
+
+          @if (applied) {
+            <div class="alert" [class.alert-success]="applied.applied" [class.alert-danger]="!applied.applied">
+              @if (applied.applied) {
+                Generated:
+                @for (e of applied.entities; track e.table_name) {
+                  @if (!e.skipped) {
+                    <a href="javascript:void(0)" (click)="openMetadata(e.table_name)" style="margin-right: 8px;">{{ e.table_name }}</a>
+                  }
+                }
+              } @else {
+                @for (err of applied.errors; track $index) {
+                  <div>{{ err }}</div>
+                }
+              }
+            </div>
+          }
+
+          @if (preview) {
+            @for (w of preview.warnings; track $index) {
+              <div class="text-muted small"><i class="fa fa-info-circle"></i> {{ w }}</div>
+            }
+
+            @if (candidates.length) {
+              <div class="table-wrapper clearfix" style="margin-top: 12px;">
+                <table class="table">
+                  <thead>
+                  <tr class="sort-header">
+                    <th style="width: 40px;">
+                      <input type="checkbox" aria-label="Select all"
+                             [checked]="selected.size === candidates.length"
+                             (change)="toggleAll($any($event.target).checked)"/>
+                    </th>
+                    <th>Table</th>
+                    <th>Key</th>
+                    <th>Order</th>
+                    <th>Fields</th>
+                    <th>Notes</th>
+                    <th></th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                    @for (e of candidates; track e.table_name) {
+                      <tr>
+                        <td>
+                          <input type="checkbox" [attr.aria-label]="'Select ' + e.table_name"
+                                 [checked]="selected.has(e.table_name)" (change)="toggle(selected, e.table_name)"/>
+                        </td>
+                        <td><strong>{{ e.table_name }}</strong></td>
+                        <td>
+                          {{ e.metadata?.['table_key'] }}
+                          <span class="text-muted">({{ e.metadata?.['table_key_type'] }}{{ e.metadata?.['table_key_addition'] ? ' of ' + e.metadata?.['table_key_addition'] : '' }})</span>
+                        </td>
+                        <td>{{ e.metadata?.['order_by'] ?? '' }}</td>
+                        <td>{{ e.fields.length }}</td>
+                        <td class="small">
+                          @for (w of e.warnings; track $index) {
+                            <div>{{ w }}</div>
+                          }
+                        </td>
+                        <td style="text-align: right;">
+                          <button type="button" class="btn btn-sm btn-default" (click)="toggle(expanded, e.table_name)">
+                            <i class="fa" [class.fa-chevron-down]="!expanded.has(e.table_name)" [class.fa-chevron-up]="expanded.has(e.table_name)"></i>
+                            Fields
+                          </button>
+                        </td>
+                      </tr>
+                      @if (expanded.has(e.table_name)) {
+                        <tr>
+                          <td></td>
+                          <td colspan="6">
+                            <table class="table table-sm small">
+                              <thead>
+                              <tr><th>Name</th><th>SQL type</th><th>Field type</th><th>Label</th><th>Mandatory</th><th>List</th><th>Search</th><th>Join / options</th></tr>
+                              </thead>
+                              <tbody>
+                                @for (f of e.fields; track f['name']) {
+                                  <tr>
+                                    <td><code>{{ f['name'] }}</code></td>
+                                    <td>{{ f['sql_type'] }}</td>
+                                    <td>{{ f['type'] }}{{ f['input_type'] ? ' / ' + f['input_type'] : '' }}</td>
+                                    <td>{{ f['label'] }}</td>
+                                    <td>{{ f['mandatory'] ? 'yes' : '' }}</td>
+                                    <td>{{ f['show_in_list'] ? 'yes' : '' }}</td>
+                                    <td>{{ f['searchable'] ? 'yes' : '' }}</td>
+                                    <td>
+                                      @if (f['join_table_name']) {
+                                        → {{ f['join_table_name'] }}.{{ f['join_table_key'] }} <span class="text-muted">(shows {{ f['join_table_select_fields'] }})</span>
+                                      } @else {
+                                        {{ f['options'] ?? '' }}
+                                      }
+                                    </td>
+                                  </tr>
+                                }
+                              </tbody>
+                            </table>
+                          </td>
+                        </tr>
+                      }
+                    }
+                  </tbody>
+                </table>
+              </div>
+
+              <div style="margin-top: 12px; text-align: right;">
+                <button type="button" class="btn btn-add" [disabled]="loading || !selected.size" (click)="apply()">
+                  <i class="fa fa-magic"></i> {{ loading ? 'Generating...' : 'Generate ' + selected.size + ' metadata(s)' }}
+                </button>
+              </div>
+            }
+
+            @if (skipped.length) {
+              <details style="margin-top: 16px;">
+                <summary class="text-muted">{{ skipped.length }} table(s) skipped</summary>
+                <ul class="small">
+                  @for (e of skipped; track e.table_name) {
+                    <li><code>{{ e.table_name }}</code>: {{ e.skip_reason }}</li>
+                  }
+                </ul>
+              </details>
+            }
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

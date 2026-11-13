@@ -141,7 +141,6 @@ export const ASSET_PATH = 'asset_path';
 export const TINYMCE_LICENSE_KEY = 'tinymce_license_key';
 export const LOGO_URL = 'logo_url';
 export const CHAT_API_PATH = 'chat_api_path';
-export const CHATINTERACTIONS_API_PATH = 'chatinteractions_api_path';
 export const CONDITION_API_PATH = 'condition_api_path';
 export const ACTIONS_API_PATH = 'actions_api_path';
 export const SCHEDULED_ACTIONS_API_PATH = 'scheduled_actions_api_path';
@@ -156,7 +155,6 @@ export const METADATA_API_PATH = 'metadata_api_path';
 export const DATA_LIST_API_PATH = 'data_list_api_path';
 export const PUBLIC_DATA_API_PATH = 'public_data_api_path';
 export const SELECT_QUERY_API_PATH = 'select_query_api_path';
-export const AI_TOOLS_API_PATH = 'ai_tools_api_path';
 export const USER_API_PATH = 'user_api_path';
 export const ROLE_API_PATH = 'role_api_path';
 export const USER_ROLES_API_PATH = 'user_roles_api_path';
@@ -274,18 +272,50 @@ const ADMIN_ITEMS_LEGACY: any[] = [
     },
     {
         id: 'list',
-        icon: 'fa fa-wrench',
-        section: 'aitools',
-        name: 'AiTools',
-        summary: 'AI Tools Management',
-        roles: 'Admin, aitools_edit, aitools_view, ai_tools_edit, ai_tools_view'
+        icon: 'fa fa-sitemap',
+        section: 'ai-projects',
+        name: 'AI Projects',
+        summary: 'Group skills, MCP tools, cards and service accounts of one AI use case',
+        roles: 'Admin'
+    },
+    {
+        id: 'list',
+        icon: 'fa fa-graduation-cap',
+        section: 'ai-skills',
+        name: 'AI Skills',
+        summary: 'Instructions the agent follows, using the project tools',
+        roles: 'Admin'
+    },
+    {
+        id: 'list',
+        icon: 'fa fa-plug',
+        section: 'ai-mcptools',
+        name: 'MCP Tools',
+        summary: 'REST calls the agent can make',
+        roles: 'Admin'
+    },
+    {
+        id: 'list',
+        icon: 'fa fa-id-card',
+        section: 'ai-cards',
+        name: 'AI Cards',
+        summary: 'How the chat renders tool results',
+        roles: 'Admin'
+    },
+    {
+        id: 'list',
+        icon: 'fa fa-key',
+        section: 'ai-serviceaccounts',
+        name: 'Service Accounts',
+        summary: 'Credentials for authenticated tools',
+        roles: 'Admin'
     },
     {
         id: 'list',
         icon: 'fa fa-comments',
-        section: 'chatinteractions',
-        name: 'Chat Interactions',
-        summary: 'Historical chat interactions',
+        section: 'ai-history',
+        name: 'Chat History',
+        summary: 'Conversations of every user',
         roles: 'Admin'
     },
     {

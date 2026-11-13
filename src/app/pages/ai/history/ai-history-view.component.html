@@ -1,0 +1,48 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>
+    Transcript
+  </h3>
+  @if (session(); as s) {
+    <p>
+      {{s.started_at | date:'yyyy-MM-dd HH:mm'}}<br>
+      {{s.message_count}} messages
+    </p>
+  }
+</div>
+
+<div class="main">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <ai-nav></ai-nav>
+        <div class="content view">
+          @if (session(); as s) {
+            <p class="text-muted">Session <code>{{s.session_id}}</code></p>
+          }
+          @if (error()) {
+            <div class="text-danger">{{error()}}</div>
+          }
+          @for (e of events(); track e.uuid) {
+            <div class="turn {{e.type}}">
+              <div class="turn-head">
+                <b>{{e.type}}</b> · {{e.username || e.user_id}} · {{e.occurred_at | date:'HH:mm:ss'}}
+                @if (e.model) { · {{e.model}} }
+              </div>
+              <pre>{{e.body}}</pre>
+            </div>
+          } @empty {
+            @if (!error()) { <p class="text-muted">No events recorded for this session.</p> }
+          }
+          <div class="btn-group btn-actions pull-right">
+            <a class="btn btn-danger" routerLink="/ai-history/list">Back</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
