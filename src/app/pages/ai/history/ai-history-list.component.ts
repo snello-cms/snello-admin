@@ -5,6 +5,7 @@ import {ConfirmationService, MessageService, PrimeTemplate, SelectItem} from 'pr
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InputText} from 'primeng/inputtext';
 import {SelectModule} from 'primeng/select';
+import {SelectClearDefaultDirective} from '../../../common/select-clear-default.directive';
 import {TableModule} from 'primeng/table';
 import {AbstractListComponent} from '../../../common/abstract-list-component';
 import {SideBarComponent} from '../../sidebar/sidebar.component';
@@ -20,7 +21,7 @@ import {AuthUserService} from '../../../services/auth-user.service';
     standalone: true,
     templateUrl: './ai-history-list.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [SideBarComponent, AdminhomeTopBar, AiNavComponent, ReactiveFormsModule, FormsModule, InputText, SelectModule,
+    imports: [SideBarComponent, AdminhomeTopBar, AiNavComponent, ReactiveFormsModule, FormsModule, InputText, SelectModule, SelectClearDefaultDirective,
         TableModule, PrimeTemplate, DatePipe]
 })
 export class AiHistoryListComponent extends AbstractListComponent<AiHistorySession> implements OnInit {

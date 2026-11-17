@@ -4,6 +4,7 @@ import {ConfirmationService, MessageService, SelectItem} from 'primeng/api';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InputText} from 'primeng/inputtext';
 import {SelectModule} from 'primeng/select';
+import {SelectClearDefaultDirective} from '../../../common/select-clear-default.directive';
 import {ToggleSwitchModule} from 'primeng/toggleswitch';
 import {SideBarComponent} from '../../sidebar/sidebar.component';
 import {AdminhomeTopBar} from '../../adminhome-topbar/adminhome-topbar.component';
@@ -17,7 +18,7 @@ import {AiServiceAccountService} from '../../../services/ai-service-account.serv
     standalone: true,
     templateUrl: './ai-service-account-edit.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [SideBarComponent, AdminhomeTopBar, AiNavComponent, ReactiveFormsModule, FormsModule, InputText, SelectModule,
+    imports: [SideBarComponent, AdminhomeTopBar, AiNavComponent, ReactiveFormsModule, FormsModule, InputText, SelectModule, SelectClearDefaultDirective,
         ToggleSwitchModule]
 })
 export class AiServiceAccountEditComponent extends AbstractAiEditComponent<AiServiceAccount> {

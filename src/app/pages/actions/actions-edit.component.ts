@@ -11,6 +11,7 @@ import {SideBarComponent} from '../sidebar/sidebar.component';
 import {AdminhomeTopBar} from '../adminhome-topbar/adminhome-topbar.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SelectModule} from 'primeng/select';
+import {SelectClearDefaultDirective} from '../../common/select-clear-default.directive';
 import {InputText} from 'primeng/inputtext';
 import {Textarea} from 'primeng/textarea';
 import {DialogModule} from 'primeng/dialog';
@@ -19,7 +20,7 @@ import {DialogModule} from 'primeng/dialog';
     standalone: true,
     templateUrl: './actions-edit.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, SelectModule, InputText, Textarea, DialogModule]
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, SelectModule, SelectClearDefaultDirective, InputText, Textarea, DialogModule]
 })
 export class ActionsEditComponent extends AbstractEditComponent<Action> implements OnInit {
 

@@ -8,6 +8,7 @@ import {map, switchMap} from 'rxjs/operators';
 import {MessageService, SelectItem} from 'primeng/api';
 import {InputText} from 'primeng/inputtext';
 import {SelectModule} from 'primeng/select';
+import {SelectClearDefaultDirective} from '../../common/select-clear-default.directive';
 import {Textarea} from 'primeng/textarea';
 import {ToggleSwitchModule} from 'primeng/toggleswitch';
 import {AutoComplete} from 'primeng/autocomplete';
@@ -33,7 +34,7 @@ import {WizardField, WizardStep} from '../../models/wizard-field';
         ReactiveFormsModule,
         FormsModule,
         InputText,
-        SelectModule,
+        SelectModule, SelectClearDefaultDirective,
         ToggleSwitchModule,
         Textarea,
         DragDropModule,

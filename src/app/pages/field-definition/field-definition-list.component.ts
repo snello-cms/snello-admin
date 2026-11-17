@@ -10,6 +10,7 @@ import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component'
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
+import {SelectClearDefaultDirective} from '../../common/select-clear-default.directive';
 import { TableModule } from 'primeng/table';
 import {MAP_INPUT_TO_FIELD} from '../../constants/constants';
 
@@ -17,7 +18,7 @@ import {MAP_INPUT_TO_FIELD} from '../../constants/constants';
     standalone: true,
     templateUrl: './field-definition-list.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, SelectModule, TableModule, PrimeTemplate]
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, SelectModule, SelectClearDefaultDirective, TableModule, PrimeTemplate]
 })
 export class FieldDefinitionListComponent extends AbstractListComponent<FieldDefinition> implements OnInit {
 

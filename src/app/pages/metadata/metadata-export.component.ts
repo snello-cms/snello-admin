@@ -31,7 +31,7 @@ export class MetadataExportComponent implements OnInit {
     readonly configOptions = EXPORT_CONFIG_OPTIONS;
     /** all on: an export is meant to move a whole project setup */
     config: ExportConfigFlags = {
-        actions: true, conditions: true, select_queries: true, scheduled_actions: true, print_templates: true
+        actions: true, conditions: true, select_queries: true, scheduled_actions: true, print_templates: true, layouts: true
     };
 
     get anyConfig(): boolean {

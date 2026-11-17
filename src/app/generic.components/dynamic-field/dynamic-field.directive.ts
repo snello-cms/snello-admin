@@ -44,33 +44,36 @@ export class DynamicFieldDirective implements OnInit {
             && !field.input_type
             && fieldName.includes('multiselect');
         const isStaticMultiselect = ((field.type === 'select' && field.input_type === 'multiselect') || isLegacyStaticMultiselect);
+        // input_disabled: shown read-only (its view component) in create / edit forms, e.g. values written by the
+        // server or a workflow. Search forms keep the input, so the field can still be used as a filter.
+        const readOnly = this.view() || (!!field.input_disabled && !isSearchField);
 
-        if (!this.view() && field.type === 'tinymce') {
+        if (!readOnly && field.type === 'tinymce') {
             componentType = (await import('../tinymce/tinymce.component')).TinymceComponent;
-        } else if (!this.view() && field.type === 'monaco') {
+        } else if (!readOnly && field.type === 'monaco') {
             componentType = (await import('../monaco/monaco.component')).MonacoComponent;
-        } else if (!this.view() && field.type === 'realtionships') {
+        } else if (!readOnly && field.type === 'realtionships') {
             componentType = (await import('../realtionships/realtionships.component')).RealtionshipsComponent;
-        } else if (this.view() && field.type === 'realtionships') {
+        } else if (readOnly && field.type === 'realtionships') {
             componentType = (await import('../realtionships/realtionships-view.component')).RealtionshipsViewComponent;
-        } else if (!this.view() && field.type === 'join' && field.input_type === 'lookup') {
+        } else if (!readOnly && field.type === 'join' && field.input_type === 'lookup') {
             componentType = (await import('../lookup/lookup.component')).LookupComponent;
-        } else if (this.view() && field.type === 'join' && field.input_type === 'lookup') {
+        } else if (readOnly && field.type === 'join' && field.input_type === 'lookup') {
             componentType = (await import('../lookup/lookup-view.component')).LookupViewComponent;
-        } else if (!this.view() && isStaticMultiselect) {
+        } else if (!readOnly && isStaticMultiselect) {
             componentType = MultiSelectComponent;
-        } else if (!this.view() && field.type === 'join' && field.input_type === 'multiselect') {
+        } else if (!readOnly && field.type === 'join' && field.input_type === 'multiselect') {
             componentType = MultiSelectComponent;
-        } else if (this.view() && field.type === 'join' && field.input_type === 'multiselect') {
+        } else if (readOnly && field.type === 'join' && field.input_type === 'multiselect') {
             componentType = MultiJoinViewComponent;
-        } else if (!this.view() && field.type === 'multijoin' && field.input_type === 'multilookup') {
+        } else if (!readOnly && field.type === 'multijoin' && field.input_type === 'multilookup') {
             componentType = (await import('../multilookup/multilookup.component')).MultiLookupComponent;
-        } else if (this.view() && field.type === 'multijoin' && field.input_type === 'multilookup') {
+        } else if (readOnly && field.type === 'multijoin' && field.input_type === 'multilookup') {
             componentType = (await import('../multilookup/multilookup-view.component')).MultiLookupViewComponent;
-        } else if (!this.view() && isSearchField && field.type === 'textarea') {
+        } else if (!readOnly && isSearchField && field.type === 'textarea') {
             componentType = InputComponent;
         } else {
-            componentType = this.view()
+            componentType = readOnly
                 ? componentViewMapper[field.type]
                 : componentMapper[field.type];
         }

@@ -14,12 +14,13 @@ import { SideBarComponent } from '../sidebar/sidebar.component';
 import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component';
 import { InputText } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
+import {SelectClearDefaultDirective} from '../../common/select-clear-default.directive';
 
 @Component({
     standalone: true,
     templateUrl: './links-edit.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, InputText, SelectModule]
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, InputText, SelectModule, SelectClearDefaultDirective]
 })
 export class LinksEditComponent extends AbstractEditComponent<Link> implements OnInit {
 

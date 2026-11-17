@@ -10,6 +10,7 @@ import { AdminhomeTopBar } from '../adminhome-topbar/adminhome-topbar.component'
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
+import {SelectClearDefaultDirective} from '../../common/select-clear-default.directive';
 import { ToggleSwitchModule } from 'primeng/toggleswitch';
 import { AutoComplete } from 'primeng/autocomplete';
 
@@ -17,7 +18,7 @@ import { AutoComplete } from 'primeng/autocomplete';
     standalone: true,
     templateUrl: './metadata-edit.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, SelectModule, PrimeTemplate, ToggleSwitchModule, AutoComplete]
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, SelectModule, SelectClearDefaultDirective, PrimeTemplate, ToggleSwitchModule, AutoComplete]
 })
 export class MetadataEditComponent extends AbstractEditComponent<Metadata>
     implements OnInit {

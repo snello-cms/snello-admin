@@ -10,13 +10,14 @@ import {AdminhomeTopBar} from '../adminhome-topbar/adminhome-topbar.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InputText} from 'primeng/inputtext';
 import {SelectModule} from 'primeng/select';
+import {SelectClearDefaultDirective} from '../../common/select-clear-default.directive';
 import {TableModule} from 'primeng/table';
 
 @Component({
     standalone: true,
     templateUrl: './print-templates-list.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, SelectModule, TableModule,
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, SelectModule, SelectClearDefaultDirective, TableModule,
         PrimeTemplate]
 })
 export class PrintTemplatesListComponent extends AbstractListComponent<PrintTemplate> implements OnInit {
