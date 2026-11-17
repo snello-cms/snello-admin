@@ -5,6 +5,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InputText} from 'primeng/inputtext';
 import {Textarea} from 'primeng/textarea';
 import {SelectModule} from 'primeng/select';
+import {SelectClearDefaultDirective} from '../../../common/select-clear-default.directive';
 import {ToggleSwitchModule} from 'primeng/toggleswitch';
 import {SideBarComponent} from '../../sidebar/sidebar.component';
 import {AdminhomeTopBar} from '../../adminhome-topbar/adminhome-topbar.component';
@@ -26,7 +27,7 @@ const JSON_FIELDS: { field: keyof AiMcpTool; label: string; required: boolean }[
     standalone: true,
     templateUrl: './ai-mcp-tool-edit.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [SideBarComponent, AdminhomeTopBar, AiNavComponent, ReactiveFormsModule, FormsModule, InputText, Textarea, SelectModule,
+    imports: [SideBarComponent, AdminhomeTopBar, AiNavComponent, ReactiveFormsModule, FormsModule, InputText, Textarea, SelectModule, SelectClearDefaultDirective,
         ToggleSwitchModule]
 })
 export class AiMcpToolEditComponent extends AbstractAiEditComponent<AiMcpTool> implements DoCheck {

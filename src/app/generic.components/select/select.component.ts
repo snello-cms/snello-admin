@@ -3,6 +3,7 @@ import { UntypedFormGroup, ReactiveFormsModule } from '@angular/forms';
 import {FieldDefinition} from '../../models/field-definition';
 import {SelectItem} from "primeng/api";
 import { SelectModule } from 'primeng/select';
+import {SelectClearDefaultDirective} from '../../common/select-clear-default.directive';
 
 @Component({
     selector: "app-select",
@@ -22,7 +23,7 @@ import { SelectModule } from 'primeng/select';
   `,
     styles: [],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [ReactiveFormsModule, SelectModule]
+    imports: [ReactiveFormsModule, SelectModule, SelectClearDefaultDirective]
 })
 export class SelectComponent implements OnInit {
   field: FieldDefinition;

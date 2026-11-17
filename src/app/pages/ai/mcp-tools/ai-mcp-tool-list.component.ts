@@ -4,6 +4,7 @@ import {ConfirmationService, MessageService, PrimeTemplate} from 'primeng/api';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {InputText} from 'primeng/inputtext';
 import {SelectModule} from 'primeng/select';
+import {SelectClearDefaultDirective} from '../../../common/select-clear-default.directive';
 import {TableModule} from 'primeng/table';
 import {AbstractAiListComponent} from '../../../common/abstract-ai-list-component';
 import {SideBarComponent} from '../../sidebar/sidebar.component';
@@ -17,7 +18,7 @@ import {AiMcpToolService} from '../../../services/ai-mcp-tool.service';
     standalone: true,
     templateUrl: './ai-mcp-tool-list.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [SideBarComponent, AdminhomeTopBar, AiNavComponent, ReactiveFormsModule, FormsModule, InputText, SelectModule,
+    imports: [SideBarComponent, AdminhomeTopBar, AiNavComponent, ReactiveFormsModule, FormsModule, InputText, SelectModule, SelectClearDefaultDirective,
         TableModule, PrimeTemplate]
 })
 export class AiMcpToolListComponent extends AbstractAiListComponent<AiMcpTool> {

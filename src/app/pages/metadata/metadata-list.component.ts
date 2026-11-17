@@ -11,13 +11,14 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { InputText } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { SelectModule } from 'primeng/select';
+import {SelectClearDefaultDirective} from '../../common/select-clear-default.directive';
 import { SelectItem } from 'primeng/api';
 
 @Component({
     standalone: true,
     templateUrl: './metadata-list.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, TableModule, PrimeTemplate, SelectModule]
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, InputText, TableModule, PrimeTemplate, SelectModule, SelectClearDefaultDirective]
 })
 export class MetadataListComponent extends AbstractListComponent<Metadata> implements OnInit {
 

@@ -13,7 +13,7 @@ export class FieldDefinition {
   value?: any;
   validations?: Validator[];
 
-  // non usata
+  // read-only in create / edit forms (rendered with the view component); search forms ignore it
   input_disabled = false;
   function_def?: string;
 

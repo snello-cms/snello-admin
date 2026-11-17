@@ -7,6 +7,8 @@ export interface ExportConfigFlags {
   select_queries?: boolean;
   scheduled_actions?: boolean;
   print_templates?: boolean;
+  /** follow the selected metadatas; all rows when none is selected */
+  layouts?: boolean;
 }
 
 export const EXPORT_CONFIG_OPTIONS: { key: keyof ExportConfigFlags; label: string; hint: string }[] = [
@@ -14,5 +16,6 @@ export const EXPORT_CONFIG_OPTIONS: { key: keyof ExportConfigFlags; label: strin
   {key: 'conditions', label: 'Conditions', hint: 'of the selected metadatas, all if none selected'},
   {key: 'select_queries', label: 'Select queries', hint: 'all'},
   {key: 'scheduled_actions', label: 'Scheduled actions', hint: 'all, imported disabled'},
-  {key: 'print_templates', label: 'Print templates', hint: 'all'}
+  {key: 'print_templates', label: 'Print templates', hint: 'all'},
+  {key: 'layouts', label: 'Layouts', hint: 'of the selected metadatas, all if none selected'}
 ];

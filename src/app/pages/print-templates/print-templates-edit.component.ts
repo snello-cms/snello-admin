@@ -9,6 +9,7 @@ import {SideBarComponent} from '../sidebar/sidebar.component';
 import {AdminhomeTopBar} from '../adminhome-topbar/adminhome-topbar.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SelectModule} from 'primeng/select';
+import {SelectClearDefaultDirective} from '../../common/select-clear-default.directive';
 import {InputText} from 'primeng/inputtext';
 import {Textarea} from 'primeng/textarea';
 import {DialogModule} from 'primeng/dialog';
@@ -18,7 +19,7 @@ import {ToggleSwitchModule} from 'primeng/toggleswitch';
     standalone: true,
     templateUrl: './print-templates-edit.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, SelectModule, InputText, Textarea,
+    imports: [SideBarComponent, AdminhomeTopBar, ReactiveFormsModule, FormsModule, SelectModule, SelectClearDefaultDirective, InputText, Textarea,
         DialogModule, ToggleSwitchModule]
 })
 export class PrintTemplatesEditComponent extends AbstractEditComponent<PrintTemplate> implements OnInit {

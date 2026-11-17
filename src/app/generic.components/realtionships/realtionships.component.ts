@@ -7,6 +7,7 @@ import { MetadataService } from '../../services/metadata.service';
 import { ApiService } from '../../services/api.service';
 import { DataListService } from '../../services/data-list.service';
 import { SelectModule } from 'primeng/select';
+import {SelectClearDefaultDirective} from '../../common/select-clear-default.directive';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
@@ -141,7 +142,7 @@ import { DynamicSearchFormComponent } from '../dynamic-form/dynamic-search-form.
         }`
     ],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [ReactiveFormsModule, FormsModule, SelectModule, TableModule, DialogModule, CommonModule, DynamicSearchFormComponent]
+    imports: [ReactiveFormsModule, FormsModule, SelectModule, SelectClearDefaultDirective, TableModule, DialogModule, CommonModule, DynamicSearchFormComponent]
 })
 export class RealtionshipsComponent implements OnInit {
     field: FieldDefinition;
