@@ -15,6 +15,7 @@ import {SelectClearDefaultDirective} from '../../common/select-clear-default.dir
 import {InputText} from 'primeng/inputtext';
 import {Textarea} from 'primeng/textarea';
 import {DialogModule} from 'primeng/dialog';
+import {APPROVAL_ACTION_TEMPLATE} from './action-templates';
 
 @Component({
     standalone: true,
@@ -51,7 +52,7 @@ export class ActionsEditComponent extends AbstractEditComponent<Action> implemen
 
     ngOnInit() {
         this.element = new Action();
-        this.metadataService.getList().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
+        this.metadataService.getAllList().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
             metadataList => this.valorizeMetadatas(metadataList)
         );
         super.ngOnInit();
@@ -66,5 +67,19 @@ export class ActionsEditComponent extends AbstractEditComponent<Action> implemen
 
     createInstance(): Action {
         return new Action();
+    }
+
+    /** Default template: start snello:record-approval for each new row (POST PERSIST). Editable afterwards. */
+    insertApprovalTemplate() {
+        console.log('[actions] approval template inserted for table', this.element.metadata_name);
+        this.element.body = APPROVAL_ACTION_TEMPLATE;
+        this.element.condition = 'PERSIST';
+        this.element.phase = 'POST';
+        if (!this.element.name) {
+            this.element.name = (this.element.metadata_name ? this.element.metadata_name + '-' : '') + 'approval';
+        }
+        if (!this.element.description) {
+            this.element.description = 'Starts snello:record-approval: reviewer APPROVE / REFUSE, then the approved / refused mail';
+        }
     }
 }

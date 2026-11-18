@@ -7,6 +7,7 @@
   <h3>{{element.uuid ? (readOnly ? 'Workflow' : 'Edit Workflow') : 'New Workflow'}}
     @if (element.uuid) {
       <span class="wf-status wf-status-{{element.status | lowercase}}">{{element.status}}</span>
+      @if (element.is_default) { <span class="wf-status wf-default" title="Seeded by snello: edit it as a new version">default</span> }
     }
   </h3>
   <p class="text-muted">Serverless Workflow 1.0 YAML. Namespace, name and version come from its <code>document</code>
@@ -46,7 +47,8 @@
                 </div>
               }
               @if (!element.uuid && !element.yaml) {
-                <button type="button" class="btn btn-default btn-sm" style="margin-top:6px" (click)="useStarter()">Insert starter workflow</button>
+                <button type="button" class="btn btn-default btn-sm" style="margin-top:6px" (click)="useStarter()">Insert starter workflow</button>&nbsp;
+                <button type="button" class="btn btn-default btn-sm" style="margin-top:6px" (click)="useApprovalExample()">Insert approval example</button>
               }
               <small class="d-block text-muted" style="margin-top:6px">
                 Runner rules: namespace / name with letters, digits and <code>-</code> only (no <code>_</code>);
@@ -82,6 +84,51 @@
             }
             <button type="button" class="btn btn-danger" (click)="navigateToList()">Back</button>
           </div>
+
+          @if (readOnly) {
+            <div class="clearfix"></div>
+            <div class="wf-run">
+              <h4>Run</h4>
+              <p class="text-muted">Starts an instance of <code>{{element.namespace}}:{{element.name}}:{{element.version}}</code>
+                on the runner with this input (JSON). Its status and its human tasks (approval pages) show up below.</p>
+              <div class="row">
+                <div class="col-md-5 col-sm-12">
+                  <textarea [(ngModel)]="runInput" name="runInput" pTextarea rows="7" class="wf-yaml" spellcheck="false"></textarea>
+                  <button type="button" class="btn btn-primary" style="margin-top:6px" [disabled]="starting" (click)="startRun()">
+                    @if (starting) { <i class="fa fa-spinner fa-spin"></i> Starting… } @else { <i class="fa fa-play"></i> Start }
+                  </button>
+                  @if (runError) { <div class="wf-check ko">{{runError}}</div> }
+                </div>
+                <div class="col-md-7 col-sm-12">
+                  @if (run) {
+                    <div class="wf-run-status">
+                      <div>Instance <code>{{run.instanceId}}</code>
+                        <span class="wf-status wf-status-{{run.status === 'COMPLETED' ? 'deployed' : run.status === 'FAULTED' || run.status === 'CANCELLED' ? 'failed' : 'draft'}}">{{run.status}}</span>
+                        @if (!runEnded) { <i class="fa fa-refresh fa-spin text-muted" title="refreshing every 3 s"></i> }
+                      </div>
+                      @if (run.currentTask) { <div>now at <b>{{run.currentTask}}</b></div> }
+                      @if (run.error?.title) { <div class="wf-check ko">{{run.error?.title}}</div> }
+                      @for (t of runTasks; track t.uuid) {
+                        <div class="wf-run-task">
+                          <span class="wf-status wf-status-{{t.status === 'OPEN' ? 'draft' : 'deployed'}}">{{t.status}}</span>
+                          {{t.title}}
+                          @if (t.decision) { — <b>{{t.decision}}</b> by {{t.decided_by}} }
+                          @if (t.status === 'OPEN') {
+                            <a class="btn btn-success btn-sm" [href]="t.url" target="_blank" rel="noopener"><i class="fa fa-external-link"></i> Open approval page</a>
+                          } @else {
+                            <a [href]="t.url" target="_blank" rel="noopener">page</a>
+                          }
+                        </div>
+                      }
+                      @if (runEnded) {
+                        <div class="text-muted" style="margin-top:6px">Ended. Whole path: Workflow Monitor, this workflow, instance {{run.instanceId}}.</div>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          }
 
         </div>
       </div>

@@ -69,6 +69,11 @@
                   <label class="label-text col-sm-3">Body</label>
                   <div class="col-sm-9">
                     <div style="display:flex;justify-content:flex-end;margin-bottom:8px;">
+                      <button type="button" class="btn btn-default btn-sm" style="margin-right:8px" (click)="insertApprovalTemplate()"
+                        title="Default template: POST PERSIST that starts the workflow snello:record-approval (reviewer APPROVE / REFUSE, then a mail)">
+                        <i class="fa fa-check-square-o" aria-hidden="true"></i>
+                        Insert approval template
+                      </button>
                       <button type="button" class="btn btn-default btn-sm" (click)="showLegendDialog = true" title="Available objects and functions">
                         <i class="fa fa-info-circle" aria-hidden="true"></i>
                         Info

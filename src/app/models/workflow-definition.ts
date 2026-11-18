@@ -15,4 +15,6 @@ export class WorkflowDefinition {
   created_by: string;
   deployed_at: string;
   deployed_by: string;
+  /** seeded by snello (e.g. snello:record-approval): a normal, editable workflow, shown with a "default" badge */
+  is_default: boolean;
 }

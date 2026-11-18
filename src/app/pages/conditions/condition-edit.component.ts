@@ -40,7 +40,7 @@ export class ConditionEditComponent extends AbstractEditComponent<Condition> imp
     ngOnInit() {
         this.element = new Condition();
         this.metadatas = [];
-        this.metadataService.getList().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
+        this.metadataService.getAllList().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(
             metadataList => {
                 this.valorizeMetadatas(metadataList);
             }
