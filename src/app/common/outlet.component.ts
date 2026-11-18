@@ -32,6 +32,19 @@ export class OutletComponent implements OnInit {
         });
     }
 
+    /**
+     * "summary: detail". A summary that already ends in ':' (e.g. 'Error: ') gets no second one, and one that ends a
+     * sentence ('Error creating table.') is followed by the detail without a colon.
+     */
+    messageText(msg: ToastMessageOptions): string {
+        const summary = (msg.summary || '').replace(/[\s:]+$/, '');
+        const detail = (msg.detail || '').trim();
+        if (!summary || !detail) {
+            return summary || detail;
+        }
+        return summary + (/[.!?]$/.test(summary) ? ' ' : ': ') + detail;
+    }
+
     removeMessage(index: number) {
         this.messages = this.messages.filter((_, i) => i !== index);
     }

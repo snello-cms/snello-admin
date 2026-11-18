@@ -1,0 +1,164 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>Workflow Monitor</h3>
+  <p class="text-muted">Quarkus Flow: diagram and instances. Pick an instance to see where it is.</p>
+  <div class="flow-legend">
+    <span class="flow-chip done">done</span>
+    <span class="flow-chip current">current</span>
+    <span class="flow-chip retried">retried</span>
+    <span class="flow-chip faulted">faulted</span>
+  </div>
+</div>
+
+<div class="main">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <div class="content list">
+
+          <div class="filter-wrapper">
+            <div class="fw-search-fields flow-workflow-select">
+              <p-select [options]="definitionOptions()" [ngModel]="selectedKey()" (ngModelChange)="selectDefinition($event)"
+                [showClear]="false" placeholder="workflow" [style]="{'width':'100%'}" [filter]="true"></p-select>
+            </div>
+            <div class="fw-search-fields">
+              <p-select [options]="statusOptions" [ngModel]="statusFilter()" (ngModelChange)="setStatus($event)"
+                [showClear]="false" [style]="{'width':'100%'}"></p-select>
+            </div>
+            <div class="fw-actions">
+              <div class="btn-group">
+                <button type="button" class="btn btn-search" (click)="refresh()"><i class="fa fa-refresh"></i> Refresh</button>
+                <button type="button" class="btn btn-reset" (click)="autoRefresh.set(!autoRefresh())">
+                  {{ autoRefresh() ? 'Auto 5 s: on' : 'Auto: off' }}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          @if (error()) {
+            <div class="alert alert-danger">{{ error() }}</div>
+          }
+
+          <div class="flow-layout">
+            <div class="flow-diagram-panel">
+              <div class="flow-panel-title">
+                @if (selectedInstance(); as si) {
+                  Instance <code>{{ si.instanceId }}</code> — <b>{{ si.status }}</b>
+                  @if (si.currentTask) { at <b>{{ si.currentTask }}</b> }
+                  <button type="button" class="btn btn-link btn-sm" (click)="selectInstance(null)">show the workflow only</button>
+                } @else {
+                  {{ selectedDefinition()?.title || selectedKey() }}
+                }
+              </div>
+              @if (selectedInstance()?.error; as err) {
+                <div class="alert alert-danger flow-error"><b>{{ err.position }}</b>: {{ err.title }}</div>
+              }
+              <div #diagram class="flow-diagram"></div>
+            </div>
+
+            <div class="flow-instances-panel">
+              <div class="flow-panel-title">
+                Instances ({{ total() }})
+                @if (lastRefresh()) { <small class="text-muted">updated {{ lastRefresh() | date:'HH:mm:ss' }}</small> }
+              </div>
+              <div class="table-wrapper clearfix">
+                <p-table [value]="instances()" [paginator]="instances().length > 15" [rows]="15" dataKey="instanceId">
+                  <ng-template pTemplate="header">
+                    <tr class="sort-header">
+                      <th>Instance</th>
+                      <th>Status</th>
+                      <th>At task</th>
+                      <th>Started</th>
+                      <th>Duration</th>
+                      <th></th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-i>
+                    <tr class="flow-row" (click)="selectInstance(i)" [class.flow-row-selected]="selectedInstance()?.instanceId === i.instanceId">
+                      <td><code title="{{ i.instanceId }}">{{ i.instanceId.slice(-8) }}</code></td>
+                      <td><span class="flow-status flow-status-{{ i.status | lowercase }}">{{ i.status }}</span></td>
+                      <td class="flow-at" [title]="i.error?.title || ''">{{ i.currentTask || (i.status === 'FAULTED' ? 'failed' : '') }}</td>
+                      <td>{{ i.startedAt | date:'dd/MM HH:mm:ss' }}</td>
+                      <td>{{ duration(i) }}</td>
+                      <td class="flow-actions">
+                        @if (isActive(i)) {
+                          @if (i.status === 'SUSPENDED') {
+                            <button type="button" class="btn btn-sm btn-default" title="resume" (click)="control(i, 'resume', $event)"><i class="fa fa-play"></i></button>
+                          } @else {
+                            <button type="button" class="btn btn-sm btn-default" title="suspend" (click)="control(i, 'suspend', $event)"><i class="fa fa-pause"></i></button>
+                          }
+                          <button type="button" class="btn btn-sm" [class.btn-danger]="confirmCancel() === i.instanceId"
+                            [class.btn-default]="confirmCancel() !== i.instanceId"
+                            [title]="confirmCancel() === i.instanceId ? 'click again to cancel' : 'cancel'"
+                            (click)="control(i, 'cancel', $event)">
+                            <i class="fa fa-stop"></i>{{ confirmCancel() === i.instanceId ? ' sure?' : '' }}
+                          </button>
+                        }
+                      </td>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="emptymessage">
+                    <tr><td colspan="6">No instances seen for this workflow{{ statusFilter() ? ' with status ' + statusFilter() : '' }}.</td></tr>
+                  </ng-template>
+                </p-table>
+              </div>
+
+              @if (selectedInstance(); as si) {
+                <div class="flow-panel-title">Task events of {{ si.instanceId.slice(-8) }}</div>
+                <table class="table table-condensed flow-tasks">
+                  <tr><th>Position</th><th>Last event</th><th>Runs</th><th>Faults</th><th>At</th></tr>
+                  @for (t of taskRows(si); track t.position) {
+                    <tr [class.flow-task-faulted]="t.state === 'faulted'" [class.flow-task-retried]="t.state !== 'faulted' && (t.faults ?? 0) > 0">
+                      <td><code>{{ t.position }}</code></td>
+                      <td>{{ t.state }}</td>
+                      <td>{{ t.count }}</td>
+                      <td [title]="t.lastError || ''">{{ t.faults || '' }}</td>
+                      <td>{{ t.at | date:'HH:mm:ss' }}</td>
+                    </tr>
+                  }
+                </table>
+              }
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .flow-layout { display: flex; gap: 16px; flex-wrap: wrap; align-items: flex-start; margin-top: 12px; }
+  .flow-diagram-panel { flex: 1 1 460px; min-width: 320px; }
+  .flow-instances-panel { flex: 1 1 520px; min-width: 320px; }
+  .flow-panel-title { font-weight: 600; margin: 6px 0 8px; }
+  .flow-diagram { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 8px; overflow: auto; max-height: 75vh; }
+  .flow-diagram svg { max-width: 100%; height: auto; }
+  .flow-workflow-select { min-width: 320px; }
+  .flow-legend { margin-top: 8px; }
+  .flow-chip { display: inline-block; padding: 1px 8px; border-radius: 10px; margin-right: 4px; font-size: 12px; border: 1px solid; }
+  .flow-chip.done { background: #d9f2e3; border-color: #2e8b57; color: #123; }
+  .flow-chip.current { background: #cfe2ff; border-color: #0d6efd; color: #012; }
+  .flow-chip.faulted { background: #f8d7da; border-color: #dc3545; color: #300; }
+  .flow-chip.retried { background: #fff3cd; border-color: #b8860b; color: #332; }
+  .flow-task-retried td { background: #fff3cd; }
+  .flow-instances-panel .table-wrapper { overflow-x: auto; }
+  .flow-instances-panel td { white-space: nowrap; }
+  .flow-at { max-width: 180px; overflow: hidden; text-overflow: ellipsis; }
+  .flow-status { font-size: 12px; padding: 1px 6px; border-radius: 4px; background: #eee; }
+  .flow-status-running, .flow-status-waiting { background: #cfe2ff; }
+  .flow-status-completed { background: #d9f2e3; }
+  .flow-status-faulted, .flow-status-cancelled { background: #f8d7da; }
+  .flow-status-suspended, .flow-status-pending { background: #fff3cd; }
+  .flow-row { cursor: pointer; }
+  .flow-row:hover td { background: #f5f8ff; }
+  .flow-row-selected td { background: #eef4ff !important; }
+  .flow-actions { white-space: nowrap; }
+  .flow-tasks td, .flow-tasks th { padding: 2px 6px; font-size: 12px; }
+  .flow-task-faulted td { background: #f8d7da; }
+  .flow-error { margin-bottom: 8px; }
+</style>

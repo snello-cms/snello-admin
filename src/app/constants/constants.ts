@@ -256,6 +256,22 @@ const ADMIN_ITEMS_LEGACY: any[] = [
     },
     {
         id: 'list',
+        icon: 'fa fa-check-square-o',
+        section: 'workflowpages',
+        name: 'Workflow Pages',
+        summary: 'Review / approval pages of human tasks (/p/name)',
+        roles: 'Admin, Manager'
+    },
+    {
+        id: 'list',
+        icon: 'fa fa-sitemap',
+        section: 'flowmonitor',
+        name: 'Workflow Monitor',
+        summary: 'Quarkus Flow: workflow diagrams and running instances',
+        roles: 'Admin, Manager'
+    },
+    {
+        id: 'list',
         icon: 'fa fa-link',
         section: 'links',
         name: 'Links',

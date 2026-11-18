@@ -11,7 +11,7 @@
 @for (msg of messages; track $index; let i = $index) {
 	<p-message
 		[severity]="msg.severity || 'info'"
-		[text]="((msg.summary || '') + (msg.detail ? ': ' + msg.detail : ''))"
+		[text]="messageText(msg)"
 		[closable]="true"
 		(onClose)="removeMessage(i)">
 	</p-message>
