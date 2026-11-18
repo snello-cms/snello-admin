@@ -12,6 +12,7 @@ import {FlowService} from '../../services/flow.service';
 import {FlowDefinition} from '../../models/flow-definition';
 import {FlowInstance} from '../../models/flow-instance';
 import {flowDiagram} from '../../common/flow-diagram';
+import {renderMermaid} from '../../common/mermaid-render';
 
 /**
  * Quarkus Flow monitor: pick a workflow, see its diagram and its instances; pick an instance and the diagram shows
@@ -52,7 +53,6 @@ export class FlowMonitorComponent implements OnInit {
     readonly selectedDefinition = computed(() => this.definitions().find(d => key(d) === this.selectedKey()) ?? null);
 
     private refreshSub?: Subscription;
-    private renderSeq = 0;
 
     constructor() {
         // redraw whenever the workflow or the selected instance (or its refreshed state) changes
@@ -61,7 +61,7 @@ export class FlowMonitorComponent implements OnInit {
             const inst = this.selectedInstance();
             const host = this.diagramHost();
             if (doc && host) {
-                void this.render(host.nativeElement, flowDiagram(doc, inst));
+                void renderMermaid(host.nativeElement, flowDiagram(doc, inst), 'flow-monitor');
             }
         });
     }
@@ -179,22 +179,6 @@ export class FlowMonitorComponent implements OnInit {
     taskRows(i: FlowInstance | null): {position: string; name: string; state: string; count: number; faults?: number; lastError?: string; at: string}[] {
         return Object.entries(i?.tasks ?? {}).map(([position, t]) => ({position, ...t}))
             .sort((a, b) => a.at.localeCompare(b.at));
-    }
-
-    private async render(host: HTMLDivElement, code: string): Promise<void> {
-        const seq = ++this.renderSeq;
-        try {
-            const mermaid = (await import('mermaid')).default;
-            mermaid.initialize({startOnLoad: false, securityLevel: 'strict', theme: 'neutral',
-                flowchart: {htmlLabels: true, curve: 'basis'}});
-            const {svg} = await mermaid.render('flow-diagram-' + seq, code);
-            if (seq === this.renderSeq) {  // a newer render started meanwhile: keep that one
-                host.innerHTML = svg;
-            }
-        } catch (e) {
-            console.error('[flow-monitor] diagram failed', e, code);
-            host.textContent = 'Diagram failed: ' + (e as Error).message;
-        }
     }
 
     private fail(summary: string, e: any): void {

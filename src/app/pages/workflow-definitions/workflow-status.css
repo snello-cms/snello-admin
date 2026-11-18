@@ -1,0 +1,13 @@
+.wf-status { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: 600; letter-spacing: .02em; }
+.wf-status-draft { background: #eef0f3; color: #4b5563; }
+.wf-status-deployed { background: #dcfce7; color: #166534; }
+.wf-status-failed { background: #fee2e2; color: #991b1b; }
+.wf-check { margin-top: 6px; font-size: 13px; }
+.wf-check.ok { color: #166534; }
+.wf-check.ko { color: #991b1b; white-space: pre-wrap; }
+.wf-message { margin: 0 0 12px; padding: 8px 12px; border-radius: 6px; font-size: 13px; white-space: pre-wrap; }
+.wf-message.failed { background: #fee2e2; color: #991b1b; }
+.wf-message.info { background: #eef6ff; color: #1e3a8a; }
+.wf-diagram { min-height: 220px; border: 1px solid #e5e7eb; border-radius: 6px; padding: 8px; overflow: auto; background: #fff; }
+.wf-yaml { width: 100%; font-family: monospace; font-size: 13px; line-height: 1.45; tab-size: 2; }
+.wf-ids code { margin-right: 6px; }
