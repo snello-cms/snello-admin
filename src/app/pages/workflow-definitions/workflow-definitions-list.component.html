@@ -56,7 +56,9 @@
                 <ng-template let-rowData let-rowIndex="rowIndex" pTemplate="body">
                   <tr>
                     <td class="RowIndex">{{ rowIndex + 1 }}</td>
-                    <td class="ui-resizable-column"><code>{{rowData.namespace}}:{{rowData.name}}</code></td>
+                    <td class="ui-resizable-column"><code>{{rowData.namespace}}:{{rowData.name}}</code>
+                      @if (rowData.is_default) { <span class="wf-status wf-default" title="Seeded by snello: edit it as a new version">default</span> }
+                    </td>
                     <td class="ui-resizable-column">{{rowData.version}}</td>
                     <td class="ui-resizable-column">{{rowData.title}}</td>
                     <td class="ui-resizable-column">

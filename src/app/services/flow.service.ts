@@ -6,6 +6,7 @@ import {ConfigurationService} from './configuration.service';
 import {API_SERVICE_PATH} from '../constants/constants';
 import {FlowDefinition} from '../models/flow-definition';
 import {FlowInstance} from '../models/flow-instance';
+import {HumanTask} from '../models/human-task';
 
 /**
  * Quarkus Flow monitoring through snello's /api/flow (Admin / Manager): the runner and flow-bridge are internal
@@ -43,6 +44,23 @@ export class FlowService {
 
     instance(id: string): Observable<FlowInstance> {
         return this.base().pipe(switchMap(b => this.http.get<FlowInstance>(b + '/instances/' + enc(id))));
+    }
+
+    /** Starts an instance (runner answers at once with its id; follow it with instance()). No version = newest. */
+    start(namespace: string, name: string, input: any, version?: string): Observable<{instanceId: string; status: string}> {
+        console.log('[flow] start', namespace, name, version ?? 'latest', 'input keys', Object.keys(input ?? {}));
+        let params = new HttpParams();
+        if (version) {
+            params = params.set('version', version);
+        }
+        return this.base().pipe(switchMap(b => this.http.post<{instanceId: string; status: string}>(
+            `${b}/start/${enc(namespace)}/${enc(name)}`, input ?? {}, {params})));
+    }
+
+    /** Human tasks opened by one instance (with their page url). */
+    tasksOf(instanceId: string): Observable<HumanTask[]> {
+        return this.configuration.getConfiguration().pipe(switchMap(c => this.http.get<HumanTask[]>(
+            String(c[API_SERVICE_PATH] ?? '/api') + '/humantasks', {params: new HttpParams().set('instance_id', instanceId)})));
     }
 
     control(i: FlowInstance, action: 'suspend' | 'resume' | 'cancel'): Observable<any> {

@@ -11,3 +11,8 @@
 .wf-diagram { min-height: 220px; border: 1px solid #e5e7eb; border-radius: 6px; padding: 8px; overflow: auto; background: #fff; }
 .wf-yaml { width: 100%; font-family: monospace; font-size: 13px; line-height: 1.45; tab-size: 2; }
 .wf-ids code { margin-right: 6px; }
+.wf-run { margin-top: 28px; padding-top: 16px; border-top: 1px solid #e5e7eb; }
+.wf-run-status { border: 1px solid #e5e7eb; border-radius: 6px; padding: 10px 12px; background: #fff; line-height: 1.9; }
+.wf-run-task { margin-top: 6px; }
+.wf-run-task .btn { margin-left: 8px; }
+.wf-default { background: #ede9fe; color: #5b21b6; margin-left: 4px; }

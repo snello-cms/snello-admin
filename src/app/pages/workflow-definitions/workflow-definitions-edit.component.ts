@@ -8,37 +8,18 @@ import {SideBarComponent} from '../sidebar/sidebar.component';
 import {AdminhomeTopBar} from '../adminhome-topbar/adminhome-topbar.component';
 import {FormsModule} from '@angular/forms';
 import {Textarea} from 'primeng/textarea';
-import {Subject, of} from 'rxjs';
-import {catchError, debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
+import {Subject, Subscription, forkJoin, interval, of} from 'rxjs';
+import {catchError, debounceTime, distinctUntilChanged, startWith, switchMap} from 'rxjs/operators';
 import {WorkflowDefinition} from '../../models/workflow-definition';
 import {WorkflowValidation} from '../../models/workflow-validation';
 import {WorkflowDefinitionService} from '../../services/workflow-definition.service';
 import {flowDiagram} from '../../common/flow-diagram';
 import {renderMermaid} from '../../common/mermaid-render';
-
-/** Starter workflow: input schema + one task. The runner's rules: no '_' in names, no YAML anchors. */
-const STARTER = `document:
-  dsl: "1.0.0"
-  namespace: snello
-  name: my-workflow
-  version: "1.0.0"
-  title: My workflow
-  summary: What it does, who starts it (e.g. a snello Action) and with which input.
-input:
-  schema:
-    format: json
-    document:
-      type: object
-      required:
-        - key
-      properties:
-        key:
-          type: string
-do:
-  - greet:
-      set:
-        message: '\${ "Started for " + .key }'
-`;
+import {HELLO_EXAMPLE, approvalExample} from './workflow-examples';
+import {FlowService} from '../../services/flow.service';
+import {ConfigurationService} from '../../services/configuration.service';
+import {FlowInstance} from '../../models/flow-instance';
+import {HumanTask} from '../../models/human-task';
 
 /**
  * Workflow editor: the YAML is the only input (namespace/name/version/title come from its document block).
@@ -58,6 +39,16 @@ export class WorkflowDefinitionsEditComponent extends AbstractEditComponent<Work
     private readonly cd = inject(ChangeDetectorRef);
     private readonly diagramHost = viewChild<ElementRef<HTMLDivElement>>('diagram');
     private readonly yamlChanges = new Subject<string>();
+    private readonly flow = inject(FlowService);
+    private readonly configuration = inject(ConfigurationService);
+
+    // Run panel (deployed workflows): start an instance and follow it
+    runInput = '{}';
+    runError = '';
+    starting = false;
+    run: FlowInstance | null = null;
+    runTasks: HumanTask[] = [];
+    private runPoll?: Subscription;
 
     check: {ok: boolean; text: string} | null = null;
     parsed: WorkflowValidation | null = null;
@@ -158,8 +149,89 @@ export class WorkflowDefinitionsEditComponent extends AbstractEditComponent<Work
 
     useStarter() {
         console.log('[workflows] starter inserted');
-        this.element.yaml = STARTER;
-        this.onYaml(STARTER);
+        this.element.yaml = HELLO_EXAMPLE;
+        this.onYaml(HELLO_EXAMPLE);
+    }
+
+    /** Approval example with this snello's Keycloak as token authority (from the admin's runtime config). */
+    useApprovalExample() {
+        this.configuration.getConfiguration().pipe(takeUntilDestroyed(this.destroyRef)).subscribe(c => {
+            const kc = (c as any).keycloakConfig ?? {};
+            const yaml = approvalExample(kc.url, kc.realm);
+            console.log('[workflows] approval example inserted, authority from', kc.url, kc.realm);
+            this.element.yaml = yaml;
+            this.onYaml(yaml);
+            this.cd.markForCheck();
+        });
+    }
+
+    /** Sample input from the workflow's input schema: every property, strings empty ("" / 0 / false / {}). */
+    private sampleInput(workflow: any): string {
+        const props = workflow?.input?.schema?.document?.properties ?? {};
+        const sample: Record<string, unknown> = {};
+        for (const [k, v] of Object.entries<any>(props)) {
+            const t = Array.isArray(v?.type) ? v.type[0] : v?.type;
+            sample[k] = t === 'number' || t === 'integer' ? 0 : t === 'boolean' ? false : t === 'object' ? {} : t === 'array' ? [] : '';
+        }
+        return JSON.stringify(sample, null, 2);
+    }
+
+    startRun() {
+        let input: any;
+        try {
+            input = JSON.parse(this.runInput || '{}');
+        } catch (e) {
+            this.runError = 'input is not valid JSON: ' + (e as Error).message;
+            return;
+        }
+        this.runError = '';
+        this.starting = true;
+        this.runTasks = [];
+        this.run = null;
+        this.runPoll?.unsubscribe();
+        const e = this.element;
+        this.flow.start(e.namespace, e.name, input, e.version).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+            next: r => {
+                this.starting = false;
+                console.log('[workflows] started', r.instanceId, r.status);
+                this.run = {instanceId: r.instanceId, status: r.status, namespace: e.namespace, name: e.name,
+                    version: e.version} as FlowInstance;
+                this.followRun(r.instanceId);
+                this.cd.markForCheck();
+            },
+            error: err => {
+                this.starting = false;
+                this.runError = err?.error?.detail ?? err?.error?.msg ?? err?.error?.error ?? err?.message ?? String(err);
+                console.warn('[workflows] start failed', err);
+                this.cd.markForCheck();
+            }
+        });
+    }
+
+    /** Status + current task (flow-bridge) and the instance's human tasks, every 3 s until it ends. */
+    private followRun(id: string) {
+        this.runPoll = interval(3000).pipe(
+            startWith(0),
+            switchMap(() => forkJoin({
+                inst: this.flow.instance(id).pipe(catchError(() => of(null))),
+                tasks: this.flow.tasksOf(id).pipe(catchError(() => of([] as HumanTask[])))
+            })),
+            takeUntilDestroyed(this.destroyRef)
+        ).subscribe(({inst, tasks}) => {
+            if (inst) {
+                this.run = inst;
+            }
+            this.runTasks = tasks ?? [];
+            if (inst && ['COMPLETED', 'FAULTED', 'CANCELLED'].includes(inst.status)) {
+                console.log('[workflows] run', id, 'ended', inst.status);
+                this.runPoll?.unsubscribe();
+            }
+            this.cd.markForCheck();
+        });
+    }
+
+    get runEnded(): boolean {
+        return !!this.run && ['COMPLETED', 'FAULTED', 'CANCELLED'].includes(this.run.status);
     }
 
     private showCheck(r: WorkflowValidation | {error: any} | null) {
@@ -173,6 +245,9 @@ export class WorkflowDefinitionsEditComponent extends AbstractEditComponent<Work
             // keep the last good diagram while the YAML is being fixed
         } else {
             this.parsed = r;
+            if (this.runInput === '{}' || !this.runInput.trim()) {
+                this.runInput = this.sampleInput(r.workflow);
+            }
             const tasks = Array.isArray(r.workflow?.do) ? r.workflow.do.length : 0;
             this.check = {ok: true, text: `${r.document.namespace}:${r.document.name}:${r.document.version} · ${tasks} task${tasks === 1 ? '' : 's'}`};
             this.drawDiagram(r.workflow);
