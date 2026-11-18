@@ -1,0 +1,90 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>{{element.uuid ? (readOnly ? 'Workflow' : 'Edit Workflow') : 'New Workflow'}}
+    @if (element.uuid) {
+      <span class="wf-status wf-status-{{element.status | lowercase}}">{{element.status}}</span>
+    }
+  </h3>
+  <p class="text-muted">Serverless Workflow 1.0 YAML. Namespace, name and version come from its <code>document</code>
+    block. Deploy writes it into the runner's workflows folder (via flow-bridge) and waits until the runner has loaded it.</p>
+</div>
+
+<div class="main">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <div class="content view">
+
+          @if (element.message) {
+            <div class="wf-message" [class.failed]="element.status === 'FAILED'" [class.info]="element.status !== 'FAILED'">
+              <b>Last deploy:</b> {{element.message}}
+            </div>
+          }
+          @if (deployAvailable === false) {
+            <div class="wf-message info">Deploy is not available on this snello: {{deployUnavailableReason}}.
+              You can still save the workflow and download the .yaml for the runner's workflows folder.</div>
+          }
+          @if (readOnly) {
+            <div class="wf-message info">Deployed {{element.deployed_at | date:'dd/MM/yyyy HH:mm'}} by {{element.deployed_by}}.
+              A deployed version cannot change (the runner never reloads it): use <b>New version</b>.</div>
+          }
+
+          <div class="row">
+            <div class="col-md-7 col-sm-12">
+              <label class="label-text">Workflow YAML</label>
+              <textarea [(ngModel)]="element.yaml" (ngModelChange)="onYaml($event)" name="yaml" pTextarea rows="30"
+                        spellcheck="false" class="wf-yaml" [readonly]="readOnly"
+                        placeholder="document:&#10;  dsl: &quot;1.0.0&quot;&#10;  namespace: …&#10;  name: …&#10;  version: &quot;1.0.0&quot;&#10;do:&#10;  - …"></textarea>
+              @if (check) {
+                <div class="wf-check" [class.ok]="check.ok" [class.ko]="!check.ok">
+                  @if (check.ok) { <i class="fa fa-check"></i> } @else { <i class="fa fa-exclamation-triangle"></i> }
+                  {{check.text}}
+                </div>
+              }
+              @if (!element.uuid && !element.yaml) {
+                <button type="button" class="btn btn-default btn-sm" style="margin-top:6px" (click)="useStarter()">Insert starter workflow</button>
+              }
+              <small class="d-block text-muted" style="margin-top:6px">
+                Runner rules: namespace / name with letters, digits and <code>-</code> only (no <code>_</code>);
+                no YAML anchors (<code>&amp;x</code> / <code>*x</code>): reuse retry policies with <code>use.retries</code> +
+                <code>retry: &lt;name&gt;</code>. Secrets: <code>$secret.&lt;name&gt;</code> from the runner's config.
+                The full schema is checked by the runner at deploy.
+              </small>
+            </div>
+            <div class="col-md-5 col-sm-12">
+              <label class="label-text">Diagram</label>
+              <div class="wf-diagram" #diagram></div>
+            </div>
+          </div>
+
+          <div class="clearfix"></div>
+          <div class="btn-group btn-actions pull-right" style="margin-top:16px">
+            <button type="button" class="btn btn-default" [disabled]="!element.yaml" (click)="download()"><i class="fa fa-download"></i> .yaml</button>&nbsp;&nbsp;
+            @if (!element.uuid) {
+              <button type="button" [disabled]="!check?.ok" class="btn btn-success" (click)="save()">Save</button>&nbsp;&nbsp;
+            }
+            @if (element.uuid && !readOnly) {
+              <button type="button" [disabled]="!check?.ok || !dirty" class="btn btn-success" (click)="update()">Save</button>&nbsp;&nbsp;
+              <button type="button" [disabled]="!check?.ok || deploying || deployAvailable === false" class="btn btn-primary" (click)="deploy()">
+                @if (deploying) { <i class="fa fa-spinner fa-spin"></i> Deploying… (up to 20 s) } @else { <i class="fa fa-rocket"></i> {{dirty ? 'Save & deploy' : 'Deploy'}} }
+              </button>&nbsp;&nbsp;
+            }
+            @if (readOnly) {
+              <button type="button" class="btn btn-primary" (click)="newVersion()"><i class="fa fa-code-fork"></i> New version</button>&nbsp;&nbsp;
+            }
+            @if (element.uuid) {
+              <button type="button" class="btn btn-danger" [disabled]="deploying" (click)="confirmDelete()"
+                      [attr.title]="readOnly ? 'Removes the file; the runner keeps it loaded until it restarts' : null">Delete</button>&nbsp;&nbsp;
+            }
+            <button type="button" class="btn btn-danger" (click)="navigateToList()">Back</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

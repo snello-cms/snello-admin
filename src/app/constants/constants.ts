@@ -264,6 +264,14 @@ const ADMIN_ITEMS_LEGACY: any[] = [
     },
     {
         id: 'list',
+        icon: 'fa fa-code-fork',
+        section: 'workflowdefinitions',
+        name: 'Workflows',
+        summary: 'Write workflow YAML and deploy it to the Quarkus Flow runner',
+        roles: 'Admin, Manager'
+    },
+    {
+        id: 'list',
         icon: 'fa fa-sitemap',
         section: 'flowmonitor',
         name: 'Workflow Monitor',

@@ -179,6 +179,18 @@ export const MainRoutes: Routes = [
         ]
     },
     {
+        path: 'workflowdefinitions',
+        component: OutletComponent,
+        canActivate: [AppAuthGuard],
+        data: { roles: ['Admin', 'Manager'] },
+        children: [
+            {path: '', redirectTo: '/workflowdefinitions/list', pathMatch: 'full'},
+            {path: 'list', loadComponent: () => import('./pages/workflow-definitions/workflow-definitions-list.component').then(m => m.WorkflowDefinitionsListComponent)},
+            {path: 'edit/:id', loadComponent: () => import('./pages/workflow-definitions/workflow-definitions-edit.component').then(m => m.WorkflowDefinitionsEditComponent)},
+            {path: 'new', loadComponent: () => import('./pages/workflow-definitions/workflow-definitions-edit.component').then(m => m.WorkflowDefinitionsEditComponent)}
+        ]
+    },
+    {
         path: 'flowmonitor',
         component: OutletComponent,
         canActivate: [AppAuthGuard],
