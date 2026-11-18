@@ -85,3 +85,28 @@ jobs:
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+
+      # The snello all-in-one image (snello-api) bundles this admin, copied from the admin image when it is built.
+      # snello-api builds only on its own pushes, so an admin-only change never reached it, and a snello-api build
+      # running at the same time as this one could still pick the previous admin (2026-11-18). Rebuild it now,
+      # pinned to the image just pushed (sha-<short>, not edge). snello-api queues its builds per branch.
+      # Needs secret SNELLO_API_DISPATCH_TOKEN: fine-grained token on snello-cms/snello-api, "Actions: read and write".
+      # Optional repo variable SNELLO_API_BRANCH (default 6.0.0-alpha): the snello-api branch whose image to rebuild.
+      - name: Rebuild snello all-in-one with this admin
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ secrets.SNELLO_API_DISPATCH_TOKEN }}
+          API_REPO: snello-cms/snello-api
+          API_BRANCH: ${{ vars.SNELLO_API_BRANCH || '6.0.0-alpha' }}
+        run: |
+          ADMIN_IMAGE="snellocms/snello-admin:sha-${GITHUB_SHA::7}"
+          echo "admin image ${ADMIN_IMAGE} -> ${API_REPO}@${API_BRANCH} build_jvm.yml (snello-all-in-one)"
+          if [ -z "${GH_TOKEN}" ]; then
+            echo "::warning::secret SNELLO_API_DISPATCH_TOKEN not set: snello all-in-one NOT rebuilt with this admin"
+            exit 0
+          fi
+          gh workflow run build_jvm.yml -R "${API_REPO}" --ref "${API_BRANCH}" \
+            -f images=snello-all-in-one \
+            -f admin_image="${ADMIN_IMAGE}" \
+            -f reason="snello-admin ${GITHUB_SHA::7} pushed to main"
+          echo "requested: https://github.com/${API_REPO}/actions/workflows/build_jvm.yml"
