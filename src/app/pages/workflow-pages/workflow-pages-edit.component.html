@@ -1,0 +1,97 @@
+<sidebar></sidebar>
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>{{element.uuid ? 'Edit' : 'New'}} Workflow Page</h3>
+  <p class="text-muted">HTML + JS shown to the reviewer of a human task. The page holds no data: it reads it with
+    <code>snello.context()</code> after login, and every decision is checked by snello.</p>
+</div>
+
+<div class="main">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <div class="content view">
+          <div class="row">
+            <div class="col-md-12 col-sm-12">
+              <form #theform="ngForm">
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Name (*)</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.name" [required]="true" name="name" pattern="[a-z0-9][a-z0-9-]*" pInputText placeholder="e.g. rent-contract-review">
+                    <small class="d-block text-muted">Lower case letters, digits and -. URL: <code>{{pagesBase}}/{{element.name || '…'}}?task=…</code>. Tasks name their page in <code>page_name</code>.</small>
+                  </div>
+                </div>
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Title</label>
+                  <div class="col-sm-9"><input [(ngModel)]="element.title" name="title" pInputText placeholder="browser tab title"></div>
+                </div>
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Description</label>
+                  <div class="col-sm-9"><input [(ngModel)]="element.description" name="description" pInputText></div>
+                </div>
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Workflow</label>
+                  <div class="col-sm-9" style="display:flex;gap:8px;">
+                    <input [(ngModel)]="element.workflow_namespace" name="workflow_namespace" pInputText placeholder="namespace" style="flex:1">
+                    <input [(ngModel)]="element.workflow_name" name="workflow_name" pInputText placeholder="name" style="flex:2">
+                  </div>
+                </div>
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Roles</label>
+                  <div class="col-sm-9">
+                    <input [(ngModel)]="element.roles" name="roles" pInputText placeholder="e.g. Admin,Manager">
+                    <small class="d-block text-muted">Informative: who may decide is set on each task (<code>roles</code>).</small>
+                  </div>
+                </div>
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Body</label>
+                  <div class="col-sm-9">
+                    <textarea [(ngModel)]="element.body" name="body" pTextarea rows="22" spellcheck="false"
+                      style="width:100%;font-family:monospace;font-size:13px;" placeholder="empty = the generic page (record fields + decision buttons)"></textarea>
+                    <button type="button" class="btn btn-default btn-sm" (click)="useStarter()">Insert starter page</button>
+                    <small class="d-block text-muted" style="margin-top:6px">
+                      Page client: <code>await snello.ready()</code> (login) · <code>snello.context()</code> /
+                      <code>snello.onChange(ctx =&gt; …)</code> → task, record, fields, workflow, user ·
+                      <code>snello.api.get/post/put/del('table/…')</code> (viewer's token) ·
+                      <code>snello.decide('APPROVE', comment)</code> / <code>snello.undo()</code> ·
+                      <code>snello.renderDecisions(el)</code> (status + buttons + UNDO) · <code>snello.renderTask(el)</code> (generic page) ·
+                      <code>snello.esc(text)</code>. CSS classes <code>sp-wrap sp-card sp-h1 sp-table sp-btn</code>.
+                    </small>
+                  </div>
+                </div>
+
+                <div class="btn-group btn-actions pull-right">
+                  @if (!element.uuid) {
+                    <button type="button" [disabled]="!theform.form.valid" class="btn btn-success" (click)="save()">Save</button>
+                  }&nbsp;&nbsp;
+                  @if (element.uuid) {
+                    <button type="button" [disabled]="!theform.form.valid" class="btn btn-success" (click)="update()">Modify</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="button" class="btn btn-danger" (click)="confirmDelete()">Delete</button>
+                  }&nbsp;&nbsp;
+                  <button type="button" class="btn btn-danger" (click)="navigateToList()">Undo</button>
+                </div>
+              </form>
+
+              @if (element.uuid) {
+                <div class="clearfix"></div>
+                <div class="form-group clearfix row" style="margin-top:32px;padding-top:16px;border-top:1px solid #e5e7eb;">
+                  <label class="label-text col-sm-3">Preview</label>
+                  <div class="col-sm-9">
+                    <div style="display:flex;gap:8px;">
+                      <input [(ngModel)]="previewTask" name="previewTask" pInputText style="flex:1;font-family:monospace;" placeholder="task id (an OPEN task: decisions are real)">
+                      <button type="button" class="btn btn-default" [disabled]="!previewTask" (click)="preview()"><i class="fa fa-external-link"></i> Open</button>
+                    </div>
+                    <small class="d-block text-muted">Opens the saved page: press Modify first to see your changes.</small>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

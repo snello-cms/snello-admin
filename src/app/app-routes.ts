@@ -167,6 +167,28 @@ export const MainRoutes: Routes = [
         ]
     },
     {
+        path: 'workflowpages',
+        component: OutletComponent,
+        canActivate: [AppAuthGuard],
+        data: { roles: ['Admin', 'Manager'] },
+        children: [
+            {path: '', redirectTo: '/workflowpages/list', pathMatch: 'full'},
+            {path: 'list', loadComponent: () => import('./pages/workflow-pages/workflow-pages-list.component').then(m => m.WorkflowPagesListComponent)},
+            {path: 'edit/:id', loadComponent: () => import('./pages/workflow-pages/workflow-pages-edit.component').then(m => m.WorkflowPagesEditComponent)},
+            {path: 'new', loadComponent: () => import('./pages/workflow-pages/workflow-pages-edit.component').then(m => m.WorkflowPagesEditComponent)}
+        ]
+    },
+    {
+        path: 'flowmonitor',
+        component: OutletComponent,
+        canActivate: [AppAuthGuard],
+        data: { roles: ['Admin', 'Manager'] },
+        children: [
+            {path: '', redirectTo: '/flowmonitor/list', pathMatch: 'full'},
+            {path: 'list', loadComponent: () => import('./pages/flow-monitor/flow-monitor.component').then(m => m.FlowMonitorComponent)}
+        ]
+    },
+    {
         path: 'datalistgeneral/list/:name',
         canActivate: [AppAuthGuard],
         data: { requiresGroup: true },
