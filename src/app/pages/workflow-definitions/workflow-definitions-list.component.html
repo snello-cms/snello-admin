@@ -80,6 +80,35 @@
               </p-table>
             </div>
           </form>
+
+          <div class="wf-git">
+            <h4>Only on the runner <small class="text-muted">loaded from its workflows folder, not written here</small></h4>
+            <p class="text-muted">Mostly the git-managed workflows (<code>snello-flows/workflows</code> → <code>aruba-k8s</code> ConfigMap,
+              copied into the folder at every runner start); also a workflow deleted here, which the runner keeps until it restarts.
+              Read-only: change them in git, an edit here would be overwritten at the next restart.</p>
+            @if (runnerError) {
+              <div class="wf-message info">Runner workflows not available: {{runnerError}}</div>
+            } @else if (!runnerOnly.length) {
+              <p class="text-muted">None.</p>
+            } @else {
+              <table class="table wf-git-table">
+                <thead><tr><th>Workflow</th><th>Version</th><th>Title</th><th class="Operations">Operations</th></tr></thead>
+                <tbody>
+                  @for (d of runnerOnly; track d.namespace + ':' + d.name + ':' + d.version) {
+                    <tr>
+                      <td><code>{{d.namespace}}:{{d.name}}</code> <span class="wf-status wf-git-badge" title="Loaded by the runner, not written in this editor (usually git-managed)">runner</span></td>
+                      <td>{{d.version}}</td>
+                      <td>{{d.title}}</td>
+                      <td>
+                        <button type="button" class="btn btn-success btn-sm" (click)="openRunner(d)"><i class="fa fa-eye"></i> Open</button>&nbsp;
+                        <button type="button" class="btn btn-default btn-sm" (click)="monitor(d)"><i class="fa fa-sitemap"></i> Monitor</button>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            }
+          </div>
         </div>
       </div>
     </div>

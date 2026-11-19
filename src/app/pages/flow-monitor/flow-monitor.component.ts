@@ -5,6 +5,7 @@ import {SelectModule} from 'primeng/select';
 import {TableModule} from 'primeng/table';
 import {PrimeTemplate, MessageService} from 'primeng/api';
 import {Subscription, interval} from 'rxjs';
+import {ActivatedRoute} from '@angular/router';
 import {SideBarComponent} from '../sidebar/sidebar.component';
 import {AdminhomeTopBar} from '../adminhome-topbar/adminhome-topbar.component';
 import {SelectClearDefaultDirective} from '../../common/select-clear-default.directive';
@@ -30,6 +31,7 @@ export class FlowMonitorComponent implements OnInit {
     private readonly flow = inject(FlowService);
     private readonly messages = inject(MessageService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly route = inject(ActivatedRoute);
     private readonly diagramHost = viewChild<ElementRef<HTMLDivElement>>('diagram');
 
     readonly definitions = signal<FlowDefinition[]>([]);
@@ -71,7 +73,15 @@ export class FlowMonitorComponent implements OnInit {
             next: defs => {
                 console.log('[flow-monitor] definitions', defs.length);
                 this.definitions.set([...defs].sort((a, b) => key(a).localeCompare(key(b))));
-                if (!this.selectedKey() && defs.length) {
+                // ?wf=namespace:name:version (from Workflows "Monitor") preselects that workflow
+                const wanted = this.route.snapshot.queryParamMap.get('wf');
+                if (wanted && this.definitions().some(d => key(d) === wanted)) {
+                    console.log('[flow-monitor] preselected from link', wanted);
+                    this.selectDefinition(wanted);
+                } else if (!this.selectedKey() && defs.length) {
+                    if (wanted) {
+                        console.warn('[flow-monitor] linked workflow not loaded on the runner', wanted);
+                    }
                     this.selectDefinition(key(this.definitions()[0]));
                 }
             },
