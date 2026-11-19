@@ -14,7 +14,7 @@ import {HumanTask} from '../models/human-task';
     template: `
         @for (t of tasks(); track t.uuid) {
             <div class="ht-row">
-                <span class="ht-status ht-{{ t.status === 'OPEN' ? 'open' : 'closed' }}">{{ t.status }}</span>
+                <span class="ht-status ht-{{ t.status === 'OPEN' ? 'open' : t.status === 'CANCELLED' ? 'cancelled' : 'closed' }}">{{ t.status }}</span>
                 <span class="ht-title">{{ t.title }}</span>
                 @if (t.decision) {
                     — <b>{{ t.decision }}</b> by {{ t.decided_by }}
@@ -39,6 +39,7 @@ import {HumanTask} from '../models/human-task';
         .ht-open-btn { margin-left: 8px; }
         .ht-status.ht-open { background: #eef0f3; color: #4b5563; }
         .ht-status.ht-closed { background: #dcfce7; color: #166534; }
+        .ht-status.ht-cancelled { background: #fee2e2; color: #991b1b; }
         .ht-muted { color: #6b7280; font-size: 12px; margin-left: 4px; }
         .ht-link { margin-left: 8px; }
     `]
