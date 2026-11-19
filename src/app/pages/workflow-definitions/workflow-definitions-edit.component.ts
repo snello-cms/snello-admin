@@ -20,6 +20,7 @@ import {FlowService} from '../../services/flow.service';
 import {ConfigurationService} from '../../services/configuration.service';
 import {FlowInstance} from '../../models/flow-instance';
 import {HumanTask} from '../../models/human-task';
+import {HumanTaskListComponent} from '../../common/human-task-list.component';
 
 /**
  * Workflow editor: the YAML is the only input (namespace/name/version/title come from its document block).
@@ -32,7 +33,7 @@ import {HumanTask} from '../../models/human-task';
     templateUrl: './workflow-definitions-edit.component.html',
     styleUrl: './workflow-status.css',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [SideBarComponent, AdminhomeTopBar, FormsModule, Textarea, DatePipe, LowerCasePipe]
+    imports: [SideBarComponent, AdminhomeTopBar, FormsModule, Textarea, DatePipe, LowerCasePipe, HumanTaskListComponent]
 })
 export class WorkflowDefinitionsEditComponent extends AbstractEditComponent<WorkflowDefinition> implements OnInit, AfterViewInit {
 

@@ -81,7 +81,8 @@
                     <tr class="flow-row" (click)="selectInstance(i)" [class.flow-row-selected]="selectedInstance()?.instanceId === i.instanceId">
                       <td><code title="{{ i.instanceId }}">{{ i.instanceId.slice(-8) }}</code></td>
                       <td><span class="flow-status flow-status-{{ i.status | lowercase }}">{{ i.status }}</span></td>
-                      <td class="flow-at" [title]="i.error?.title || ''">{{ i.currentTask || (i.status === 'FAULTED' ? 'failed' : '') }}</td>
+                      <td class="flow-at" [title]="i.error?.title || ''">{{ i.currentTask || (i.status === 'FAULTED' ? 'failed' : '') }}
+                        @if (waitingForPerson().has(i.instanceId)) { <i class="fa fa-user flow-person" title="waiting for a person: open the instance for the review page"></i> }</td>
                       <td>{{ i.startedAt | date:'dd/MM HH:mm:ss' }}</td>
                       <td>{{ duration(i) }}</td>
                       <td class="flow-actions">
@@ -108,6 +109,10 @@
               </div>
 
               @if (selectedInstance(); as si) {
+                <div class="flow-panel-title">Human tasks of {{ si.instanceId.slice(-8) }}</div>
+                <div class="flow-human-tasks">
+                  <human-task-list [tasks]="instanceTasks()" emptyText="None: this instance has not asked a person."></human-task-list>
+                </div>
                 <div class="flow-panel-title">Task events of {{ si.instanceId.slice(-8) }}</div>
                 <table class="table table-condensed flow-tasks">
                   <tr><th>Position</th><th>Last event</th><th>Runs</th><th>Faults</th><th>At</th></tr>
@@ -136,6 +141,8 @@
   .flow-diagram-panel { flex: 1 1 460px; min-width: 320px; }
   .flow-instances-panel { flex: 1 1 520px; min-width: 320px; }
   .flow-panel-title { font-weight: 600; margin: 6px 0 8px; }
+  .flow-human-tasks { background: #fff; border: 1px solid #e5e7eb; border-radius: 6px; padding: 4px 10px 8px; margin-bottom: 12px; }
+  .flow-person { color: #b45309; margin-left: 6px; }
   .flow-diagram { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 8px; overflow: auto; max-height: 75vh; }
   .flow-diagram svg { max-width: 100%; height: auto; }
   .flow-workflow-select { min-width: 320px; }

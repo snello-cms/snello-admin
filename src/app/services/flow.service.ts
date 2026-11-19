@@ -33,6 +33,13 @@ export class FlowService {
             `${b}/definitions/${enc(d.namespace)}/${enc(d.name)}/${enc(d.version)}`)));
     }
 
+    /** The same workflow as YAML, as the runner loaded it (snello converts the runner's JSON). */
+    definitionYaml(d: FlowDefinition): Observable<string> {
+        console.log('[flow] definition yaml', d.namespace, d.name, d.version);
+        return this.base().pipe(switchMap(b => this.http.get(
+            `${b}/definitions/${enc(d.namespace)}/${enc(d.name)}/${enc(d.version)}/yaml`, {responseType: 'text'})));
+    }
+
     instances(filter: {namespace?: string; name?: string; version?: string; status?: string; limit?: number}):
         Observable<{total: number; instances: FlowInstance[]}> {
         let params = new HttpParams();
@@ -61,6 +68,13 @@ export class FlowService {
     tasksOf(instanceId: string): Observable<HumanTask[]> {
         return this.configuration.getConfiguration().pipe(switchMap(c => this.http.get<HumanTask[]>(
             String(c[API_SERVICE_PATH] ?? '/api') + '/humantasks', {params: new HttpParams().set('instance_id', instanceId)})));
+    }
+
+    /** OPEN human tasks of a workflow (all its instances): which instances are waiting for a person. */
+    openTasksOfWorkflow(namespace: string, name: string): Observable<HumanTask[]> {
+        return this.configuration.getConfiguration().pipe(switchMap(c => this.http.get<HumanTask[]>(
+            String(c[API_SERVICE_PATH] ?? '/api') + '/humantasks', {params: new HttpParams()
+                .set('status', 'OPEN').set('workflow_namespace', namespace).set('workflow_name', name)})));
     }
 
     control(i: FlowInstance, action: 'suspend' | 'resume' | 'cancel'): Observable<any> {

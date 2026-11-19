@@ -108,18 +108,7 @@
                       </div>
                       @if (run.currentTask) { <div>now at <b>{{run.currentTask}}</b></div> }
                       @if (run.error?.title) { <div class="wf-check ko">{{run.error?.title}}</div> }
-                      @for (t of runTasks; track t.uuid) {
-                        <div class="wf-run-task">
-                          <span class="wf-status wf-status-{{t.status === 'OPEN' ? 'draft' : 'deployed'}}">{{t.status}}</span>
-                          {{t.title}}
-                          @if (t.decision) { — <b>{{t.decision}}</b> by {{t.decided_by}} }
-                          @if (t.status === 'OPEN') {
-                            <a class="btn btn-success btn-sm" [href]="t.url" target="_blank" rel="noopener"><i class="fa fa-external-link"></i> Open approval page</a>
-                          } @else {
-                            <a [href]="t.url" target="_blank" rel="noopener">page</a>
-                          }
-                        </div>
-                      }
+                      <human-task-list [tasks]="runTasks" openLabel="Open approval page"></human-task-list>
                       @if (runEnded) {
                         <div class="text-muted" style="margin-top:6px">Ended. Whole path: Workflow Monitor, this workflow, instance {{run.instanceId}}.</div>
                       }
