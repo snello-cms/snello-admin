@@ -5,6 +5,8 @@ export interface HumanTask {
   status: string;          // OPEN / CLOSED / CANCELLED
   decision?: string;
   decided_by?: string;
+  decided_at?: string;
+  roles?: string;          // "Admin,Manager": who may decide
   decisions?: string;      // "APPROVE,REFUSE"
   page_name?: string;
   instance_id?: string;

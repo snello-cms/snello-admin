@@ -70,6 +70,13 @@ export class FlowService {
             String(c[API_SERVICE_PATH] ?? '/api') + '/humantasks', {params: new HttpParams().set('instance_id', instanceId)})));
     }
 
+    /** OPEN human tasks of a workflow (all its instances): which instances are waiting for a person. */
+    openTasksOfWorkflow(namespace: string, name: string): Observable<HumanTask[]> {
+        return this.configuration.getConfiguration().pipe(switchMap(c => this.http.get<HumanTask[]>(
+            String(c[API_SERVICE_PATH] ?? '/api') + '/humantasks', {params: new HttpParams()
+                .set('status', 'OPEN').set('workflow_namespace', namespace).set('workflow_name', name)})));
+    }
+
     control(i: FlowInstance, action: 'suspend' | 'resume' | 'cancel'): Observable<any> {
         console.log('[flow]', action, i.instanceId);
         return this.base().pipe(switchMap(b => this.http.post(
