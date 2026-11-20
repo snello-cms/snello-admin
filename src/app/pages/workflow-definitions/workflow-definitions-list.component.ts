@@ -1,8 +1,6 @@
 import {Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef} from '@angular/core';
-import {forkJoin, of} from 'rxjs';
-import {catchError} from 'rxjs/operators';
-import {FlowService} from '../../services/flow.service';
-import {FlowDefinition} from '../../models/flow-definition';
+import {from, of} from 'rxjs';
+import {catchError, concatMap, map, toArray} from 'rxjs/operators';
 import {DatePipe, LowerCasePipe} from '@angular/common';
 import {AbstractListComponent} from '../../common/abstract-list-component';
 import {Router} from '@angular/router';
@@ -29,51 +27,56 @@ export class WorkflowDefinitionsListComponent extends AbstractListComponent<Work
         public confirmationService: ConfirmationService,
         public service: WorkflowDefinitionService,
         public messageService: MessageService,
-        private flow: FlowService,
         private cd: ChangeDetectorRef
     ) {
         super(messageService, router, confirmationService, service, 'workflowdefinitions');
         this.filters = new WorkflowDefinition();
     }
 
-    /** Loaded on the runner but not written here: the git-managed workflows (k8s init container -> workflows folder). */
-    runnerOnly: FlowDefinition[] = [];
-    runnerError: string | null = null;
-
     ngOnInit() {
         this.service.buildSearch();
         this.firstReload = true;
-        this.loadRunnerOnly();
     }
 
-    loadRunnerOnly() {
-        forkJoin({
-            loaded: this.flow.definitions(),
-            managed: this.service.getAllList({}).pipe(catchError(() => of([] as WorkflowDefinition[])))
-        }).subscribe({
-            next: ({loaded, managed}) => {
-                const here = new Set((managed ?? []).map(w => `${w.namespace}:${w.name}:${w.version}`));
-                this.runnerOnly = (loaded ?? [])
-                    .filter(d => !here.has(`${d.namespace}:${d.name}:${d.version}`))
-                    .sort((a, b) => `${a.namespace}:${a.name}:${a.version}`.localeCompare(`${b.namespace}:${b.name}:${b.version}`));
-                this.runnerError = null;
-                console.log('[workflows] runner loaded', loaded?.length, 'managed here', here.size, '-> from git', this.runnerOnly.length);
-                this.cd.markForCheck();
-            },
-            error: e => {
-                this.runnerError = e?.error?.error || e?.message || 'runner not reachable';
-                console.warn('[workflows] runner workflows not available', e);
-                this.cd.markForCheck();
-            }
+    uploading = false;
+    uploadResults: {file: string; ok: boolean; text: string}[] = [];
+
+    /**
+     * Several .yaml files at once: each becomes a new workflow (DRAFT, same checks as Save), one after the other.
+     * A file whose namespace:name:version exists already is refused (409): change document.version.
+     */
+    uploadFiles(event: Event, datatable: any) {
+        const input = event.target as HTMLInputElement;
+        const files = Array.from(input.files ?? []);
+        input.value = '';
+        if (!files.length) {
+            return;
+        }
+        console.log('[workflows] upload', files.length, 'file(s)', files.map(f => f.name));
+        this.uploading = true;
+        this.uploadResults = [];
+        from(files).pipe(
+            concatMap(f => from(f.size > 256 * 1024 ? Promise.reject(new Error('larger than 256 KB')) : f.text()).pipe(
+                concatMap(yaml => {
+                    const w = new WorkflowDefinition();
+                    w.yaml = yaml;
+                    return this.service.persist(w);
+                }),
+                map(row => ({file: f.name, ok: true,
+                    text: `saved as ${row.namespace}:${row.name}:${row.version} (draft: open it to deploy)`})),
+                catchError(e => of({file: f.name, ok: false, text: e?.error?.msg || e?.message || String(e)}))
+            )),
+            toArray()
+        ).subscribe(results => {
+            this.uploading = false;
+            this.uploadResults = results;
+            const ok = results.filter(r => r.ok).length;
+            console.log('[workflows] upload done', ok, 'saved of', results.length, results);
+            this.messageService.add({severity: ok === results.length ? 'success' : 'warn', summary: 'Upload',
+                detail: `${ok} of ${results.length} file(s) saved as new workflows`});
+            this.reload(datatable);
+            this.cd.markForCheck();
         });
-    }
-
-    openRunner(d: FlowDefinition) {
-        this.router.navigate(['/workflowdefinitions/runner', d.namespace, d.name, d.version]);
-    }
-
-    monitor(d: FlowDefinition) {
-        this.router.navigate(['/flowmonitor/list'], {queryParams: {wf: `${d.namespace}:${d.name}:${d.version}`}});
     }
 
     public new() {

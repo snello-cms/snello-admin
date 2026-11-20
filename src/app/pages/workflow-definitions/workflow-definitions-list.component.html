@@ -6,8 +6,14 @@
 <div class="sidebar-subpage">
   <h3>Workflows</h3>
   <p class="text-muted">Serverless Workflow YAML, deployed to the Quarkus Flow runner. A deployed version cannot change:
-    edit it as a new version (running instances keep theirs).</p>
+    edit it as a new version (running instances keep theirs). Every workflow lives here: at startup snello imports the
+    new ones shipped with <code>snello-flows</code>.</p>
   <button type="button" class="btn btn-add pull-right btn-block" (click)="new()"><i class="fa fa-plus-circle"></i> Add
+  </button>
+  <input #yamlFiles type="file" accept=".yaml,.yml,text/yaml,application/yaml" multiple hidden (change)="uploadFiles($event, datatable)">
+  <button type="button" class="btn btn-default pull-right btn-block" [disabled]="uploading" (click)="yamlFiles.click()"
+          title="Each .yaml becomes a new workflow (draft): open it to deploy">
+    <i class="fa" [class.fa-upload]="!uploading" [class.fa-spinner]="uploading" [class.fa-spin]="uploading"></i> Upload files
   </button>
 </div>
 
@@ -80,35 +86,16 @@
               </p-table>
             </div>
           </form>
-
-          <div class="wf-git">
-            <h4>Only on the runner <small class="text-muted">loaded from its workflows folder, not written here</small></h4>
-            <p class="text-muted">Mostly the git-managed workflows (<code>snello-flows/workflows</code> → <code>aruba-k8s</code> ConfigMap,
-              copied into the folder at every runner start); also a workflow deleted here, which the runner keeps until it restarts.
-              Read-only: change them in git, an edit here would be overwritten at the next restart.</p>
-            @if (runnerError) {
-              <div class="wf-message info">Runner workflows not available: {{runnerError}}</div>
-            } @else if (!runnerOnly.length) {
-              <p class="text-muted">None.</p>
-            } @else {
-              <table class="table wf-git-table">
-                <thead><tr><th>Workflow</th><th>Version</th><th>Title</th><th class="Operations">Operations</th></tr></thead>
-                <tbody>
-                  @for (d of runnerOnly; track d.namespace + ':' + d.name + ':' + d.version) {
-                    <tr>
-                      <td><code>{{d.namespace}}:{{d.name}}</code> <span class="wf-status wf-git-badge" title="Loaded by the runner, not written in this editor (usually git-managed)">runner</span></td>
-                      <td>{{d.version}}</td>
-                      <td>{{d.title}}</td>
-                      <td>
-                        <button type="button" class="btn btn-success btn-sm" (click)="openRunner(d)"><i class="fa fa-eye"></i> Open</button>&nbsp;
-                        <button type="button" class="btn btn-default btn-sm" (click)="monitor(d)"><i class="fa fa-sitemap"></i> Monitor</button>
-                      </td>
-                    </tr>
-                  }
-                </tbody>
-              </table>
-            }
-          </div>
+          @if (uploadResults.length) {
+            <div class="wf-upload">
+              <b>Upload</b> <button type="button" class="btn btn-link btn-sm" (click)="uploadResults = []">hide</button>
+              <ul>
+                @for (r of uploadResults; track r.file) {
+                  <li [class.ko]="!r.ok"><code>{{r.file}}</code>: {{r.text}}</li>
+                }
+              </ul>
+            </div>
+          }
         </div>
       </div>
     </div>

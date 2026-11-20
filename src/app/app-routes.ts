@@ -188,7 +188,6 @@ export const MainRoutes: Routes = [
             {path: 'list', loadComponent: () => import('./pages/workflow-definitions/workflow-definitions-list.component').then(m => m.WorkflowDefinitionsListComponent)},
             {path: 'edit/:id', loadComponent: () => import('./pages/workflow-definitions/workflow-definitions-edit.component').then(m => m.WorkflowDefinitionsEditComponent)},
             {path: 'new', loadComponent: () => import('./pages/workflow-definitions/workflow-definitions-edit.component').then(m => m.WorkflowDefinitionsEditComponent)},
-            {path: 'runner/:namespace/:name/:version', loadComponent: () => import('./pages/workflow-definitions/workflow-runner-view.component').then(m => m.WorkflowRunnerViewComponent)}
         ]
     },
     {

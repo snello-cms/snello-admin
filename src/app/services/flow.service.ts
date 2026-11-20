@@ -33,13 +33,6 @@ export class FlowService {
             `${b}/definitions/${enc(d.namespace)}/${enc(d.name)}/${enc(d.version)}`)));
     }
 
-    /** The same workflow as YAML, as the runner loaded it (snello converts the runner's JSON). */
-    definitionYaml(d: FlowDefinition): Observable<string> {
-        console.log('[flow] definition yaml', d.namespace, d.name, d.version);
-        return this.base().pipe(switchMap(b => this.http.get(
-            `${b}/definitions/${enc(d.namespace)}/${enc(d.name)}/${enc(d.version)}/yaml`, {responseType: 'text'})));
-    }
-
     instances(filter: {namespace?: string; name?: string; version?: string; status?: string; limit?: number}):
         Observable<{total: number; instances: FlowInstance[]}> {
         let params = new HttpParams();

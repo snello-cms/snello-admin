@@ -46,6 +46,11 @@
                   {{check.text}}
                 </div>
               }
+              @if (!readOnly) {
+                <input #yamlFile type="file" accept=".yaml,.yml,text/yaml,application/yaml" hidden (change)="uploadYaml($event)">
+                <button type="button" class="btn btn-default btn-sm" style="margin-top:6px" (click)="yamlFile.click()"
+                        title="Puts the file's YAML in the text area: check it, then Save / Deploy as usual"><i class="fa fa-upload"></i> Upload .yaml</button>&nbsp;
+              }
               @if (!element.uuid && !element.yaml) {
                 <button type="button" class="btn btn-default btn-sm" style="margin-top:6px" (click)="useStarter()">Insert starter workflow</button>&nbsp;
                 <button type="button" class="btn btn-default btn-sm" style="margin-top:6px" (click)="useApprovalExample()">Insert approval example</button>
