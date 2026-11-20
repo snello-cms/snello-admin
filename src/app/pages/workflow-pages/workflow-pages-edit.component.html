@@ -34,9 +34,11 @@
                 </div>
                 <div class="form-group clearfix row">
                   <label class="label-text col-sm-3">Workflow</label>
-                  <div class="col-sm-9" style="display:flex;gap:8px;">
-                    <input [(ngModel)]="element.workflow_namespace" name="workflow_namespace" pInputText placeholder="namespace" style="flex:1">
-                    <input [(ngModel)]="element.workflow_name" name="workflow_name" pInputText placeholder="name" style="flex:2">
+                  <div class="col-sm-9">
+                    <p-select [(ngModel)]="workflowKey" [options]="workflowOptions" name="workflow" [filter]="true" [showClear]="true"
+                      placeholder="Choose one of our workflows" [style]="{'width':'100%'}"></p-select>
+                    @if (workflowsError) { <small class="text-danger">Workflows not available: {{workflowsError}}</small> }
+                    @else { <small class="text-muted">From the Workflows editor; the page shows the tasks this workflow opens.</small> }
                   </div>
                 </div>
                 <div class="form-group clearfix row">

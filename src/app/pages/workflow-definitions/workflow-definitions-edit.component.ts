@@ -148,6 +148,30 @@ export class WorkflowDefinitionsEditComponent extends AbstractEditComponent<Work
         this.yamlChanges.next(yaml ?? '');
     }
 
+    /** A .yaml file from disk replaces the text area's YAML (the usual check, diagram, Save / Deploy follow). */
+    uploadYaml(event: Event) {
+        const input = event.target as HTMLInputElement;
+        const file = input.files?.[0];
+        input.value = '';   // the same file again fires change again
+        if (!file) {
+            return;
+        }
+        console.log('[workflows] upload', file.name, file.size, 'bytes');
+        if (file.size > 256 * 1024) {
+            this.messageService.add({severity: 'error', summary: 'File too large', detail: `${file.name}: a workflow is at most 256 KB`});
+            return;
+        }
+        file.text().then(yaml => {
+            this.element.yaml = yaml;
+            this.onYaml(yaml);
+            this.messageService.add({severity: 'info', summary: 'File loaded', detail: `${file.name}: check it, then Save`});
+            this.cd.markForCheck();
+        }).catch(e => {
+            console.warn('[workflows] upload failed', file.name, e);
+            this.messageService.add({severity: 'error', summary: 'Cannot read the file', detail: file.name});
+        });
+    }
+
     useStarter() {
         console.log('[workflows] starter inserted');
         this.element.yaml = HELLO_EXAMPLE;

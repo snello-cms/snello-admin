@@ -14,6 +14,7 @@
 .wf-run { margin-top: 28px; padding-top: 16px; border-top: 1px solid #e5e7eb; }
 .wf-run-status { border: 1px solid #e5e7eb; border-radius: 6px; padding: 10px 12px; background: #fff; line-height: 1.9; }
 .wf-default { background: #ede9fe; color: #5b21b6; margin-left: 4px; }
-.wf-git { margin-top: 28px; padding-top: 16px; border-top: 1px solid #e5e7eb; }
-.wf-git-table { background: #fff; }
-.wf-git-badge { background: #fef3c7; color: #92400e; margin-left: 4px; }
+
+.wf-upload { margin-top: 16px; padding: 10px 14px; background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 4px; }
+.wf-upload ul { margin: 6px 0 0; padding-left: 18px; }
+.wf-upload li.ko { color: #b91c1c; }
