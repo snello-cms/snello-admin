@@ -1,0 +1,56 @@
+<sidebar></sidebar>
+
+<div class="sidebar">
+  <adminhome-topbar></adminhome-topbar>
+</div>
+
+<div class="sidebar-subpage">
+  <h3>Introspect batch</h3>
+  <button type="button" class="btn btn-reset btn-block" style="display: block; width: 100%;" (click)="goBack()">
+    <i class="fa fa-arrow-left"></i> Back to introspect
+  </button>
+  @if (active) {
+    <button type="button" class="btn btn-default btn-block" style="display: block; width: 100%; margin-top: 8px;" (click)="cancel()">
+      Cancel
+    </button>
+  }
+</div>
+
+<div class="main">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12 col-sm-12">
+        <div class="content list">
+          @if (job) {
+            <p>
+              Status: <strong>{{ job.status }}</strong>
+              — progress {{ job.done_tables }} / {{ job.total_tables }}
+              @if (job.failed_tables) { (failed {{ job.failed_tables }}) }
+              @if (job.current_table) { — current: {{ job.current_table }} }
+            </p>
+            <div style="background: #eee; height: 10px; border-radius: 4px; margin-bottom: 16px; max-width: 480px;">
+              <div [style.width.%]="progressPct" style="background: #337ab7; height: 10px; border-radius: 4px;"></div>
+            </div>
+            @if (job.error_message) {
+              <p style="color: #a94442;">{{ job.error_message }}</p>
+            }
+          }
+
+          <h4>Log</h4>
+          <div style="max-height: 480px; overflow: auto; background: #1e1e1e; color: #ddd; padding: 12px; font-family: monospace; font-size: 12px;">
+            @for (line of logs; track line.uuid) {
+              <div>
+                <span style="opacity: 0.6;">{{ line.created_at }}</span>
+                [{{ line.level }}]
+                @if (line.table_name) { {{ line.table_name }} — }
+                {{ line.message }}
+              </div>
+            } @empty {
+              <div>Waiting for log lines…</div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

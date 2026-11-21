@@ -1,17 +1,22 @@
-import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, inject} from '@angular/core';
 import {Router} from '@angular/router';
 import {FormsModule} from '@angular/forms';
 import {MessageService} from 'primeng/api';
 import {SideBarComponent} from '../sidebar/sidebar.component';
 import {AdminhomeTopBar} from '../adminhome-topbar/adminhome-topbar.component';
-import {IntrospectService} from '../../services/introspect.service';
+import {
+    IntrospectCatalog,
+    IntrospectJob,
+    IntrospectService
+} from '../../services/introspect.service';
 import {IntrospectResult} from '../../models/introspect-result';
 import {IntrospectedEntity} from '../../models/introspected-entity';
 import {IntrospectRequest} from '../../models/introspect-request';
 
+const MAX_SELECT = 15;
+
 /**
- * Generate metadata from the DB schema: preview what /api/introspect infers for tables not yet described,
- * pick the ones to keep, apply. Apply only writes metadatas/fielddefinitions rows (already_exist=true), never DDL.
+ * Generate metadata from the DB schema: catalog + selective preview/apply (≤15), or full async batch.
  */
 @Component({
     standalone: true,
@@ -19,13 +24,15 @@ import {IntrospectRequest} from '../../models/introspect-request';
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [SideBarComponent, AdminhomeTopBar, FormsModule]
 })
-export class MetadataIntrospectComponent {
+export class MetadataIntrospectComponent implements OnInit {
     private readonly router = inject(Router);
     private readonly service = inject(IntrospectService);
     private readonly messageService = inject(MessageService);
 
+    readonly maxSelect = MAX_SELECT;
+    catalog: IntrospectCatalog | null = null;
     metadataGroup = '';
-    sampleRows = 30;
+    sampleRows = 5;
     loading = false;
     preview: IntrospectResult | null = null;
     applied: IntrospectResult | null = null;
@@ -33,6 +40,12 @@ export class MetadataIntrospectComponent {
     selected = new Set<string>();
     /** tables whose field list is expanded */
     expanded = new Set<string>();
+    jobs: IntrospectJob[] = [];
+
+    ngOnInit() {
+        this.reloadCatalog();
+        this.reloadJobs();
+    }
 
     get candidates(): IntrospectedEntity[] {
         return (this.preview?.entities ?? []).filter(e => !e.skipped);
@@ -46,17 +59,35 @@ export class MetadataIntrospectComponent {
         this.router.navigate(['/metadata/list']);
     }
 
+    reloadCatalog() {
+        this.service.catalog().subscribe({
+            next: c => this.catalog = c,
+            error: err => this.messageService.add({severity: 'error', summary: 'Catalog failed', detail: err?.message})
+        });
+    }
+
+    reloadJobs() {
+        this.service.listJobs().subscribe({
+            next: jobs => this.jobs = jobs || [],
+            error: () => { /* batch endpoints may be unavailable on older APIs */ }
+        });
+    }
+
     runPreview() {
         this.loading = true;
         this.applied = null;
         this.service.preview(this.request()).subscribe({
             next: result => {
                 this.preview = result;
-                // everything inferable is ticked by default: the admin unticks what they don't want
-                this.selected = new Set(this.candidates.map(e => e.table_name));
+                this.selected = new Set(this.candidates.slice(0, MAX_SELECT).map(e => e.table_name));
                 this.expanded.clear();
                 this.loading = false;
-                console.info(`[introspect] preview candidates=${this.candidates.length} skipped=${this.skipped.length}`);
+                if (this.candidates.length > MAX_SELECT) {
+                    this.messageService.add({
+                        severity: 'warn',
+                        summary: `Select at most ${MAX_SELECT} tables, or use full batch import.`
+                    });
+                }
                 if (!this.candidates.length) {
                     this.messageService.add({severity: 'info', summary: 'Every table already has a metadata.'});
                 }
@@ -74,6 +105,13 @@ export class MetadataIntrospectComponent {
             this.messageService.add({severity: 'warn', summary: 'Select at least one table.'});
             return;
         }
+        if (tables.length > MAX_SELECT) {
+            this.messageService.add({
+                severity: 'warn',
+                summary: `Select at most ${MAX_SELECT} tables, or use full batch import.`
+            });
+            return;
+        }
         this.loading = true;
         this.service.apply({...this.request(), tables}).subscribe({
             next: result => {
@@ -84,8 +122,9 @@ export class MetadataIntrospectComponent {
                     ? {severity: 'success', summary: `Generated ${created} metadata(s).`}
                     : {severity: 'error', summary: 'Apply rejected', detail: result.errors.join('; ')});
                 if (result.applied) {
-                    // applied tables are now "already referenced": refresh so they move to skipped
                     this.preview = null;
+                    this.reloadCatalog();
+                    this.reloadJobs();
                 }
             },
             error: err => {
@@ -95,16 +134,46 @@ export class MetadataIntrospectComponent {
         });
     }
 
+    startBatch() {
+        this.loading = true;
+        const group = this.metadataGroup.trim();
+        this.service.startBatch(this.sampleRows, group || undefined).subscribe({
+            next: job => {
+                this.loading = false;
+                this.messageService.add({severity: 'success', summary: 'Batch started.'});
+                this.router.navigate(['/metadata/introspect/batch', job.uuid]);
+            },
+            error: err => {
+                this.loading = false;
+                const detail = err?.error?.error || err?.message;
+                this.messageService.add({severity: 'error', summary: 'Batch start failed', detail});
+            }
+        });
+    }
+
+    openJob(job: IntrospectJob) {
+        this.router.navigate(['/metadata/introspect/batch', job.uuid]);
+    }
+
     toggle(set: Set<string>, table: string) {
         if (set.has(table)) {
             set.delete(table);
-        } else {
-            set.add(table);
+            return;
         }
+        if (set.size >= MAX_SELECT) {
+            this.messageService.add({
+                severity: 'warn',
+                summary: `Select at most ${MAX_SELECT} tables, or use full batch import.`
+            });
+            return;
+        }
+        set.add(table);
     }
 
     toggleAll(checked: boolean) {
-        this.selected = checked ? new Set(this.candidates.map(e => e.table_name)) : new Set();
+        this.selected = checked
+            ? new Set(this.candidates.slice(0, MAX_SELECT).map(e => e.table_name))
+            : new Set();
     }
 
     openMetadata(table: string) {

@@ -38,6 +38,7 @@ export const MainRoutes: Routes = [
             {path: 'export', loadComponent: () => import('./pages/metadata/metadata-export.component').then(m => m.MetadataExportComponent)},
             {path: 'import', loadComponent: () => import('./pages/metadata/metadata-import.component').then(m => m.MetadataImportComponent)},
             {path: 'introspect', loadComponent: () => import('./pages/metadata/metadata-introspect.component').then(m => m.MetadataIntrospectComponent)},
+            {path: 'introspect/batch/:uuid', loadComponent: () => import('./pages/metadata/metadata-introspect-batch.component').then(m => m.MetadataIntrospectBatchComponent)},
             {path: 'change-order/:id', loadComponent: () => import('./pages/metadata/metadata-field-definition-order.component').then(m => m.MetadataFieldDefinitionOrderComponent)},
             {path: 'edit/:id', loadComponent: () => import('./pages/metadata/metadata-edit.component').then(m => m.MetadataEditComponent)},
             {path: 'new', loadComponent: () => import('./pages/metadata/metadata-edit.component').then(m => m.MetadataEditComponent)},
