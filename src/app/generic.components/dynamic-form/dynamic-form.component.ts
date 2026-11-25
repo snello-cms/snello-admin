@@ -14,7 +14,7 @@ import { FieldsetModule } from 'primeng/fieldset';
           @if (!groupToFields) {
             <div>
               @for (field of fields(); track field) {
-                <ng-container dynamicField [field]="field" [group]="form" [view]="view()">
+                <ng-container dynamicField [field]="field" [group]="form" [view]="view()" [allFields]="fields()">
                 </ng-container>
               }
             </div>
@@ -34,7 +34,7 @@ import { FieldsetModule } from 'primeng/fieldset';
                       <div>
                         @for (field of groupToFields.get(tab); track field) {
                           <ng-container dynamicField [field]="field"
-                            [group]="form" [view]="view()">
+                            [group]="form" [view]="view()" [allFields]="fields()">
                           </ng-container>
                         }
                       </div>
@@ -45,7 +45,7 @@ import { FieldsetModule } from 'primeng/fieldset';
                           <p-fieldset [legend]="group">
                             @for (field of groupToFields.get(group); track field) {
                               <ng-container dynamicField [field]="field"
-                                [group]="form" [view]="view()">
+                                [group]="form" [view]="view()" [allFields]="fields()">
                               </ng-container>
                             }
                           </p-fieldset>
@@ -64,7 +64,7 @@ import { FieldsetModule } from 'primeng/fieldset';
                 <p-fieldset [legend]="group">
                   @for (field of groupToFields.get(group); track field) {
                     <ng-container dynamicField [field]="field"
-                      [group]="form" [view]="view()">
+                      [group]="form" [view]="view()" [allFields]="fields()">
                     </ng-container>
                   }
                 </p-fieldset>

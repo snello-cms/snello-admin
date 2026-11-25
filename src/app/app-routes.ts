@@ -222,6 +222,7 @@ export const MainRoutes: Routes = [
             {
                 path: 'list/:name',
                 loadComponent: () => import('./pages/form-generation/form-generation-list.component').then(m => m.FormGenerationListComponent),
+                data: {recreateOnParamChange: true},
                 resolve: {
                     fieldDefinitionValorized: FieldDefinitionResolver
                 }
@@ -229,6 +230,7 @@ export const MainRoutes: Routes = [
             {
                 path: 'new/:name',
                 loadComponent: () => import('./pages/form-generation/form-generation-edit.component').then(m => m.FormGenerationEditComponent),
+                data: {recreateOnParamChange: true},
                 resolve: {
                     fieldDefinitionValorized: FieldDefinitionResolver
                 }
@@ -236,6 +238,7 @@ export const MainRoutes: Routes = [
             {
                 path: 'edit/:name/:uuid',
                 loadComponent: () => import('./pages/form-generation/form-generation-edit.component').then(m => m.FormGenerationEditComponent),
+                data: {recreateOnParamChange: true},
                 resolve: {
                     fieldDefinitionValorized: FieldDefinitionResolver
                 }
@@ -243,6 +246,7 @@ export const MainRoutes: Routes = [
             {
                 path: 'view/:name/:uuid',
                 loadComponent: () => import('./pages/form-generation/form-generation-view.component').then(m => m.FormGenerationViewComponent),
+                data: {recreateOnParamChange: true},
                 resolve: {
                     fieldDefinitionValorized: FieldDefinitionResolver
                 }

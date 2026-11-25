@@ -5,7 +5,7 @@ import {FieldDefinition} from '../../models/field-definition';
 import {ApiService} from '../../services/api.service';
 import {ActivatedRoute} from '@angular/router';
 import {Observable, of} from 'rxjs';
-import {tap} from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import { AutoComplete } from 'primeng/autocomplete';
 import { AsyncPipe } from '@angular/common';
 
@@ -17,7 +17,7 @@ import { AsyncPipe } from '@angular/common';
           <div class="form-group clearfix" [formGroup]="group">
             <div class="row">
               <label class="col-sm-3">
-                {{ field.name }}{{ field.mandatory ? ' (*)' : '' }}
+                {{ (field.label || field.name) }}{{ field.mandatory ? ' (*)' : '' }}
               </label>
               <div class="col-sm-9">
                 <p-autoComplete
@@ -78,7 +78,8 @@ export class JoinComponent implements OnInit {
             : rawJoinValue;
         const hasJoinValue = joinKeyValue != null && joinKeyValue !== '';
 
-        if (this.uuid && fieldName && hasJoinValue) {
+        // any key present at start: the row's own (edit) or a default value on a new row (e.g. nation = IT)
+        if (fieldName && hasJoinValue) {
             this.join$ =
                 this.apiService.fetchJoinedObject(
                     this.field.join_table_name,
@@ -89,8 +90,15 @@ export class JoinComponent implements OnInit {
                     .pipe(
                         tap(join => {
                             this.options = join ? [join] : [];
-                            this.group.get(fieldName)?.setValue(join ?? null);
+                            if (join) {
+                                this.group.get(fieldName)?.setValue(join);
+                            } else {
+                                // key not found (e.g. a default whose row is not loaded yet): keep the field visible
+                                // with the bare key instead of hiding it
+                                console.warn(`[join] ${this.field.metadata_name}.${fieldName}: ${joinKeyValue} not found in ${this.field.join_table_name}`);
+                            }
                         }),
+                        map(join => join ?? {}),
                     );
 
         } else {

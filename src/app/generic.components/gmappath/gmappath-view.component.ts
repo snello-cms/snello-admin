@@ -11,7 +11,7 @@ import { splitPath } from '../map-utils';
   changeDetection: ChangeDetectionStrategy.Eager,
   template: `
     <div class="form-group clearfix row" [formGroup]="group">
-      <label class="col-sm-3">{{ field?.name }}</label>
+      <label class="col-sm-3">{{ (field?.label || field?.name) }}</label>
       <div class="col-sm-9">
         @if (path.length) {
           <div><strong>Selected path:</strong> {{ path.length }} point(s)</div>

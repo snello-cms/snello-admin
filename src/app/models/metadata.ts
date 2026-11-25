@@ -19,6 +19,8 @@ export class Metadata {
 
   api_protected: boolean;
   username_field: string;
+  /** roles allowed to create / change / delete rows, e.g. "Admin,Manager"; empty = any logged-in user */
+  write_roles?: string;
 
   icon: string;
   tab_groups: string;

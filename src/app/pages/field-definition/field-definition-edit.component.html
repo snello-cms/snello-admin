@@ -129,6 +129,17 @@
                   </div>
                 </div>
               }
+              @if (fieldType == 'button') {
+                <div class="form-group clearfix row">
+                  <label class="label-text col-sm-3">Action (JSON)</label>
+                  <div class="col-sm-9">
+                    <textarea [(ngModel)]="element.function_def" name="function_def" pTextarea rows="8"
+                              style="width: 100%; font-family: monospace"
+                              placeholder='{"action": "prefill", "url": "https://...", "files": [{"name": "front", "required": true}], "result": "customer"}'></textarea>
+                    <small class="muted">No column: the button uploads the files to the url and fills the form with the answer.</small>
+                  </div>
+                </div>
+              }
               @if (tabs.length > 0) {
                 <div class="form-group clearfix row">
                   <label class="label-text col-sm-3">Tab Name</label>

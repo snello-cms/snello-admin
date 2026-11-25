@@ -28,7 +28,9 @@ export const MAP_INPUT_TO_FIELD: Map<string, any> = new Map(
         ['multilookup', ['multijoin', 'multilookup']],
         ['realtionships', ['realtionships', null]],
         ['gmaplocation', ['gmaplocation', null]],
-        ['gmappath', ['gmappath', null]]
+        ['gmappath', ['gmappath', null]],
+        // a form action with no column (snello-api skips it): function_def holds its JSON config
+        ['button', ['button', null]]
     ]
 );
 

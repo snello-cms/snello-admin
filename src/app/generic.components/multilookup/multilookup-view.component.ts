@@ -12,7 +12,7 @@ import { ApiService } from '../../services/api.service';
     template: `
       @if (values$ | async; as values) {
         <div class="form-group clearfix row" [formGroup]="group">
-          <label class="col-sm-3">{{ field.name }}</label>
+          <label class="col-sm-3">{{ (field.label || field.name) }}</label>
           <div class="col-sm-9">
             @if (values.length === 0) {
               <span>-</span>

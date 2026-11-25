@@ -105,6 +105,16 @@
                 </div>
               }
 
+              <div class="form-group clearfix row">
+                <label class="label-text col-sm-3">Who can write</label>
+                <div class="col-sm-9">
+                  <input [(ngModel)]="element.write_roles" name="write_roles" pInputText
+                    placeholder="Any logged-in user (or roles, e.g. Admin,Manager)">
+                  <small class="muted">Roles allowed to create, change and delete rows, comma separated. Empty: any
+                    logged-in user. Reads follow "api protected".</small>
+                </div>
+              </div>
+
 
               @if (!newtable) {
                 <div class="form-group clearfix row">

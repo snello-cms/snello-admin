@@ -8,7 +8,7 @@ import {SelectItem} from 'primeng/api';
     standalone: true,
     template: `
         <div class="form-group clearfix row" [formGroup]="group">
-            <label class="col-sm-3">{{ field.name }}</label>
+            <label class="col-sm-3">{{ (field.label || field.name) }}</label>
             <div class="col-sm-9" [innerHTML]="field.value">
             </div>
         </div>

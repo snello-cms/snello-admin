@@ -9,7 +9,7 @@ import { CheckboxModule } from 'primeng/checkbox';
     standalone: true,
     template: `
     <div class="form-group clearfix row" [formGroup]="group">
-      <label class="col-sm-3">{{ field.name }}{{ field.mandatory ? ' (*)' : '' }}</label>
+      <label class="col-sm-3">{{ (field.label || field.name) }}{{ field.mandatory ? ' (*)' : '' }}</label>
       <div class="col-sm-9">
         @if (isTriStateSearchField()) {
           <p-checkbox

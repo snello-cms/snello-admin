@@ -207,14 +207,21 @@ export class FieldDefinitionEditComponent extends AbstractEditComponent<FieldDef
         this.updateJoinMetadataOptions();
     }
 
+    /**
+     * The select offers only tables not created yet (to add fields to); the edited field's own table must be an
+     * option too, even when created, or the select shows "Select metadata" for every field of a created table.
+     * (It checked mapMetadata, which holds every table, so it never added it.)
+     */
     private ensureMetadataOption(metadataUuid?: string) {
-        if (!metadataUuid || this.mapMetadata.has(metadataUuid)) {
+        if (!metadataUuid || this.metadatasSelect.some(m => m.uuid === metadataUuid)) {
             return;
         }
-        const currentMetadata = this.metadatas.find(m => m.uuid === metadataUuid);
+        const currentMetadata = this.mapMetadata.get(metadataUuid) ?? this.metadatas.find(m => m.uuid === metadataUuid);
         if (currentMetadata) {
-            this.metadatasSelect.push(currentMetadata);
+            this.metadatasSelect = [...this.metadatasSelect, currentMetadata];
             this.mapMetadata.set(currentMetadata.uuid, currentMetadata);
+        } else {
+            console.warn('[field-definition] metadata', metadataUuid, 'of this field not found');
         }
     }
 

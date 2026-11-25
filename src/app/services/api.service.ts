@@ -33,7 +33,33 @@ export class ApiService implements OnInit {
         } else if (error.status === 500) {
             return throwError({status: error.status, error: error.message || error.error});
         }
-        return throwError(error.message /*json().msg*/ || error.error /*json().error*/ || 'Server error');
+        // keep the server's own reason (e.g. a PRE action's "asset X is already reserved on ..."): HttpErrorResponse's
+        // message is only "Http failure response for <url>: 400 Bad Request", useless to the person saving
+        const serverMessage = ApiService.serverMessage(error);
+        console.warn('[api] request failed', error.status, error.url, serverMessage ?? error.message);
+        return throwError(serverMessage || error.message || 'Server error');
+    }
+
+    /**
+     * The readable reason in a snello error body: {msg, detail} from RsExceptionMapper, or a plain string. A script
+     * error comes as "Error: <text> in <eval> at line number N at column number M": only <text> is kept.
+     */
+    public static serverMessage(error: HttpErrorResponse): string | null {
+        const body = error?.error;
+        let text: string | null = null;
+        if (typeof body === 'string' && body.trim()) {
+            text = body;
+        } else if (body && typeof body === 'object') {
+            text = (body.msg || body.message || body.detail || null) as string | null;
+        }
+        if (!text) {
+            return null;
+        }
+        return String(text)
+            .replace(/^rootCause=/, '')
+            .replace(/^(\w+\.)*\w*(Error|Exception):\s*/, '')
+            .replace(/\s+in <eval> at line number \d+( at column number \d+)?\s*$/, '')
+            .trim() || null;
     }
 
 
