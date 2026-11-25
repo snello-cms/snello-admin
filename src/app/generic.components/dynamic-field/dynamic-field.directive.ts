@@ -30,6 +30,8 @@ export class DynamicFieldDirective implements OnInit {
     field = input.required<FieldDefinition>();
     group = input.required<UntypedFormGroup>();
     view = input(false);
+    /** every field of the form: given to components that act on other fields (the action button) */
+    allFields = input<FieldDefinition[]>([]);
 
     private container = inject(ViewContainerRef);
 
@@ -48,7 +50,12 @@ export class DynamicFieldDirective implements OnInit {
         // server or a workflow. Search forms keep the input, so the field can still be used as a filter.
         const readOnly = this.view() || (!!field.input_disabled && !isSearchField);
 
-        if (!readOnly && field.type === 'tinymce') {
+        if (field.type === 'button') {
+            // a form action (no column): only in create / edit forms, never in a view or a search form
+            componentType = readOnly || isSearchField
+                ? undefined
+                : (await import('../action-button/action-button.component')).ActionButtonComponent;
+        } else if (!readOnly && field.type === 'tinymce') {
             componentType = (await import('../tinymce/tinymce.component')).TinymceComponent;
         } else if (!readOnly && field.type === 'monaco') {
             componentType = (await import('../monaco/monaco.component')).MonacoComponent;
@@ -85,6 +92,9 @@ export class DynamicFieldDirective implements OnInit {
         this.componentRef = this.container.createComponent(componentType);
         this.componentRef.instance.field = this.field();
         this.componentRef.instance.group = this.group();
+        if ('allFields' in this.componentRef.instance) {
+            this.componentRef.instance.allFields = this.allFields();
+        }
     }
 }
 

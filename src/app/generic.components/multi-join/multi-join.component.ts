@@ -19,7 +19,7 @@ import { AsyncPipe } from '@angular/common';
                     <div class="form-group clearfix" [formGroup]="group">
                         <div class="row">
               <label class="col-sm-3">
-                {{ field.name }}{{ field.mandatory ? ' (*)' : '' }}
+                {{ (field.label || field.name) }}{{ field.mandatory ? ' (*)' : '' }}
               </label>
               <div class="col-sm-9">
                 <p-autoComplete

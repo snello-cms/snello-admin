@@ -190,9 +190,10 @@ export class FormGenerationEditComponent implements OnInit, AfterViewChecked {
 
         const objToSave = this.preSaveUpdate();
         console.log('[form-generation] save payload', objToSave);
+        this.errorMessage = '';
         this.apiService.persist(this.metadataName, objToSave)
-            .subscribe(
-                element => {
+            .subscribe({
+                next: element => {
                     if (element) {
                         this.router.navigate([
                             'datalist/view',
@@ -200,8 +201,10 @@ export class FormGenerationEditComponent implements OnInit, AfterViewChecked {
                             this.resolvePersistedTableKey(element as Record<string, unknown>)
                         ]);
                     }
-                }
-            );
+                },
+                // a refused save (validation, PRE action, constraint) must say why, not leave the form silent
+                error: err => this.showSaveError('save', err)
+            });
     }
 
 
@@ -211,9 +214,10 @@ export class FormGenerationEditComponent implements OnInit, AfterViewChecked {
         }
         const objToSave = this.preSaveUpdate();
         console.log('[form-generation] update payload', objToSave);
+        this.errorMessage = '';
         this.apiService.update(this.metadataName, this.uuid, objToSave)
-            .subscribe(
-                element => {
+            .subscribe({
+                next: element => {
                     if (element) {
                         // a slug key is renewed when its source field changes: follow the key the API returns
                         const savedKey = this.resolvePersistedTableKey(element as Record<string, unknown>) || this.uuid;
@@ -222,8 +226,48 @@ export class FormGenerationEditComponent implements OnInit, AfterViewChecked {
                         }
                         this.router.navigate(['datalist/view', this.metadataName, savedKey]);
                     }
-                }
-            );
+                },
+                error: err => this.showSaveError('update', err)
+            });
+    }
+
+    private showSaveError(operation: string, err: unknown) {
+        const reason = typeof err === 'string' ? err
+            : (err as { error?: unknown })?.error != null ? String((err as { error?: unknown }).error)
+                : 'unknown error';
+        console.warn(`[form-generation] ${operation} of ${this.metadataName} refused:`, reason);
+        this.errorMessage = `Not saved: ${reason}`;
+        window.scrollTo({top: 0, behavior: 'smooth'}); // the banner sits above the form
+    }
+
+    /**
+     * Join fields filled with a bare key (by a clone, which patches the form after the join widgets started) show
+     * the key ("scooter", a uuid): load each joined row so the widget shows its label, as on edit.
+     */
+    private resolveJoinLabels() {
+        for (const field of this.regConfig) {
+            if (field.type !== 'join' || !field.name) {
+                continue;
+            }
+            const value = field.value;
+            if (value == null || value === '' || typeof value === 'object') {
+                continue;
+            }
+            console.debug('[form-generation] resolving join', field.name, '=', value);
+            this.apiService.fetchJoinedObject(field.join_table_name, field.join_table_key, String(value),
+                field.join_table_select_fields)
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe({
+                    next: row => {
+                        if (!row) {
+                            return; // not found: the key stays visible, which is the honest thing to show
+                        }
+                        field.value = row;
+                        this.form?.form?.get(field.name)?.setValue(row, {emitEvent: false});
+                    },
+                    error: e => console.warn('[form-generation] join', field.name, value, 'not resolved:', e)
+                });
+        }
     }
 
     private checkMandatoryFields(): boolean {
@@ -517,6 +561,7 @@ export class FormGenerationEditComponent implements OnInit, AfterViewChecked {
                 this.applyCloneValues(source);
                 this.unarshallFields();
                 this.syncFormValues();
+                this.resolveJoinLabels();
                 this.cloneLoaded = true;
             },
             error: () => {
@@ -782,6 +827,11 @@ export class FormGenerationEditComponent implements OnInit, AfterViewChecked {
             }
 
             const fieldName = field.name;
+            if (field.type === 'button') {
+                // a form action, no column
+                delete objToSave[fieldName];
+                continue;
+            }
             if (!(fieldName in objToSave)) {
                 objToSave[fieldName] = this.form.value?.[fieldName];
             }

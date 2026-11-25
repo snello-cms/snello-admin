@@ -11,7 +11,7 @@ import { Document } from '../../models/document';
   selector: 'app-image-view',
   template: `
     <div class="form-group clearfix row">
-      <label class="col-sm-3">{{ field.name }}</label>
+      <label class="col-sm-3">{{ (field.label || field.name) }}</label>
       <div class="col-sm-9">
         @if (selectedDocument) {
           <div class="image-view">

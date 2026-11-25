@@ -1,5 +1,6 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { provideRouter, withPreloading, PreloadAllModules, withHashLocation, withComponentInputBinding } from '@angular/router';
+import { provideRouter, withPreloading, PreloadAllModules, withHashLocation, withComponentInputBinding, RouteReuseStrategy } from '@angular/router';
+import { ParamChangeReuseStrategy } from './app/common/param-change-reuse-strategy';
 import { importProvidersFrom, LOCALE_ID, provideZoneChangeDetection } from '@angular/core';
 import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS, withXhr } from '@angular/common/http';
 import { registerLocaleData } from '@angular/common';
@@ -64,6 +65,8 @@ const bootstrap = async (): Promise<void> => {
                 }
             }),
             provideRouter(MainRoutes, withPreloading(PreloadAllModules), withHashLocation(), withComponentInputBinding()),
+            // datalist pages: a fresh component per table / row instead of a reused one showing the previous table
+            { provide: RouteReuseStrategy, useClass: ParamChangeReuseStrategy },
             provideHttpClient(withXhr(), withInterceptorsFromDi()),
             { provide: HTTP_INTERCEPTORS, useClass: BasicHttpInterceptor, multi: true },
             { provide: LOCALE_ID, useValue: 'it' },

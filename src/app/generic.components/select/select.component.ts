@@ -10,7 +10,7 @@ import {SelectClearDefaultDirective} from '../../common/select-clear-default.dir
     standalone: true,
     template: `
     <div class="form-group clearfix row" [formGroup]="group">
-      <label class="col-sm-3">{{ field.name }}{{ field.mandatory ? ' (*)' : '' }}</label>
+      <label class="col-sm-3">{{ (field.label || field.name) }}{{ field.mandatory ? ' (*)' : '' }}</label>
       <div class="col-sm-9">
         <p-select
           [options]="options"
