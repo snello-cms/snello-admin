@@ -8,8 +8,8 @@ import {Metadata} from '../../models/metadata';
 import {MetadataService} from '../../services/metadata.service';
 import { SideBarComponent } from '../sidebar/sidebar.component';
 import { HomepageTopBar } from '../homepage-topbar/homepage-topbar.component';
-import {from} from 'rxjs';
-import {concatMap, toArray} from 'rxjs/operators';
+import {from, throwError} from 'rxjs';
+import {catchError, concatMap, tap, toArray} from 'rxjs/operators';
 import {getDatesInRange} from '../../common/cron.util';
 import {DialogModule} from 'primeng/dialog';
 import {MassivePreviewService} from './massive-preview.service';
@@ -146,13 +146,23 @@ export class FormGenerationEditComponent implements OnInit, AfterViewChecked {
         this.setupMassiveDateAutofill();
     }
 
+    /** calendar values of the occurrences a massive save of this form already created (a later attempt skips them) */
+    private massiveSavedOccurrences = new Set<string>();
+
+    /** is_edit of each field before the last save attempt (see unlockFieldsAfterRefusedSave) */
+    private editableBeforeSave = new Map<FieldDefinition, boolean>();
+
     delete() {
+        this.errorMessage = '';
         this.apiService.delete(this.metadataName, this.uuid)
-            .subscribe(
-                element => {
+            .subscribe({
+                next: () => {
+                    console.log('[form-generation] deleted', this.metadataName, this.uuid);
                     this.router.navigate(['datalist/list', this.metadataName]);
-                }
-            );
+                },
+                // e.g. 403 "only Admin,Manager can change assets": without this the page stayed as it was, silently
+                error: err => this.showSaveError('delete', err, 'Not deleted')
+            });
     }
 
     confirmDelete() {
@@ -200,6 +210,10 @@ export class FormGenerationEditComponent implements OnInit, AfterViewChecked {
                             this.metadataName,
                             this.resolvePersistedTableKey(element as Record<string, unknown>)
                         ]);
+                    } else {
+                        // saved, but the API sent no row back (204 / null): its key is unknown, so the list
+                        console.info('[form-generation] save of', this.metadataName, 'answered with no body: back to the list');
+                        this.router.navigate(['datalist/list', this.metadataName]);
                     }
                 },
                 // a refused save (validation, PRE action, constraint) must say why, not leave the form silent
@@ -225,19 +239,49 @@ export class FormGenerationEditComponent implements OnInit, AfterViewChecked {
                             console.info('[form-generation] key changed on update', this.uuid, '->', savedKey);
                         }
                         this.router.navigate(['datalist/view', this.metadataName, savedKey]);
+                    } else {
+                        // updated, but no row came back (204 / null): the key cannot have changed without one
+                        console.info('[form-generation] update of', this.metadataName, this.uuid, 'answered with no body');
+                        this.router.navigate(['datalist/view', this.metadataName, this.uuid]);
                     }
                 },
                 error: err => this.showSaveError('update', err)
             });
     }
 
-    private showSaveError(operation: string, err: unknown) {
-        const reason = typeof err === 'string' ? err
+    private showSaveError(operation: string, err: unknown, prefix = 'Not saved') {
+        const reason = this.errorReason(err);
+        console.warn(`[form-generation] ${operation} of ${this.metadataName} refused:`, reason);
+        this.errorMessage = `${prefix}: ${reason}`;
+        if (operation !== 'delete') {
+            // a delete locks nothing, and must not unlock the fields of a save still running
+            this.unlockFieldsAfterRefusedSave(operation);
+        }
+        window.scrollTo({top: 0, behavior: 'smooth'}); // the banner sits above the form
+    }
+
+    /** ApiService.handleError throws the server's reason as a string, or {status, error} for 401 / 500 */
+    private errorReason(err: unknown): string {
+        return typeof err === 'string' ? err
             : (err as { error?: unknown })?.error != null ? String((err as { error?: unknown }).error)
                 : 'unknown error';
-        console.warn(`[form-generation] ${operation} of ${this.metadataName} refused:`, reason);
-        this.errorMessage = `Not saved: ${reason}`;
-        window.scrollTo({top: 0, behavior: 'smooth'}); // the banner sits above the form
+    }
+
+    /**
+     * preSaveUpdate() turns is_edit off on every field. A successful save leaves the page, a refused one stays on
+     * it: without this the photo field of a saved record showed "accessible only after the record has been saved"
+     * and its Choose button stayed disabled until a reload.
+     */
+    private unlockFieldsAfterRefusedSave(operation: string) {
+        let unlocked = 0;
+        for (const [field, wasEditable] of this.editableBeforeSave) {
+            if (wasEditable && !field.is_edit) {
+                field.is_edit = true;
+                unlocked++;
+            }
+        }
+        this.editableBeforeSave.clear();
+        console.debug(`[form-generation] ${operation} refused: ${unlocked} field(s) editable again`);
     }
 
     /**
@@ -246,6 +290,10 @@ export class FormGenerationEditComponent implements OnInit, AfterViewChecked {
      */
     private resolveJoinLabels() {
         for (const field of this.regConfig) {
+            if (field.type === 'multijoin' && field.name) {
+                this.resolveMultijoinLabels(field);
+                continue;
+            }
             if (field.type !== 'join' || !field.name) {
                 continue;
             }
@@ -268,6 +316,36 @@ export class FormGenerationEditComponent implements OnInit, AfterViewChecked {
                     error: e => console.warn('[form-generation] join', field.name, value, 'not resolved:', e)
                 });
         }
+    }
+
+    /**
+     * The same for a multijoin filled with bare keys: its widget loads the joined rows only when it starts, so a
+     * clone showed one empty chip per vehicle (the keys were saved, but nobody could see which ones).
+     */
+    private resolveMultijoinLabels(field: FieldDefinition) {
+        const keyField = field.join_table_key;
+        const values: unknown[] = Array.isArray(field.value) ? field.value : [];
+        const keys = values.filter(v => v != null && v !== '' && typeof v !== 'object').map(String);
+        if (!field.name || !keyField || keys.length === 0) {
+            return; // nothing selected, or already rows
+        }
+        const name = field.name;
+        const selectFields = Array.from(new Set([...(field.join_table_select_fields ?? '').split(','), keyField]))
+            .filter(Boolean).join(',');
+        console.debug('[form-generation] resolving multijoin', name, '=', keys);
+        this.apiService.fetchObjectsByKeys(field.join_table_name, keyField, keys, selectFields)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: rows => {
+                    const byKey = new Map((rows ?? []).map((row: any) => [String(row?.[keyField]), row]));
+                    // the saved order; a key whose row is gone stays as it is rather than vanish from the contract
+                    const resolved = keys.map(key => byKey.get(key) ?? key);
+                    console.debug('[form-generation] multijoin', name, ':', byKey.size, 'of', keys.length, 'row(s) found');
+                    field.value = resolved;
+                    this.form?.form?.get(name)?.setValue(resolved, {emitEvent: false});
+                },
+                error: e => console.warn('[form-generation] multijoin', name, keys, 'not resolved:', e)
+            });
     }
 
     private checkMandatoryFields(): boolean {
@@ -525,24 +603,51 @@ export class FormGenerationEditComponent implements OnInit, AfterViewChecked {
             return;
         }
 
+        const calendarField = this.metadata.calendar_field;
         const basePayload = this.preSaveUpdate();
         const payloads = dates.map((date, index) => ({
             ...this.applyMassivePlaceholders(basePayload, index, dates.length),
-            [this.metadata.calendar_field]: this.serializeCalendarValue(date)
+            [calendarField]: this.serializeCalendarValue(date)
         }));
+        // The occurrences are saved one by one, with no transaction over them: when one is refused, the ones before
+        // it exist. A second Save from the same form then creates only the ones still missing.
+        const pending = payloads.filter(payload => !this.massiveSavedOccurrences.has(String(payload[calendarField])));
+        const alreadySaved = payloads.length - pending.length;
+        console.log(`[form-generation] massive save of ${this.metadataName}: ${payloads.length} occurrence(s), `
+            + `${alreadySaved} saved by an earlier attempt, ${pending.length} to save`);
+        let savedNow = 0;
 
-        from(payloads)
+        from(pending)
             .pipe(
-                concatMap(payload => this.apiService.persist(this.metadataName, payload)),
+                concatMap(payload => this.apiService.persist(this.metadataName, payload).pipe(
+                    tap(() => {
+                        savedNow++;
+                        this.massiveSavedOccurrences.add(String(payload[calendarField]));
+                    }),
+                    catchError(err => throwError(() => ({occurrence: String(payload[calendarField]), cause: err})))
+                )),
                 toArray()
             )
             .subscribe({
                 next: () => {
+                    console.log(`[form-generation] massive save of ${this.metadataName} complete: ${savedNow} saved now`);
                     this.errorMessage = '';
+                    this.massiveSavedOccurrences.clear();
                     this.router.navigate(['datalist/list', this.metadataName]);
                 },
-                error: error => {
-                    this.errorMessage = `Unable to complete the massive save. ${error || ''}`;
+                error: (failure: { occurrence?: string; cause?: unknown }) => {
+                    const reason = this.errorReason(failure?.cause ?? failure);
+                    const done = alreadySaved + savedNow;
+                    const left = payloads.length - done;
+                    console.warn(`[form-generation] massive save of ${this.metadataName} stopped at`,
+                        failure?.occurrence, `: ${done} of ${payloads.length} saved, reason:`, reason);
+                    this.errorMessage = `Massive save stopped at ${failure?.occurrence ?? 'an occurrence'}: ${reason}. `
+                        + (done > 0
+                            ? `${done} of ${payloads.length} are saved and will not be created again: `
+                              + `correct the form and save to create the remaining ${left}.`
+                            : `Nothing was saved (${payloads.length} occurrences).`);
+                    window.scrollTo({top: 0, behavior: 'smooth'});
+                    this.unlockFieldsAfterRefusedSave('massive save');
                 }
             });
     }
@@ -816,6 +921,11 @@ export class FormGenerationEditComponent implements OnInit, AfterViewChecked {
             }
         }
         
+        // media / upload fields are locked while the save runs; showSaveError gives the lock back when it is refused
+        // only when none is pending: a second click while the first request runs would snapshot the locked state
+        if (this.editableBeforeSave.size === 0) {
+            this.editableBeforeSave = new Map(this.regConfig.map(field => [field, field.is_edit]));
+        }
         for (const field of this.regConfig) {
             field.is_edit = false;
             if (!field.name) {
