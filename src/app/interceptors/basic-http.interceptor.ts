@@ -55,7 +55,24 @@ export class BasicHttpInterceptor implements HttpInterceptor {
     return clone;
   }
 
+  /**
+   * Only the SPA's own static files (assets/config.json, i18n, icons) go without a token. The match is on the
+   * app's assets/ folder resolved against <base href>, not on "/assets/" anywhere in the URL: that also matched
+   * the API of a table named `assets` (PUT /api/assets/{id} went out without a token, 401 "Unauthorized").
+   */
   private shouldSkipAuth(url: string): boolean {
-    return url.includes('/assets/') || url.startsWith('assets/');
+    let skip = false;
+    try {
+      const target = new URL(url, document.baseURI).href;
+      // under <base href>, and at the origin root: CONFIG_PATH is the absolute /assets/config.json
+      skip = [new URL('assets/', document.baseURI).href, new URL('/assets/', document.baseURI).href]
+        .some(folder => target.startsWith(folder));
+    } catch (e) {
+      console.warn('[auth] url not understood, sent with token', url, e);
+    }
+    if (skip) {
+      console.debug('[auth] no token for static file', url);
+    }
+    return skip;
   }
 }

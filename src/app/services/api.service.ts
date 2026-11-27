@@ -31,7 +31,11 @@ export class ApiService implements OnInit {
         if (error.status === 401) {
             return throwError({status: error.status, error: 'Unauthorized'});
         } else if (error.status === 500) {
-            return throwError({status: error.status, error: error.message || error.error});
+            // same shape as before ({status, error}), but with the server's reason when it sent one (a script that
+            // throws: "asset is in use"), not HttpErrorResponse's "Http failure response for <url>: 500"
+            const reason = ApiService.serverMessage(error);
+            console.warn('[api] request failed', error.status, error.url, reason ?? error.message);
+            return throwError({status: error.status, error: reason || error.message || error.error});
         }
         // keep the server's own reason (e.g. a PRE action's "asset X is already reserved on ..."): HttpErrorResponse's
         // message is only "Http failure response for <url>: 400 Bad Request", useless to the person saving
@@ -45,12 +49,25 @@ export class ApiService implements OnInit {
      * error comes as "Error: <text> in <eval> at line number N at column number M": only <text> is kept.
      */
     public static serverMessage(error: HttpErrorResponse): string | null {
-        const body = error?.error;
+        let body = error?.error;
+        const raw = typeof body === 'string' && body.trim() ? body.trim() : null;
         let text: string | null = null;
+        if (typeof body === 'string' && body.trim().startsWith('{')) {
+            // a request made with responseType 'text' (DELETE) gets the JSON body as text
+            try {
+                body = JSON.parse(body);
+            } catch {
+                // not JSON after all: kept as text below
+            }
+        }
         if (typeof body === 'string' && body.trim()) {
             text = body;
         } else if (body && typeof body === 'object') {
-            text = (body.msg || body.message || body.detail || null) as string | null;
+            // {error: "..."} / {reason: "..."} from other mappers; a body with none of these keeps its raw text
+            text = (body.msg || body.message || body.detail || body.error || body.reason || raw || null) as string | null;
+            if (typeof text !== 'string') {
+                text = raw;
+            }
         }
         if (!text) {
             return null;
